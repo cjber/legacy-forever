@@ -32,6 +32,37 @@ function Live.Visible()
 	return visible
 end
 
+-- Criteria IDs the data places for each achievement, built once.
+local locatedByAchievement
+local function LocatedCriteria(achievementID)
+	if not locatedByAchievement then
+		locatedByAchievement = {}
+		for _, entries in pairs(ns.Data.zones) do
+			for _, entry in ipairs(entries) do
+				local list = locatedByAchievement[entry.achievement] or {}
+				list[#list + 1] = entry.criteria
+				locatedByAchievement[entry.achievement] = list
+			end
+		end
+	end
+	return locatedByAchievement[achievementID]
+end
+
+-- A single-step achievement (e.g. Conqueror of the Lair) reports no criteria: the
+-- achievement is the step. File its completion under the criterion the data placed,
+-- or under 0 (never placed) so it still counts as unplaced work.
+local function WholeAchievement(achievementID)
+	local _, name, _, completed = GetAchievementInfo(achievementID)
+	if not name then
+		return nil
+	end
+	local result = {}
+	for _, criteriaID in ipairs(LocatedCriteria(achievementID) or { 0 }) do
+		result[criteriaID] = { text = name, completed = completed, index = 1 }
+	end
+	return result
+end
+
 -- Criteria by ID rather than index: DB2 order and API order need not agree.
 function Live.Criteria(achievementID)
 	local cached = criteriaCache[achievementID]
@@ -57,6 +88,9 @@ function Live.Criteria(achievementID)
 				}
 			end
 		end
+	end
+	if count == 0 then
+		result = WholeAchievement(achievementID)
 	end
 	criteriaCache[achievementID] = result or false
 	return result
