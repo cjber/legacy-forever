@@ -360,23 +360,78 @@ local function CreatePinProvider()
 	LegacyHereAreaPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
 	-- Pools are made on first acquire, as MapExplorationPinMixin does; see LegacyHerePinMixin:OnAcquired.
+	-- One hover layer over the canvas picks the area under the cursor (Model.AreaAt); it takes mouse
+	-- motion only, so clicks, drags and the wheel still reach the map.
 	function LegacyHereAreaPinMixin:CreatePools()
 		self:SetIgnoreGlobalPinScale(true)
 		self:UseFrameLevelType("PIN_FRAME_LEVEL_MAP_EXPLORATION")
 		self.textures = CreateTexturePool(self, "OVERLAY")
-		self.hits = CreateFramePool("Frame", self)
+		self.hover = CreateFrame("Frame", nil, self)
+		self.hover:SetAllPoints()
+		self.hover:SetMouseMotionEnabled(true)
+		self.hover:SetMouseClickEnabled(false)
+		self.hover:SetScript("OnEnter", function(hover)
+			hover:SetScript("OnUpdate", function()
+				self:HoverAt(self:CursorPosition())
+			end)
+		end)
+		self.hover:SetScript("OnLeave", function(hover)
+			hover:SetScript("OnUpdate", nil)
+			self:Highlight(nil)
+		end)
 	end
 
 	function LegacyHereAreaPinMixin:ReleaseAreas()
 		if self.textures then
+			self:Highlight(nil)
 			self.textures:ReleaseAll()
-			self.hits:ReleaseAll()
 		end
+		self.areas, self.drawn = {}, {}
 	end
 
 	function LegacyHereAreaPinMixin:OnReleased()
 		MapCanvasPinMixin.OnReleased(self)
 		self:ReleaseAreas()
+	end
+
+	-- The cursor in canvas pixels, the space overlay offsets are in.
+	function LegacyHereAreaPinMixin:CursorPosition()
+		local scale = self:GetEffectiveScale()
+		local x, y = GetCursorPosition()
+		return x / scale - self:GetLeft(), self:GetTop() - y / scale
+	end
+
+	function LegacyHereAreaPinMixin:HoverAt(x, y)
+		local index = ns.Model.AreaAt(self.areas, x, y)
+		if index ~= self.hovered then
+			self:Highlight(index)
+		end
+	end
+
+	function LegacyHereAreaPinMixin:Highlight(index)
+		if self.hovered then
+			for _, texture in ipairs(self.drawn[self.hovered]) do
+				texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
+			end
+			GameTooltip:Hide()
+		end
+		self.hovered = index
+		if not index then
+			return
+		end
+		for _, texture in ipairs(self.drawn[index]) do
+			texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
+		end
+		local area = self.areas[index]
+		GameTooltip:SetOwner(self.hover, "ANCHOR_CURSOR_RIGHT")
+		local objective = self.legacy[area.key]
+		if objective then
+			AddPinTooltip(GameTooltip, objective.group, objective.objective)
+		else
+			GameTooltip_SetTitle(GameTooltip, area.name)
+			GameTooltip_AddNormalLine(GameTooltip, KIND_LABEL.explore)
+		end
+		GameTooltip:Show()
 	end
 
 	function LegacyHereAreaPinMixin:DrawTile(tileID, x, y, width, height, u, v)
@@ -392,7 +447,6 @@ local function CreatePinProvider()
 		return texture
 	end
 
-	-- `areas`, largest first, so a smaller area's hover sits above one it overlaps.
 	function LegacyHereAreaPinMixin:OnAcquired(zone, areas, legacy)
 		if not self.textures then
 			self:CreatePools()
@@ -401,6 +455,7 @@ local function CreatePinProvider()
 		self:ReleaseAreas()
 		self:SetSize(self:GetMap():GetCanvas():GetSize())
 		self:SetPosition(0.5, 0.5)
+		self.areas, self.legacy = areas, legacy
 		for index, area in ipairs(areas) do
 			local offsetX, offsetY, width, height = ns.Model.OverlayRect(area.key)
 			local textures = {}
@@ -415,42 +470,11 @@ local function CreatePinProvider()
 					tile.v
 				)
 			end
-			local hit = self.hits:Acquire()
-			hit:SetFrameLevel(self:GetFrameLevel() + index)
-			local left, top, right, bottom = offsetX, offsetY, offsetX + width, offsetY + height
-			if area.hit then
-				left, top, right, bottom = unpack(area.hit)
-			end
-			hit:SetSize(right - left, bottom - top)
-			hit:ClearAllPoints()
-			hit:SetPoint("TOPLEFT", left, -top)
-			hit:SetMouseMotionEnabled(true)
-			hit:SetMouseClickEnabled(false)
-			hit:SetScript("OnEnter", function()
-				for _, texture in ipairs(textures) do
-					texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
-				end
-				GameTooltip:SetOwner(hit, "ANCHOR_CURSOR_RIGHT")
-				local objective = legacy[area.key]
-				if objective then
-					AddPinTooltip(GameTooltip, objective.group, objective.objective)
-				else
-					GameTooltip_SetTitle(GameTooltip, area.name)
-					GameTooltip_AddNormalLine(GameTooltip, KIND_LABEL.explore)
-				end
-				GameTooltip:Show()
-			end)
-			hit:SetScript("OnLeave", function()
-				for _, texture in ipairs(textures) do
-					texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
-				end
-				GameTooltip:Hide()
-			end)
-			hit:Show()
+			self.drawn[index] = textures
 		end
 	end
 
-	-- The zone's undiscovered areas that have map tiles, largest first; nil when the game reports no
+	-- The zone's undiscovered areas that have map tiles; nil when the game reports no
 	-- exploration for the map, so nothing is claimed undiscovered.
 	local function UndiscoveredAreas(mapID)
 		local zone = ns.Data.completion[mapID]
@@ -464,11 +488,6 @@ local function CreatePinProvider()
 				areas[#areas + 1] = area
 			end
 		end
-		table.sort(areas, function(a, b)
-			local _, _, aw, ah = ns.Model.OverlayRect(a.key)
-			local _, _, bw, bh = ns.Model.OverlayRect(b.key)
-			return aw * ah > bw * bh
-		end)
 		return zone, areas
 	end
 

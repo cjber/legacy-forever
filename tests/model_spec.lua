@@ -120,6 +120,16 @@ end)
 equal(noAreas.areas, nil, "an uncounted category is left out")
 equal(noAreas.total, completion.total - completion.areas.total, "and drops out of the total")
 
+-- Hovering picks the area whose centre is nearest among those whose texture holds the point.
+local overlapping = {
+	{ key = "0:0:100:100" },
+	{ key = "50:0:100:100", hit = { 120, 40, 140, 60 } },
+}
+equal(Model.AreaAt(overlapping, 10, 50), 1, "only one texture holds the point")
+equal(Model.AreaAt(overlapping, 70, 50), 1, "nearer the first area's centre")
+equal(Model.AreaAt(overlapping, 95, 50), 2, "nearer the second area's hit rectangle")
+equal(Model.AreaAt(overlapping, 200, 50), nil, "outside every texture")
+
 -- Overlay tiles, laid out like Blizzard's exploration overlays.
 local ox, oy, ow, oh = Model.OverlayRect("413:476:256:128")
 equal(ox + oy + ow + oh, 413 + 476 + 256 + 128, "overlay key parses to integers")

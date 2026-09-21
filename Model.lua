@@ -202,6 +202,28 @@ function Model.OverlayRect(key)
 	return tonumber(offsetX), tonumber(offsetY), tonumber(width), tonumber(height)
 end
 
+-- The area under a point on the map canvas, or nil. Overlay textures are rectangles around
+-- irregular shapes and overlap, so of the areas whose texture holds the point, the one whose
+-- centre (its hit rectangle's, Blizzard's own label target, else the texture's) is nearest wins.
+function Model.AreaAt(areas, x, y)
+	local best, bestDistance
+	for index, area in ipairs(areas) do
+		local offsetX, offsetY, width, height = Model.OverlayRect(area.key)
+		if x >= offsetX and x <= offsetX + width and y >= offsetY and y <= offsetY + height then
+			local left, top, right, bottom = offsetX, offsetY, offsetX + width, offsetY + height
+			if area.hit then
+				left, top, right, bottom = area.hit[1], area.hit[2], area.hit[3], area.hit[4]
+			end
+			local dx, dy = x - (left + right) / 2, y - (top + bottom) / 2
+			local distance = dx * dx + dy * dy
+			if not bestDistance or distance < bestDistance then
+				best, bestDistance = index, distance
+			end
+		end
+	end
+	return best
+end
+
 -- A tile's drawn size and how much of its power-of-two file that covers; only the last
 -- tile in a row or column is partial.
 local function TileSpan(total, tileSize, index, count)
