@@ -37,8 +37,6 @@
     "MapCanvasDataProviderMixin",
     "MapCanvasPinMixin",
     "strtrim",
-    "tContains",
-    "tDeleteItem",
     "ToggleLegacySystemUI",
     "ToggleWorldMap",
     "UIParent",

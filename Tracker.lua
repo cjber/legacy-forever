@@ -16,14 +16,28 @@ local function Tracked()
 	return LegacyHereDB.tracked
 end
 
-function Tracker.IsTracked(challenge)
-	return tContains(Tracked(), challenge)
+local function IndexOf(list, value)
+	for index, item in ipairs(list) do
+		if item == value then
+			return index
+		end
+	end
 end
 
+function Tracker.IsTracked(challenge)
+	return IndexOf(Tracked(), challenge) ~= nil
+end
+
+-- Confirms in chat because the tracker can sit behind a maximised world map.
 function Tracker.Toggle(challenge)
 	local tracked = Tracked()
-	if not tDeleteItem(tracked, challenge) then
+	local index = IndexOf(tracked, challenge)
+	if index then
+		table.remove(tracked, index)
+		ns.Print(("stopped tracking %s"):format(ns.Live.Name(challenge)))
+	else
 		tracked[#tracked + 1] = challenge
+		ns.Print(("tracking %s"):format(ns.Live.Name(challenge)))
 	end
 	Tracker.Refresh()
 end
