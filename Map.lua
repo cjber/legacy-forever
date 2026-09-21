@@ -18,25 +18,90 @@ local function ZoneGroups(uiMapID)
 	return ns.Model.ZoneObjectives(ns.Data, uiMapID, ns.Live.Visible(), ns.Live.Criteria)
 end
 
-local function AddPointsLine(tooltip, challenge)
+local function PointsText(challenge)
 	local points = ns.Live.Points(challenge)
 	if points then
-		local icon = CreateAtlasMarkup(POINTS_ICON, 10, 14)
-		GameTooltip_AddNormalLine(tooltip, ("%s %d Legacy |4point:points;"):format(icon, points))
+		return ("%s %d Legacy |4point:points;"):format(CreateAtlasMarkup(POINTS_ICON, 10, 14), points)
 	end
 end
 
--- The challenge, the exploration achievement feeding it (if any), then what's left here.
-local function AddGroupTooltip(tooltip, group, objectives)
-	GameTooltip_SetTitle(tooltip, ns.Live.Name(group.challenge))
-	if group.achievement ~= group.challenge then
-		GameTooltip_AddHighlightLine(tooltip, ns.Live.Name(group.achievement))
+local function AddPointsLine(tooltip, challenge)
+	local text = PointsText(challenge)
+	if text then
+		GameTooltip_AddNormalLine(tooltip, text)
 	end
-	for _, objective in ipairs(objectives) do
+end
+
+-- Points belong to the whole challenge, so a feeding achievement (an "Explore <zone>")
+-- names what it counts toward rather than implying each step is worth them.
+local function AddRewardLine(tooltip, group)
+	if group.achievement == group.challenge then
+		AddPointsLine(tooltip, group.challenge)
+		return
+	end
+	local points = PointsText(group.challenge)
+	local name = ns.Live.Name(group.challenge)
+	GameTooltip_AddNormalLine(
+		tooltip,
+		points and ("Part of %s (%s)"):format(name, points) or ("Part of %s"):format(name)
+	)
+end
+
+local function IsExploreGroup(group)
+	return group.objectives[1].entry.kind == "explore"
+end
+
+-- "9 of 12 areas left" for an exploration achievement, from live progress.
+local function AreasLeftText(group)
+	local total, left = 0, 0
+	for _, progress in pairs(ns.Live.Criteria(group.achievement) or {}) do
+		total = total + 1
+		if not progress.completed then
+			left = left + 1
+		end
+	end
+	return ("%s: %d of %d areas left"):format(ns.Live.Name(group.achievement), left, total)
+end
+
+local function AddGroupTooltip(tooltip, group)
+	if IsExploreGroup(group) then
+		GameTooltip_SetTitle(tooltip, ns.Live.Name(group.achievement))
+		GameTooltip_AddNormalLine(tooltip, AreasLeftText(group))
+		for _, objective in ipairs(group.objectives) do
+			GameTooltip_AddColoredLine(tooltip, objective.text, WHITE_FONT_COLOR)
+		end
+	else
+		GameTooltip_SetTitle(tooltip, ns.Live.Name(group.challenge))
+		for _, objective in ipairs(group.objectives) do
+			local label = KIND_LABEL[objective.entry.kind]
+			GameTooltip_AddColoredLine(tooltip, ("%s: %s"):format(label, objective.text), WHITE_FONT_COLOR)
+		end
+	end
+	AddRewardLine(tooltip, group)
+end
+
+local function AddPinTooltip(tooltip, group, objective)
+	if objective.entry.kind == "explore" then
+		GameTooltip_SetTitle(tooltip, objective.text)
+		GameTooltip_AddNormalLine(tooltip, KIND_LABEL.explore)
+		GameTooltip_AddHighlightLine(tooltip, AreasLeftText(group))
+	else
+		GameTooltip_SetTitle(tooltip, ns.Live.Name(group.challenge))
 		local label = KIND_LABEL[objective.entry.kind]
 		GameTooltip_AddColoredLine(tooltip, ("%s: %s"):format(label, objective.text), WHITE_FONT_COLOR)
 	end
-	AddPointsLine(tooltip, group.challenge)
+	AddRewardLine(tooltip, group)
+end
+
+-- Session default is on; kept across sessions only where SavedVariables load.
+local function ShowAreas()
+	return not (LegacyHereDB and LegacyHereDB.hideAreas)
+end
+
+local function ToggleAreas()
+	LegacyHereDB = LegacyHereDB or {}
+	LegacyHereDB.hideAreas = ShowAreas()
+	ns.RefreshMap()
 end
 
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]
@@ -59,7 +124,7 @@ local function AddGroup(root, group)
 	local text = ("%s |cffffffff(%d)|r"):format(name, #group.objectives)
 	local button = root:CreateCheckbox(text, IsTracked, OnObjectiveClick, group)
 	button:SetTooltip(function(tooltip)
-		AddGroupTooltip(tooltip, group, group.objectives)
+		AddGroupTooltip(tooltip, group)
 		GameTooltip_AddInstructionLine(tooltip, "Click to track. Shift-click to open in the Legacy panel.")
 	end)
 end
@@ -99,6 +164,7 @@ local function BuildMenu(root, uiMapID)
 		AddGroup(root, group)
 	end
 	root:CreateDivider()
+	root:CreateCheckbox("Show undiscovered areas", ShowAreas, ToggleAreas)
 	AddUnlocated(root)
 	root:CreateButton("Open the Legacy panel", ToggleLegacySystemUI)
 end
@@ -165,18 +231,27 @@ local function CreatePinProvider()
 
 	function LegacyHerePinMixin:OnLoad()
 		self:UseFrameLevelType("PIN_FRAME_LEVEL_AREA_POI")
-		self:SetScalingLimits(1, 1.0, 1.2)
 	end
 
+	-- Areas are many and minor, so they sit smaller and quieter than dungeons,
+	-- bosses and quests. Pins are pooled, so every acquire sets both looks.
 	function LegacyHerePinMixin:OnAcquired(group, objective)
 		self.group = group
 		self.objective = objective
+		if objective.entry.kind == "explore" then
+			self:SetScalingLimits(1, 0.65, 0.9)
+			self:SetAlpha(0.8)
+		else
+			self:SetScalingLimits(1, 1.0, 1.2)
+			self:SetAlpha(1)
+		end
 		self:SetPosition(objective.entry.x, objective.entry.y)
+		self:ApplyCurrentScale()
 	end
 
 	function LegacyHerePinMixin:OnMouseEnter()
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		AddGroupTooltip(GameTooltip, self.group, { self.objective })
+		AddPinTooltip(GameTooltip, self.group, self.objective)
 		GameTooltip:Show()
 	end
 
@@ -194,7 +269,7 @@ local function CreatePinProvider()
 		self:RemoveAllData()
 		for _, group in ipairs(ZoneGroups(self:GetMap():GetMapID())) do
 			for _, objective in ipairs(group.objectives) do
-				if objective.entry.x then
+				if objective.entry.x and (objective.entry.kind ~= "explore" or ShowAreas()) then
 					self:GetMap():AcquirePin(PIN_TEMPLATE, group, objective)
 				end
 			end
@@ -214,12 +289,13 @@ local function Attach()
 	-- Refresh anchors it; see TopRightOffset.
 	local button = map:AddOverlayFrame("LegacyHereMapButtonTemplate", "DROPDOWNBUTTON")
 
-	ns.Live.OnChange(function()
+	function ns.RefreshMap()
 		if map:IsShown() then
 			provider:RefreshAllData()
 			button:Refresh()
 		end
-	end)
+	end
+	ns.Live.OnChange(ns.RefreshMap)
 	button:Refresh()
 end
 

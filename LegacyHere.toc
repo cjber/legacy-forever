@@ -7,6 +7,7 @@
 ## X-License: GPL-3.0-or-later
 ## X-Website: https://github.com/cjber/legacy-here
 ## IconAtlas: UI-Legacy-Points-icon-c60
+## SavedVariables: LegacyHereDB
 ## AddonCompartmentFunc: LegacyHere_OnAddonCompartmentClick
 
 Data\Legacy.lua

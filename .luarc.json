@@ -3,6 +3,7 @@
   "diagnostics.globals": [
     "lua51",
     "LegacyHereMapButtonMixin",
+    "LegacyHereDB",
     "LegacyHerePinMixin",
     "LegacyHere_OnAddonCompartmentClick",
     "SLASH_LEGACYHERE1",

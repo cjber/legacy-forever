@@ -5,6 +5,7 @@ ignore = { "212/_.*", "212/self" } -- unused args prefixed with _, and self on m
 
 globals = {
 	"LegacyHereMapButtonMixin",
+	"LegacyHereDB",
 	"LegacyHerePinMixin",
 	"LegacyHere_OnAddonCompartmentClick",
 	"SLASH_LEGACYHERE1",
