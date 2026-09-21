@@ -86,8 +86,8 @@ for zone, entries in pairs(data.zones) do
 	end
 end
 assert(explore == 549, "all exploration objectives retained")
-assert(instances == 58 and instancePins == 52, "56 newly located instance objectives; six zone-only entries")
-assert(spelunkerLocated == 54 and adventureLocated == 2 and raidLocated == 2, "new locations by challenge category")
+assert(instances == 60 and instancePins == 54, "compound variants add two instance pins; six zone-only entries")
+assert(spelunkerLocated == 56 and adventureLocated == 2 and raidLocated == 2, "locations by challenge category")
 
 -- Two ID-backed geography checks: hit-rectangle centres in the matching art's
 -- 1002 x 668 layer, in Mulgore and Redridge (see tools/README.md).
@@ -118,13 +118,20 @@ end
 assert(samples["1427:62033:3266"].instance == 230, "Blackrock Depths uses Searing Gorge approach")
 local dalaran = assert(samples["1416:62032:116050"], "City of Dalaran has a verified entrance zone")
 assert(dalaran.instance == 2959 and dalaran.x == nil, "no fabricated corpse coordinates")
+assert(#data.zones[1454] == 3, "Orgrimmar retains exploration and adds both compound variant refs")
+for _, key in ipairs({ "1454:62031:19213", "1454:64016:117733" }) do
+	local compound = assert(samples[key], "compound objective placed at its verified Ragefire alternative")
+	assert(
+		compound.kind == "instance" and compound.instance == 389 and compound.x == 0.530 and compound.y == 0.489,
+		"Ragefire corpse point projects through UiMapAssignment 46764"
+	)
+end
+assert(data.completion[1454] == nil, "compound placement does not create Orgrimmar completion")
 for _, key in ipairs({
 	"62034:116084", -- DungeonEncounter 3339 is absent from this build.
 	"64019:117764",
 	"62032:116053", -- The Drowned City has no verified instance/entrance.
 	"64017:117736",
-	"62031:19213", -- Compound Ragefire Chasm / Hall of Thanes step.
-	"64016:117733",
 	"62033:116055", -- Blackmaw Hold has exterior geography but no instance Map ID.
 	"64018:117761",
 	"62032:116052", -- Krol'dok Stronghold: same limitation.
@@ -147,6 +154,9 @@ local totals = {
 	Neutral = 0,
 	wings = 0,
 	refs = 0,
+	raids = 0,
+	raidBosses = 0,
+	raidRefs = 0,
 	legacy = 0,
 	legacyRefs = 0,
 	legacyCollapsed = 0,
@@ -155,17 +165,18 @@ local totals = {
 }
 local taxiZones, wingZones, completionAreas = {}, {}, {}
 local dungeonRefs, legacyRefs, reputationZones = {}, {}, {}
+local raidRefs = {}
 local areaKeys = {}
 local mirrors = { [62031] = 64016, [62032] = 64017, [62033] = 64018 }
 assert(type(data.completion) == "table", "completion data")
 for zone, entry in pairs(data.completion) do
 	assert(positiveInteger(zone), "completion zone ID")
 	assert(zone ~= 2521 and zone ~= 1459 and zone ~= 1460 and zone ~= 1461, "excluded completion maps")
-	for _, category in ipairs({ "areas", "taxis", "dungeons", "legacy", "reputations" }) do
+	for _, category in ipairs({ "areas", "taxis", "dungeons", "raids", "legacy", "reputations" }) do
 		assert(type(entry[category]) == "table", "completion categories always present, including empty lists")
 	end
 	assert(
-		#entry.areas + #entry.taxis + #entry.dungeons + #entry.legacy + #entry.reputations > 0,
+		#entry.areas + #entry.taxis + #entry.dungeons + #entry.raids + #entry.legacy + #entry.reputations > 0,
 		"only populated completion zones"
 	)
 	assert(entry.tileWidth == 256 and entry.tileHeight == 256, "pinned build base-layer tile dimensions")
@@ -230,6 +241,37 @@ for zone, entry in pairs(data.completion) do
 		totals.wings = totals.wings + 1
 	end
 	local previousName
+	for _, raid in ipairs(entry.raids) do
+		assert(type(raid.name) == "string" and raid.name:find("%S"), "nonempty client raid name")
+		assert(not previousName or previousName < raid.name, "raids sorted by name and unique")
+		previousName = raid.name
+		assert(type(raid.bosses) == "table" and #raid.bosses > 0, "raid has boss objectives")
+		local previousBoss
+		for _, boss in ipairs(raid.bosses) do
+			assert(type(boss.name) == "string" and boss.name:find("%S"), "nonempty boss objective text")
+			assert(not previousBoss or previousBoss <= boss.name, "raid bosses sorted by name")
+			previousBoss = boss.name
+			assert(type(boss.refs) == "table" and #boss.refs == 2, "both Conqueror variants per boss")
+			local previousRef
+			for _, ref in ipairs(boss.refs) do
+				assert(#ref == 2 and data.rewards[ref[1]] and positiveInteger(ref[2]), "raid reward reference")
+				local key = zone .. ":" .. ref[1] .. ":" .. ref[2]
+				local source = assert(samples[key], "raid reference has a verified zone")
+				assert(source.kind == "instance" and source.instance == 249, "only verified Onyxia instance")
+				assert(not raidRefs[key] and not dungeonRefs[key], "raid reference counts once")
+				assert(
+					not previousRef or previousRef[1] < ref[1] or (previousRef[1] == ref[1] and previousRef[2] < ref[2]),
+					"raid references sorted and unique"
+				)
+				previousRef = ref
+				raidRefs[key] = boss
+				totals.raidRefs = totals.raidRefs + 1
+			end
+			totals.raidBosses = totals.raidBosses + 1
+		end
+		totals.raids = totals.raids + 1
+	end
+	previousName = nil
 	for _, objective in ipairs(entry.legacy) do
 		assert(type(objective.name) == "string" and objective.name:find("%S"), "nonempty Legacy objective text")
 		assert(not previousName or previousName <= objective.name, "Legacy entries sorted by name")
@@ -243,7 +285,10 @@ for zone, entry in pairs(data.completion) do
 			)
 			local key = zone .. ":" .. ref[1] .. ":" .. ref[2]
 			local source = assert(samples[key], "Legacy reference is located in this zone")
-			assert(source.kind ~= "explore" and not dungeonRefs[key], "areas and dungeon wings do not count twice")
+			assert(
+				source.kind ~= "explore" and not dungeonRefs[key] and not raidRefs[key],
+				"areas, dungeon wings, and raids do not count twice"
+			)
 			assert(not legacyRefs[key], "Legacy reference appears once per zone")
 			assert(
 				not previousRef or previousRef[1] < ref[1] or (previousRef[1] == ref[1] and previousRef[2] < ref[2]),
@@ -295,7 +340,11 @@ for zone, entries in pairs(data.zones) do
 		else
 			assert(entry.key == nil, "only exploration objectives carry area keys")
 			local key = zone .. ":" .. entry.achievement .. ":" .. entry.criteria
-			assert(dungeonRefs[key] or legacyRefs[key], "every located non-explore objective counts in its zone")
+			if zone == 1454 then
+				assert(entry.instance == 389 and not data.completion[zone], "compound pin outside completion maps")
+			else
+				assert(dungeonRefs[key] or raidRefs[key] or legacyRefs[key], "located objective counts in its zone")
+			end
 		end
 	end
 end
@@ -313,10 +362,11 @@ end
 assert(bloodhoof.key == "357:328:238:206" and remapped.key == "295:385:256:128", "exact current-art keys")
 assert(located["768:1050"].key == "746:125:256:256", "empty hit rectangle still links to its drawable overlay")
 assert(totals.wings == 31 and totals.refs == 62, "32 individual wings, one unplaced, both variants")
-assert(totals.legacy == 2 and totals.legacyRefs == 4, "four non-dungeon references become two Legacy objectives")
+assert(totals.raids == 1 and totals.raidBosses == 1 and totals.raidRefs == 2, "one raid, one boss, both variants")
+assert(totals.legacy == 1 and totals.legacyRefs == 2, "Onyxia moves from Legacy to raids")
 assert(
-	totals.legacyCollapsed == 2 and totals.legacyRefs - totals.legacy == 2,
-	"two variant pairs remove two duplicate entries"
+	totals.legacyCollapsed == 1 and totals.legacyRefs - totals.legacy == 1,
+	"Valthalak's variant pair remains one Legacy entry"
 )
 assert(#data.completion[1428].legacy == 1, "Burning Steppes counts Valthalak once alongside its dungeon wings")
 assert(
@@ -333,10 +383,13 @@ assert(
 		== "Complete the questline beginning with An Earnest Proposition, and ending with Saving the Best for Last.",
 	"empty criterion descriptions use the single-step achievement description"
 )
-local onyxia = assert(legacyRefs["1445:684:3271"], "Onyxia Legacy objective")
+assert(#data.completion[1445].legacy == 0, "Onyxia no longer counts as Legacy completion")
+local lair = data.completion[1445].raids[1]
+assert(lair.name == "Onyxia's Lair" and #lair.bosses == 1, "raid name comes from Map 249")
+local onyxia = assert(raidRefs["1445:684:3271"], "Onyxia raid boss objective")
 assert(
-	onyxia == legacyRefs["1445:64030:117792"] and #onyxia.refs == 2 and onyxia.name == "Onyxia",
-	"Onyxia variants share the owning CriteriaTree description"
+	onyxia == raidRefs["1445:64030:117792"] and onyxia == lair.bosses[1] and onyxia.name == "Onyxia",
+	"same Type 0 / Asset 10184 / Amount 1 collapses Onyxia variants"
 )
 assert(
 	totals.reputations == 7 and totals.reputationAlliance == 1,
