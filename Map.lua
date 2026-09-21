@@ -313,13 +313,12 @@ end
 local function CreatePinProvider()
 	LegacyHerePinMixin = CreateFromMixins(MapCanvasPinMixin)
 
-	function LegacyHerePinMixin:OnLoad()
-		self:UseFrameLevelType("PIN_FRAME_LEVEL_AREA_POI")
-	end
-
 	-- Areas are many and minor, so they sit smaller and quieter than dungeons,
 	-- bosses and quests. Pins are pooled, so every acquire sets both looks.
+	-- Setup lives here rather than in OnLoad, as Blizzard's own map pins do:
+	-- this client doesn't reliably run OnLoad for addon pins.
 	function LegacyHerePinMixin:OnAcquired(group, objective, zone)
+		self:UseFrameLevelType("PIN_FRAME_LEVEL_AREA_POI")
 		self.group = group
 		self.objective = objective
 		self.zone = zone
@@ -360,7 +359,8 @@ local function CreatePinProvider()
 	-- tiles Blizzard reveals on discovery (see MapExplorationPinMixin:RefreshOverlays).
 	LegacyHereAreaPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
-	function LegacyHereAreaPinMixin:OnLoad()
+	-- Pools are made on first acquire, as MapExplorationPinMixin does; see LegacyHerePinMixin:OnAcquired.
+	function LegacyHereAreaPinMixin:CreatePools()
 		self:SetIgnoreGlobalPinScale(true)
 		self:UseFrameLevelType("PIN_FRAME_LEVEL_MAP_EXPLORATION")
 		self.textures = CreateTexturePool(self, "OVERLAY")
@@ -368,8 +368,10 @@ local function CreatePinProvider()
 	end
 
 	function LegacyHereAreaPinMixin:OnReleased()
-		self.textures:ReleaseAll()
-		self.hits:ReleaseAll()
+		if self.textures then
+			self.textures:ReleaseAll()
+			self.hits:ReleaseAll()
+		end
 	end
 
 	function LegacyHereAreaPinMixin:DrawTile(tileID, x, y, width, height, u, v)
@@ -387,6 +389,9 @@ local function CreatePinProvider()
 
 	-- `areas`, largest first, so a smaller area's hover sits above one it overlaps.
 	function LegacyHereAreaPinMixin:OnAcquired(zone, areas, legacy)
+		if not self.textures then
+			self:CreatePools()
+		end
 		self:SetSize(self:GetMap():GetCanvas():GetSize())
 		self:SetPosition(0.5, 0.5)
 		for index, area in ipairs(areas) do
