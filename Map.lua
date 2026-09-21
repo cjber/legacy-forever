@@ -36,6 +36,10 @@ local function AddPointsLine(tooltip, challenge)
 	end
 end
 
+local function IsExploreGroup(group)
+	return group.objectives[1].entry.kind == "explore"
+end
+
 -- Points belong to the whole challenge, so a feeding achievement (an "Explore <zone>")
 -- names what it counts toward rather than implying each step is worth them.
 local function AddRewardLine(tooltip, group)
@@ -45,14 +49,13 @@ local function AddRewardLine(tooltip, group)
 	end
 	local points = PointsText(group.challenge)
 	local name = ns.Live.Name(group.challenge)
+	-- Explorer pays once for exploring all of Azeroth (Explore Azeroth), so one area is a
+	-- small share of a single point; say so rather than let it read as a point per area.
+	local scope = IsExploreGroup(group) and "for exploring every zone" or "for the whole challenge"
 	GameTooltip_AddNormalLine(
 		tooltip,
-		points and ("Part of %s (%s)"):format(name, points) or ("Part of %s"):format(name)
+		points and ("Part of %s: %s %s"):format(name, points, scope) or ("Part of %s"):format(name)
 	)
-end
-
-local function IsExploreGroup(group)
-	return group.objectives[1].entry.kind == "explore"
 end
 
 -- "9 of 12 areas left" for an exploration achievement, from live progress.
