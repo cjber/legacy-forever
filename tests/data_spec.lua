@@ -299,7 +299,7 @@ for zone, entries in pairs(data.zones) do
 		end
 	end
 end
-assert(matched == 500 and unmatched == 49, "Legacy exploration current-art area matches")
+assert(matched == 535 and unmatched == 14, "Legacy exploration current-art area matches")
 assert(totals.zones == 43 and totals.areas == 555, "current-art completion coverage")
 assert(totals.Alliance == 31 and totals.Horde == 30 and totals.Neutral == 4, "65 learnable player taxis")
 assert(totals.tiles == 937, "verified layer-zero overlay file IDs")

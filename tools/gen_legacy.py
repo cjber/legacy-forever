@@ -321,7 +321,21 @@ class Geography:
         entry = {"kind": "explore"}
         if not art_zones:
             counts["overlay art not on current zone"] += 1
-            matches = self.current_overlays[overlay_areas(overlay)]
+            old_areas = overlay_areas(overlay)
+            matches = self.current_overlays[old_areas]
+            if not matches:
+                # Old art sometimes drew several subzones as one overlay where current art
+                # draws one each (Silithus): take the single current overlay on this zone
+                # whose subzones the old one covered.
+                matches = [
+                    row
+                    for area_ids, rows in self.current_overlays.items()
+                    if area_ids and area_ids <= old_areas
+                    for row in rows
+                    if self.by_art[row["UiMapArtID"]] == {zone}
+                ]
+                if len(matches) == 1:
+                    counts["current-art remap by contained subzone"] += 1
             if len(matches) != 1:
                 counts["current-art remap missing" if not matches else "current-art remap ambiguous"] += 1
                 return zone, entry
@@ -343,6 +357,11 @@ class Geography:
             top, bottom, left, right = (overlay[f"HitRect{k}"] for k in ("Top", "Bottom", "Left", "Right"))
             if top == bottom == left == right == 0:
                 counts["empty hit rectangle"] += 1
+            elif top > bottom or left > right:
+                # Client data defect (Kharanos 5136 has top and bottom swapped): no pin
+                # position, but the overlay's key and tiles still stand.
+                counts["inverted hit rectangle"] += 1
+                print(f"  Inverted hit rectangle: WorldMapOverlay {overlay['ID']}", file=sys.stderr)
             elif not (0 <= left < right <= width and 0 <= top < bottom <= height):
                 raise ValueError(f"WorldMapOverlay {overlay['ID']}: invalid hit rectangle")
             else:

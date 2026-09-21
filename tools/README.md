@@ -120,12 +120,14 @@ still fail. No workflow change is necessary.
 
 Build **1.60.1.69913**, snapshot **2026-09-21**: 130 rewards, 46 supporting
 achievements (43 exploration achievements plus three metas), 47 populated zones.
-There are **549 exploration entries: 493 pinned, 56 unpinned**. Of 497 old-art
-criteria overlays, 449 have a unique current-art match, 48 have none, and zero
-have multiple matches. One unique match disagrees with the area-derived zone;
-448 remaps are accepted, yielding 447 additional pins and one empty rectangle.
-The 56 unpinned entries comprise 48 unmatched overlays, one zone mismatch, and
-seven empty rectangles. There are **58 instance entries: 52 pinned, six zone-only**,
+There are **549 exploration entries: 524 pinned, 25 unpinned**. Of 497 old-art
+criteria overlays, 449 have a current-art overlay with the same subzones and 35
+more have exactly one current-art overlay on the zone whose subzones the old one
+covered (old art sometimes drew several subzones as one overlay, as in Silithus);
+13 have neither, and none have several. One match disagrees with the area-derived
+zone; 483 remaps are accepted. The 25 unpinned entries comprise 13 unmatched
+overlays, one zone mismatch, ten empty rectangles and one inverted rectangle
+(Kharanos, WorldMapOverlay 5136, a client data defect that keeps its key). There are **58 instance entries: 52 pinned, six zone-only**,
 using **two curated criteria**, 27 wing facts with Map IDs, and one curated quest.
 No exploration objective is unresolved.
 
@@ -187,7 +189,7 @@ runtime supplies progress and applies eligibility filters.
   Runtime must apply Blizzard's edge-tile power-of-two padding/texture cropping;
   the key's offsets and dimensions remain full-layer pixels.
   Legacy `kind = "explore"` entries carry the same `key` when their current-art
-  overlay occurs in their zone's completion areas: **500 matched, 49 unmatched**.
+  overlay occurs in their zone's completion areas: **535 matched, 14 unmatched**.
   Unmatched entries remain in `zones` without a key and are printed individually.
 - **Taxis:** take TaxiNodes with `Flags & 3` and a nonzero `CharacterBitNumber`
   (zero marks special services such as the Nighthaven druid flights and Eastern
