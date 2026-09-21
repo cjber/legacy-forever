@@ -45,15 +45,41 @@ local function Audit()
 	ns.Print(("%d challenges have objectives with no fixed location"):format(#unlocated))
 end
 
+-- Every criterion the game reports for one achievement, for reporting data mismatches.
+local function Criteria(achievementID)
+	local count = GetAchievementNumCriteria(achievementID) or 0
+	ns.Print(
+		("achievement %d (%s): %d criteria"):format(achievementID, ns.Live.Name(achievementID) or "unknown", count)
+	)
+	for index = 1, count do
+		local text, criteriaType, completed, _, _, _, _, asset, _, criteriaID =
+			GetAchievementCriteriaInfo(achievementID, index)
+		ns.Print(
+			("  %d: id %s type %s asset %s %s%s"):format(
+				index,
+				tostring(criteriaID),
+				tostring(criteriaType),
+				tostring(asset),
+				text or "",
+				completed and " (done)" or ""
+			)
+		)
+	end
+end
+
 SLASH_LEGACYHERE1 = "/lh"
 SLASH_LEGACYHERE2 = "/legacyhere"
 SlashCmdList.LEGACYHERE = function(msg)
 	local command = strtrim(msg or ""):lower()
+	local achievementID = tonumber(command:match("^criteria%s+(%d+)$"))
 	if command == "audit" then
 		Audit()
+	elseif achievementID then
+		Criteria(achievementID)
 	else
 		ns.Print("open the world map and use the Legacy button in its top-right corner.")
 		ns.Print("/lh audit - check the bundled data against the game")
+		ns.Print("/lh criteria <achievement id> - list what the game reports for one achievement")
 	end
 end
 
