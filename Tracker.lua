@@ -89,8 +89,21 @@ function ModuleMixin:LayoutContents()
 	end
 end
 
--- Registered once Blizzard's manager has set up its own modules; uiOrder 0 puts
--- Legacy at the top of the tracker, wherever the player has placed it.
+-- Attaching is a no-op until Blizzard's manager has added its own container, and
+-- that runs on the same events as ours, so attach now if it has and again after its
+-- Init either way. uiOrder 0 puts Legacy at the top, wherever the tracker is placed.
+local function Attach()
+	ObjectiveTrackerManager:SetModuleContainer(module, ObjectiveTrackerFrame)
+end
+
+function Tracker.IsAttached()
+	return module ~= nil and ObjectiveTrackerManager:GetContainerForModule(module) ~= nil
+end
+
+function Tracker.Count()
+	return #Tracked()
+end
+
 local function Register()
 	if not (ObjectiveTrackerManager and ObjectiveTrackerFrame) then
 		ns.Print("the objective tracker isn't available, so tracked challenges can't be shown.")
@@ -100,8 +113,14 @@ local function Register()
 	Mixin(module, ModuleMixin)
 	module:SetHeader(ModuleMixin.headerText)
 	module.uiOrder = 0
-	ObjectiveTrackerManager:SetModuleContainer(module, ObjectiveTrackerFrame)
+	hooksecurefunc(ObjectiveTrackerManager, "Init", Attach)
+	Attach()
+	C_Timer.After(5, function()
+		if not Tracker.IsAttached() then
+			ns.Print("couldn't add the Legacy section to the objective tracker; please report /lh audit.")
+		end
+	end)
 end
 
-EventUtil.ContinueAfterAllEvents(Register, "PLAYER_ENTERING_WORLD", "VARIABLES_LOADED")
+Register()
 ns.Live.OnChange(Tracker.Refresh)

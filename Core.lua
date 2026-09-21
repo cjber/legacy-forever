@@ -43,6 +43,12 @@ local function Audit()
 
 	local unlocated = ns.Model.Unlocated(data, visible, ns.Live.Criteria)
 	ns.Print(("%d challenges have objectives with no fixed location"):format(#unlocated))
+	ns.Print(
+		("tracker: %d tracked, Legacy section %s"):format(
+			ns.Tracker.Count(),
+			ns.Tracker.IsAttached() and "in the objective tracker" or "NOT in the objective tracker"
+		)
+	)
 end
 
 -- Every criterion the game reports for one achievement, for reporting data mismatches.
