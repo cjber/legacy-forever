@@ -11,8 +11,10 @@ local visible
 local criteriaCache = {}
 local listeners = {}
 
--- The challenges the game lists for this character, exactly as the Legacy panel
--- enumerates them. Only reward-bearing ones count; the list also holds helpers.
+-- The unfinished challenges the game lists for this character, exactly as the Legacy
+-- panel enumerates them. Only reward-bearing ones count; the list also holds helpers.
+-- Completed ones are dropped here: an alt's own exploration can't advance a challenge
+-- the account has already earned.
 function Live.Visible()
 	if visible then
 		return visible
@@ -20,8 +22,8 @@ function Live.Visible()
 	visible = {}
 	for _, categoryID in ipairs(GetCategoryList() or {}) do
 		for index = 1, GetCategoryNumAchievements(categoryID) or 0 do
-			local achievementID = GetAchievementInfo(categoryID, index)
-			if achievementID and ns.Data.rewards[achievementID] then
+			local achievementID, _, _, completed = GetAchievementInfo(categoryID, index)
+			if achievementID and ns.Data.rewards[achievementID] and not completed then
 				visible[achievementID] = true
 			end
 		end

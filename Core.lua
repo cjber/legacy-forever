@@ -18,9 +18,9 @@ local function Audit()
 	for _ in pairs(visible) do
 		numVisible = numVisible + 1
 	end
-	ns.Print(("%d Legacy challenges listed for this character"):format(numVisible))
+	ns.Print(("%d unfinished Legacy challenges listed for this character"):format(numVisible))
 	if numVisible == 0 then
-		ns.Print("the game listed none; if you're below level 25 or just logged in, try again shortly.")
+		ns.Print("the game listed none unfinished; if you're below level 25 or just logged in, try again shortly.")
 		return
 	end
 

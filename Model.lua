@@ -3,8 +3,8 @@ local _, ns = ...
 -- Pure logic over the generated data and a snapshot of live progress; no WoW API
 -- calls, so tests/model_spec.lua can exercise it under plain LuaJIT.
 --
--- `visible` is the set of reward-bearing challenges the game shows this character
--- (Forever ships two variant sets and the client lists only one).
+-- `visible` is the set of unfinished reward-bearing challenges the game shows this
+-- character (Forever ships two variant sets and the client lists only one).
 -- `criteria(achievementID)` returns { [criteriaID] = { text, completed, type, asset } }
 -- or nil when the game has no data for that achievement.
 local Model = {}
