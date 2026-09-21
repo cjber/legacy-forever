@@ -14,12 +14,12 @@ globals = {
 }
 
 read_globals = {
-	"AchievementFrame_SelectAchievement", "C_ContentTracking", "C_Map", "C_Timer", "C_Traits", "CreateAtlasMarkup",
-	"CreateFrame", "CreateFromMixins", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
+	"AchievementFrame_SelectAchievement", "C_Map", "C_Timer", "C_Traits", "CreateAtlasMarkup",
+	"CreateFrame", "CreateFromMixins", "DEFAULT_CHAT_FRAME", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameTooltip_AddColoredLine", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",
 	"GameTooltip_AddNormalLine", "GameTooltip_SetTitle", "GetAchievementCriteriaInfo", "GetAchievementInfo",
 	"GetAchievementNumCriteria", "GetBuildInfo", "GetCategoryList", "GetCategoryNumAchievements",
-	"IsShiftKeyDown", "LegacySystemFrame", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "strtrim",
+	"LegacySystemFrame", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "strtrim",
 	"ToggleLegacySystemUI", "ToggleWorldMap", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 

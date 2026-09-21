@@ -106,26 +106,18 @@ end
 
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]
 
--- Tracks the achievement holding the objectives; the Legacy panel only lists challenges.
-local function OnObjectiveClick(ids)
-	if IsShiftKeyDown() then
-		ns.Live.ShowInLegacyPanel(ids.challenge)
-	else
-		ns.Live.ToggleTracked(ids.achievement)
-	end
-end
-
-local function IsTracked(ids)
-	return ns.Live.IsTracked(ids.achievement)
+-- Forever's ruleset doesn't let achievements be tracked, so the panel is the action.
+local function OpenInPanel(challenge)
+	ns.Live.ShowInLegacyPanel(challenge)
 end
 
 local function AddGroup(root, group)
 	local name = ns.Live.Name(group.achievement)
 	local text = ("%s |cffffffff(%d)|r"):format(name, #group.objectives)
-	local button = root:CreateCheckbox(text, IsTracked, OnObjectiveClick, group)
+	local button = root:CreateButton(text, OpenInPanel, group.challenge)
 	button:SetTooltip(function(tooltip)
 		AddGroupTooltip(tooltip, group)
-		GameTooltip_AddInstructionLine(tooltip, "Click to track. Shift-click to open in the Legacy panel.")
+		GameTooltip_AddInstructionLine(tooltip, "Click to open in the Legacy panel.")
 	end)
 end
 
@@ -137,17 +129,12 @@ local function AddUnlocated(root)
 	local submenu = root:CreateButton(("No fixed location |cffffffff(%d)|r"):format(#unlocated))
 	for _, item in ipairs(unlocated) do
 		local text = ("%s |cffffffff(%d)|r"):format(ns.Live.Name(item.challenge), item.open)
-		local button = submenu:CreateCheckbox(
-			text,
-			IsTracked,
-			OnObjectiveClick,
-			{ achievement = item.challenge, challenge = item.challenge }
-		)
+		local button = submenu:CreateButton(text, OpenInPanel, item.challenge)
 		button:SetTooltip(function(tooltip)
 			GameTooltip_SetTitle(tooltip, ns.Live.Name(item.challenge))
 			GameTooltip_AddNormalLine(tooltip, "Levels, skills, ranks and anything without a fixed place.")
 			AddPointsLine(tooltip, item.challenge)
-			GameTooltip_AddInstructionLine(tooltip, "Click to track. Shift-click to open in the Legacy panel.")
+			GameTooltip_AddInstructionLine(tooltip, "Click to open in the Legacy panel.")
 		end)
 	end
 end

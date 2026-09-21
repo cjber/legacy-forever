@@ -12,8 +12,8 @@ Legacy points are account-wide and come from challenges spread over the whole wo
 
 ## Features
 
-- **Map button** in the world map's top-right button column, with a count of the unfinished objectives on the map you're viewing. Its menu groups them by challenge. Click one to track it in the objective tracker, or shift-click to open it in the Legacy panel.
-- **Map pins** on areas you haven't discovered yet, with a tooltip naming the challenge, the objective and the Legacy points it's worth.
+- **Map button** in the world map's top-right button column, with a count of the unfinished objectives on the map you're viewing. Its menu groups them by challenge; click one to open it in the Legacy panel. It can also hide the area pins.
+- **Map pins** on areas you haven't discovered yet (small and quiet, with how many of the zone's areas are left) and on dungeon entrances, with the challenge each counts toward and its Legacy points.
 - **No fixed location** lists challenges whose remaining work isn't tied to a place, such as levels, skills and ranks.
 - Progress comes from the game each time, so it matches the Legacy panel and follows whichever challenge set your character sees.
 

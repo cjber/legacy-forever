@@ -66,24 +66,6 @@ function Live.Points(achievementID)
 	return points and points > 0 and points or nil
 end
 
-function Live.IsTracked(achievementID)
-	return C_ContentTracking.IsTracking(Enum.ContentTrackingType.Achievement, achievementID)
-end
-
-function Live.ToggleTracked(achievementID)
-	local kind = Enum.ContentTrackingType.Achievement
-	if Live.IsTracked(achievementID) then
-		C_ContentTracking.StopTracking(kind, achievementID, Enum.ContentTrackingStopType.Manual)
-		return
-	end
-	local err = C_ContentTracking.StartTracking(kind, achievementID)
-	if err == Enum.ContentTrackingError.MaxTracked then
-		ns.Print("you're already tracking as many things as the game allows.")
-	elseif err == Enum.ContentTrackingError.Untrackable then
-		ns.Print("the game doesn't allow tracking that challenge.")
-	end
-end
-
 -- Opens Blizzard's Legacy panel on this challenge. The panel opens on its first
 -- page and only Legacy.SelectPage switches to the challenges page.
 local CHALLENGES_PAGE = 2
