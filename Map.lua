@@ -1,6 +1,10 @@
 local _, ns = ...
 
 local PIN_TEMPLATE = "LegacyHerePinTemplate"
+local AREA_TEMPLATE = "LegacyHereAreaPinTemplate"
+-- Unseen ground reads darker, the fog-of-war convention (a warm tint vanished on the
+-- parchment); darker still under the mouse.
+local AREA_ALPHA, AREA_HOVER_ALPHA = 0.25, 0.4
 local POINTS_ICON = "UI-Legacy-Points-icon-c60"
 
 local KIND_LABEL = {
@@ -32,6 +36,10 @@ local function AddPointsLine(tooltip, challenge)
 	end
 end
 
+local function IsExploreGroup(group)
+	return group.objectives[1].entry.kind == "explore"
+end
+
 -- Points belong to the whole challenge, so a feeding achievement (an "Explore <zone>")
 -- names what it counts toward rather than implying each step is worth them.
 local function AddRewardLine(tooltip, group)
@@ -41,14 +49,13 @@ local function AddRewardLine(tooltip, group)
 	end
 	local points = PointsText(group.challenge)
 	local name = ns.Live.Name(group.challenge)
+	-- Explorer pays once for exploring all of Azeroth (Explore Azeroth), so one area is a
+	-- small share of a single point; say so rather than let it read as a point per area.
+	local scope = IsExploreGroup(group) and "for exploring every zone" or "for the whole challenge"
 	GameTooltip_AddNormalLine(
 		tooltip,
-		points and ("Part of %s (%s)"):format(name, points) or ("Part of %s"):format(name)
+		points and ("Part of %s: %s %s"):format(name, points, scope) or ("Part of %s"):format(name)
 	)
-end
-
-local function IsExploreGroup(group)
-	return group.objectives[1].entry.kind == "explore"
 end
 
 -- "9 of 12 areas left" for an exploration achievement, from live progress.
@@ -96,23 +103,22 @@ end
 local function AddZoneTooltip(tooltip, zone)
 	GameTooltip_SetTitle(tooltip, zone.name)
 	for _, group in ipairs(zone.groups) do
-		local text = IsExploreGroup(group) and AreasLeftText(group)
-			or ("%s: %d left"):format(ns.Live.Name(group.challenge), #group.objectives)
-		GameTooltip_AddNormalLine(tooltip, text)
+		GameTooltip_AddNormalLine(tooltip, ("%s: %d left"):format(ns.Live.Name(group.challenge), #group.objectives))
 	end
+	ns.Completion.AddSummary(tooltip, zone.uiMapID)
 	GameTooltip_AddInstructionLine(tooltip, "Click the zone to see where.")
 end
 
 -- On a continent, one badge per zone with its unfinished count, instead of every pin.
--- Exploration groups count only while area pins are shown.
-local function ContinentZones(continentID, includeAreas)
+-- Exploration is left to the zone map's shading, so badges count place-bound objectives only.
+local function ContinentZones(continentID)
 	local zones = {}
 	for uiMapID in pairs(ns.Data.zones) do
 		local info = C_Map.GetMapInfo(uiMapID)
 		if info and info.parentMapID == continentID then
 			local groups = {}
 			for _, group in ipairs(ZoneGroups(uiMapID)) do
-				if includeAreas or not IsExploreGroup(group) then
+				if not IsExploreGroup(group) then
 					groups[#groups + 1] = group
 				end
 			end
@@ -120,6 +126,7 @@ local function ContinentZones(continentID, includeAreas)
 			local left, right, top, bottom = C_Map.GetMapRectOnMap(uiMapID, continentID)
 			if count > 0 and left then
 				zones[#zones + 1] = {
+					uiMapID = uiMapID,
 					name = info.name,
 					groups = groups,
 					count = count,
@@ -132,9 +139,9 @@ local function ContinentZones(continentID, includeAreas)
 	return zones
 end
 
--- Off by default, since areas are many; kept across sessions only where SavedVariables load.
+-- On by default: the shading is the quickest way to see what a zone still hides.
 local function ShowAreas()
-	return LegacyHereDB and LegacyHereDB.showAreas or false
+	return not (LegacyHereDB and LegacyHereDB.showAreas == false)
 end
 
 local function ToggleAreas()
@@ -242,6 +249,9 @@ local function BuildMenu(root, uiMapID)
 	root:CreateDivider()
 	root:CreateCheckbox("Show undiscovered areas", ShowAreas, ToggleAreas)
 	AddUnlocated(root)
+	root:CreateDivider()
+	ns.Completion.AddMenu(root)
+	root:CreateDivider()
 	root:CreateButton("Open the Legacy panel", ToggleLegacySystemUI)
 end
 
@@ -305,32 +315,20 @@ end
 local function CreatePinProvider()
 	LegacyHerePinMixin = CreateFromMixins(MapCanvasPinMixin)
 
-	function LegacyHerePinMixin:OnLoad()
-		self:UseFrameLevelType("PIN_FRAME_LEVEL_AREA_POI")
-	end
-
-	-- Areas are many and minor, so they sit smaller and quieter than dungeons,
-	-- bosses and quests. Pins are pooled, so every acquire sets both looks.
+	-- Setup lives here rather than in OnLoad, as Blizzard's own map pins do:
+	-- this client doesn't reliably run OnLoad for addon pins.
 	function LegacyHerePinMixin:OnAcquired(group, objective, zone)
+		self:UseFrameLevelType("PIN_FRAME_LEVEL_AREA_POI")
 		self.group = group
 		self.objective = objective
 		self.zone = zone
 		self.Count:SetText(zone and zone.count or "")
+		self:SetScalingLimits(1, 1.0, 1.2)
 		if zone then
-			self:SetScalingLimits(1, 1.0, 1.2)
-			self:SetAlpha(1)
 			self:SetPosition(zone.x, zone.y)
-			self:ApplyCurrentScale()
-			return
-		end
-		if objective.entry.kind == "explore" then
-			self:SetScalingLimits(1, 0.9, 1.1)
-			self:SetAlpha(0.85)
 		else
-			self:SetScalingLimits(1, 1.0, 1.2)
-			self:SetAlpha(1)
+			self:SetPosition(objective.entry.x, objective.entry.y)
 		end
-		self:SetPosition(objective.entry.x, objective.entry.y)
 		self:ApplyCurrentScale()
 	end
 
@@ -348,10 +346,145 @@ local function CreatePinProvider()
 		GameTooltip:Hide()
 	end
 
+	-- One pin per zone map holding every undiscovered area, drawn from the same map
+	-- tiles Blizzard reveals on discovery (see MapExplorationPinMixin:RefreshOverlays).
+	LegacyHereAreaPinMixin = CreateFromMixins(MapCanvasPinMixin)
+
+	-- Pools are made on first acquire, as MapExplorationPinMixin does; see LegacyHerePinMixin:OnAcquired.
+	-- Hover is polled rather than caught by a mouse-enabled frame, which would swallow the
+	-- map's own clicks (right-click to zoom out, drag to pan). While the cursor is on bare map
+	-- (no pin or button above it), the area under it is picked (Model.AreaAt) among all the
+	-- zone's areas, explored or not, so an explored label never lights up the unexplored
+	-- neighbour whose rectangle overlaps it.
+	function LegacyHereAreaPinMixin:CreatePools()
+		self:SetIgnoreGlobalPinScale(true)
+		self:UseFrameLevelType("PIN_FRAME_LEVEL_MAP_EXPLORATION")
+		self:EnableMouse(false)
+		self.textures = CreateTexturePool(self, "OVERLAY")
+		self:SetScript("OnUpdate", function()
+			if self:GetMap():IsCanvasMouseFocus() then
+				self:HoverAt(self:CursorPosition())
+			elseif self.hovered then
+				self:Highlight(nil)
+			end
+		end)
+	end
+
+	function LegacyHereAreaPinMixin:ReleaseAreas()
+		if self.textures then
+			self:Highlight(nil)
+			self.textures:ReleaseAll()
+		end
+		self.zone, self.drawn = nil, {}
+	end
+
+	function LegacyHereAreaPinMixin:OnReleased()
+		MapCanvasPinMixin.OnReleased(self)
+		self:ReleaseAreas()
+	end
+
+	-- The cursor in canvas pixels, the space overlay offsets are in.
+	function LegacyHereAreaPinMixin:CursorPosition()
+		local scale = self:GetEffectiveScale()
+		local x, y = GetCursorPosition()
+		return x / scale - self:GetLeft(), self:GetTop() - y / scale
+	end
+
+	function LegacyHereAreaPinMixin:HoverAt(x, y)
+		local index = self.zone and ns.Model.AreaAt(self.zone.areas, x, y)
+		local area = index and self.zone.areas[index]
+		local shaded = area and self.drawn[area.key] and area or nil
+		if shaded ~= self.hovered then
+			self:Highlight(shaded)
+		end
+	end
+
+	function LegacyHereAreaPinMixin:Highlight(area)
+		if self.hovered then
+			for _, texture in ipairs(self.drawn[self.hovered.key]) do
+				texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
+			end
+			GameTooltip:Hide()
+		end
+		self.hovered = area
+		if not area then
+			return
+		end
+		for _, texture in ipairs(self.drawn[area.key]) do
+			texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
+		end
+		GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
+		local objective = self.legacy[area.key]
+		if objective then
+			AddPinTooltip(GameTooltip, objective.group, objective.objective)
+		else
+			GameTooltip_SetTitle(GameTooltip, area.name)
+			GameTooltip_AddNormalLine(GameTooltip, KIND_LABEL.explore)
+		end
+		GameTooltip:Show()
+	end
+
+	function LegacyHereAreaPinMixin:DrawTile(tileID, x, y, width, height, u, v)
+		local texture = self.textures:Acquire()
+		self:GetMap():AddMaskableTexture(texture)
+		texture:SetTexture(tileID, nil, nil, "TRILINEAR")
+		texture:SetSize(width, height)
+		texture:SetTexCoord(0, u, 0, v)
+		texture:ClearAllPoints()
+		texture:SetPoint("TOPLEFT", x, -y)
+		texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
+		texture:Show()
+		return texture
+	end
+
+	function LegacyHereAreaPinMixin:OnAcquired(zone, areas, legacy)
+		if not self.textures then
+			self:CreatePools()
+		end
+		-- Cleared here too: a pooled pin that missed OnReleased would otherwise stack another shade.
+		self:ReleaseAreas()
+		self:SetSize(self:GetMap():GetCanvas():GetSize())
+		self:SetPosition(0.5, 0.5)
+		self.zone, self.legacy = zone, legacy
+		for _, area in ipairs(areas) do
+			local offsetX, offsetY, width, height = ns.Model.OverlayRect(area.key)
+			local textures = {}
+			for _, tile in ipairs(ns.Model.OverlayTiles(width, height, zone.tileWidth, zone.tileHeight)) do
+				textures[#textures + 1] = self:DrawTile(
+					area.tiles[tile.index],
+					offsetX + tile.x,
+					offsetY + tile.y,
+					tile.width,
+					tile.height,
+					tile.u,
+					tile.v
+				)
+			end
+			self.drawn[area.key] = textures
+		end
+	end
+
+	-- The zone's undiscovered areas that have map tiles; nil for a map without shading data.
+	local function UndiscoveredAreas(mapID)
+		local zone = ns.Data.completion[mapID]
+		if not (zone and zone.tileWidth) then
+			return nil
+		end
+		local explored = ns.Live.ZoneSnapshot(mapID).explored
+		local areas = {}
+		for _, area in ipairs(zone.areas) do
+			if area.tiles and not explored[area.key] then
+				areas[#areas + 1] = area
+			end
+		end
+		return zone, areas
+	end
+
 	local provider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 	function provider:RemoveAllData()
 		self:GetMap():RemoveAllPinsByTemplate(PIN_TEMPLATE)
+		self:GetMap():RemoveAllPinsByTemplate(AREA_TEMPLATE)
 	end
 
 	function provider:RefreshAllData()
@@ -359,17 +492,33 @@ local function CreatePinProvider()
 		local mapID = self:GetMap():GetMapID()
 		local info = mapID and C_Map.GetMapInfo(mapID)
 		if info and info.mapType == Enum.UIMapType.Continent then
-			for _, zone in ipairs(ContinentZones(mapID, ShowAreas())) do
+			for _, zone in ipairs(ContinentZones(mapID)) do
 				self:GetMap():AcquirePin(PIN_TEMPLATE, nil, nil, zone)
 			end
 			return
 		end
+		-- Exploration is never pinned: undiscovered areas are shaded, carrying their Legacy
+		-- step in the hover, and only place-bound objectives (bosses, dungeons, quests) get pins.
+		local zone, areas = nil, nil
+		if ShowAreas() then
+			zone, areas = UndiscoveredAreas(mapID)
+		end
+		local shaded, legacy = {}, {}
+		for _, area in ipairs(areas or {}) do
+			shaded[area.key] = true
+		end
 		for _, group in ipairs(ZoneGroups(mapID)) do
 			for _, objective in ipairs(group.objectives) do
-				if objective.entry.x and (objective.entry.kind ~= "explore" or ShowAreas()) then
+				local entry = objective.entry
+				if entry.kind == "explore" and shaded[entry.key] then
+					legacy[entry.key] = { group = group, objective = objective }
+				elseif entry.x and entry.kind ~= "explore" then
 					self:GetMap():AcquirePin(PIN_TEMPLATE, group, objective)
 				end
 			end
+		end
+		if areas and #areas > 0 then
+			self:GetMap():AcquirePin(AREA_TEMPLATE, zone, areas, legacy)
 		end
 	end
 

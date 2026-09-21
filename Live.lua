@@ -1,7 +1,7 @@
 local _, ns = ...
 
--- Reads progress from the game. Everything is rebuilt from live APIs each session:
--- Forever's SavedVariables don't load (forever-bugs#34), so nothing is persisted.
+-- Reads progress from the game, rebuilt from live APIs each session. The one thing the
+-- game won't say is which flight paths a character knows, so that is recorded (FlightRecord).
 local Live = {}
 ns.Live = Live
 
@@ -138,18 +138,149 @@ local function Notify()
 	end
 end
 
-function Live.Invalidate()
-	visible = nil
-	criteriaCache = {}
+local snapshots = {}
+
+local function Changed()
 	if not pending then
 		pending = true
 		C_Timer.After(0.5, Notify)
 	end
 end
 
+function Live.Invalidate()
+	visible = nil
+	criteriaCache = {}
+	snapshots = {}
+	Changed()
+end
+
+-- A wing or Legacy objective counts as done when any of its Legacy steps (either variant) is.
+local function RefsDone(refs)
+	local state
+	for _, ref in ipairs(refs) do
+		local progress = (Live.Criteria(ref[1]) or {})[ref[2]]
+		if progress then
+			if progress.completed then
+				return true
+			end
+			state = false
+		end
+	end
+	return state
+end
+
+-- A faction the player hasn't met yet has no data, which is simply not Friendly yet.
+local function Reaction(factionID)
+	local data = C_Reputation.GetFactionDataByID(factionID)
+	return data and data.reaction or 0
+end
+
+local function OverlayKey(texture)
+	return ("%d:%d:%d:%d"):format(texture.offsetX, texture.offsetY, texture.textureWidth, texture.textureHeight)
+end
+
+-- The continent a map sits on, or nil above continent level.
+local function ContinentOf(uiMapID)
+	local info = C_Map.GetMapInfo(uiMapID)
+	while info and info.mapType > Enum.UIMapType.Continent do
+		info = C_Map.GetMapInfo(info.parentMapID)
+	end
+	return info and info.mapType == Enum.UIMapType.Continent and info.mapID or nil
+end
+
+-- Which flight paths this character knows. Zone maps report every node as discovered on
+-- Forever, so the only reliable source is a flight master's own list: opening one records
+-- the known nodes for its continent. Until then that continent's flight paths are unknown.
+local function FlightRecord()
+	local records = ns.SavedTable("flightPaths")
+	local guid = UnitGUID("player")
+	records[guid] = records[guid] or { known = {}, continents = {} }
+	return records[guid]
+end
+
+local function RecordFlightMaster()
+	local continent = ContinentOf(C_Map.GetBestMapForUnit("player") or 0)
+	local nodes = continent and C_TaxiMap.GetAllTaxiNodes(continent)
+	if not nodes or #nodes == 0 then
+		return
+	end
+	local record = FlightRecord()
+	record.continents[continent] = true
+	for _, node in ipairs(nodes) do
+		record.known[node.nodeID] = node.state ~= Enum.FlightPathState.Unreachable or nil
+	end
+end
+
+-- Live progress for Model.ZoneCompletion.
+function Live.ZoneSnapshot(uiMapID)
+	local snapshot = snapshots[uiMapID]
+	if snapshot then
+		return snapshot
+	end
+	snapshot = { taxis = {}, faction = UnitFactionGroup("player"), refsDone = RefsDone, reaction = Reaction }
+	-- A zone this character has never entered reports no textures at all (nil), which
+	-- means nothing explored yet rather than unknown.
+	snapshot.explored = {}
+	for _, texture in ipairs(C_MapExplorationInfo.GetExploredMapTextures(uiMapID) or {}) do
+		snapshot.explored[OverlayKey(texture)] = true
+	end
+	local record = FlightRecord()
+	if record.continents[ContinentOf(uiMapID) or 0] then
+		for _, taxi in ipairs(ns.Data.completion[uiMapID].taxis or {}) do
+			snapshot.taxis[taxi.node] = record.known[taxi.node] == true
+		end
+	end
+	snapshots[uiMapID] = snapshot
+	return snapshot
+end
+
+-- The zone the player is in, walking up from a cave or city sub-map to the first map
+-- with completion data; nil on a continent or anywhere the data doesn't cover.
+function Live.CurrentZone()
+	local uiMapID = C_Map.GetBestMapForUnit("player")
+	while uiMapID and not ns.Data.completion[uiMapID] do
+		local info = C_Map.GetMapInfo(uiMapID)
+		if not info or info.mapType <= Enum.UIMapType.Continent then
+			return nil
+		end
+		uiMapID = info.parentMapID
+	end
+	return uiMapID
+end
+
+local INVALIDATING = {
+	"CRITERIA_UPDATE",
+	"ACHIEVEMENT_EARNED",
+	"RECEIVED_ACHIEVEMENT_LIST",
+	"PLAYER_ENTERING_WORLD",
+	"MAP_EXPLORATION_UPDATED",
+}
+-- Flight paths and reputation feed only the zone snapshots.
+local SNAPSHOT_CHANGES = { "TAXI_NODE_STATUS_CHANGED", "TAXIMAP_OPENED", "UPDATE_FACTION" }
+local FLIGHT_MASTER = { TAXIMAP_OPENED = true, TAXI_NODE_STATUS_CHANGED = true }
+-- Moving between zones changes which zone is shown, not anyone's progress.
+local ZONE_CHANGES = { "ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA" }
+
 local events = CreateFrame("Frame")
-events:RegisterEvent("CRITERIA_UPDATE")
-events:RegisterEvent("ACHIEVEMENT_EARNED")
-events:RegisterEvent("RECEIVED_ACHIEVEMENT_LIST")
-events:RegisterEvent("PLAYER_ENTERING_WORLD")
-events:SetScript("OnEvent", Live.Invalidate)
+for _, event in ipairs(INVALIDATING) do
+	events:RegisterEvent(event)
+end
+for _, event in ipairs(ZONE_CHANGES) do
+	events:RegisterEvent(event)
+end
+for _, event in ipairs(SNAPSHOT_CHANGES) do
+	events:RegisterEvent(event)
+end
+events:SetScript("OnEvent", function(_, event)
+	if tContains(ZONE_CHANGES, event) then
+		Changed()
+	elseif tContains(SNAPSHOT_CHANGES, event) then
+		if FLIGHT_MASTER[event] then
+			RecordFlightMaster()
+		end
+		snapshots = {}
+		Changed()
+	else
+		Live.Invalidate()
+	end
+end)

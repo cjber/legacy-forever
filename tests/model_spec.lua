@@ -80,4 +80,90 @@ equal(lines[2].detail, nil, "single step has no count")
 equal(lines[3].detail, "1/4", "earn-achievement step shows its criteria done")
 equal(#Model.TrackerLines(999, criteria), 0, "unknown challenge has no lines")
 
+-- Zone completion: own-faction and neutral flight paths only, unknown wings left out.
+local zone = {
+	areas = { { key = "0:0:10:10", name = "Kharanos" }, { key = "10:0:10:10", name = "Gol'Bolar Quarry" } },
+	taxis = {
+		{ node = 6, faction = "Alliance", name = "Ironforge" },
+		{ node = 7, faction = "Horde", name = "Kargath" },
+		{ node = 8, faction = "Neutral", name = "Ratchet" },
+		{ node = 9, faction = "Neutral", name = "Unlisted" },
+	},
+	dungeons = {
+		{ name = "Gnomeregan", refs = { { 1, 1 } } },
+		{ name = "Unknown wing", refs = { { 2, 2 } } },
+	},
+	legacy = {
+		{ name = "Lord Valthalak Laid to Rest", refs = { { 3, 3 }, { 4, 4 } } },
+	},
+	reputations = {
+		{ faction = 21, name = "Booty Bay" },
+		{ faction = 589, name = "Wintersaber Trainers", side = "Alliance" },
+		{ faction = 530, name = "Darkspear Trolls", side = "Horde" },
+	},
+}
+local snapshot = {
+	explored = { ["0:0:10:10"] = true },
+	taxis = { [6] = true, [7] = false, [8] = false },
+	faction = "Alliance",
+	refsDone = function(refs)
+		if refs[1][1] == 1 then
+			return false
+		end
+		if refs[1][1] == 3 then
+			return refs[2][1] == 4
+		end
+	end,
+	reaction = function(factionID)
+		return factionID == 21 and 5 or 4
+	end,
+}
+local completion = Model.ZoneCompletion(zone, snapshot)
+equal(completion.areas.done, 1, "one area explored")
+equal(completion.areas.left[1], "Gol'Bolar Quarry", "unexplored area named")
+equal(completion.taxis.total, 2, "other faction's and unlisted flight paths left out")
+equal(completion.taxis.pending, 1, "an unknown flight path is pending, outside the total")
+equal(completion.dungeons.total, 1, "wing with unknown progress left out")
+equal(completion.legacy.done, 1, "a Legacy objective is done when any variant is")
+equal(completion.reputations.total, 2, "the other faction's reputation is left out")
+equal(completion.reputations.done, 1, "Friendly counts, Neutral doesn't")
+equal(completion.reputations.left[1], "Wintersaber Trainers", "reputation still to earn named")
+equal(completion.total, 8, "items across categories")
+equal(completion.percent, 50, "percent floors")
+equal(Model.ZoneCompletion({}, snapshot).percent, nil, "empty zone has no percent")
+local noAreas = Model.ZoneCompletion(zone, snapshot, function(key)
+	return key ~= "areas"
+end)
+equal(noAreas.areas, nil, "an uncounted category is left out")
+equal(noAreas.total, completion.total - completion.areas.total, "and drops out of the total")
+
+-- Hovering picks the area whose centre is nearest among those whose texture holds the point.
+local overlapping = {
+	{ key = "0:0:100:100" },
+	{ key = "50:0:100:100", hit = { 120, 40, 140, 60 } },
+}
+equal(Model.AreaAt(overlapping, 10, 50), 1, "only one texture holds the point")
+equal(Model.AreaAt(overlapping, 70, 50), 1, "nearer the first area's centre")
+equal(Model.AreaAt(overlapping, 95, 50), 2, "nearer the second area's hit rectangle")
+equal(Model.AreaAt(overlapping, 200, 50), nil, "outside every texture")
+
+-- Overlay tiles, laid out like Blizzard's exploration overlays.
+local ox, oy, ow, oh = Model.OverlayRect("413:476:256:128")
+equal(ox + oy + ow + oh, 413 + 476 + 256 + 128, "overlay key parses to integers")
+local tiles = Model.OverlayTiles(549, 241, 256, 256)
+equal(#tiles, 3, "549x241 needs three 256px tiles in one row")
+equal(tiles[3].x, 512, "third tile offset")
+equal(tiles[3].width, 37, "last tile keeps the remainder")
+equal(tiles[3].u, 37 / 64, "partial tile samples its power-of-two file")
+equal(tiles[1].u, 1, "full tile samples the whole file")
+equal(#Model.OverlayTiles(512, 512, 256, 256), 4, "exact multiples add no partial tile")
+
+snapshot.taxis = {}
+local unvisited = Model.ZoneCompletion(zone, snapshot).taxis
+equal(unvisited and unvisited.total, 0, "flight paths before a flight master visit are all pending")
+equal(unvisited and unvisited.pending, 3, "own-faction and neutral ones")
+snapshot.explored = { ["0:0:10:10"] = true, ["10:0:10:10"] = true }
+local onlyKnown = Model.ZoneCompletion({ areas = zone.areas, taxis = zone.taxis }, snapshot)
+equal(onlyKnown.percent, 99, "everything known done, with flight paths pending, stays under 100%")
+equal(onlyKnown.complete, false, "and isn't complete")
 print(("model_spec: %d checks passed"):format(checks))

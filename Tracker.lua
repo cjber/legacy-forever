@@ -9,11 +9,8 @@ ns.Tracker = Tracker
 -- Matches Blizzard's achievement section: five steps, then "...".
 local MAX_STEPS = 5
 
--- Session default is empty; kept across sessions only where SavedVariables load.
 local function Tracked()
-	LegacyHereDB = LegacyHereDB or {}
-	LegacyHereDB.tracked = LegacyHereDB.tracked or {}
-	return LegacyHereDB.tracked
+	return ns.SavedTable("tracked")
 end
 
 local function IndexOf(list, value)
@@ -92,41 +89,66 @@ end
 -- Attaching is a no-op until Blizzard's manager has added ObjectiveTrackerFrame as a
 -- container. Its Init is scheduled as a closure over the original function, so hooking
 -- Init never fires; AddContainer is looked up on the table and can be hooked.
--- uiOrder 0 puts Legacy at the top, wherever the tracker is placed.
-local function Attach()
-	ObjectiveTrackerManager:SetModuleContainer(module, ObjectiveTrackerFrame)
+-- uiOrder puts our sections at the top, wherever the tracker is placed.
+local modules = {}
+
+local function Attach(trackerModule)
+	ObjectiveTrackerManager:SetModuleContainer(trackerModule, ObjectiveTrackerFrame)
 end
 
 local function OnContainerAdded(_, container)
 	if container == ObjectiveTrackerFrame then
-		Attach()
+		for _, trackerModule in ipairs(modules) do
+			Attach(trackerModule)
+		end
 	end
 end
 
+local function IsAttached(trackerModule)
+	return ObjectiveTrackerManager:GetContainerForModule(trackerModule) ~= nil
+end
+
 function Tracker.IsAttached()
-	return module ~= nil and ObjectiveTrackerManager:GetContainerForModule(module) ~= nil
+	return module ~= nil and IsAttached(module)
 end
 
 function Tracker.Count()
 	return #Tracked()
 end
 
+local function Available()
+	return ObjectiveTrackerManager and ObjectiveTrackerFrame
+end
+
+-- A section of our own in the objective tracker, laid out by `mixin`. Returns nil
+-- when the tracker isn't available (Register reports that once).
+function Tracker.AddModule(name, mixin, uiOrder)
+	if not Available() then
+		return nil
+	end
+	local trackerModule = CreateFrame("Frame", name, UIParent, "ObjectiveTrackerModuleTemplate")
+	Mixin(trackerModule, mixin)
+	trackerModule:SetHeader(mixin.headerText or "")
+	trackerModule.uiOrder = uiOrder
+	if #modules == 0 then
+		hooksecurefunc(ObjectiveTrackerManager, "AddContainer", OnContainerAdded)
+	end
+	modules[#modules + 1] = trackerModule
+	Attach(trackerModule)
+	C_Timer.After(5, function()
+		if not IsAttached(trackerModule) then
+			ns.Print("couldn't add a section to the objective tracker; please report /lh audit.")
+		end
+	end)
+	return trackerModule
+end
+
 local function Register()
-	if not (ObjectiveTrackerManager and ObjectiveTrackerFrame) then
+	if not Available() then
 		ns.Print("the objective tracker isn't available, so tracked challenges can't be shown.")
 		return
 	end
-	module = CreateFrame("Frame", "LegacyHereObjectiveTracker", UIParent, "ObjectiveTrackerModuleTemplate")
-	Mixin(module, ModuleMixin)
-	module:SetHeader(ModuleMixin.headerText)
-	module.uiOrder = 0
-	hooksecurefunc(ObjectiveTrackerManager, "AddContainer", OnContainerAdded)
-	Attach()
-	C_Timer.After(5, function()
-		if not Tracker.IsAttached() then
-			ns.Print("couldn't add the Legacy section to the objective tracker; please report /lh audit.")
-		end
-	end)
+	module = Tracker.AddModule("LegacyHereObjectiveTracker", ModuleMixin, 0)
 end
 
 Register()

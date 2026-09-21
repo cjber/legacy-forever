@@ -1,0 +1,43 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/AddOns/Blizzard_SharedXML/UI.xsd">
+	<!-- The viewed zone's completion in the world map's top-left corner: bare text, no box. -->
+	<Button name="LegacyHereZoneOverlayTemplate" mixin="LegacyHereZoneOverlayMixin" frameStrata="HIGH" virtual="true">
+		<Size x="1" y="1"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<!-- A feathered dark wash keeps the text legible on pale parchment, with no edge to read as a box. -->
+				<Texture parentKey="Shade" file="Interface\AddOns\LegacyHere\media\Shade" alpha="0.6">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="-48" y="22"/>
+						<Anchor point="BOTTOMRIGHT" x="64" y="-22"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<FontString parentKey="Title" inherits="GameFontNormalLarge" justifyH="LEFT">
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+					<Shadow>
+						<Offset x="1" y="-1"/>
+						<Color r="0" g="0" b="0"/>
+					</Shadow>
+				</FontString>
+				<FontString parentKey="Counts" inherits="GameFontHighlight" justifyH="LEFT">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" x="0" y="-12"/>
+					</Anchors>
+					<Shadow>
+						<Offset x="1" y="-1"/>
+						<Color r="0" g="0" b="0"/>
+					</Shadow>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnClick method="OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+	</Button>
+</Ui>

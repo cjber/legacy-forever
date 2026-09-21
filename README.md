@@ -14,9 +14,11 @@ Legacy points are account-wide and come from challenges spread over the whole wo
 
 ## Features
 
-- **Map button** in the world map's top-right button column, with a count of the unfinished objectives on the map you're viewing. Its menu lists them by challenge, with a tick box to track each one. Challenges with no fixed place are grouped the way the Legacy panel groups them. Area pins are off until you turn them on in the same menu.
+- **Map button** in the world map's top-right button column, with a count of the unfinished objectives on the map you're viewing. Its menu lists them by challenge, with a tick box to track each one. Challenges with no fixed place are grouped the way the Legacy panel groups them. Undiscovered areas are shaded on the zone map; the same menu turns the shading off.
 - **Tracker**: a Legacy section at the top of the objective tracker lists the challenges you track, each unfinished step with its live progress (12/20, or areas done in an exploration step). Click a challenge to open it in the Legacy panel; right-click to stop tracking. Forever doesn't allow Blizzard's own tracking of these, so this replaces it.
-- **Map pins** on dungeon entrances and, when turned on, on areas you haven't discovered yet (with how many of the zone's areas are left), with the challenge each counts toward and its Legacy points.
+- **Map pins** on dungeon entrances, with the challenge each counts toward and its Legacy points.
+- **Undiscovered areas** are shaded darker in their real shape on the zone map, so you can see where to go at a glance. Hovering one names it and, when a Legacy challenge counts it, shows the challenge, its points and how many of the zone's areas are left.
+- **Zone completion**: how much of a zone you've done, Guild Wars 2 style. Areas explored, flight paths learned and local reputations at Friendly count for the character; dungeons and the zone's other Legacy objectives count your Legacy progress on the account. It shows in the world map's corner, for the zone you're viewing, and in each zone badge's tooltip on continent maps. It can also show in the objective tracker, for the zone you're in (the zone name, a percentage and one row of counts), once you tick that in the map menu. Each can be collapsed, and hovering lists what's left. "What counts" in the same menu leaves out any category you don't care about, and the percentage follows.
 - **No fixed location** lists challenges whose remaining work isn't tied to a place, such as levels, skills and ranks.
 - Progress comes from the game each time, so it matches the Legacy panel and follows whichever challenge set your character sees.
 
@@ -38,8 +40,9 @@ Open the world map. The Legacy button sits below the map's own tracking buttons.
 
 Everything is generated from the Forever client's own data (via [wago.tools](https://wago.tools)) by `tools/gen_legacy.py`. Nothing is matched by name or scraped from a database site.
 
-- **Areas:** each exploration criterion names a world map overlay. Its pin is the centre of that overlay on the zone's current map art.
+- **Areas:** each exploration criterion names a world map overlay. The zone map shades that overlay on the zone's current map art; exploration is never pinned.
 - **Dungeons and raids:** placed at the client's entrance marker, only where the zone is certain.
+- **Zone completion:** areas are the zone's map overlays, the same ones the game reveals as you explore. Flight paths are the client's flight nodes for your faction, placed by the zone in each node's name. The game only says which ones a character knows at a flight master, so flight paths count once you've opened one on that continent, and show as "?" until then. Special services with nothing to learn, such as the Nighthaven druid flights, are left out. Dungeons are the single-boss clears in the Legacy Spelunker challenges, by the zone of the instance entrance. Legacy objectives are the zone's other placed Legacy steps, with a step's variants counted once. Reputations are a short curated list of factions tied to a single zone, such as Booty Bay for Stranglethorn. Quests and rares are left out: the client doesn't say which belong to a zone, and no openly licensed list covers Forever.
 - **Kills, quests and reputations:** the client ships no spawn or encounter data for these (none of the 53 Legacy kill targets has a Creature row), so they stay unpinned. Track the challenge to follow their progress instead.
 
 **Found a wrong or missing objective?** Run `/lh audit` and [open an issue](https://github.com/cjber/legacy-here/issues/new) with the output.
