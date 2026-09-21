@@ -19,7 +19,7 @@ copied unchanged from SkillUp Forever and only reports the newest Forever build.
 
 Sources: `TraitCurrencySource`, `Achievement`, `Criteria`, `CriteriaTree`,
 `WorldMapOverlay`, `AreaTable`, `UiMap`, `UiMapAssignment`, `UiMapXMapArt`,
-`UiMapArt`, `UiMapArtStyleLayer`, `Map`, and `DungeonEncounter`. Currency 4225
+`UiMapArt`, `UiMapArtStyleLayer`, `Map`, `DungeonEncounter`, and `TaxiNodes`. Currency 4225
 selects both reward variants. Type-8 criteria recursively populate `feeds`;
 objectives retain the owning achievement and actual Criteria.ID, never a tree
 node ID or a copied parent achievement ID.
@@ -73,7 +73,8 @@ Onyxia's Map 249 projects through assignment 46755 into Dustwallow (1445) at
 Add an entry under `locations.json` → `criteria`, keyed by decimal Criteria.ID,
 with `uiMap`, `kind`, and an `evidence` string naming verified row IDs or an
 unambiguous geography fact. `kind = "instance"` also requires `instance = Map.ID`;
-other kinds omit it. Never add coordinates, name-based joins, or Wowhead data.
+other kinds omit it. For these Legacy objectives, never add coordinates, name-based
+joins, or Wowhead data.
 The generator validates IDs, reachability, types, and conflicts with client data,
 and derives any instance pin itself. The two current facts select Dustwallow for
 Onyxia's two criteria variants; new Forever bosses/quests remain unresolved.
@@ -93,3 +94,62 @@ kill **106**, instance/encounter **2**, quest **8**, reputation **16**, level **
 skill **36**, rank **10**; **232** total. The two Explorer meta criteria are expanded,
 not counted as unresolved. Global progress and unplaced objectives stay absent
 from `zones` for the addon's “No fixed location” view.
+## Zone completion
+
+`completion[uiMapID]` is independent of Legacy objectives. Each populated zone
+always has `areas`, `taxis`, and `dungeons` arrays, including empty arrays for
+categories with no items. Names come from the pinned English client export;
+no progress, coordinates, faction eligibility rules, or runtime state is emitted.
+
+- **Areas:** enumerate WorldMapOverlay on the zone's current phase-0 UiMap art,
+  reusing Geography's art join. The key is exactly
+  `OffsetX:OffsetY:TextureWidth:TextureHeight`, formatted as four decimal integers;
+  the name is AreaTable.AreaName_lang for AreaID_0. Empty hit rectangles still
+  count; zero-size textures do not, since they never draw on the map. Exclude Zephras Isle (2521, colliding zero keys) and battleground maps
+  1459–1461. Duplicate keys within a zone or duplicate phase-0 art fail generation.
+- **Taxis:** take TaxiNodes with `Flags & 3`, excluding names beginning `zz`
+  (case insensitive) and battleground destinations. Bits 1/2/3 become
+  `Alliance`/`Horde`/`Neutral`. Match the exact suffix after the last `", "` to
+  UiMap.Name_lang. `locations.json.taxiNodes`, keyed by TaxiNodes.ID, supplies
+  only missing, abbreviated, or incorrect suffixes. Each fact has `uiMap`, the
+  exact node `name`, and `evidence`. Crossroads and Kargath already have correct
+  suffixes; no overrides are needed. City-named nodes retain the suffix's zone
+  (for example Ironforge belongs to Dun Morogh). The emitted name drops the
+  `", Zone"` suffix, since it is always listed under a zone. Runtime filters own faction
+  plus Neutral; these strings are not the differently numbered live taxi enum.
+- **Dungeons:** walk all six Spelunker achievements (62031–62033, 64016–64018),
+  retaining single-boss Type-0 kill steps. Group by Criteria.Asset (boss ID),
+  keep the wing's CriteriaTree description, and collect every sorted
+  `{achievement, criteria}` reference across variants and tiers. Separate wings
+  remain separate even when they share an instance. Exclude only the verified
+  Type-78 compound step 19213/117733, “Ragefire Chasm or Hall of Thanes”; raids
+  never enter this graph. `locations.json.dungeonWings`, keyed by boss ID,
+  supplies `uiMap`, the exact wing `name`, and `evidence`. Optional `area` and
+  `instance` IDs validate the exterior AreaTable ancestry and Map entrance.
+  These completion facts do not add Legacy objective pins.
+
+Completion curation must cite the pinned build and client row facts. Unknown,
+unreachable, renamed, or redundant taxi overrides and stale wing curation fail
+before output is replaced. Unassigned taxis, duplicate wing names/references,
+and unexpected Spelunker step types also fail. A wing without verified entrance
+geography is omitted and printed by name and boss ID; it is not assigned by
+nearest map rectangle. Instance entrances can overlap multiple zone rectangles,
+so curation selects the documented exterior approach (Blackrock Depths uses
+Searing Gorge; both Spire wings use Burning Steppes).
+
+Build **1.60.1.69913**: **43 completion zones, 555 areas, 71 taxis** (32 Alliance,
+31 Horde, 8 Neutral; 40 Alliance-usable and 39 Horde-usable), and **31 of 32 wings**
+with **62 references**. Twelve taxi exceptions and 31 wing locations are curated.
+**The Drowned City** (boss 260274) remains unplaced: WMOAreaTable 144590 names it
+but points to AreaTable 17037, which is absent from this build; Map and AreaTable
+supply no verified entrance zone. The separate compound step is excluded, not
+counted among these 32 wings.
+
+For reference, Gnomeregan uses `{62032, 18529}` and `{64017, 117738}`;
+The Deadmines uses `{62031, 3262}` and `{64016, 117731}`.
+
+Verify with two consecutive `python3 tools/gen_legacy.py --offline` runs and
+compare `Data/Legacy.lua` byte-for-byte, then run `luajit tests/data_spec.lua`,
+`luajit tests/model_spec.lua`, `luacheck Data tests`, and `stylua --check Data tests`.
+The generator renders Lua in the repository's StyLua style without depending on
+a formatter or excluding the generated file from CI.

@@ -87,4 +87,72 @@ assert(samples["1445:684:3271"].x == 0.529, "Onyxia entrance world-to-UI project
 assert(samples["1445:64030:117792"].y == 0.777, "Onyxia second reward variant")
 assert(data.rewards[62382] and data.rewards[64015], "both Explorer variants")
 assert(data.feeds[627][1] == 62382 and data.feeds[627][2] == 64015, "Dun Morogh feeds both Explorers")
+
+local totals = { zones = 0, areas = 0, Alliance = 0, Horde = 0, Neutral = 0, wings = 0, refs = 0 }
+local taxiZones, wingZones, completionAreas = {}, {}, {}
+local mirrors = { [62031] = 64016, [62032] = 64017, [62033] = 64018 }
+local spelunker = { [62031] = true, [62032] = true, [62033] = true, [64016] = true, [64017] = true, [64018] = true }
+assert(type(data.completion) == "table", "completion data")
+for zone, entry in pairs(data.completion) do
+	assert(positiveInteger(zone), "completion zone ID")
+	assert(zone ~= 2521 and zone ~= 1459 and zone ~= 1460 and zone ~= 1461, "excluded completion maps")
+	for _, category in ipairs({ "areas", "taxis", "dungeons" }) do
+		assert(type(entry[category]) == "table", "completion categories always present, including empty lists")
+	end
+	assert(#entry.areas + #entry.taxis + #entry.dungeons > 0, "only populated completion zones")
+	totals.zones = totals.zones + 1
+	local keys = {}
+	for _, area in ipairs(entry.areas) do
+		assert(type(area.name) == "string" and #area.name > 0, "area name")
+		assert(type(area.key) == "string", "texture key string")
+		local x, y, width, height = area.key:match("^(%-?%d+):(%-?%d+):(%-?%d+):(%-?%d+)$")
+		assert(x and y and width and height, "four integer texture components")
+		assert(
+			area.key == string.format("%d:%d:%d:%d", tonumber(x), tonumber(y), tonumber(width), tonumber(height)),
+			"canonical integer-formatted texture key"
+		)
+		assert(not keys[area.key], "unique texture keys within each zone")
+		keys[area.key] = true
+		completionAreas[zone .. ":" .. area.name] = area.key
+		totals.areas = totals.areas + 1
+	end
+	for _, taxi in ipairs(entry.taxis) do
+		assert(positiveInteger(taxi.node) and not taxiZones[taxi.node], "unique taxi node ID")
+		assert(taxi.faction == "Alliance" or taxi.faction == "Horde" or taxi.faction == "Neutral", "taxi faction")
+		assert(type(taxi.name) == "string" and #taxi.name > 0, "taxi name")
+		assert(taxi.name:sub(1, 2):lower() ~= "zz", "obsolete taxis excluded")
+		taxiZones[taxi.node] = zone
+		totals[taxi.faction] = totals[taxi.faction] + 1
+	end
+	for _, wing in ipairs(entry.dungeons) do
+		assert(type(wing.name) == "string" and #wing.name > 0 and not wingZones[wing.name], "unique wing name")
+		assert(type(wing.refs) == "table" and #wing.refs >= 2, "wing references include both variants")
+		local refs, achievements = {}, {}
+		for _, ref in ipairs(wing.refs) do
+			assert(#ref == 2 and spelunker[ref[1]] and positiveInteger(ref[2]), "Spelunker achievement/criteria pair")
+			assert(data.rewards[ref[1]], "Spelunker reference belongs to the reward graph")
+			assert(ref[2] ~= 19213 and ref[2] ~= 117733, "compound dungeon step excluded")
+			local key = ref[1] .. ":" .. ref[2]
+			assert(not refs[key], "unique wing reference")
+			refs[key] = true
+			achievements[ref[1]] = true
+			totals.refs = totals.refs + 1
+		end
+		for original, mirror in pairs(mirrors) do
+			assert(achievements[original] == achievements[mirror], "both variants of every represented tier")
+		end
+		wingZones[wing.name] = zone
+		totals.wings = totals.wings + 1
+	end
+end
+assert(totals.zones == 43 and totals.areas == 555, "current-art completion coverage")
+assert(totals.Alliance == 32 and totals.Horde == 31 and totals.Neutral == 8, "71 supported player taxis")
+assert(totals.wings == 31 and totals.refs == 62, "32 individual wings, one unplaced, both variants")
+assert(not wingZones["The Drowned City"], "wing without verified entrance geography remains unplaced")
+assert(wingZones["Gnomeregan"] == 1426 and wingZones["The Deadmines"] == 1436, "distinct Spelunker wings")
+assert(taxiZones[25] == 1413 and taxiZones[21] == 1418, "Crossroads and Kargath use their correct suffixes")
+assert(taxiZones[49] == 1450 and taxiZones[69] == 1450, "curated Moonglade taxis without suffixes")
+assert(taxiZones[5] == 1433 and taxiZones[11] == 1420, "curated abbreviated zone suffixes")
+assert(not taxiZones[59] and not taxiZones[60], "battleground taxis excluded")
+assert(completionAreas["1426:Anvilmar"] and completionAreas["2652:Forlorn Gardens"], "empty hit rectangles still count")
 print("ok")

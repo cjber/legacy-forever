@@ -12,5 +12,280 @@
       "instance": 249,
       "evidence": "Build 1.60.1.69913: Achievement 64030 owns Criteria 117792 (Type 0, Asset 10184) and Instance_ID 249, the second reward variant of Achievement 684 / Criteria 3271. Onyxia's Lair is in the Wyrmbog, Dustwallow Marsh (AreaTable 511 -> 15; UiMapAssignment 46755 -> UiMap 1445). Map 249's CorpseMapID 1 and Corpse coordinates project to (0.529, 0.777); the zone selection is the same verified geography fact as Criteria 3271."
     }
+  },
+  "taxiNodes": {
+    "2": {
+      "uiMap": 1429,
+      "name": "Stormwind, Elwynn",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 2 (Stormwind, Elwynn, Flags 1025). Suffix 'Elwynn' abbreviates Elwynn Forest. AreaTable 12 (Elwynn Forest) -> 12; UiMapAssignment 46739 -> UiMap 1429."
+    },
+    "5": {
+      "uiMap": 1433,
+      "name": "Lakeshire, Redridge",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 5 (Lakeshire, Redridge, Flags 1025). Suffix 'Redridge' abbreviates Redridge Mountains. AreaTable 69 (Lakeshire) -> 44; UiMapAssignment 46743 -> UiMap 1433."
+    },
+    "11": {
+      "uiMap": 1420,
+      "name": "Undercity, Tirisfal",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 11 (Undercity, Tirisfal, Flags 1026). Suffix 'Tirisfal' abbreviates Tirisfal Glades. AreaTable 85 (Tirisfal Glades) -> 85; UiMapAssignment 46730 -> UiMap 1420."
+    },
+    "13": {
+      "uiMap": 1424,
+      "name": "Tarren Mill, Hillsbrad",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 13 (Tarren Mill, Hillsbrad, Flags 1026). Suffix 'Hillsbrad' abbreviates Hillsbrad Foothills. AreaTable 272 (Tarren Mill) -> 267; UiMapAssignment 46734 -> UiMap 1424."
+    },
+    "14": {
+      "uiMap": 1424,
+      "name": "Southshore, Hillsbrad",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 14 (Southshore, Hillsbrad, Flags 1025). Suffix 'Hillsbrad' abbreviates Hillsbrad Foothills. AreaTable 271 (Southshore) -> 267; UiMapAssignment 46734 -> UiMap 1424."
+    },
+    "16": {
+      "uiMap": 1417,
+      "name": "Refuge Pointe, Arathi",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 16 (Refuge Pointe, Arathi, Flags 1025). Suffix 'Arathi' abbreviates Arathi Highlands. AreaTable 320 (Refuge Pointe) -> 45; UiMapAssignment 46727 -> UiMap 1417."
+    },
+    "17": {
+      "uiMap": 1417,
+      "name": "Hammerfall, Arathi",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 17 (Hammerfall, Arathi, Flags 1026). Suffix 'Arathi' abbreviates Arathi Highlands. AreaTable 321 (Hammerfall) -> 45; UiMapAssignment 46727 -> UiMap 1417."
+    },
+    "18": {
+      "uiMap": 1434,
+      "name": "Booty Bay, Stranglethorn",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 18 (Booty Bay, Stranglethorn, Flags 1026). Suffix 'Stranglethorn' abbreviates Stranglethorn Vale. AreaTable 35 (Booty Bay) -> 33; UiMapAssignment 46744 -> UiMap 1434."
+    },
+    "19": {
+      "uiMap": 1434,
+      "name": "Booty Bay, Stranglethorn",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 19 (Booty Bay, Stranglethorn, Flags 1025). Suffix 'Stranglethorn' abbreviates Stranglethorn Vale. AreaTable 35 (Booty Bay) -> 33; UiMapAssignment 46744 -> UiMap 1434."
+    },
+    "20": {
+      "uiMap": 1434,
+      "name": "Grom'gol, Stranglethorn",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 20 (Grom'gol, Stranglethorn, Flags 1026). Suffix 'Stranglethorn' abbreviates Stranglethorn Vale. AreaTable 117 (Grom'gol Base Camp) -> 33; UiMapAssignment 46744 -> UiMap 1434."
+    },
+    "49": {
+      "uiMap": 1450,
+      "name": "Moonglade",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 49 (Moonglade, Flags 1025). No comma-separated zone suffix; the node is named Moonglade. AreaTable 493 (Moonglade) -> 493; UiMapAssignment 46760 -> UiMap 1450."
+    },
+    "69": {
+      "uiMap": 1450,
+      "name": "Moonglade",
+      "evidence": "Build 1.60.1.69913: TaxiNodes 69 (Moonglade, Flags 1026). No comma-separated zone suffix; the node is named Moonglade. AreaTable 493 (Moonglade) -> 493; UiMapAssignment 46760 -> UiMap 1450."
+    }
+  },
+  "dungeonWings": {
+    "639": {
+      "uiMap": 1436,
+      "name": "The Deadmines",
+      "area": 20,
+      "instance": 36,
+      "evidence": "Build 1.60.1.69913: Achievement 62031, CriteriaTree 230762, Criteria 3262 (Type 0, Asset 639). Exterior AreaTable 20 (Moonbrook) -> 40; UiMapAssignment 46746 -> UiMap 1436 (Westfall). Map 36 (Deadmines), CorpseMapID 0, Corpse (-11207.7988, 1681.1509). The entrance is beneath Moonbrook; Map 36 corpse coordinates also land in current Westfall overlay 5300 (AreaTable 920, The Dagger Hills)."
+    },
+    "1853": {
+      "uiMap": 1422,
+      "name": "Scholomance",
+      "area": 2298,
+      "instance": 289,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230789, Criteria 19263 (Type 0, Asset 1853). Exterior AreaTable 2298 (Caer Darrow) -> 28; UiMapAssignment 46732 -> UiMap 1422 (Western Plaguelands). Map 289 (Scholomance), CorpseMapID 0, Corpse (1274.7812, -2552.5640). WMOAreaTable 33837 names Scholomance and directly assigns AreaTable 2298 (Caer Darrow)."
+    },
+    "2748": {
+      "uiMap": 1418,
+      "name": "Uldaman",
+      "area": 1517,
+      "instance": 70,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230781, Criteria 18531 (Type 0, Asset 2748). Exterior AreaTable 1517 (Uldaman) -> 3; UiMapAssignment 46728 -> UiMap 1418 (Badlands). Map 70 (Uldaman), CorpseMapID 0, Corpse (-6060.1816, -2954.9973)."
+    },
+    "3654": {
+      "uiMap": 1413,
+      "name": "Wailing Caverns",
+      "area": 387,
+      "instance": 43,
+      "evidence": "Build 1.60.1.69913: Achievement 62031, CriteriaTree 230763, Criteria 18524 (Type 0, Asset 3654). Exterior AreaTable 387 (Lushwater Oasis) -> 17; UiMapAssignment 46723 -> UiMap 1413 (The Barrens). Map 43 (Wailing Caverns), CorpseMapID 1, Corpse (-751.1312, -2209.2405). AreaPOI 1068 names Wailing Caverns and explicitly uses AreaID 387 (Lushwater Oasis, parent 17)."
+    },
+    "3975": {
+      "uiMap": 1420,
+      "name": "Scarlet Monastery: Armory",
+      "area": 459,
+      "instance": 189,
+      "evidence": "Build 1.60.1.69913: Achievement 62032, CriteriaTree 230776, Criteria 116060 (Type 0, Asset 3975). Exterior AreaTable 459 (Scarlet Watch Post) -> 85; UiMapAssignment 46730 -> UiMap 1420 (Tirisfal Glades). Map 189 (Scarlet Monastery), CorpseMapID 0, Corpse (2892.2354, -811.2637). The four wings share the Scarlet Monastery entrance beyond Scarlet Watch Post; Map 189 corpse (2892.2354, -811.2637) projects northeast of that post on Tirisfal (overlay 5008, AreaID 459)."
+    },
+    "3976": {
+      "uiMap": 1420,
+      "name": "Scarlet Monastery: Cathedral",
+      "area": 459,
+      "instance": 189,
+      "evidence": "Build 1.60.1.69913: Achievement 62032, CriteriaTree 230777, Criteria 3264 (Type 0, Asset 3976). Exterior AreaTable 459 (Scarlet Watch Post) -> 85; UiMapAssignment 46730 -> UiMap 1420 (Tirisfal Glades). Map 189 (Scarlet Monastery), CorpseMapID 0, Corpse (2892.2354, -811.2637). The four wings share the Scarlet Monastery entrance beyond Scarlet Watch Post; Map 189 corpse (2892.2354, -811.2637) projects northeast of that post on Tirisfal (overlay 5008, AreaID 459)."
+    },
+    "4275": {
+      "uiMap": 1421,
+      "name": "Shadowfang Keep",
+      "area": 236,
+      "instance": 33,
+      "evidence": "Build 1.60.1.69913: Achievement 62031, CriteriaTree 231426, Criteria 3263 (Type 0, Asset 4275). Exterior AreaTable 236 (Shadowfang Keep) -> 130; UiMapAssignment 46731 -> UiMap 1421 (Silverpine Forest). Map 33 (Shadowfang Keep), CorpseMapID 0, Corpse (-230.9894, 1571.5703)."
+    },
+    "4421": {
+      "uiMap": 1413,
+      "name": "Razorfen Kraul",
+      "area": 1717,
+      "instance": 47,
+      "evidence": "Build 1.60.1.69913: Achievement 62032, CriteriaTree 230773, Criteria 18528 (Type 0, Asset 4421). Exterior AreaTable 1717 (Razorfen Kraul) -> 17; UiMapAssignment 46723 -> UiMap 1413 (The Barrens). Map 47 (Razorfen Kraul), CorpseMapID 1, Corpse (-4459.4492, -1660.2118)."
+    },
+    "4543": {
+      "uiMap": 1420,
+      "name": "Scarlet Monastery: Graveyard",
+      "area": 459,
+      "instance": 189,
+      "evidence": "Build 1.60.1.69913: Achievement 62032, CriteriaTree 230774, Criteria 116058 (Type 0, Asset 4543). Exterior AreaTable 459 (Scarlet Watch Post) -> 85; UiMapAssignment 46730 -> UiMap 1420 (Tirisfal Glades). Map 189 (Scarlet Monastery), CorpseMapID 0, Corpse (2892.2354, -811.2637). The four wings share the Scarlet Monastery entrance beyond Scarlet Watch Post; Map 189 corpse (2892.2354, -811.2637) projects northeast of that post on Tirisfal (overlay 5008, AreaID 459)."
+    },
+    "4829": {
+      "uiMap": 1440,
+      "name": "Blackfathom Deeps",
+      "area": 2797,
+      "instance": 48,
+      "evidence": "Build 1.60.1.69913: Achievement 62032, CriteriaTree 230771, Criteria 18526 (Type 0, Asset 4829). Exterior AreaTable 2797 (Blackfathom Deeps) -> 331; UiMapAssignment 46750 -> UiMap 1440 (Ashenvale). Map 48 (Blackfathom Deeps), CorpseMapID 1, Corpse (4249.1206, 748.3871)."
+    },
+    "5709": {
+      "uiMap": 1435,
+      "name": "The Temple of Atal'Hakkar",
+      "instance": 109,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230785, Criteria 18533 (Type 0, Asset 5709). Map 109 (Sunken Temple), CorpseMapID 0, Corpse (-10170.0996, -3995.9700). The client entrance projects only to UiMap 1435 (Swamp of Sorrows)."
+    },
+    "6487": {
+      "uiMap": 1420,
+      "name": "Scarlet Monastery: Library",
+      "area": 459,
+      "instance": 189,
+      "evidence": "Build 1.60.1.69913: Achievement 62032, CriteriaTree 230775, Criteria 116059 (Type 0, Asset 6487). Exterior AreaTable 459 (Scarlet Watch Post) -> 85; UiMapAssignment 46730 -> UiMap 1420 (Tirisfal Glades). Map 189 (Scarlet Monastery), CorpseMapID 0, Corpse (2892.2354, -811.2637). The four wings share the Scarlet Monastery entrance beyond Scarlet Watch Post; Map 189 corpse (2892.2354, -811.2637) projects northeast of that post on Tirisfal (overlay 5008, AreaID 459)."
+    },
+    "7267": {
+      "uiMap": 1446,
+      "name": "Zul'farrak",
+      "area": 978,
+      "instance": 209,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230782, Criteria 3265 (Type 0, Asset 7267). Exterior AreaTable 978 (Zul'Farrak) -> 440; UiMapAssignment 46756 -> UiMap 1446 (Tanaris). Map 209 (Zul'Farrak), CorpseMapID 1, Corpse (-6790.5767, -2891.2781)."
+    },
+    "7358": {
+      "uiMap": 1413,
+      "name": "Razorfen Downs",
+      "area": 1316,
+      "instance": 129,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230780, Criteria 18530 (Type 0, Asset 7358). Exterior AreaTable 1316 (Razorfen Downs) -> 17; UiMapAssignment 46723 -> UiMap 1413 (The Barrens). Map 129 (Razorfen Downs), CorpseMapID 1, Corpse (-4662.8828, -2535.8716)."
+    },
+    "7800": {
+      "uiMap": 1426,
+      "name": "Gnomeregan",
+      "area": 133,
+      "instance": 90,
+      "evidence": "Build 1.60.1.69913: Achievement 62032, CriteriaTree 230772, Criteria 18529 (Type 0, Asset 7800). Exterior AreaTable 133 (Gnomeregan) -> 1; UiMapAssignment 46736 -> UiMap 1426 (Dun Morogh). Map 90 (Gnomeregan), CorpseMapID 0, Corpse (-5162.6616, 931.5988)."
+    },
+    "9019": {
+      "uiMap": 1427,
+      "name": "Blackrock Depths",
+      "area": 1445,
+      "instance": 230,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230786, Criteria 3266 (Type 0, Asset 9019). Exterior AreaTable 1445 (Blackrock Mountain) -> 51; UiMapAssignment 46737 -> UiMap 1427 (Searing Gorge). Map 230 (Blackrock Depths), CorpseMapID 0, Corpse (-7178.0947, -928.6395). Select the Searing Gorge side of Blackrock Mountain; Map 230 corpse (-7178.0947, -928.6395) projects to (0.271, 0.725) there, in overlay 5191. Both mountain approaches overlap in UiMapAssignment."
+    },
+    "9568": {
+      "uiMap": 1428,
+      "name": "Lower Blackrock Spire",
+      "area": 254,
+      "instance": 229,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230787, Criteria 18534 (Type 0, Asset 9568). Exterior AreaTable 254 (Blackrock Mountain) -> 46; UiMapAssignment 46738 -> UiMap 1428 (Burning Steppes). Map 229 (Blackrock Spire), CorpseMapID 0, Corpse (-7522.5269, -1233.0415). WMOAreaTable 15493 names Blackrock Spire and assigns outdoor AreaTable 254; select Burning Steppes among the overlapping mountain approaches."
+    },
+    "10363": {
+      "uiMap": 1428,
+      "name": "Upper Blackrock Spire",
+      "area": 254,
+      "instance": 229,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230788, Criteria 3268 (Type 0, Asset 10363). Exterior AreaTable 254 (Blackrock Mountain) -> 46; UiMapAssignment 46738 -> UiMap 1428 (Burning Steppes). Map 229 (Blackrock Spire), CorpseMapID 0, Corpse (-7522.5269, -1233.0415). WMOAreaTable 15493 names Blackrock Spire and assigns outdoor AreaTable 254; select Burning Steppes among the overlapping mountain approaches."
+    },
+    "10440": {
+      "uiMap": 1423,
+      "name": "Stratholme: Dead",
+      "area": 2279,
+      "instance": 329,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230791, Criteria 18471 (Type 0, Asset 10440). Exterior AreaTable 2279 (Stratholme) -> 139; UiMapAssignment 46733 -> UiMap 1423 (Eastern Plaguelands). Map 329 (Stratholme), CorpseMapID 0, Corpse (3392.3169, -3378.4832)."
+    },
+    "10813": {
+      "uiMap": 1423,
+      "name": "Stratholme: Live",
+      "area": 2279,
+      "instance": 329,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230790, Criteria 550 (Type 0, Asset 10813). Exterior AreaTable 2279 (Stratholme) -> 139; UiMapAssignment 46733 -> UiMap 1423 (Eastern Plaguelands). Map 329 (Stratholme), CorpseMapID 0, Corpse (3392.3169, -3378.4832)."
+    },
+    "11492": {
+      "uiMap": 1444,
+      "name": "Diremaul: East",
+      "area": 2577,
+      "instance": 429,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230792, Criteria 545 (Type 0, Asset 11492). Exterior AreaTable 2577 (Dire Maul) -> 357; UiMapAssignment 46754 -> UiMap 1444 (Feralas). Map 429 (Dire Maul), CorpseMapID 1, Corpse (-3908.0300, 1130.0000)."
+    },
+    "11496": {
+      "uiMap": 1444,
+      "name": "Diremaul: West",
+      "area": 2577,
+      "instance": 429,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230794, Criteria 546 (Type 0, Asset 11496). Exterior AreaTable 2577 (Dire Maul) -> 357; UiMapAssignment 46754 -> UiMap 1444 (Feralas). Map 429 (Dire Maul), CorpseMapID 1, Corpse (-3908.0300, 1130.0000)."
+    },
+    "11501": {
+      "uiMap": 1444,
+      "name": "Diremaul: North",
+      "area": 2577,
+      "instance": 429,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230793, Criteria 18535 (Type 0, Asset 11501). Exterior AreaTable 2577 (Dire Maul) -> 357; UiMapAssignment 46754 -> UiMap 1444 (Feralas). Map 429 (Dire Maul), CorpseMapID 1, Corpse (-3908.0300, 1130.0000)."
+    },
+    "12201": {
+      "uiMap": 1443,
+      "name": "Maraudon",
+      "instance": 349,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230783, Criteria 18532 (Type 0, Asset 12201). Map 349 (Maraudon), CorpseMapID 1, Corpse (-1432.6971, 2924.9775). The client entrance projects only to UiMap 1443 (Desolace)."
+    },
+    "246020": {
+      "uiMap": 1416,
+      "name": "City of Dalaran",
+      "area": 279,
+      "instance": 2959,
+      "evidence": "Build 1.60.1.69913: Achievement 62032, CriteriaTree 230769, Criteria 116050 (Type 0, Asset 246020). Exterior AreaTable 279 (Dalaran) -> 36; UiMapAssignment 46726 -> UiMap 1416 (Alterac Mountains). Map 2959 (City of Dalaran), CorpseMapID -1. The outdoor approach is Dalaran in Alterac Mountains (also AreaTable 17707, Old Dalaran Ruins); the instance is Map 2959, with no corpse entrance."
+    },
+    "247234": {
+      "uiMap": 1447,
+      "name": "Blackmaw Hold",
+      "area": 1216,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230796, Criteria 116055 (Type 0, Asset 247234). Exterior AreaTable 1216 (Blackmaw Hold) -> 16; UiMapAssignment 46757 -> UiMap 1447 (Azshara)."
+    },
+    "250657": {
+      "uiMap": 1420,
+      "name": "Ruins of Lordaeron",
+      "area": 153,
+      "instance": 2999,
+      "evidence": "Build 1.60.1.69913: Achievement 62031, CriteriaTree 230760, Criteria 116049 (Type 0, Asset 250657). Exterior AreaTable 153 (Ruins of Lordaeron) -> 85; UiMapAssignment 46730 -> UiMap 1420 (Tirisfal Glades). Map 2999 (Ruins of Lordaeron), CorpseMapID -1."
+    },
+    "255702": {
+      "uiMap": 1445,
+      "name": "Alcaz Prison",
+      "area": 2079,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230784, Criteria 116057 (Type 0, Asset 255702). Exterior AreaTable 2079 (Alcaz Island) -> 15; UiMapAssignment 46755 -> UiMap 1445 (Dustwallow Marsh). Alcaz Prison is the prison on Alcaz Island; WMOAreaTable 137677 names the prison (WMOID 20008, AreaTableID 0). The exterior island supplies the zone."
+    },
+    "258968": {
+      "uiMap": 2548,
+      "name": "Krol'dok Stronghold",
+      "area": 17780,
+      "evidence": "Build 1.60.1.69913: Achievement 62032, CriteriaTree 230778, Criteria 116052 (Type 0, Asset 258968). Exterior AreaTable 17780 (Krol'dok Stronghold) -> 16591; UiMapAssignment 69323 -> UiMap 2548 (Riverglades)."
+    },
+    "260326": {
+      "uiMap": 1437,
+      "name": "Excavation Site: Wetlands",
+      "area": 17732,
+      "instance": 2998,
+      "evidence": "Build 1.60.1.69913: Achievement 62031, CriteriaTree 230761, Criteria 116054 (Type 0, Asset 260326). Exterior AreaTable 17732 (Excavation Site: Wetlands) -> 11; UiMapAssignment 46747 -> UiMap 1437 (Wetlands). Map 2998 (Excavation Site: Wetlands), CorpseMapID -1."
+    },
+    "261809": {
+      "uiMap": 1449,
+      "name": "The Shaper's Terrace",
+      "area": 16985,
+      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230795, Criteria 116056 (Type 0, Asset 261809). Exterior AreaTable 16985 (The Shaper's Terrace) -> 490; UiMapAssignment 46759 -> UiMap 1449 (Un'Goro Crater)."
+    }
   }
 }
