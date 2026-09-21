@@ -1,0 +1,17 @@
+## Interface: 16001
+## Title: Legacy Here
+## Notes: Shows which of your unfinished Legacy challenges you can advance in the zone on the world map.
+## Author: cjber
+## Version: @project-version@
+## Category: Map
+## X-License: GPL-3.0-or-later
+## X-Website: https://github.com/cjber/legacy-here
+## IconAtlas: UI-Legacy-Points-icon-c60
+## AddonCompartmentFunc: LegacyHere_OnAddonCompartmentClick
+
+Data\Legacy.lua
+Core.lua
+Model.lua
+Live.lua
+Map.lua
+Map.xml
