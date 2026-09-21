@@ -71,15 +71,18 @@ SLASH_LEGACYHERE1 = "/lh"
 SLASH_LEGACYHERE2 = "/legacyhere"
 SlashCmdList.LEGACYHERE = function(msg)
 	local command = strtrim(msg or ""):lower()
-	local achievementID = tonumber(command:match("^criteria%s+(%d+)$"))
+	-- Lenient: "criteria 684", "criteria <684>" and a bare "684" all work.
+	local achievementID = (command:find("^criteria") or command:find("^%d+$")) and tonumber(command:match("%d+"))
 	if command == "audit" then
 		Audit()
 	elseif achievementID then
 		Criteria(achievementID)
+	elseif command:find("^criteria") then
+		ns.Print("usage: /lh criteria 684")
 	else
 		ns.Print("open the world map and use the Legacy button in its top-right corner.")
 		ns.Print("/lh audit - check the bundled data against the game")
-		ns.Print("/lh criteria <achievement id> - list what the game reports for one achievement")
+		ns.Print("/lh criteria 684 - list what the game reports for one achievement")
 	end
 end
 

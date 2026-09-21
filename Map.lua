@@ -93,6 +93,39 @@ local function AddPinTooltip(tooltip, group, objective)
 	AddRewardLine(tooltip, group)
 end
 
+local function AddZoneTooltip(tooltip, zone)
+	GameTooltip_SetTitle(tooltip, zone.name)
+	for _, group in ipairs(zone.groups) do
+		local text = IsExploreGroup(group) and AreasLeftText(group)
+			or ("%s: %d left"):format(ns.Live.Name(group.challenge), #group.objectives)
+		GameTooltip_AddNormalLine(tooltip, text)
+	end
+	GameTooltip_AddInstructionLine(tooltip, "Click the zone to see where.")
+end
+
+-- On a continent, one badge per zone with its unfinished count, instead of every pin.
+local function ContinentZones(continentID)
+	local zones = {}
+	for uiMapID in pairs(ns.Data.zones) do
+		local info = C_Map.GetMapInfo(uiMapID)
+		if info and info.parentMapID == continentID then
+			local groups = ZoneGroups(uiMapID)
+			local count = ns.Model.CountObjectives(groups)
+			local left, right, top, bottom = C_Map.GetMapRectOnMap(uiMapID, continentID)
+			if count > 0 and left then
+				zones[#zones + 1] = {
+					name = info.name,
+					groups = groups,
+					count = count,
+					x = (left + right) / 2,
+					y = (top + bottom) / 2,
+				}
+			end
+		end
+	end
+	return zones
+end
+
 -- Session default is on; kept across sessions only where SavedVariables load.
 local function ShowAreas()
 	return not (LegacyHereDB and LegacyHereDB.hideAreas)
@@ -233,9 +266,18 @@ local function CreatePinProvider()
 
 	-- Areas are many and minor, so they sit smaller and quieter than dungeons,
 	-- bosses and quests. Pins are pooled, so every acquire sets both looks.
-	function LegacyHerePinMixin:OnAcquired(group, objective)
+	function LegacyHerePinMixin:OnAcquired(group, objective, zone)
 		self.group = group
 		self.objective = objective
+		self.zone = zone
+		self.Count:SetText(zone and zone.count or "")
+		if zone then
+			self:SetScalingLimits(1, 1.0, 1.2)
+			self:SetAlpha(1)
+			self:SetPosition(zone.x, zone.y)
+			self:ApplyCurrentScale()
+			return
+		end
 		if objective.entry.kind == "explore" then
 			self:SetScalingLimits(1, 0.9, 1.1)
 			self:SetAlpha(0.85)
@@ -249,7 +291,11 @@ local function CreatePinProvider()
 
 	function LegacyHerePinMixin:OnMouseEnter()
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		AddPinTooltip(GameTooltip, self.group, self.objective)
+		if self.zone then
+			AddZoneTooltip(GameTooltip, self.zone)
+		else
+			AddPinTooltip(GameTooltip, self.group, self.objective)
+		end
 		GameTooltip:Show()
 	end
 
@@ -265,7 +311,15 @@ local function CreatePinProvider()
 
 	function provider:RefreshAllData()
 		self:RemoveAllData()
-		for _, group in ipairs(ZoneGroups(self:GetMap():GetMapID())) do
+		local mapID = self:GetMap():GetMapID()
+		local info = mapID and C_Map.GetMapInfo(mapID)
+		if info and info.mapType == Enum.UIMapType.Continent then
+			for _, zone in ipairs(ContinentZones(mapID)) do
+				self:GetMap():AcquirePin(PIN_TEMPLATE, nil, nil, zone)
+			end
+			return
+		end
+		for _, group in ipairs(ZoneGroups(mapID)) do
 			for _, objective in ipairs(group.objectives) do
 				if objective.entry.x and (objective.entry.kind ~= "explore" or ShowAreas()) then
 					self:GetMap():AcquirePin(PIN_TEMPLATE, group, objective)

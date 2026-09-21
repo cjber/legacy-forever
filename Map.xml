@@ -11,6 +11,13 @@
 					</Anchors>
 				</Texture>
 			</Layer>
+			<Layer level="OVERLAY">
+				<FontString parentKey="Count" inherits="NumberFontNormalSmall" justifyH="LEFT">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" x="-2" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
 			<Layer level="HIGHLIGHT">
 				<Texture atlas="UI-Legacy-Points-icon-c60" alphaMode="ADD" alpha="0.5">
 					<Size x="11" y="16"/>

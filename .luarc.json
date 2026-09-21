@@ -17,6 +17,7 @@
     "CreateFrame",
     "CreateFromMixins",
     "DEFAULT_CHAT_FRAME",
+    "Enum",
     "EventRegistry",
     "EventUtil",
     "GameTooltip",

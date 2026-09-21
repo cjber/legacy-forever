@@ -30,7 +30,7 @@ Open the world map. The Legacy button sits below the map's own tracking buttons.
 |---|---|
 | `/lh` | Short help |
 | `/lh audit` | Compare the bundled data with what the game reports, and list any objective the game doesn't know |
-| `/lh criteria <id>` | List every criterion the game reports for one achievement (useful alongside an audit's unknown IDs) |
+| `/lh criteria 684` | List every criterion the game reports for one achievement (useful alongside an audit's unknown IDs) |
 
 ## Where the locations come from
 
