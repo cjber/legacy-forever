@@ -19,7 +19,7 @@ read_globals = {
 	"GameTooltip_AddColoredLine", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",
 	"GameTooltip_AddNormalLine", "GameTooltip_Hide", "GameTooltip_SetTitle", "GetAchievementCriteriaInfo", "GetAchievementInfo",
 	"GetAchievementNumCriteria", "GetBuildInfo", "GetCategoryList", "GetCategoryNumAchievements",
-	"IsShiftKeyDown", "LegacySystemFrame", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "strtrim", "tContains", "tDeleteItem",
+	"LegacySystemFrame", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "strtrim", "tContains", "tDeleteItem",
 	"ToggleLegacySystemUI", "ToggleWorldMap", "UIParent", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 

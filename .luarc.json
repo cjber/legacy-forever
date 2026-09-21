@@ -32,7 +32,6 @@
     "GetBuildInfo",
     "GetCategoryList",
     "GetCategoryNumAchievements",
-    "IsShiftKeyDown",
     "LegacySystemFrame",
     "MapCanvasDataProviderMixin",
     "MapCanvasPinMixin",

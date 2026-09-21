@@ -4,9 +4,9 @@
 
 First release.
 
-- A Legacy button on the world map counts the unfinished Legacy objectives on the map you're viewing. Its menu opens them in the Legacy panel.
+- A Legacy button on the world map counts the unfinished Legacy objectives on the map you're viewing.
 - Pins mark 493 undiscovered areas and dungeon entrances; area pins show how much of the zone is left and can be hidden.
 - Challenges with no fixed location are listed separately.
-- Shift-click a challenge to track it: a movable tracker shows its unfinished steps with live progress.
+- Tick a challenge in the map menu to track it: a movable tracker shows its unfinished steps with live progress.
 - `/lh audit` checks the bundled data against the game.
 - Data from Forever build 1.60.1.69913.

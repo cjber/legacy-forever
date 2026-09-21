@@ -106,29 +106,29 @@ end
 
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]
 
--- Click opens the Legacy panel; shift-click adds to or removes from our own tracker.
-local function OnChallengeClick(challenge)
-	if IsShiftKeyDown() then
-		ns.Tracker.Toggle(challenge)
-	else
-		ns.Live.ShowInLegacyPanel(challenge)
-	end
+-- Each challenge is a checkbox for our own tracker (Forever refuses Blizzard's);
+-- the tracker's challenge names open the Legacy panel.
+local function IsTracked(challenge)
+	return ns.Tracker.IsTracked(challenge)
 end
 
-local CLICK_HINT = "Click to open in the Legacy panel. Shift-click to track."
+local function ToggleTracked(challenge)
+	ns.Tracker.Toggle(challenge)
+end
 
-local function ChallengeText(name, count, challenge)
-	local check = ns.Tracker.IsTracked(challenge) and "|TInterface\\RaidFrame\\ReadyCheck-Ready:12|t " or ""
-	return ("%s%s |cffffffff(%d)|r"):format(check, name, count)
+local TRACK_HINT = "Click to track, with live progress."
+
+local function ChallengeText(name, count)
+	return ("%s |cffffffff(%d)|r"):format(name, count)
 end
 
 local function AddGroup(root, group)
 	local name = ns.Live.Name(group.achievement)
 	local button =
-		root:CreateButton(ChallengeText(name, #group.objectives, group.challenge), OnChallengeClick, group.challenge)
+		root:CreateCheckbox(ChallengeText(name, #group.objectives), IsTracked, ToggleTracked, group.challenge)
 	button:SetTooltip(function(tooltip)
 		AddGroupTooltip(tooltip, group)
-		GameTooltip_AddInstructionLine(tooltip, CLICK_HINT)
+		GameTooltip_AddInstructionLine(tooltip, TRACK_HINT)
 	end)
 end
 
@@ -139,13 +139,13 @@ local function AddUnlocated(root)
 	end
 	local submenu = root:CreateButton(("No fixed location |cffffffff(%d)|r"):format(#unlocated))
 	for _, item in ipairs(unlocated) do
-		local text = ChallengeText(ns.Live.Name(item.challenge), item.open, item.challenge)
-		local button = submenu:CreateButton(text, OnChallengeClick, item.challenge)
+		local text = ChallengeText(ns.Live.Name(item.challenge), item.open)
+		local button = submenu:CreateCheckbox(text, IsTracked, ToggleTracked, item.challenge)
 		button:SetTooltip(function(tooltip)
 			GameTooltip_SetTitle(tooltip, ns.Live.Name(item.challenge))
 			GameTooltip_AddNormalLine(tooltip, "Levels, skills, ranks and anything without a fixed place.")
 			AddPointsLine(tooltip, item.challenge)
-			GameTooltip_AddInstructionLine(tooltip, CLICK_HINT)
+			GameTooltip_AddInstructionLine(tooltip, TRACK_HINT)
 		end)
 	end
 end
@@ -237,8 +237,8 @@ local function CreatePinProvider()
 		self.group = group
 		self.objective = objective
 		if objective.entry.kind == "explore" then
-			self:SetScalingLimits(1, 0.65, 0.9)
-			self:SetAlpha(0.8)
+			self:SetScalingLimits(1, 0.9, 1.1)
+			self:SetAlpha(0.85)
 		else
 			self:SetScalingLimits(1, 1.0, 1.2)
 			self:SetAlpha(1)
