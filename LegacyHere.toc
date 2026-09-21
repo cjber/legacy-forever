@@ -17,7 +17,7 @@ Core.lua
 Model.lua
 Live.lua
 Tracker.lua
-Map.xml
-Map.lua
 Completion.xml
 Completion.lua
+Map.xml
+Map.lua
