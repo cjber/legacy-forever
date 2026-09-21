@@ -319,17 +319,11 @@ local function IsZoneComplete(uiMapID)
 	return ns.Model.CompletionCounts(result) and result.complete
 end
 
--- The continent a zone sits on, or nil.
-local function ContinentOf(uiMapID)
-	local info = C_Map.GetMapInfo(uiMapID)
-	return info and info.parentMapID
-end
-
 -- "Kalimdor: 3 of 20 zones complete (15%)", counting what the player counts.
 local function ContinentText(continentID)
 	local results = {}
 	for uiMapID, zone in pairs(ns.Data.completion) do
-		if ContinentOf(uiMapID) == continentID then
+		if ns.Live.ContinentOf(uiMapID) == continentID then
 			results[#results + 1] = ns.Model.ZoneCompletion(zone, ns.Live.ZoneSnapshot(uiMapID), IsCounted)
 		end
 	end
@@ -360,7 +354,7 @@ local function SetUpToast(frame, uiMapID)
 	frame.Icon.Texture:SetAtlas(ICONS.areas.atlas)
 	frame:SetScript("OnClick", OnToastClick)
 	PlaySound(SOUNDKIT.UI_SCENARIO_STAGE_END)
-	local continent = ContinentOf(uiMapID)
+	local continent = ns.Live.ContinentOf(uiMapID)
 	local line = continent and ContinentText(continent)
 	if line then
 		ns.Print(("%s complete. %s"):format(C_Map.GetMapInfo(uiMapID).name, line))
@@ -369,13 +363,15 @@ end
 
 local toasts = AlertFrame:AddQueuedAlertFrameSubSystem("CriteriaAlertFrameTemplate", SetUpToast, 2, 6)
 
--- Zones already complete when you log in are not news: for the first few seconds, while the
--- game is still sending progress, completions are only noted.
+-- Zones already complete when you log in are not news. The first check (on entering the
+-- world, however long the loading screen took) and those in the few seconds after it, while
+-- the game is still sending achievement progress, only note completions.
 local QUIET_SECONDS = 10
-local quietUntil = GetTime() + QUIET_SECONDS
+local quietUntil
 local rewarded = {}
 
 local function CheckRewards()
+	quietUntil = quietUntil or GetTime() + QUIET_SECONDS
 	local quiet = GetTime() < quietUntil
 	for uiMapID in pairs(ns.Data.completion) do
 		if not rewarded[uiMapID] and IsZoneComplete(uiMapID) then
@@ -420,7 +416,7 @@ function Completion.AddSummary(tooltip, uiMapID)
 		HIGHLIGHT_FONT_COLOR.b
 	)
 	GameTooltip_AddHighlightLine(tooltip, CountsText(result, 14))
-	local continent = ContinentOf(uiMapID)
+	local continent = ns.Live.ContinentOf(uiMapID)
 	local line = continent and ContinentText(continent)
 	if line then
 		GameTooltip_AddNormalLine(tooltip, line)
