@@ -42,7 +42,7 @@
 				<Texture parentKey="Icon" atlas="UI-Legacy-Points-icon-c60">
 					<Size x="13" y="19"/>
 					<Anchors>
-						<Anchor point="CENTER" x="-1" y="1"/>
+						<Anchor point="CENTER" relativeKey="$parent.Background"/>
 					</Anchors>
 				</Texture>
 			</Layer>

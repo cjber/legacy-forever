@@ -111,7 +111,26 @@ function LegacyHereMapButtonMixin:OnLoad()
 	end)
 end
 
+-- Below whichever of Blizzard's top-right buttons are actually showing there: rulesets
+-- disable them (C_GameRules) and layout addons move them, so this is checked per refresh.
+local TOP_RIGHT_BUTTONS = { "WorldMapTrackingOptionsButton", "WorldMapTrackingPinButton" }
+local BUTTON_SPACING = -32
+
+local function TopRightOffset(map)
+	local offsetY = -2
+	for _, key in ipairs(TOP_RIGHT_BUTTONS) do
+		local button = map[key]
+		if button and button:IsShown() and button:GetPoint(1) == "TOPRIGHT" then
+			offsetY = offsetY + BUTTON_SPACING
+		end
+	end
+	return offsetY
+end
+
 function LegacyHereMapButtonMixin:Refresh()
+	local map = self:GetParent()
+	self:ClearAllPoints()
+	self:SetPoint("TOPRIGHT", map:GetCanvasContainer(), "TOPRIGHT", -4, TopRightOffset(map))
 	local count = ns.Model.CountObjectives(ZoneGroups(self:GetParent():GetMapID()))
 	self.Count:SetText(count > 0 and count or "")
 	self.Icon:SetDesaturated(count == 0)
@@ -187,29 +206,13 @@ end
 
 --[[ Wiring ]]
 
-local BUTTON_SPACING = -32
-
 local function Attach()
 	local map = WorldMapFrame
 	local provider = CreatePinProvider()
 	map:AddDataProvider(provider)
 
-	-- Below whichever of Blizzard's own top-right buttons this ruleset enables.
-	local offsetY = -2
-	for _, key in ipairs({ "WorldMapTrackingOptionsButton", "WorldMapTrackingPinButton" }) do
-		if map[key] then
-			offsetY = offsetY + BUTTON_SPACING
-		end
-	end
-	local button = map:AddOverlayFrame(
-		"LegacyHereMapButtonTemplate",
-		"DROPDOWNBUTTON",
-		"TOPRIGHT",
-		map:GetCanvasContainer(),
-		"TOPRIGHT",
-		-4,
-		offsetY
-	)
+	-- Refresh anchors it; see TopRightOffset.
+	local button = map:AddOverlayFrame("LegacyHereMapButtonTemplate", "DROPDOWNBUTTON")
 
 	ns.Live.OnChange(function()
 		if map:IsShown() then

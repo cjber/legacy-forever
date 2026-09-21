@@ -10,8 +10,8 @@ end
 -- up as a count and a list of IDs rather than as a silently missing pin.
 local function Audit()
 	local data = ns.Data
-	local _, clientBuild = GetBuildInfo()
-	ns.Print(("data from build %s, client build %s"):format(data.build, tostring(clientBuild)))
+	local version, build = GetBuildInfo()
+	ns.Print(("data from build %s, client build %s.%s"):format(data.build, version, build))
 
 	local visible = ns.Live.Visible()
 	local numVisible = 0
