@@ -404,7 +404,10 @@ local function CreatePinProvider()
 			for _, texture in ipairs(self.drawn[self.hovered.key]) do
 				texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
 			end
-			GameTooltip:Hide()
+			-- Only our own tooltip: a pin the cursor just moved onto has already shown its own.
+			if GameTooltip:GetOwner() == self then
+				GameTooltip:Hide()
+			end
 		end
 		self.hovered = area
 		if not area then
