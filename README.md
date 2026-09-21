@@ -10,9 +10,11 @@ Your unfinished WoW: Forever Legacy challenges, on the world map, for the zone y
 
 Legacy points are account-wide and come from challenges spread over the whole world: areas to discover, dungeons to clear, bosses, quests and reputations. The Legacy panel lists them, but it doesn't tell you which ones you can work on where you are. This addon adds that to the world map, and keeps a small tracker of the challenges you pick.
 
+<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-here/main/docs/screenshots/map.png" width="640" alt="Ashenvale on the world map with a pin on each undiscovered area and the Legacy menu open"></p>
+
 ## Features
 
-- **Map button** in the world map's top-right button column, with a count of the unfinished objectives on the map you're viewing. Its menu groups them by challenge; tick one to track it; challenges with no fixed place are grouped like the Legacy panel. Area pins are off until you turn them on there.
+- **Map button** in the world map's top-right button column, with a count of the unfinished objectives on the map you're viewing. Its menu lists them by challenge, with a tick box to track each one. Challenges with no fixed place are grouped the way the Legacy panel groups them. Area pins are off until you turn them on in the same menu.
 - **Tracker**: a Legacy section at the top of the objective tracker lists the challenges you track, each unfinished step with its live progress (12/20, or areas done in an exploration step). Click a challenge to open it in the Legacy panel; right-click to stop tracking. Forever doesn't allow Blizzard's own tracking of these, so this replaces it.
 - **Map pins** on dungeon entrances and, when turned on, on areas you haven't discovered yet (with how many of the zone's areas are left), with the challenge each counts toward and its Legacy points.
 - **No fixed location** lists challenges whose remaining work isn't tied to a place, such as levels, skills and ranks.
@@ -20,7 +22,7 @@ Legacy points are account-wide and come from challenges spread over the whole wo
 
 ## Install
 
-Download the zip from [Releases](https://github.com/cjber/legacy-here/releases) and extract it into `_classic_beta_/Interface/AddOns/`, so you end up with `AddOns/LegacyHere/LegacyHere.toc`.
+Install it from [CurseForge](https://www.curseforge.com/wow/addons/legacy-here) or [Wago Addons](https://addons.wago.io/addons/legacy-here), or download the zip from [Releases](https://github.com/cjber/legacy-here/releases). To install the zip by hand, extract it into `_classic_beta_/Interface/AddOns/` so you end up with `AddOns/LegacyHere/LegacyHere.toc`.
 
 ## Usage
 
@@ -62,3 +64,5 @@ CI runs these checks on every push. Each day a scheduled job checks wago.tools f
 ## Licence
 
 GPL-3.0-or-later. Game data comes from the client via [wago.tools](https://wago.tools).
+
+Made by Cillian Berragan · [cillian.dev](https://cillian.dev) · [GitHub](https://github.com/cjber) · [Twitter](https://twitter.com/cjberragan)
