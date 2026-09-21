@@ -3,6 +3,15 @@
 	<Button name="LegacyHereZoneOverlayTemplate" mixin="LegacyHereZoneOverlayMixin" frameStrata="HIGH" virtual="true">
 		<Size x="1" y="1"/>
 		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Shade">
+					<Color r="1" g="1" b="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="-12" y="8"/>
+						<Anchor point="BOTTOMRIGHT" x="48" y="-8"/>
+					</Anchors>
+				</Texture>
+			</Layer>
 			<Layer level="OVERLAY">
 				<FontString parentKey="Title" inherits="GameFontNormalLarge" justifyH="LEFT">
 					<Anchors>
@@ -15,7 +24,7 @@
 				</FontString>
 				<FontString parentKey="Counts" inherits="GameFontHighlight" justifyH="LEFT">
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" x="0" y="-12"/>
 					</Anchors>
 					<Shadow>
 						<Offset x="1" y="-1"/>
@@ -25,6 +34,7 @@
 			</Layer>
 		</Layers>
 		<Scripts>
+			<OnLoad method="OnLoad"/>
 			<OnClick method="OnClick"/>
 			<OnEnter method="OnEnter"/>
 			<OnLeave method="OnLeave"/>

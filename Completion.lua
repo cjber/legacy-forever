@@ -83,6 +83,25 @@ local function AddTooltip(tooltip, name, result)
 	end
 end
 
+-- A thin fill for the percent, in the tracker's gold; green once the zone is done.
+local BAR_HEIGHT = 2
+
+local function CreateProgressBar(parent)
+	local bar = CreateFrame("StatusBar", nil, parent)
+	bar:SetHeight(BAR_HEIGHT)
+	bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+	bar:SetMinMaxValues(0, 100)
+	local background = bar:CreateTexture(nil, "BACKGROUND")
+	background:SetAllPoints()
+	background:SetColorTexture(0, 0, 0, 0.45)
+	return bar
+end
+
+local function SetProgress(bar, result)
+	bar:SetValue(result.percent)
+	bar:SetStatusBarColor((result.done == result.total and GREEN_FONT_COLOR or NORMAL_FONT_COLOR):GetRGB())
+end
+
 --[[ Objective tracker: the zone you're in ]]
 
 local TrackerMixin = {}
@@ -95,6 +114,7 @@ function TrackerMixin:LayoutContents()
 	end
 	self:SetHeader(C_Map.GetMapInfo(uiMapID).name)
 	self.Header.Percent:SetText(PercentText(result))
+	SetProgress(self.Header.Progress, result)
 	local block = self:GetBlock(uiMapID)
 	block:SetHeader(CountsText(result, 14))
 	self:LayoutBlock(block)
@@ -123,6 +143,10 @@ if trackerModule then
 	local header = trackerModule.Header
 	header.Percent = header:CreateFontString(nil, "ARTWORK", "ObjectiveTrackerHeaderFont")
 	header.Percent:SetPoint("RIGHT", header.MinimizeButton, "LEFT", -4, 0)
+	-- Along the header art's own underline, under the zone name and percent.
+	header.Progress = CreateProgressBar(header)
+	header.Progress:SetPoint("BOTTOMLEFT", 7, 1)
+	header.Progress:SetPoint("BOTTOMRIGHT", header.Percent, "BOTTOMRIGHT", 0, 1)
 	-- Saved variables arrive only once every file has run.
 	EventUtil.ContinueOnAddOnLoaded(addonName, function()
 		trackerModule:SetCollapsed(Settings().trackerCollapsed == true)
@@ -140,6 +164,18 @@ end
 LegacyHereZoneOverlayMixin = {}
 
 -- Called by the world map whenever it changes map.
+-- Room for the text, the bar and a fade on the right, so it never looks boxed.
+local OVERLAY_MIN_WIDTH = 140
+
+function LegacyHereZoneOverlayMixin:OnLoad()
+	self.Progress = CreateProgressBar(self)
+	self.Progress:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT", 0, -4)
+	self.Progress:SetPoint("RIGHT")
+	-- A soft shade behind the text keeps it legible on pale parchment.
+	self.Shade:SetGradient("HORIZONTAL", CreateColor(0, 0, 0, 0.5), CreateColor(0, 0, 0, 0))
+end
+
+-- Called by the world map whenever it changes map.
 function LegacyHereZoneOverlayMixin:Refresh()
 	local map = self:GetParent()
 	local uiMapID = map:GetMapID()
@@ -148,12 +184,17 @@ function LegacyHereZoneOverlayMixin:Refresh()
 		self:Hide()
 		return
 	end
+	local collapsed = Settings().mapCollapsed == true
 	self.name = C_Map.GetMapInfo(uiMapID).name
 	self.Title:SetText(("%s  %s"):format(self.name, PercentText(self.result)))
+	SetProgress(self.Progress, self.result)
 	self.Counts:SetText(CountsText(self.result, 16))
-	self.Counts:SetShown(not Settings().mapCollapsed)
-	local height = self.Title:GetStringHeight() + (Settings().mapCollapsed and 0 or self.Counts:GetStringHeight() + 4)
-	self:SetSize(math.max(self.Title:GetStringWidth(), self.Counts:GetStringWidth()), height)
+	self.Counts:SetShown(not collapsed)
+	local height = self.Title:GetStringHeight() + 4 + BAR_HEIGHT
+	if not collapsed then
+		height = height + 6 + self.Counts:GetStringHeight()
+	end
+	self:SetSize(math.max(self.Title:GetStringWidth(), self.Counts:GetStringWidth(), OVERLAY_MIN_WIDTH), height)
 	self:Show()
 end
 
