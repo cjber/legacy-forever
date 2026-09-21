@@ -160,7 +160,8 @@ Model.COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons" }
 -- the nodes the game lists (any other node is unknown), faction = "Alliance" | "Horde",
 -- wingDone = function(refs) -> true/false/nil }.
 -- Areas and flight paths are per character; dungeon wings are account-wide Legacy steps.
-function Model.ZoneCompletion(zone, snapshot)
+-- `counted(key)`, when given, says which categories the player counts; the rest are left out entirely.
+function Model.ZoneCompletion(zone, snapshot, counted)
 	local ownTaxis = {}
 	for _, taxi in ipairs(zone.taxis or {}) do
 		if taxi.faction == "Neutral" or taxi.faction == snapshot.faction then
@@ -181,6 +182,9 @@ function Model.ZoneCompletion(zone, snapshot)
 		total = 0,
 	}
 	for _, key in ipairs(Model.COMPLETION_CATEGORIES) do
+		if counted and not counted(key) then
+			result[key] = nil
+		end
 		local category = result[key]
 		if category then
 			result.done = result.done + category.done

@@ -29,6 +29,11 @@ local function IsShown(surface)
 	return shown
 end
 
+-- Every category counts until the player unticks it under "What counts".
+local function IsCounted(category)
+	return Settings()["count_" .. category] ~= false
+end
+
 local function Refresh()
 	for _, callback in ipairs(listeners) do
 		callback()
@@ -40,7 +45,7 @@ function Completion.Of(uiMapID)
 	if not zone then
 		return nil
 	end
-	local result = ns.Model.ZoneCompletion(zone, ns.Live.ZoneSnapshot(uiMapID))
+	local result = ns.Model.ZoneCompletion(zone, ns.Live.ZoneSnapshot(uiMapID), IsCounted)
 	return result.total > 0 and result or nil
 end
 
@@ -299,10 +304,24 @@ local function Toggle(surface)
 	Refresh()
 end
 
+local function ToggleCounted(category)
+	Settings()["count_" .. category] = not IsCounted(category)
+	Refresh()
+end
+
 function Completion.AddMenu(root)
 	root:CreateTitle("Zone completion")
 	root:CreateCheckbox("In the objective tracker", IsShown, Toggle, "tracker")
 	root:CreateCheckbox("On the world map", IsShown, Toggle, "map")
+	local counts = root:CreateButton("What counts")
+	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
+		counts:CreateCheckbox(
+			("%s %s"):format(CreateAtlasMarkup(ICONS[key], 14, 14), LABELS[key]),
+			IsCounted,
+			ToggleCounted,
+			key
+		)
+	end
 end
 
 -- For /lh audit: the current zone's counts against what the game reports.

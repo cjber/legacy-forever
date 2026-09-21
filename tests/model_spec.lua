@@ -114,6 +114,11 @@ equal(completion.percent, 40, "percent floors")
 snapshot.explored = nil
 equal(Model.ZoneCompletion(zone, snapshot).areas, nil, "unknown exploration drops the category")
 equal(Model.ZoneCompletion({}, snapshot).percent, nil, "empty zone has no percent")
+local noAreas = Model.ZoneCompletion(zone, snapshot, function(key)
+	return key ~= "areas"
+end)
+equal(noAreas.areas, nil, "an uncounted category is left out")
+equal(noAreas.total, completion.total - completion.areas.total, "and drops out of the total")
 
 -- Overlay tiles, laid out like Blizzard's exploration overlays.
 local ox, oy, ow, oh = Model.OverlayRect("413:476:256:128")
