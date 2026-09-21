@@ -1,10 +1,11 @@
 package-as: LegacyHere
 
 manual-changelog:
-  filename: CHANGELOG.md
+  filename: .release-notes.md
   markup-type: markdown
 
 ignore:
+  - .release-notes.md
   - tools
   - tests
   - docs
