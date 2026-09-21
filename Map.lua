@@ -476,14 +476,13 @@ local function CreatePinProvider()
 		end
 	end
 
-	-- The zone's undiscovered areas that have map tiles; nil when the game reports no
-	-- exploration for the map, so nothing is claimed undiscovered.
+	-- The zone's undiscovered areas that have map tiles; nil for a map without shading data.
 	local function UndiscoveredAreas(mapID)
 		local zone = ns.Data.completion[mapID]
-		local explored = zone and zone.tileWidth and ns.Live.ZoneSnapshot(mapID).explored
-		if not explored then
+		if not (zone and zone.tileWidth) then
 			return nil
 		end
+		local explored = ns.Live.ZoneSnapshot(mapID).explored
 		local areas = {}
 		for _, area in ipairs(zone.areas) do
 			if area.tiles and not explored[area.key] then
