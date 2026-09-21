@@ -218,12 +218,11 @@ function Live.ZoneSnapshot(uiMapID)
 		return snapshot
 	end
 	snapshot = { taxis = {}, faction = UnitFactionGroup("player"), refsDone = RefsDone, reaction = Reaction }
-	local textures = C_MapExplorationInfo.GetExploredMapTextures(uiMapID)
-	if textures then
-		snapshot.explored = {}
-		for _, texture in ipairs(textures) do
-			snapshot.explored[OverlayKey(texture)] = true
-		end
+	-- A zone this character has never entered reports no textures at all (nil), which
+	-- means nothing explored yet rather than unknown.
+	snapshot.explored = {}
+	for _, texture in ipairs(C_MapExplorationInfo.GetExploredMapTextures(uiMapID) or {}) do
+		snapshot.explored[OverlayKey(texture)] = true
 	end
 	local record = FlightRecord()
 	if record.continents[ContinentOf(uiMapID) or 0] then
