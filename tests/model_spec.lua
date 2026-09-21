@@ -26,16 +26,16 @@ local data = {
 
 local live = {
 	[10] = {
-		[1] = { text = "Area A", completed = false },
-		[2] = { text = "Area B", completed = true },
-		[4] = { text = "Area C", completed = false },
-		[8] = { text = "Unplaced area", completed = false },
+		[1] = { text = "Area A", completed = false, index = 1 },
+		[2] = { text = "Area B", completed = true, index = 2 },
+		[4] = { text = "Area C", completed = false, index = 3 },
+		[8] = { text = "Unplaced area", completed = false, index = 4 },
 	},
 	[100] = {
-		[3] = { text = "Boss", completed = false },
-		[5] = { text = "Reach level 20", completed = false },
-		[6] = { text = "Explore", completed = false, type = 8, asset = 10 },
-		[7] = { text = "Done already", completed = true },
+		[3] = { text = "Boss", completed = false, index = 2 },
+		[5] = { text = "Reach level 20", completed = false, index = 1, quantity = 12, required = 20 },
+		[6] = { text = "Explore", completed = false, index = 3, type = 8, asset = 10 },
+		[7] = { text = "Done already", completed = true, index = 4 },
 	},
 }
 local function criteria(id)
@@ -70,5 +70,14 @@ equal(#unlocated, 1, "one challenge with unplaced work")
 equal(unlocated[1].challenge, 100, "unplaced challenge")
 equal(unlocated[1].open, 2, "the level criterion plus the unplaced area under 10")
 equal(#Model.Unlocated(data, { [200] = true }, criteria), 0, "variant without live criteria")
+
+-- Tracker: unfinished steps in game order, with counts and sub-achievement progress.
+local lines = Model.TrackerLines(100, criteria)
+equal(#lines, 3, "completed step left out of the tracker")
+equal(lines[1].text, "Reach level 20", "tracker follows game order")
+equal(lines[1].detail, "12/20", "counted criterion shows quantity")
+equal(lines[2].detail, nil, "single step has no count")
+equal(lines[3].detail, "1/4", "earn-achievement step shows its criteria done")
+equal(#Model.TrackerLines(999, criteria), 0, "unknown challenge has no lines")
 
 print(("model_spec: %d checks passed"):format(checks))

@@ -5,7 +5,8 @@ local _, ns = ...
 --
 -- `visible` is the set of unfinished reward-bearing challenges the game shows this
 -- character (Forever ships two variant sets and the client lists only one).
--- `criteria(achievementID)` returns { [criteriaID] = { text, completed, type, asset } }
+-- `criteria(achievementID)` returns { [criteriaID] = { text, completed, type, asset,
+-- quantity, required, index } }
 -- or nil when the game has no data for that achievement.
 local Model = {}
 ns.Model = Model
@@ -97,4 +98,35 @@ function Model.Unlocated(data, visible, criteria)
 		return a.challenge < b.challenge
 	end)
 	return result
+end
+
+-- A tracked challenge's unfinished steps in game order, each with its progress:
+-- "3/10" for counted criteria, and done/total of X's criteria for "earn achievement X".
+function Model.TrackerLines(challenge, criteria)
+	local open = {}
+	for _, progress in pairs(criteria(challenge) or {}) do
+		if not progress.completed then
+			open[#open + 1] = progress
+		end
+	end
+	table.sort(open, function(a, b)
+		return a.index < b.index
+	end)
+	local lines = {}
+	for _, progress in ipairs(open) do
+		local detail
+		local sub = progress.type == EARN_ACHIEVEMENT and criteria(progress.asset)
+		if sub then
+			local done, total = 0, 0
+			for _, step in pairs(sub) do
+				total = total + 1
+				done = done + (step.completed and 1 or 0)
+			end
+			detail = ("%d/%d"):format(done, total)
+		elseif progress.required and progress.required > 1 then
+			detail = ("%d/%d"):format(progress.quantity, progress.required)
+		end
+		lines[#lines + 1] = { text = progress.text, detail = detail }
+	end
+	return lines
 end

@@ -106,18 +106,29 @@ end
 
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]
 
--- Forever's ruleset doesn't let achievements be tracked, so the panel is the action.
-local function OpenInPanel(challenge)
-	ns.Live.ShowInLegacyPanel(challenge)
+-- Click opens the Legacy panel; shift-click adds to or removes from our own tracker.
+local function OnChallengeClick(challenge)
+	if IsShiftKeyDown() then
+		ns.Tracker.Toggle(challenge)
+	else
+		ns.Live.ShowInLegacyPanel(challenge)
+	end
+end
+
+local CLICK_HINT = "Click to open in the Legacy panel. Shift-click to track."
+
+local function ChallengeText(name, count, challenge)
+	local check = ns.Tracker.IsTracked(challenge) and "|TInterface\\RaidFrame\\ReadyCheck-Ready:12|t " or ""
+	return ("%s%s |cffffffff(%d)|r"):format(check, name, count)
 end
 
 local function AddGroup(root, group)
 	local name = ns.Live.Name(group.achievement)
-	local text = ("%s |cffffffff(%d)|r"):format(name, #group.objectives)
-	local button = root:CreateButton(text, OpenInPanel, group.challenge)
+	local button =
+		root:CreateButton(ChallengeText(name, #group.objectives, group.challenge), OnChallengeClick, group.challenge)
 	button:SetTooltip(function(tooltip)
 		AddGroupTooltip(tooltip, group)
-		GameTooltip_AddInstructionLine(tooltip, "Click to open in the Legacy panel.")
+		GameTooltip_AddInstructionLine(tooltip, CLICK_HINT)
 	end)
 end
 
@@ -128,13 +139,13 @@ local function AddUnlocated(root)
 	end
 	local submenu = root:CreateButton(("No fixed location |cffffffff(%d)|r"):format(#unlocated))
 	for _, item in ipairs(unlocated) do
-		local text = ("%s |cffffffff(%d)|r"):format(ns.Live.Name(item.challenge), item.open)
-		local button = submenu:CreateButton(text, OpenInPanel, item.challenge)
+		local text = ChallengeText(ns.Live.Name(item.challenge), item.open, item.challenge)
+		local button = submenu:CreateButton(text, OnChallengeClick, item.challenge)
 		button:SetTooltip(function(tooltip)
 			GameTooltip_SetTitle(tooltip, ns.Live.Name(item.challenge))
 			GameTooltip_AddNormalLine(tooltip, "Levels, skills, ranks and anything without a fixed place.")
 			AddPointsLine(tooltip, item.challenge)
-			GameTooltip_AddInstructionLine(tooltip, "Click to open in the Legacy panel.")
+			GameTooltip_AddInstructionLine(tooltip, CLICK_HINT)
 		end)
 	end
 end

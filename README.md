@@ -8,11 +8,12 @@ Your unfinished WoW: Forever Legacy challenges, on the world map, for the zone y
 <a href="https://github.com/cjber/legacy-here/releases/latest"><img src="https://img.shields.io/github/v/release/cjber/legacy-here" alt="Latest release"></a>
 </p>
 
-Legacy points are account-wide and come from challenges spread over the whole world: areas to discover, dungeons to clear, bosses, quests and reputations. The Legacy panel lists them, but it doesn't tell you which ones you can work on where you are. This addon adds that to the world map. It does not open a separate frame.
+Legacy points are account-wide and come from challenges spread over the whole world: areas to discover, dungeons to clear, bosses, quests and reputations. The Legacy panel lists them, but it doesn't tell you which ones you can work on where you are. This addon adds that to the world map, and keeps a small tracker of the challenges you pick.
 
 ## Features
 
-- **Map button** in the world map's top-right button column, with a count of the unfinished objectives on the map you're viewing. Its menu groups them by challenge; click one to open it in the Legacy panel. It can also hide the area pins.
+- **Map button** in the world map's top-right button column, with a count of the unfinished objectives on the map you're viewing. Its menu groups them by challenge; click one to open it in the Legacy panel, or shift-click to track it. It can also hide the area pins.
+- **Tracker** lists the challenges you track with each unfinished step and its live progress (12/20, or areas done in an exploration step). Click a challenge to open it in the Legacy panel, right-click to stop tracking, drag the title to move it. Forever doesn't allow Blizzard's own tracking of these, so this replaces it.
 - **Map pins** on areas you haven't discovered yet (small and quiet, with how many of the zone's areas are left) and on dungeon entrances, with the challenge each counts toward and its Legacy points.
 - **No fixed location** lists challenges whose remaining work isn't tied to a place, such as levels, skills and ranks.
 - Progress comes from the game each time, so it matches the Legacy panel and follows whichever challenge set your character sees.
@@ -23,7 +24,7 @@ Download the zip from [Releases](https://github.com/cjber/legacy-here/releases) 
 
 ## Usage
 
-Open the world map. The Legacy button sits below the map's own tracking buttons.
+Open the world map. The Legacy button sits below the map's own tracking buttons. Shift-click a challenge in its menu to add it to the tracker.
 
 | Command | What it does |
 |---|---|
@@ -36,7 +37,7 @@ Everything is generated from the Forever client's own data (via [wago.tools](htt
 
 - **Areas:** each exploration criterion names a world map overlay. Its pin is the centre of that overlay on the zone's current map art.
 - **Dungeons and raids:** placed at the client's entrance marker, only where the zone is certain.
-- **Kills, quests and reputations:** the client data has no reliable location for most of these, so they stay in the list without a pin until a location is verified from game data.
+- **Kills, quests and reputations:** the client ships no spawn or encounter data for these (none of the 53 Legacy kill targets has a Creature row), so they stay unpinned. Track the challenge to follow their progress instead.
 
 **Found a wrong or missing objective?** Run `/lh audit` and [open an issue](https://github.com/cjber/legacy-here/issues/new) with the output.
 

@@ -42,10 +42,18 @@ function Live.Criteria(achievementID)
 	if count and count > 0 then
 		result = {}
 		for index = 1, count do
-			local text, criteriaType, completed, _, _, _, _, asset, _, criteriaID =
+			local text, criteriaType, completed, quantity, required, _, _, asset, _, criteriaID =
 				GetAchievementCriteriaInfo(achievementID, index)
 			if criteriaID then
-				result[criteriaID] = { text = text, completed = completed, type = criteriaType, asset = asset }
+				result[criteriaID] = {
+					text = text,
+					completed = completed,
+					type = criteriaType,
+					asset = asset,
+					quantity = quantity,
+					required = required,
+					index = index,
+				}
 			end
 		end
 	end
@@ -107,4 +115,5 @@ local events = CreateFrame("Frame")
 events:RegisterEvent("CRITERIA_UPDATE")
 events:RegisterEvent("ACHIEVEMENT_EARNED")
 events:RegisterEvent("RECEIVED_ACHIEVEMENT_LIST")
+events:RegisterEvent("PLAYER_ENTERING_WORLD")
 events:SetScript("OnEvent", Live.Invalidate)
