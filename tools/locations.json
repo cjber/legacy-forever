@@ -1,0 +1,16 @@
+{
+  "criteria": {
+    "3271": {
+      "uiMap": 1445,
+      "kind": "instance",
+      "instance": 249,
+      "evidence": "Build 1.60.1.69913: Achievement 684 (CriteriaTree 230797) owns Criteria 3271 (Type 0, Asset 10184) and Instance_ID 249. Onyxia's Lair is in the Wyrmbog, Dustwallow Marsh (AreaTable 511 -> 15; UiMapAssignment 46755 -> UiMap 1445). Map 249: CorpseMapID 1, Corpse (-4753.3125, -3752.4211425781) projects there to (0.529, 0.777). The geography fact selects Dustwallow among overlapping zone rectangles; the generator derives the pin from Map, not this text."
+    },
+    "117792": {
+      "uiMap": 1445,
+      "kind": "instance",
+      "instance": 249,
+      "evidence": "Build 1.60.1.69913: Achievement 64030 owns Criteria 117792 (Type 0, Asset 10184) and Instance_ID 249, the second reward variant of Achievement 684 / Criteria 3271. Onyxia's Lair is in the Wyrmbog, Dustwallow Marsh (AreaTable 511 -> 15; UiMapAssignment 46755 -> UiMap 1445). Map 249's CorpseMapID 1 and Corpse coordinates project to (0.529, 0.777); the zone selection is the same verified geography fact as Criteria 3271."
+    }
+  }
+}

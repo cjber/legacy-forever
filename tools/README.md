@@ -1,0 +1,95 @@
+# Legacy data generator
+
+Run from the repository root:
+
+```sh
+python3 tools/gen_legacy.py --refresh
+python3 tools/gen_legacy.py --offline
+luajit tests/data_spec.lua
+```
+
+Python's standard library is sufficient. The generator pins `BUILD` and
+`SOURCE_DATE`, downloads CSVs from
+`https://wago.tools/db2/<Table>/csv?build=<BUILD>` into ignored `tools/.cache/`,
+and atomically writes `Data/Legacy.lua`. The default reuses cached downloads;
+`--refresh` replaces them and `--offline` requires them. Coverage goes to stderr;
+malformed schemas, unknown relevant criteria types, graph cycles, and stale
+curated IDs fail without replacing the generated output. `latest_build.py` is
+copied unchanged from SkillUp Forever and only reports the newest Forever build.
+
+Sources: `TraitCurrencySource`, `Achievement`, `Criteria`, `CriteriaTree`,
+`WorldMapOverlay`, `AreaTable`, `UiMap`, `UiMapAssignment`, `UiMapXMapArt`,
+`UiMapArt`, `UiMapArtStyleLayer`, `Map`, and `DungeonEncounter`. Currency 4225
+selects both reward variants. Type-8 criteria recursively populate `feeds`;
+objectives retain the owning achievement and actual Criteria.ID, never a tree
+node ID or a copied parent achievement ID.
+
+## Coordinates and verification
+
+Exploration uses Criteria.Asset → WorldMapOverlay.ID. All nonzero overlay AreaIDs
+are followed through AreaTable.ParentAreaID to UiMapAssignment.AreaID. Multiple
+candidate zones remain unresolved. An exact, unphased UiMapXMapArt match takes
+precedence: its map owns the overlay's coordinate space. In particular, overlay
+202 / Criteria 911 outlines Thunder Bluff **on Mulgore**, not on the city map.
+
+If the criterion's overlay has no UiMapXMapArt row, an exact match of its nonzero
+AreaID set must identify exactly one overlay on current art. The replacement's
+art/UiMap must agree with the area-derived zone. Its hit rectangle supplies the
+pin; achievement and Criteria.ID remain unchanged. Missing, ambiguous, or
+zone-conflicting matches stay unpinned and are counted.
+
+UiMapArt.UiMapArtStyleID joins the base (`LayerIndex = 0`) UiMapArtStyleLayer.
+Hit rectangles already use full-layer pixels; texture offsets are not added:
+
+```text
+x = (HitRectLeft + HitRectRight) / (2 * LayerWidth)
+y = (HitRectTop + HitRectBottom) / (2 * LayerHeight)
+```
+
+Two sanity checks, also asserted by the Lua spec, use the 1002 × 668 layer:
+
+| Area / ID-backed chain | Rectangle (left, right, top, bottom) | Pin |
+| --- | --- | --- |
+| Bloodhoof Village: Criteria 914 → overlay 186 → Area 222 → parent 215 → UiMap 1412; art 1200 | 434, 507, 388, 445 | 0.470, 0.624 |
+| Lakeshire: Criteria 1185 → overlay 364 → Area 69 → parent 44 → UiMap 1433; art 2121 | 94, 334, 263, 342 | 0.214, 0.453 |
+
+Both lie within their independently joined zone bounds, in southern Mulgore and
+western Redridge respectively. A remap assertion covers Dun Morogh Criteria 502:
+old overlay 117 and current overlay 5129 share AreaID 800; current art 2151 gives
+0.349, 0.681 on UiMap 1426. Only the current overlay supplies pixel coordinates.
+Empty hit rectangles receive no pin. Output coordinates have three decimals.
+
+Instances use the owning Achievement.Instance_ID or a type-165
+DungeonEncounter.MapID. Map.CorpseMapID selects the world map; Corpse_0/1 supply
+world X/Y. For a matching UiMapAssignment, UI X reverses world Y over
+Region_1..Region_4, and UI Y reverses world X over Region_0..Region_3; each is
+scaled into UiMin..UiMax. WMO-local assignments are excluded. Overlapping zone
+rectangles require a verified zone selection, not a nearest-centre guess.
+Onyxia's Map 249 projects through assignment 46755 into Dustwallow (1445) at
+0.529, 0.777. These are client corpse entrance markers, not boss-room positions.
+
+## Verified locations and current coverage
+
+Add an entry under `locations.json` → `criteria`, keyed by decimal Criteria.ID,
+with `uiMap`, `kind`, and an `evidence` string naming verified row IDs or an
+unambiguous geography fact. `kind = "instance"` also requires `instance = Map.ID`;
+other kinds omit it. Never add coordinates, name-based joins, or Wowhead data.
+The generator validates IDs, reachability, types, and conflicts with client data,
+and derives any instance pin itself. The two current facts select Dustwallow for
+Onyxia's two criteria variants; new Forever bosses/quests remain unresolved.
+
+Build **1.60.1.69913**, snapshot **2026-09-21**: 130 rewards, 46 supporting
+achievements (43 exploration achievements plus three metas), 47 populated zones.
+There are **549 exploration entries: 493 pinned, 56 unpinned**. Of 497 old-art
+criteria overlays, 449 have a unique current-art match, 48 have none, and zero
+have multiple matches. One unique match disagrees with the area-derived zone;
+448 remaps are accepted, yielding 447 additional pins and one empty rectangle.
+The 56 unpinned entries comprise 48 unmatched overlays, one zone mismatch, and
+seven empty rectangles. There are **two pinned instance entries** for one entrance
+and **two curated criteria**. No exploration objective is unresolved.
+
+Unresolved direct reward `(achievement, criteria)` pairs across both variants:
+kill **106**, instance/encounter **2**, quest **8**, reputation **16**, level **54**,
+skill **36**, rank **10**; **232** total. The two Explorer meta criteria are expanded,
+not counted as unresolved. Global progress and unplaced objectives stay absent
+from `zones` for the addon's “No fixed location” view.
