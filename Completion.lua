@@ -1,6 +1,6 @@
 local addonName, ns = ...
 
--- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths, dungeons,
+-- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths, dungeons, raids,
 -- Legacy objectives and local reputations are done, as a section in the objective tracker (the zone you're in) and in
 -- the world map's corner (the zone you're viewing). Each is optional and collapsible.
 local Completion = {}
@@ -10,6 +10,7 @@ local ICONS = {
 	areas = { atlas = "islands-queue-prop-compass" },
 	taxis = { atlas = "flightmaster" },
 	dungeons = { atlas = "dungeon" },
+	raids = { atlas = "raid" },
 	legacy = { atlas = "UI-Legacy-Points-icon-c60", aspect = 50 / 73 },
 	-- No atlas reads as reputation, so the classic handshake icon, trimmed of its border.
 	reputations = { file = "Interface\\Icons\\Achievement_Reputation_01" },
@@ -18,6 +19,7 @@ local LABELS = {
 	areas = "Areas explored",
 	taxis = "Flight paths",
 	dungeons = "Dungeons",
+	raids = "Raids",
 	legacy = "Legacy objectives",
 	reputations = "Reputations (Friendly)",
 }
@@ -61,7 +63,7 @@ function Completion.Of(uiMapID)
 	return result.total > 0 and result or nil
 end
 
-local function Icon(key, size)
+function Completion.Icon(key, size)
 	local icon = ICONS[key]
 	if icon.file then
 		return ("|T%s:%d:%d:0:0:64:64:5:59:5:59|t"):format(icon.file, size, size)
@@ -100,7 +102,7 @@ local function CountsText(result, iconSize)
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 		local category = result[key]
 		if category then
-			parts[#parts + 1] = ("%s %s"):format(Icon(key, iconSize), CategoryText(category, true))
+			parts[#parts + 1] = ("%s %s"):format(Completion.Icon(key, iconSize), CategoryText(category, true))
 		end
 	end
 	return table.concat(parts, "   ")
@@ -112,7 +114,7 @@ local function AddTooltip(tooltip, name, result)
 		local category = result[key]
 		if category then
 			tooltip:AddDoubleLine(
-				("%s %s"):format(Icon(key, 14), LABELS[key]),
+				("%s %s"):format(Completion.Icon(key, 14), LABELS[key]),
 				CategoryText(category),
 				NORMAL_FONT_COLOR.r,
 				NORMAL_FONT_COLOR.g,
@@ -134,8 +136,11 @@ local function AddTooltip(tooltip, name, result)
 			end
 		end
 	end
-	if result.dungeons or result.legacy then
-		GameTooltip_AddDisabledLine(tooltip, "Dungeons and Legacy objectives count your progress on any character.")
+	if result.dungeons or result.raids or result.legacy then
+		GameTooltip_AddDisabledLine(
+			tooltip,
+			"Dungeons, raids and Legacy objectives count your progress on any character."
+		)
 	end
 end
 
@@ -305,6 +310,82 @@ end
 EventUtil.ContinueOnAddOnLoaded("Blizzard_WorldMap", AttachMap)
 ns.Live.OnChange(Refresh)
 
+--[[ A zone reaching 100%: a toast and a sound, GW2 style ]]
+
+-- Every category counts toward the reward, whatever "What counts" shows, so unticking one
+-- never hands out toasts.
+local function IsZoneComplete(uiMapID)
+	local result = ns.Model.ZoneCompletion(ns.Data.completion[uiMapID], ns.Live.ZoneSnapshot(uiMapID))
+	return ns.Model.CompletionCounts(result) and result.complete
+end
+
+-- "Kalimdor: 3 of 20 zones complete (15%)", counting what the player counts.
+local function ContinentText(continentID)
+	local results = {}
+	for uiMapID, zone in pairs(ns.Data.completion) do
+		if ns.Live.ContinentOf(uiMapID) == continentID then
+			results[#results + 1] = ns.Model.ZoneCompletion(zone, ns.Live.ZoneSnapshot(uiMapID), IsCounted)
+		end
+	end
+	local continent = ns.Model.ContinentCompletion(results)
+	local info = C_Map.GetMapInfo(continentID)
+	if not continent or not info then
+		return nil
+	end
+	return ("%s: %d of %d zones complete (%d%%)"):format(
+		info.name,
+		continent.complete,
+		continent.zones,
+		continent.percent
+	)
+end
+
+local function OnToastClick(frame, button, down)
+	if not AlertFrame_OnClick(frame, button, down) then
+		OpenWorldMap(frame.uiMapID)
+	end
+end
+
+-- Blizzard's own achievement-progress toast, so it queues and stacks with the game's alerts.
+local function SetUpToast(frame, uiMapID)
+	frame.uiMapID = uiMapID
+	frame.Unlocked:SetText("Zone complete")
+	frame.Name:SetText(C_Map.GetMapInfo(uiMapID).name)
+	frame.Icon.Texture:SetAtlas(ICONS.areas.atlas)
+	frame:SetScript("OnClick", OnToastClick)
+	PlaySound(SOUNDKIT.UI_SCENARIO_STAGE_END)
+	local continent = ns.Live.ContinentOf(uiMapID)
+	local line = continent and ContinentText(continent)
+	if line then
+		ns.Print(("%s complete. %s"):format(C_Map.GetMapInfo(uiMapID).name, line))
+	end
+end
+
+local toasts = AlertFrame:AddQueuedAlertFrameSubSystem("CriteriaAlertFrameTemplate", SetUpToast, 2, 6)
+
+-- Zones already complete when you log in are not news. The first check (on entering the
+-- world, however long the loading screen took) and those in the few seconds after it, while
+-- the game is still sending achievement progress, only note completions.
+local QUIET_SECONDS = 10
+local quietUntil
+local rewarded = {}
+
+local function CheckRewards()
+	quietUntil = quietUntil or GetTime() + QUIET_SECONDS
+	local quiet = GetTime() < quietUntil
+	for uiMapID in pairs(ns.Data.completion) do
+		if not rewarded[uiMapID] and IsZoneComplete(uiMapID) then
+			rewarded[uiMapID] = true
+			-- Someone who has switched zone completion off entirely doesn't want its toasts.
+			if not quiet and (IsShown("map") or IsShown("tracker")) then
+				toasts:AddAlert(uiMapID)
+			end
+		end
+	end
+end
+
+ns.Live.OnChange(CheckRewards)
+
 --[[ Settings, in the Legacy map menu ]]
 
 local function Toggle(surface)
@@ -335,6 +416,11 @@ function Completion.AddSummary(tooltip, uiMapID)
 		HIGHLIGHT_FONT_COLOR.b
 	)
 	GameTooltip_AddHighlightLine(tooltip, CountsText(result, 14))
+	local continent = ns.Live.ContinentOf(uiMapID)
+	local line = continent and ContinentText(continent)
+	if line then
+		GameTooltip_AddNormalLine(tooltip, line)
+	end
 end
 
 function Completion.AddMenu(root)
@@ -343,7 +429,7 @@ function Completion.AddMenu(root)
 	root:CreateCheckbox("On the world map", IsShown, Toggle, "map")
 	local counts = root:CreateButton("What counts")
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
-		counts:CreateCheckbox(("%s %s"):format(Icon(key, 14), LABELS[key]), IsCounted, ToggleCounted, key)
+		counts:CreateCheckbox(("%s %s"):format(Completion.Icon(key, 14), LABELS[key]), IsCounted, ToggleCounted, key)
 	end
 end
 

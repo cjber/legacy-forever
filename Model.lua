@@ -156,7 +156,20 @@ local function CompletionCategory(items, state)
 	return (category.total > 0 or category.pending > 0) and category or nil
 end
 
-Model.COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons", "legacy", "reputations" }
+Model.COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons", "raids", "legacy", "reputations" }
+
+-- A raid is done when every boss is, and a boss when any of its refs is; unknown while any boss is.
+local function RaidDone(raid, refsDone)
+	local done = true
+	for _, boss in ipairs(raid.bosses) do
+		local bossDone = refsDone(boss.refs)
+		if bossDone == nil then
+			return nil
+		end
+		done = done and bossDone
+	end
+	return done
+end
 
 -- A zone's reputation counts once the player is Friendly (reaction 5) or better with it.
 Model.REPUTATION_TARGET = 5
@@ -180,8 +193,8 @@ end
 -- flight master on the zone's continent has been opened (until then every node is pending),
 -- faction = "Alliance" | "Horde",
 -- refsDone = function(refs) -> true/false/nil, reaction = function(factionID) -> number }.
--- Areas, flight paths and reputations are per character; dungeon wings and Legacy
--- objectives are account-wide Legacy steps, done when any of their refs is.
+-- Areas, flight paths and reputations are per character; dungeon wings, raids and Legacy
+-- objectives are account-wide Legacy steps, done when any of their refs is (a raid: every boss).
 -- `counted(key)`, when given, says which categories the player counts; the rest are left out entirely.
 function Model.ZoneCompletion(zone, snapshot, counted)
 	local result = {
@@ -193,6 +206,9 @@ function Model.ZoneCompletion(zone, snapshot, counted)
 		end),
 		dungeons = CompletionCategory(zone.dungeons, function(wing)
 			return snapshot.refsDone(wing.refs)
+		end),
+		raids = CompletionCategory(zone.raids, function(raid)
+			return RaidDone(raid, snapshot.refsDone)
 		end),
 		legacy = CompletionCategory(zone.legacy, function(objective)
 			return snapshot.refsDone(objective.refs)
@@ -222,6 +238,31 @@ function Model.ZoneCompletion(zone, snapshot, counted)
 		result.percent = math.min(result.percent, 99)
 	end
 	return result
+end
+
+-- Whether a zone completion counts anything at all: a zone with every category switched off
+-- (or none to count) is neither complete nor incomplete.
+function Model.CompletionCounts(result)
+	return result.total > 0 or result.pending > 0
+end
+
+-- A continent's zone completion from its zones' results: { complete, zones, percent },
+-- or nil when none of them counts anything.
+function Model.ContinentCompletion(results)
+	local continent = { complete = 0, zones = 0 }
+	for _, result in ipairs(results) do
+		if Model.CompletionCounts(result) then
+			continent.zones = continent.zones + 1
+			if result.complete then
+				continent.complete = continent.complete + 1
+			end
+		end
+	end
+	if continent.zones == 0 then
+		return nil
+	end
+	continent.percent = math.floor(100 * continent.complete / continent.zones)
+	return continent
 end
 
 -- offsetX, offsetY, width, height from an overlay key ("offsetX:offsetY:width:height").

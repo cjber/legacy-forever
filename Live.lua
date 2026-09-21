@@ -180,7 +180,7 @@ local function OverlayKey(texture)
 end
 
 -- The continent a map sits on, or nil above continent level.
-local function ContinentOf(uiMapID)
+function Live.ContinentOf(uiMapID)
 	local info = C_Map.GetMapInfo(uiMapID)
 	while info and info.mapType > Enum.UIMapType.Continent do
 		info = C_Map.GetMapInfo(info.parentMapID)
@@ -199,7 +199,7 @@ local function FlightRecord()
 end
 
 local function RecordFlightMaster()
-	local continent = ContinentOf(C_Map.GetBestMapForUnit("player") or 0)
+	local continent = Live.ContinentOf(C_Map.GetBestMapForUnit("player") or 0)
 	local nodes = continent and C_TaxiMap.GetAllTaxiNodes(continent)
 	if not nodes or #nodes == 0 then
 		return
@@ -225,7 +225,7 @@ function Live.ZoneSnapshot(uiMapID)
 		snapshot.explored[OverlayKey(texture)] = true
 	end
 	local record = FlightRecord()
-	if record.continents[ContinentOf(uiMapID) or 0] then
+	if record.continents[Live.ContinentOf(uiMapID) or 0] then
 		for _, taxi in ipairs(ns.Data.completion[uiMapID].taxis or {}) do
 			snapshot.taxis[taxi.node] = record.known[taxi.node] == true
 		end

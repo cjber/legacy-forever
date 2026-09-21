@@ -17,7 +17,7 @@ malformed schemas, unknown relevant criteria types, graph cycles, and stale
 curated IDs fail without replacing the generated output. `latest_build.py` is
 copied unchanged from SkillUp Forever and only reports the newest Forever build.
 
-Sources: `TraitCurrencySource`, `Achievement`, `Criteria`, `CriteriaTree`,
+Sources: `TraitCurrencySource`, `Achievement`, `Criteria`, `CriteriaTree`, `ModifierTree`,
 `WorldMapOverlay`, `WorldMapOverlayTile`, `AreaTable`, `UiMap`, `UiMapAssignment`, `UiMapXMapArt`,
 `UiMapArt`, `UiMapArtStyleLayer`, `Map`, `DungeonEncounter`, `QuestV2`, `TaxiNodes`, and `Faction`. Currency 4225
 selects both reward variants. Type-8 criteria recursively populate `feeds`;
@@ -65,8 +65,9 @@ the exact boss ID in `locations.json.dungeonWings` → its verified `instance`
 (Map.ID). Wing facts with only exterior geography cannot establish an instance
 ID and do not create Legacy entries. Reviewed quest associations use Type-27
 Criteria.Asset → `locations.json.questInstances` (keyed by QuestV2.ID) →
-DungeonEncounter.ID → MapID. No other instance-completion criterion
-types occur in the reachable Legacy graph in this build.
+DungeonEncounter.ID → MapID. Type-78 compound objectives use validated
+ModifierTree alternatives and reviewed `locations.json.compoundInstances`
+associations, described below.
 
 Reuse the curated entrance zone for the same Map.ID, rejecting conflicts
 between facts. Otherwise require exactly one entrance projection, or existing
@@ -98,11 +99,32 @@ area ancestry, entrance projection, and reachability from a Legacy criterion.
 Both variants use Burning Steppes (1428), **0.330, 0.252**, reusing the Spire wing
 entrance facts. Their original quest criteria remain the progress identifiers.
 
+**Ragefire Chasm or Hall of Thanes is one compound objective.** Spelunker
+refs `{62031, 19213}` and `{64016, 117733}` retain their original Type-78
+criterion. Both point to ModifierTree 455791: an OR root (Operator 8, Amount 1)
+whose only children are creature leaves 455792 → 11519 and 455793 → 261319
+(Type 4, Operator 2, Amount 1). `compoundInstances[455791]` records the reviewed
+Bazzalan 11519 → Ragefire Chasm Map 389 association. The generator checks the
+exact root/leaf fields, child set, criterion type/asset/modifier, owning refs,
+objective text/amount, instance name/type, exterior ancestry, and entrance.
+Missing, changed, additional, or unreachable facts fail before output is written.
+
+Map 389's CorpseMapID 1 and corpse point **(1816.755859375, -4423.3715820312)**
+project through UiMapAssignment **46764** to Orgrimmar **1454**, at
+**0.530, 0.489** (unrounded 0.5295651853, 0.4886820751). Both variant entries
+have `kind = "instance"`, `instance = 389`, and the same pin; runtime treats
+them as one shared objective. They leave “No fixed location” but do not create
+Orgrimmar completion or a dungeon wing. Hall of Thanes remains an unresolved
+alternative: Map **3065**, interior Area **16919**, encounters **3493–3496**,
+has CorpseMapID **-1** and no verified exterior entrance. Do not pin that option.
+
 ## Verified locations and current coverage
 
 Add an entry under `locations.json` → `criteria`, keyed by decimal Criteria.ID,
-with `uiMap`, `kind`, and an `evidence` string naming verified row IDs or an
-unambiguous geography fact. `kind = "instance"` also requires `instance = Map.ID`;
+with `uiMap`, `kind`, the owning `achievement`, expected criterion `type` and
+`asset`, and a build-stamped `evidence` string naming verified row IDs or an
+unambiguous geography fact. `kind = "instance"` also requires `instance = Map.ID`
+and the expected `instanceType` (1 for dungeons, 2 for raids);
 other kinds omit it. Quest curation has `uiMap`, `name` (the expected encounter
 name), `instance`, `encounter`, `evidence`, and optional exterior `area`.
 Evidence must cite the criterion/tree, encounter and Map rows, and the entrance
@@ -111,6 +133,8 @@ joins, or Wowhead data.
 The generator validates IDs, reachability, types, and conflicts with client data,
 and derives any instance pin itself. The two criterion facts select Dustwallow for
 Onyxia's two variants; the existing wing facts also locate matching boss criteria.
+Raid criterion facts additionally require the owning achievement's Instance_ID
+to retain the curated Map.ID; changed assets, owners, or instance links fail.
 Evidence records the build on which a fact was reviewed; it need not equal the
 current `BUILD`. The refresh workflow changes BUILD/SOURCE_DATE without rewriting
 curation. Names, referenced IDs, instance types, ancestry, conflicts, and
@@ -127,13 +151,14 @@ covered (old art sometimes drew several subzones as one overlay, as in Silithus)
 13 have neither, and none have several. One match disagrees with the area-derived
 zone; 483 remaps are accepted. The 25 unpinned entries comprise 13 unmatched
 overlays, one zone mismatch, ten empty rectangles and one inverted rectangle
-(Kharanos, WorldMapOverlay 5136, a client data defect that keeps its key). There are **58 instance entries: 52 pinned, six zone-only**,
-using **two curated criteria**, 27 wing facts with Map IDs, and one curated quest.
+(Kharanos, WorldMapOverlay 5136, a client data defect that keeps its key). There are **60 instance entries: 54 pinned, six zone-only**,
+using **two curated criteria**, 27 wing facts with Map IDs, one curated quest,
+and one compound fact with two variant references.
 No exploration objective is unresolved.
 
 Unresolved direct reward `(achievement, criteria)` pairs across both variants:
-kill **52**, instance/encounter **2**, quest **6**, reputation **16**, level **54**,
-skill **36**, rank **10**; **176** total. The two Explorer meta criteria are expanded,
+kill **50**, instance/encounter **2**, quest **6**, reputation **16**, level **54**,
+skill **36**, rank **10**; **174** total. The two Explorer meta criteria are expanded,
 not counted as unresolved. Global progress and unplaced objectives stay absent
 from `zones` for the addon's “No fixed location” view.
 
@@ -141,7 +166,7 @@ Changes from the previous slice, counting both variants:
 
 | Challenge category | Newly located | Remaining unlocated and reason |
 | --- | ---: | --- |
-| Dungeons (Spelunker) | 54 | 12: compound Ragefire/Hall of Thanes (2) is not one instance; Drowned City (2) has no verified entrance/Map; Blackmaw Hold, Alcaz Prison, Krol'dok Stronghold, Shaper's Terrace (8) have reviewed exterior zones but no instance Map IDs. |
+| Dungeons (Spelunker) | 56 | 10: Drowned City (2) has no verified entrance/Map; Blackmaw Hold, Alcaz Prison, Krol'dok Stronghold, Shaper's Terrace (8) have reviewed exterior zones but no instance Map IDs. |
 | Raids | 0 | 42: Wilds (26) and Deeps (16) lack encounter/instance evidence even for reviewed curation; see the audit below. Onyxia's two entries were already located. |
 | Adventure | 2 | None; both Valthalak variants use the reviewed Spire entrance. |
 | Field of Honor | 0 | 6: quests 96915/96918/96921 have outdoor Map 1 POIs, not dungeon/raid bindings. |
@@ -156,11 +181,16 @@ row for Hyjal Summit or Barrow Deeps. Map 2995 (Hyjal Crater) is InstanceType 4,
 not a dungeon/raid; the four Nightmare Grove encounters on Map 2832 do not
 identify these objectives. Descriptive similarities are insufficient to curate
 an instance or invent a corpse entrance.
+Hyjal Summit and Barrow Deeps therefore remain outside `completion.raids`:
+neither has a verified Map/encounter/entrance link in this build.
+**WMOAreaTable 143937** associates “The Barrow Deeps” with Winterspring Area
+**618**, but establishes neither an instance nor an entrance; related Area
+**17180** is absent. This is an **unverified lead**, not placement evidence.
 
 ## Zone completion
 
 `completion[uiMapID]` combines map content with located Legacy objectives. Each populated zone
-always has `areas`, `taxis`, `dungeons`, `legacy`, and `reputations` arrays, including empty arrays for
+always has `areas`, `taxis`, `dungeons`, `raids`, `legacy`, and `reputations` arrays, including empty arrays for
 categories with no items, and `tileWidth`/`tileHeight` from
 UiMapXMapArt (PhaseID 0) → UiMapArt.UiMapArtStyleID → UiMapArtStyleLayer (LayerIndex 0).
 All 43 completion zones use **256 × 256** tiles. Names come from the pinned
@@ -207,16 +237,28 @@ runtime supplies progress and applies eligibility filters.
   retaining single-boss Type-0 kill steps. Group by Criteria.Asset (boss ID),
   keep the wing's CriteriaTree description, and collect every sorted
   `{achievement, criteria}` reference across variants and tiers. Separate wings
-  remain separate even when they share an instance. Exclude only the verified
-  Type-78 compound step 19213/117733, “Ragefire Chasm or Hall of Thanes”; raids
-  never enter this graph. `locations.json.dungeonWings`, keyed by boss ID,
+  remain separate even when they share an instance. The validated Type-78
+  compound step 19213/117733, “Ragefire Chasm or Hall of Thanes”, gets a Legacy
+  entrance pin but is not a single-boss wing; raids never enter this graph.
+  `locations.json.dungeonWings`, keyed by boss ID,
   supplies `uiMap`, the exact wing `name`, and `evidence`. Optional `area` and
   `instance` IDs validate the exterior AreaTable ancestry and Map entrance.
   Facts with a verified `instance` also locate Legacy objectives for the exact
   boss ID, using the instance entrance rules above; names are validation only.
+- **Raids:** group located raid-instance objectives by Map.ID, requiring
+  InstanceType 2 and a verified entrance projection into the selected zone.
+  Read the nonempty raid name from Map.MapName_lang. Emit
+  `{ name, bosses = { { name, refs = { {achievement, criteria}, ... } }, ... } }`,
+  sorting raids and bosses by name, and refs numerically. Boss variants use the
+  same client equivalence rule as Legacy below. This build has only Onyxia's
+  Lair (Map 249, Dustwallow 1445): one boss, Onyxia, refs `{684, 3271}` and
+  `{64030, 117792}`. Runtime counts the raid once, requiring every boss, with
+  any variant ref sufficient for each boss. The instance ID remains on `zones`
+  entries; it is not part of the completion raid entry.
 - **Legacy:** start with the objectives already in `zones[uiMapID]`, including
-  zone-only objectives without pins. Exclude `kind = "explore"` and each exact
-  `(achievement, criteria)` pair present in that zone's `dungeons.refs`.
+  zone-only objectives without pins, on existing completion maps only. Legacy
+  pins alone do not create completion maps. Exclude `kind = "explore"` and each
+  exact `(achievement, criteria)` pair in that zone's dungeon or raid boss refs.
   Group the remainder by **Criteria.Type + Criteria.Asset + CriteriaTree.Amount**,
   so variants describe the same client objective and required quantity. Names
   never establish equivalence. A reference located in multiple zones counts in
@@ -261,14 +303,16 @@ Build **1.60.1.69913**: **43 completion zones, 555 areas, 937 tiles** (one area
 without tiles), **65 taxis** (31 Alliance,
 30 Horde, 4 Neutral; 35 Alliance-usable and 34 Horde-usable), and **31 of 32 wings**
 with **62 references**. Twelve taxi exceptions and 31 wing locations are curated.
-The **four** remaining located non-exploration references collapse into **two
-Legacy entries** (two merged groups; two duplicate entries removed):
-Onyxia in Dustwallow (1445), Type 0 / Asset 10184 / Amount 1, and Valthalak in
-Burning Steppes (1428), Type 27 / Asset 84195 / Amount 1. Valthalak retains
+There is **one raid entry / one boss / two refs**, Onyxia's Lair in Dustwallow
+(1445), Type 0 / Asset 10184 / Amount 1; those refs no longer count as Legacy.
+The **two** remaining non-exploration references on completion maps collapse
+into **one Legacy entry** (one duplicate removed): Valthalak in Burning Steppes
+(1428), Type 27 / Asset 84195 / Amount 1. Valthalak retains
 `{62054, 111555}` and `{64014, 117727}` in one entry and uses the achievement's
 questline description because both leaf descriptions are empty. Legacy entry
 counts for **1428 / 1434 / 1439 are 1 / 0 / 0**. Exploration and located dungeon
-wing references account for everything else; no unlocated objectives are added.
+wing and raid references account for everything else on completion maps. The
+two compound refs live only in `zones[1454]`; no completion map is added.
 
 **Seven reputations** are curated: six neutral and one Alliance-only. All facts
 below were reviewed against build **1.60.1.69913**; full evidence is in

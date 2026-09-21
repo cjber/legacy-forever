@@ -166,4 +166,46 @@ snapshot.explored = { ["0:0:10:10"] = true, ["10:0:10:10"] = true }
 local onlyKnown = Model.ZoneCompletion({ areas = zone.areas, taxis = zone.taxis }, snapshot)
 equal(onlyKnown.percent, 99, "everything known done, with flight paths pending, stays under 100%")
 equal(onlyKnown.complete, false, "and isn't complete")
+-- A raid is done when every boss is; a boss when either of its variants is.
+local raidZone = {
+	raids = {
+		{
+			name = "Onyxia's Lair",
+			bosses = { { name = "Onyxia", refs = { { 50, 1 }, { 51, 1 } } }, { name = "Whelps", refs = { { 52, 1 } } } },
+		},
+	},
+}
+local done = {}
+local raidSnapshot = {
+	refsDone = function(refs)
+		for _, ref in ipairs(refs) do
+			if done[ref[1]] then
+				return true
+			end
+		end
+		if not done.unknown then
+			return false
+		end
+	end,
+}
+equal(Model.ZoneCompletion(raidZone, raidSnapshot).raids.done, 0, "no boss down, raid not done")
+done[51] = true
+local raids = Model.ZoneCompletion(raidZone, raidSnapshot).raids
+equal(raids.done, 0, "one boss down of two, raid still not done")
+equal(raids.left[1], "Onyxia's Lair", "the raid is named, not its bosses")
+done[52] = true
+equal(Model.ZoneCompletion(raidZone, raidSnapshot).complete, true, "every boss down by any variant")
+done[52], done.unknown = nil, true
+equal(Model.ZoneCompletion(raidZone, raidSnapshot).raids.pending, 1, "an unknown boss leaves the raid pending")
+
+-- A continent counts its zones that count anything, complete or not.
+local continent = Model.ContinentCompletion({
+	{ total = 3, pending = 0, complete = true },
+	{ total = 4, pending = 1, complete = false },
+	{ total = 0, pending = 0, complete = true },
+})
+equal(continent.zones, 2, "a zone counting nothing is left out")
+equal(continent.complete, 1, "complete zones")
+equal(continent.percent, 50, "continent percent")
+equal(Model.ContinentCompletion({ { total = 0, pending = 0, complete = true } }), nil, "no zone counts anything")
 print(("model_spec: %d checks passed"):format(checks))

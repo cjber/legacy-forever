@@ -168,8 +168,11 @@ local function ChallengeText(name, count)
 	return ("%s |cffffffff(%d)|r"):format(name, count)
 end
 
+-- Each entry wears the icon it has on the map: the Legacy pin, or for exploration the
+-- compass of the undiscovered-area shading (as under "What counts").
 local function AddGroup(root, group)
-	local name = ns.Live.Name(group.achievement)
+	local icon = IsExploreGroup(group) and ns.Completion.Icon("areas", 14) or CreateAtlasMarkup(POINTS_ICON, 10, 14)
+	local name = ("%s %s"):format(icon, ns.Live.Name(group.achievement))
 	local button =
 		root:CreateCheckbox(ChallengeText(name, #group.objectives), IsTracked, ToggleTracked, group.challenge)
 	button:SetTooltip(function(tooltip)
@@ -404,7 +407,10 @@ local function CreatePinProvider()
 			for _, texture in ipairs(self.drawn[self.hovered.key]) do
 				texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
 			end
-			GameTooltip:Hide()
+			-- Only our own tooltip: a pin the cursor just moved onto has already shown its own.
+			if GameTooltip:GetOwner() == self then
+				GameTooltip:Hide()
+			end
 		end
 		self.hovered = area
 		if not area then

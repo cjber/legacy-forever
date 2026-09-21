@@ -1,16 +1,37 @@
 {
   "criteria": {
     "3271": {
+      "achievement": 684,
+      "type": 0,
+      "asset": 10184,
       "uiMap": 1445,
       "kind": "instance",
       "instance": 249,
+      "instanceType": 2,
       "evidence": "Build 1.60.1.69913: Achievement 684 (CriteriaTree 230797) owns Criteria 3271 (Type 0, Asset 10184) and Instance_ID 249. Onyxia's Lair is in the Wyrmbog, Dustwallow Marsh (AreaTable 511 -> 15; UiMapAssignment 46755 -> UiMap 1445). Map 249: CorpseMapID 1, Corpse (-4753.3125, -3752.4211425781) projects there to (0.529, 0.777). The geography fact selects Dustwallow among overlapping zone rectangles; the generator derives the pin from Map, not this text."
     },
     "117792": {
+      "achievement": 64030,
+      "type": 0,
+      "asset": 10184,
       "uiMap": 1445,
       "kind": "instance",
       "instance": 249,
+      "instanceType": 2,
       "evidence": "Build 1.60.1.69913: Achievement 64030 owns Criteria 117792 (Type 0, Asset 10184) and Instance_ID 249, the second reward variant of Achievement 684 / Criteria 3271. Onyxia's Lair is in the Wyrmbog, Dustwallow Marsh (AreaTable 511 -> 15; UiMapAssignment 46755 -> UiMap 1445). Map 249's CorpseMapID 1 and Corpse coordinates project to (0.529, 0.777); the zone selection is the same verified geography fact as Criteria 3271."
+    }
+  },
+  "compoundInstances": {
+    "455791": {
+      "uiMap": 1454,
+      "name": "Ragefire Chasm or Hall of Thanes",
+      "area": 1637,
+      "instance": 389,
+      "instanceName": "Ragefire Chasm",
+      "boss": 11519,
+      "alternatives": { "455792": 11519, "455793": 261319 },
+      "refs": [[62031, 19213], [64016, 117733]],
+      "evidence": "Build 1.60.1.69913: Achievement 62031 / CriteriaTree 230766 / Criteria 19213 and variant 64016 / Criteria 117733 use Type 78, Asset 0, Modifier_tree_ID 455791. ModifierTree 455791 is an OR root (Parent 0, Operator 8, Amount 1, Type 0, Asset 0); its only children 455792 and 455793 are creature leaves (Operator 2, Amount 1, Type 4) for 11519 and 261319 respectively, with SecondaryAsset/TertiaryAsset 0 throughout. Reviewed creature 11519 (Bazzalan) -> Ragefire Chasm Map 389 (InstanceType 1); this is a curated association, not a ModifierTree-to-Map foreign key. Map 389 has CorpseMapID 1 and Corpse (1816.755859375, -4423.3715820312); exterior AreaTable 1637 and UiMapAssignment 46764 identify Orgrimmar, UiMap 1454. The client entrance projects to (0.530, 0.489), derived by the generator. Preserve one shared OR objective with both original refs, pinned only at this verified alternative. Hall of Thanes Map 3065 has CorpseMapID -1 and no verified exterior entrance; leave that alternative unpinned. This objective does not create a completion map or a single-boss dungeon wing."
     }
   },
   "questInstances": {
