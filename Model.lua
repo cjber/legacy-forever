@@ -152,6 +152,7 @@ local function CompletionCategory(items, state)
 			end
 		end
 	end
+	category.complete = category.done == category.total and category.pending == 0
 	return (category.total > 0 or category.pending > 0) and category or nil
 end
 
@@ -175,7 +176,7 @@ end
 -- A zone's completion, GW2 style: every area, flight path, dungeon, Legacy objective and
 -- local reputation counts once.
 -- Items whose state is unknown (nil) are `pending`: shown, but outside done/total and the percent.
--- `snapshot` = { explored = set of overlay keys or nil, taxis = { [node] = known } once a
+-- `snapshot` = { explored = set of overlay keys, taxis = { [node] = known } once a
 -- flight master on the zone's continent has been opened (until then every node is pending),
 -- faction = "Alliance" | "Horde",
 -- refsDone = function(refs) -> true/false/nil, reaction = function(factionID) -> number }.
@@ -184,7 +185,7 @@ end
 -- `counted(key)`, when given, says which categories the player counts; the rest are left out entirely.
 function Model.ZoneCompletion(zone, snapshot, counted)
 	local result = {
-		areas = snapshot.explored and CompletionCategory(zone.areas, function(area)
+		areas = CompletionCategory(zone.areas, function(area)
 			return snapshot.explored[area.key] == true
 		end),
 		taxis = CompletionCategory(ForFaction(zone.taxis, snapshot.faction, "faction"), function(taxi)
@@ -201,6 +202,7 @@ function Model.ZoneCompletion(zone, snapshot, counted)
 		end),
 		done = 0,
 		total = 0,
+		pending = 0,
 	}
 	for _, key in ipairs(Model.COMPLETION_CATEGORIES) do
 		if counted and not counted(key) then
@@ -210,10 +212,15 @@ function Model.ZoneCompletion(zone, snapshot, counted)
 		if category then
 			result.done = result.done + category.done
 			result.total = result.total + category.total
+			result.pending = result.pending + category.pending
 		end
 	end
-	-- Floored, so 100% means nothing is left.
+	result.complete = result.done == result.total and result.pending == 0
+	-- Floored, and held under 100 while anything is pending, so 100% means nothing is left.
 	result.percent = result.total > 0 and math.floor(100 * result.done / result.total) or nil
+	if result.percent and not result.complete then
+		result.percent = math.min(result.percent, 99)
+	end
 	return result
 end
 

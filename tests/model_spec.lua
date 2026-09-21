@@ -130,8 +130,6 @@ equal(completion.reputations.done, 1, "Friendly counts, Neutral doesn't")
 equal(completion.reputations.left[1], "Wintersaber Trainers", "reputation still to earn named")
 equal(completion.total, 8, "items across categories")
 equal(completion.percent, 50, "percent floors")
-snapshot.explored = nil
-equal(Model.ZoneCompletion(zone, snapshot).areas, nil, "unknown exploration drops the category")
 equal(Model.ZoneCompletion({}, snapshot).percent, nil, "empty zone has no percent")
 local noAreas = Model.ZoneCompletion(zone, snapshot, function(key)
 	return key ~= "areas"
@@ -164,4 +162,8 @@ snapshot.taxis = {}
 local unvisited = Model.ZoneCompletion(zone, snapshot).taxis
 equal(unvisited and unvisited.total, 0, "flight paths before a flight master visit are all pending")
 equal(unvisited and unvisited.pending, 3, "own-faction and neutral ones")
+snapshot.explored = { ["0:0:10:10"] = true, ["10:0:10:10"] = true }
+local onlyKnown = Model.ZoneCompletion({ areas = zone.areas, taxis = zone.taxis }, snapshot)
+equal(onlyKnown.percent, 99, "everything known done, with flight paths pending, stays under 100%")
+equal(onlyKnown.complete, false, "and isn't complete")
 print(("model_spec: %d checks passed"):format(checks))

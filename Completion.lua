@@ -91,7 +91,7 @@ local function CategoryText(category, colored)
 	if not colored then
 		return text
 	end
-	local color = category.done == category.total and GREEN_FONT_COLOR or HIGHLIGHT_FONT_COLOR
+	local color = category.complete and GREEN_FONT_COLOR or HIGHLIGHT_FONT_COLOR
 	return color:WrapTextInColorCode(text)
 end
 
@@ -130,10 +130,8 @@ local function AddTooltip(tooltip, name, result)
 				GameTooltip_AddColoredLine(tooltip, "    " .. left, WHITE_FONT_COLOR)
 			end
 			if category.pending > 0 then
-				GameTooltip_AddDisabledLine(
-					tooltip,
-					("    %d not known yet. %s"):format(category.pending, PENDING_HINTS[key] or "")
-				)
+				local line = ("    %d not known yet."):format(category.pending)
+				GameTooltip_AddDisabledLine(tooltip, PENDING_HINTS[key] and line .. " " .. PENDING_HINTS[key] or line)
 			end
 		end
 	end
@@ -158,7 +156,7 @@ end
 
 local function SetProgress(bar, result)
 	bar:SetValue(result.percent)
-	bar:SetStatusBarColor((result.done == result.total and GREEN_FONT_COLOR or NORMAL_FONT_COLOR):GetRGB())
+	bar:SetStatusBarColor((result.complete and GREEN_FONT_COLOR or NORMAL_FONT_COLOR):GetRGB())
 end
 
 --[[ Objective tracker: the zone you're in ]]
@@ -281,7 +279,7 @@ end
 
 function LegacyHereZonePercentPinMixin:OnAcquired(x, y, result)
 	self.Text:SetText(PercentText(result))
-	self.Text:SetTextColor((result.done == result.total and GREEN_FONT_COLOR or NORMAL_FONT_COLOR):GetRGB())
+	self.Text:SetTextColor((result.complete and GREEN_FONT_COLOR or NORMAL_FONT_COLOR):GetRGB())
 	self:SetPosition(x, y)
 	self:ApplyCurrentScale()
 end
