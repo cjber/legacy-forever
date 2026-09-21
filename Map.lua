@@ -104,12 +104,18 @@ local function AddZoneTooltip(tooltip, zone)
 end
 
 -- On a continent, one badge per zone with its unfinished count, instead of every pin.
-local function ContinentZones(continentID)
+-- Exploration groups count only while area pins are shown.
+local function ContinentZones(continentID, includeAreas)
 	local zones = {}
 	for uiMapID in pairs(ns.Data.zones) do
 		local info = C_Map.GetMapInfo(uiMapID)
 		if info and info.parentMapID == continentID then
-			local groups = ZoneGroups(uiMapID)
+			local groups = {}
+			for _, group in ipairs(ZoneGroups(uiMapID)) do
+				if includeAreas or not IsExploreGroup(group) then
+					groups[#groups + 1] = group
+				end
+			end
 			local count = ns.Model.CountObjectives(groups)
 			local left, right, top, bottom = C_Map.GetMapRectOnMap(uiMapID, continentID)
 			if count > 0 and left then
@@ -126,14 +132,14 @@ local function ContinentZones(continentID)
 	return zones
 end
 
--- Session default is on; kept across sessions only where SavedVariables load.
+-- Off by default, since areas are many; kept across sessions only where SavedVariables load.
 local function ShowAreas()
-	return not (LegacyHereDB and LegacyHereDB.hideAreas)
+	return LegacyHereDB and LegacyHereDB.showAreas or false
 end
 
 local function ToggleAreas()
 	LegacyHereDB = LegacyHereDB or {}
-	LegacyHereDB.hideAreas = ShowAreas()
+	LegacyHereDB.showAreas = not ShowAreas()
 	ns.RefreshMap()
 end
 
@@ -314,7 +320,7 @@ local function CreatePinProvider()
 		local mapID = self:GetMap():GetMapID()
 		local info = mapID and C_Map.GetMapInfo(mapID)
 		if info and info.mapType == Enum.UIMapType.Continent then
-			for _, zone in ipairs(ContinentZones(mapID)) do
+			for _, zone in ipairs(ContinentZones(mapID, ShowAreas())) do
 				self:GetMap():AcquirePin(PIN_TEMPLATE, nil, nil, zone)
 			end
 			return
