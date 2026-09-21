@@ -4,11 +4,11 @@
 		<Size x="1" y="1"/>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture parentKey="Shade">
-					<Color r="1" g="1" b="1"/>
+				<!-- A feathered dark wash keeps the text legible on pale parchment, with no edge to read as a box. -->
+				<Texture parentKey="Shade" file="Interface\AddOns\LegacyHere\media\Shade" alpha="0.6">
 					<Anchors>
-						<Anchor point="TOPLEFT" x="-12" y="8"/>
-						<Anchor point="BOTTOMRIGHT" x="48" y="-8"/>
+						<Anchor point="TOPLEFT" x="-48" y="22"/>
+						<Anchor point="BOTTOMRIGHT" x="64" y="-22"/>
 					</Anchors>
 				</Texture>
 			</Layer>

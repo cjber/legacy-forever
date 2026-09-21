@@ -181,8 +181,6 @@ function LegacyHereZoneOverlayMixin:OnLoad()
 	self.Progress = CreateProgressBar(self)
 	self.Progress:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT", 0, -4)
 	self.Progress:SetPoint("RIGHT")
-	-- A soft shade behind the text keeps it legible on pale parchment.
-	self.Shade:SetGradient("HORIZONTAL", CreateColor(0, 0, 0, 0.5), CreateColor(0, 0, 0, 0))
 end
 
 -- Called by the world map whenever it changes map.
@@ -280,7 +278,7 @@ local function AttachMap()
 		map:GetCanvasContainer(),
 		"TOPLEFT",
 		44,
-		-10
+		-18
 	)
 	local provider = CreateProvider(overlay)
 	map:AddDataProvider(provider)

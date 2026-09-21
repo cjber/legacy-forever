@@ -4,8 +4,8 @@ local PIN_TEMPLATE = "LegacyHerePinTemplate"
 local AREA_TEMPLATE = "LegacyHereAreaPinTemplate"
 -- Undiscovered ground in see-through gold: plain to spot, with the map still readable
 -- underneath. Brighter under the mouse.
-local AREA_COLOR = { r = 1, g = 0.82, b = 0.25 }
-local AREA_ALPHA, AREA_HOVER_ALPHA = 0.45, 0.75
+-- Unseen ground reads darker, the fog-of-war convention; a warm tint vanished on the parchment.
+local AREA_ALPHA, AREA_HOVER_ALPHA = 0.4, 0.6
 local POINTS_ICON = "UI-Legacy-Points-icon-c60"
 
 local KIND_LABEL = {
@@ -381,8 +381,7 @@ local function CreatePinProvider()
 		texture:SetSize(width, height)
 		texture:SetTexCoord(0, u, 0, v)
 		texture:SetPoint("TOPLEFT", x, -y)
-		texture:SetDesaturated(true)
-		texture:SetVertexColor(AREA_COLOR.r, AREA_COLOR.g, AREA_COLOR.b, AREA_ALPHA)
+		texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
 		texture:Show()
 		return texture
 	end
