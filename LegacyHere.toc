@@ -10,6 +10,7 @@
 ## X-Wago-ID: b6mzA7KP
 ## IconAtlas: UI-Legacy-Points-icon-c60
 ## SavedVariables: LegacyHereDB
+## LoadSavedVariablesFirst: 1
 ## AddonCompartmentFunc: LegacyHere_OnAddonCompartmentClick
 
 Data\Legacy.lua
