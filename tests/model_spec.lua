@@ -122,6 +122,7 @@ local completion = Model.ZoneCompletion(zone, snapshot)
 equal(completion.areas.done, 1, "one area explored")
 equal(completion.areas.left[1], "Gol'Bolar Quarry", "unexplored area named")
 equal(completion.taxis.total, 2, "other faction's and unlisted flight paths left out")
+equal(completion.taxis.pending, 1, "an unknown flight path is pending, outside the total")
 equal(completion.dungeons.total, 1, "wing with unknown progress left out")
 equal(completion.legacy.done, 1, "a Legacy objective is done when any variant is")
 equal(completion.reputations.total, 2, "the other faction's reputation is left out")
@@ -159,4 +160,8 @@ equal(tiles[3].u, 37 / 64, "partial tile samples its power-of-two file")
 equal(tiles[1].u, 1, "full tile samples the whole file")
 equal(#Model.OverlayTiles(512, 512, 256, 256), 4, "exact multiples add no partial tile")
 
+snapshot.taxis = {}
+local unvisited = Model.ZoneCompletion(zone, snapshot).taxis
+equal(unvisited and unvisited.total, 0, "flight paths before a flight master visit are all pending")
+equal(unvisited and unvisited.pending, 3, "own-faction and neutral ones")
 print(("model_spec: %d checks passed"):format(checks))

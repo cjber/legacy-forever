@@ -138,10 +138,12 @@ local function CompletionCategory(items, state)
 	if not items or #items == 0 then
 		return nil
 	end
-	local category = { done = 0, total = 0, left = {} }
+	local category = { done = 0, total = 0, left = {}, pending = 0 }
 	for _, item in ipairs(items) do
 		local done = state(item)
-		if done ~= nil then
+		if done == nil then
+			category.pending = category.pending + 1
+		else
 			category.total = category.total + 1
 			if done then
 				category.done = category.done + 1
@@ -150,7 +152,7 @@ local function CompletionCategory(items, state)
 			end
 		end
 	end
-	return category.total > 0 and category or nil
+	return (category.total > 0 or category.pending > 0) and category or nil
 end
 
 Model.COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons", "legacy", "reputations" }
@@ -172,8 +174,10 @@ end
 
 -- A zone's completion, GW2 style: every area, flight path, dungeon, Legacy objective and
 -- local reputation counts once.
--- `snapshot` = { explored = set of overlay keys or nil, taxis = { [node] = discovered } for
--- the nodes the game lists (any other node is unknown), faction = "Alliance" | "Horde",
+-- Items whose state is unknown (nil) are `pending`: shown, but outside done/total and the percent.
+-- `snapshot` = { explored = set of overlay keys or nil, taxis = { [node] = known } once a
+-- flight master on the zone's continent has been opened (until then every node is pending),
+-- faction = "Alliance" | "Horde",
 -- refsDone = function(refs) -> true/false/nil, reaction = function(factionID) -> number }.
 -- Areas, flight paths and reputations are per character; dungeon wings and Legacy
 -- objectives are account-wide Legacy steps, done when any of their refs is.

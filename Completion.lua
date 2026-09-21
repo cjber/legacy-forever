@@ -70,8 +70,29 @@ local function Icon(key, size)
 	return CreateAtlasMarkup(icon.atlas, math.floor(size * (icon.aspect or 1) + 0.5), size)
 end
 
+-- What the player does to resolve a category's pending items.
+local PENDING_HINTS = {
+	taxis = "Open a flight master on this continent to check these.",
+}
+
 local function PercentText(result)
 	return ("%d%%"):format(result.percent)
+end
+
+-- "3/5", or "?" while every item is pending; `colored` greens a finished category.
+local function CategoryText(category, colored)
+	if category.total == 0 then
+		return GRAY_FONT_COLOR:WrapTextInColorCode("?")
+	end
+	local text = ("%d/%d"):format(category.done, category.total)
+	if category.pending > 0 then
+		text = text .. " +?"
+	end
+	if not colored then
+		return text
+	end
+	local color = category.done == category.total and GREEN_FONT_COLOR or HIGHLIGHT_FONT_COLOR
+	return color:WrapTextInColorCode(text)
 end
 
 -- "[compass] 9/14   [gryphon] 1/1   [door] 0/1", a finished category in green.
@@ -80,11 +101,7 @@ local function CountsText(result, iconSize)
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 		local category = result[key]
 		if category then
-			local color = category.done == category.total and GREEN_FONT_COLOR or HIGHLIGHT_FONT_COLOR
-			parts[#parts + 1] = ("%s %s"):format(
-				Icon(key, iconSize),
-				color:WrapTextInColorCode(("%d/%d"):format(category.done, category.total))
-			)
+			parts[#parts + 1] = ("%s %s"):format(Icon(key, iconSize), CategoryText(category, true))
 		end
 	end
 	return table.concat(parts, "   ")
@@ -97,7 +114,7 @@ local function AddTooltip(tooltip, name, result)
 		if category then
 			tooltip:AddDoubleLine(
 				("%s %s"):format(Icon(key, 14), LABELS[key]),
-				("%d/%d"):format(category.done, category.total),
+				CategoryText(category),
 				NORMAL_FONT_COLOR.r,
 				NORMAL_FONT_COLOR.g,
 				NORMAL_FONT_COLOR.b,
@@ -111,6 +128,12 @@ local function AddTooltip(tooltip, name, result)
 					break
 				end
 				GameTooltip_AddColoredLine(tooltip, "    " .. left, WHITE_FONT_COLOR)
+			end
+			if category.pending > 0 then
+				GameTooltip_AddDisabledLine(
+					tooltip,
+					("    %d not known yet. %s"):format(category.pending, PENDING_HINTS[key] or "")
+				)
 			end
 		end
 	end
@@ -367,13 +390,13 @@ function Completion.Audit()
 	for _, area in ipairs(zone.areas or {}) do
 		known[area.key] = true
 	end
-	for key in pairs(snapshot.explored or {}) do
+	for key in pairs(snapshot.explored) do
 		if not known[key] then
 			ns.Print("  explored area not in the data: " .. key)
 		end
 	end
-	if not snapshot.explored then
-		ns.Print("  the game reported no exploration for this zone")
+	if next(snapshot.explored) == nil then
+		ns.Print("  the game reports nothing explored in this zone")
 	end
 
 	for _, taxi in ipairs(zone.taxis or {}) do
