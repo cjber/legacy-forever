@@ -29,6 +29,7 @@ local live = {
 		[1] = { text = "Area A", completed = false },
 		[2] = { text = "Area B", completed = true },
 		[4] = { text = "Area C", completed = false },
+		[8] = { text = "Unplaced area", completed = false },
 	},
 	[100] = {
 		[3] = { text = "Boss", completed = false },
@@ -63,11 +64,11 @@ local unknown = Model.ZoneObjectives(data, 1, visible, function()
 end)
 equal(#unknown, 0, "unknown progress is not shown as unfinished")
 
--- Located criteria and "earn achievement 10" (placed by its children) are excluded.
+-- Located criteria are excluded; "earn achievement 10" counts only 10's unplaced criteria.
 local unlocated = Model.Unlocated(data, visible, criteria)
 equal(#unlocated, 1, "one challenge with unplaced work")
 equal(unlocated[1].challenge, 100, "unplaced challenge")
-equal(unlocated[1].open, 1, "only the level criterion is unplaced")
+equal(unlocated[1].open, 2, "the level criterion plus the unplaced area under 10")
 equal(#Model.Unlocated(data, { [200] = true }, criteria), 0, "variant without live criteria")
 
 print(("model_spec: %d checks passed"):format(checks))

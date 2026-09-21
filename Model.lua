@@ -66,19 +66,29 @@ local function LocatedCriteria(data)
 	return located
 end
 
+-- Unfinished criteria no zone places, counting through "earn achievement X" into
+-- X's own criteria when X is a feeding achievement (the generator rejects cycles).
+local function OpenUnlocated(data, located, criteria, achievementID)
+	local open = 0
+	for criteriaID, progress in pairs(criteria(achievementID) or {}) do
+		if not progress.completed and not located[criteriaID] then
+			if progress.type == EARN_ACHIEVEMENT and data.feeds[progress.asset] then
+				open = open + OpenUnlocated(data, located, criteria, progress.asset)
+			else
+				open = open + 1
+			end
+		end
+	end
+	return open
+end
+
 -- Visible challenges with unfinished criteria no zone accounts for: levels, skills,
 -- ranks, and anything whose location the data can't establish.
 function Model.Unlocated(data, visible, criteria)
 	local located = LocatedCriteria(data)
 	local result = {}
 	for challenge in pairs(visible) do
-		local open = 0
-		for criteriaID, progress in pairs(criteria(challenge) or {}) do
-			local placedByChildren = progress.type == EARN_ACHIEVEMENT and data.feeds[progress.asset] ~= nil
-			if not progress.completed and not located[criteriaID] and not placedByChildren then
-				open = open + 1
-			end
-		end
+		local open = OpenUnlocated(data, located, criteria, challenge)
 		if open > 0 then
 			result[#result + 1] = { challenge = challenge, open = open }
 		end
