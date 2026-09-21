@@ -11,6 +11,10 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-21
+
+Zone completion, Guild Wars 2 style, with a reward when a zone reaches 100%.
+
 - **Zone completion**: each zone shows how much of it you've done, as areas explored, flight paths learned, dungeons cleared for Legacy, the zone's other Legacy objectives and its local reputations at Friendly, with the rest listed on hover. It sits in the world map's corner for the zone you're viewing, and on continent maps it is in each zone badge's tooltip. Tick it in the map menu to also add the zone you're in to the objective tracker. Each collapses to just the zone and its percentage, and the map menu turns either off. "What counts" in the map menu drops any category from the count and the percentage. Flight paths count once you've opened a flight master on that continent, since that is the only place the game says which ones you know; until then they show as "?" with a note to visit one.
 - **Raids count toward zone completion**, once every boss is down, on any character. Onyxia's Lair counts in Dustwallow Marsh.
 - **A zone reaching 100% gets a toast and a sound**, in the game's own achievement style, with your continent's progress in chat. Click the toast to open that zone's map. Zones already complete when you log in stay quiet, and every category counts toward the toast whatever "What counts" shows.
