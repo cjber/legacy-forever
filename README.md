@@ -12,8 +12,8 @@ Legacy points are account-wide and come from challenges spread over the whole wo
 
 ## Features
 
-- **Map button** in the world map's top-right button column, with a count of the unfinished objectives on the map you're viewing. Its menu groups them by challenge; tick one to track it. Area pins are off until you turn them on there.
-- **Tracker** lists the challenges you track with each unfinished step and its live progress (12/20, or areas done in an exploration step). Click a challenge to open it in the Legacy panel, right-click to stop tracking, drag the title to move it. Forever doesn't allow Blizzard's own tracking of these, so this replaces it.
+- **Map button** in the world map's top-right button column, with a count of the unfinished objectives on the map you're viewing. Its menu groups them by challenge; tick one to track it; challenges with no fixed place are grouped like the Legacy panel. Area pins are off until you turn them on there.
+- **Tracker**: a Legacy section at the top of the objective tracker lists the challenges you track, each unfinished step with its live progress (12/20, or areas done in an exploration step). Click a challenge to open it in the Legacy panel; right-click to stop tracking. Forever doesn't allow Blizzard's own tracking of these, so this replaces it.
 - **Map pins** on dungeon entrances and, when turned on, on areas you haven't discovered yet (with how many of the zone's areas are left), with the challenge each counts toward and its Legacy points.
 - **No fixed location** lists challenges whose remaining work isn't tied to a place, such as levels, skills and ranks.
 - Progress comes from the game each time, so it matches the Legacy panel and follows whichever challenge set your character sees.

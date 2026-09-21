@@ -171,21 +171,60 @@ local function AddGroup(root, group)
 	end)
 end
 
+local function AddUnlocatedItem(menu, item)
+	local text = ChallengeText(ns.Live.Name(item.challenge), item.open)
+	local button = menu:CreateCheckbox(text, IsTracked, ToggleTracked, item.challenge)
+	button:SetTooltip(function(tooltip)
+		GameTooltip_SetTitle(tooltip, ns.Live.Name(item.challenge))
+		GameTooltip_AddNormalLine(tooltip, "Levels, skills, ranks and anything without a fixed place.")
+		AddPointsLine(tooltip, item.challenge)
+		GameTooltip_AddInstructionLine(tooltip, TRACK_HINT)
+	end)
+end
+
+-- Ordered groups keyed by name, so submenus keep the order items first appear in.
+local function Group(list, byName, name)
+	local group = byName[name]
+	if not group then
+		group = { name = name, items = {}, subs = {}, subsByName = {} }
+		byName[name] = group
+		list[#list + 1] = group
+	end
+	return group
+end
+
+-- Grouped like the Legacy panel: the game's category, under its parent when it has
+-- one (Classes > Priest, PvP > Ranks), so no submenu runs off the screen.
 local function AddUnlocated(root)
 	local unlocated = ns.Model.Unlocated(ns.Data, ns.Live.Visible(), ns.Live.Criteria)
 	if #unlocated == 0 then
 		return
 	end
-	local submenu = root:CreateButton(("No fixed location |cffffffff(%d)|r"):format(#unlocated))
+	local tops, topsByName = {}, {}
 	for _, item in ipairs(unlocated) do
-		local text = ChallengeText(ns.Live.Name(item.challenge), item.open)
-		local button = submenu:CreateCheckbox(text, IsTracked, ToggleTracked, item.challenge)
-		button:SetTooltip(function(tooltip)
-			GameTooltip_SetTitle(tooltip, ns.Live.Name(item.challenge))
-			GameTooltip_AddNormalLine(tooltip, "Levels, skills, ranks and anything without a fixed place.")
-			AddPointsLine(tooltip, item.challenge)
-			GameTooltip_AddInstructionLine(tooltip, TRACK_HINT)
-		end)
+		local name, parentID = GetCategoryInfo(GetAchievementCategory(item.challenge))
+		local parentName = parentID and parentID > 0 and GetCategoryInfo(parentID)
+		if parentName then
+			local top = Group(tops, topsByName, parentName)
+			local sub = Group(top.subs, top.subsByName, name)
+			sub.items[#sub.items + 1] = item
+		else
+			local top = Group(tops, topsByName, name or OTHER)
+			top.items[#top.items + 1] = item
+		end
+	end
+	local submenu = root:CreateButton(("No fixed location |cffffffff(%d)|r"):format(#unlocated))
+	for _, top in ipairs(tops) do
+		local topMenu = submenu:CreateButton(top.name)
+		for _, sub in ipairs(top.subs) do
+			local subMenu = topMenu:CreateButton(sub.name)
+			for _, item in ipairs(sub.items) do
+				AddUnlocatedItem(subMenu, item)
+			end
+		end
+		for _, item in ipairs(top.items) do
+			AddUnlocatedItem(topMenu, item)
+		end
 	end
 end
 

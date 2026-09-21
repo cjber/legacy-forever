@@ -17,9 +17,10 @@ read_globals = {
 	"AchievementFrame_SelectAchievement", "C_Map", "C_Timer", "C_Traits", "CreateAtlasMarkup",
 	"CreateFrame", "CreateFromMixins", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameTooltip_AddColoredLine", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",
-	"GameTooltip_AddNormalLine", "GameTooltip_Hide", "GameTooltip_SetTitle", "GetAchievementCriteriaInfo", "GetAchievementInfo",
-	"GetAchievementNumCriteria", "GetBuildInfo", "GetCategoryList", "GetCategoryNumAchievements",
-	"LegacySystemFrame", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "strtrim",
+	"GameTooltip_AddNormalLine", "GameTooltip_SetTitle", "GetAchievementCategory", "GetAchievementCriteriaInfo", "GetAchievementInfo",
+	"GetAchievementNumCriteria", "GetBuildInfo", "GetCategoryInfo", "GetCategoryList", "GetCategoryNumAchievements",
+	"LegacySystemFrame", "MenuUtil", "OTHER", "Mixin", "OBJECTIVE_DASH_STYLE_HIDE", "ObjectiveTrackerFrame",
+	"ObjectiveTrackerManager", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "strtrim",
 	"ToggleLegacySystemUI", "ToggleWorldMap", "UIParent", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 

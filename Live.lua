@@ -49,16 +49,17 @@ local function LocatedCriteria(achievementID)
 end
 
 -- A single-step achievement (e.g. Conqueror of the Lair) reports no criteria: the
--- achievement is the step. File its completion under the criterion the data placed,
--- or under 0 (never placed) so it still counts as unplaced work.
+-- achievement is the step, described by its description. File its completion under
+-- the criterion the data placed, or under 0 (never placed) so it still counts as unplaced.
 local function WholeAchievement(achievementID)
-	local _, name, _, completed = GetAchievementInfo(achievementID)
+	local _, name, _, completed, _, _, _, description = GetAchievementInfo(achievementID)
 	if not name then
 		return nil
 	end
+	local text = description and description ~= "" and description or name
 	local result = {}
 	for _, criteriaID in ipairs(LocatedCriteria(achievementID) or { 0 }) do
-		result[criteriaID] = { text = name, completed = completed, index = 1 }
+		result[criteriaID] = { text = text, completed = completed, index = 1 }
 	end
 	return result
 end
