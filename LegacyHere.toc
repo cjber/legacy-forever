@@ -19,3 +19,5 @@ Live.lua
 Tracker.lua
 Map.xml
 Map.lua
+Completion.xml
+Completion.lua

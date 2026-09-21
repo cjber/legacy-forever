@@ -242,6 +242,9 @@ local function BuildMenu(root, uiMapID)
 	root:CreateDivider()
 	root:CreateCheckbox("Show undiscovered areas", ShowAreas, ToggleAreas)
 	AddUnlocated(root)
+	root:CreateDivider()
+	ns.Completion.AddMenu(root)
+	root:CreateDivider()
 	root:CreateButton("Open the Legacy panel", ToggleLegacySystemUI)
 end
 

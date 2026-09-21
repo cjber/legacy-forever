@@ -1,0 +1,313 @@
+local addonName, ns = ...
+
+-- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths and
+-- dungeons are done, as a section in the objective tracker (the zone you're in) and in
+-- the world map's corner (the zone you're viewing). Each is optional and collapsible.
+local Completion = {}
+ns.Completion = Completion
+
+local ICONS = { areas = "islands-queue-prop-compass", taxis = "flightmaster", dungeons = "dungeon" }
+local LABELS = { areas = "Areas explored", taxis = "Flight paths", dungeons = "Dungeons" }
+-- Names listed per category in a tooltip before "and N more".
+local MAX_LEFT = 6
+local PERCENT_PIN_TEMPLATE = "LegacyHereZonePercentPinTemplate"
+
+-- All off by default; kept across sessions only where SavedVariables load.
+local function Settings()
+	LegacyHereDB = LegacyHereDB or {}
+	LegacyHereDB.zoneCompletion = LegacyHereDB.zoneCompletion or {}
+	return LegacyHereDB.zoneCompletion
+end
+
+local listeners = {}
+
+local function Refresh()
+	for _, callback in ipairs(listeners) do
+		callback()
+	end
+end
+
+function Completion.Of(uiMapID)
+	local zone = uiMapID and ns.Data.completion[uiMapID]
+	if not zone then
+		return nil
+	end
+	local result = ns.Model.ZoneCompletion(zone, ns.Live.ZoneSnapshot(uiMapID))
+	return result.total > 0 and result or nil
+end
+
+local function PercentText(result)
+	return ("%d%%"):format(result.percent)
+end
+
+-- "[compass] 9/14   [gryphon] 1/1   [door] 0/1", a finished category in green.
+local function CountsText(result, iconSize)
+	local parts = {}
+	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
+		local category = result[key]
+		if category then
+			local color = category.done == category.total and GREEN_FONT_COLOR or HIGHLIGHT_FONT_COLOR
+			parts[#parts + 1] = ("%s %s"):format(
+				CreateAtlasMarkup(ICONS[key], iconSize, iconSize),
+				color:WrapTextInColorCode(("%d/%d"):format(category.done, category.total))
+			)
+		end
+	end
+	return table.concat(parts, "   ")
+end
+
+local function AddTooltip(tooltip, name, result)
+	GameTooltip_SetTitle(tooltip, ("%s  %s"):format(name, PercentText(result)))
+	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
+		local category = result[key]
+		if category then
+			tooltip:AddDoubleLine(
+				("%s %s"):format(CreateAtlasMarkup(ICONS[key], 14, 14), LABELS[key]),
+				("%d/%d"):format(category.done, category.total),
+				NORMAL_FONT_COLOR.r,
+				NORMAL_FONT_COLOR.g,
+				NORMAL_FONT_COLOR.b,
+				HIGHLIGHT_FONT_COLOR.r,
+				HIGHLIGHT_FONT_COLOR.g,
+				HIGHLIGHT_FONT_COLOR.b
+			)
+			for index, left in ipairs(category.left) do
+				if index > MAX_LEFT then
+					GameTooltip_AddDisabledLine(tooltip, ("    and %d more"):format(#category.left - MAX_LEFT))
+					break
+				end
+				GameTooltip_AddColoredLine(tooltip, "    " .. left, WHITE_FONT_COLOR)
+			end
+		end
+	end
+	if result.dungeons then
+		GameTooltip_AddDisabledLine(tooltip, "Dungeons count your Legacy clears on any character.")
+	end
+end
+
+--[[ Objective tracker: the zone you're in ]]
+
+local TrackerMixin = {}
+
+function TrackerMixin:LayoutContents()
+	local uiMapID = Settings().tracker and ns.Live.CurrentZone()
+	local result = Completion.Of(uiMapID)
+	if not result then
+		return
+	end
+	self:SetHeader(C_Map.GetMapInfo(uiMapID).name)
+	self.Header.Percent:SetText(PercentText(result))
+	local block = self:GetBlock(uiMapID)
+	block:SetHeader(CountsText(result, 14))
+	self:LayoutBlock(block)
+end
+
+function TrackerMixin:OnBlockHeaderEnter(block)
+	local result = Completion.Of(block.id)
+	if result then
+		GameTooltip:SetOwner(block, "ANCHOR_LEFT")
+		AddTooltip(GameTooltip, C_Map.GetMapInfo(block.id).name, result)
+		GameTooltip_AddInstructionLine(GameTooltip, "Click to open the map.")
+		GameTooltip:Show()
+	end
+end
+
+function TrackerMixin:OnBlockHeaderLeave()
+	GameTooltip:Hide()
+end
+
+function TrackerMixin:OnBlockHeaderClick(block)
+	OpenWorldMap(block.id)
+end
+
+local trackerModule = ns.Tracker.AddModule("LegacyHereZoneTracker", TrackerMixin, -1)
+if trackerModule then
+	local header = trackerModule.Header
+	header.Percent = header:CreateFontString(nil, "ARTWORK", "ObjectiveTrackerHeaderFont")
+	header.Percent:SetPoint("RIGHT", header.MinimizeButton, "LEFT", -4, 0)
+	-- Saved variables arrive only once every file has run.
+	EventUtil.ContinueOnAddOnLoaded(addonName, function()
+		trackerModule:SetCollapsed(Settings().trackerCollapsed == true)
+		hooksecurefunc(trackerModule, "SetCollapsed", function(_, collapsed)
+			Settings().trackerCollapsed = collapsed
+		end)
+	end)
+	listeners[#listeners + 1] = function()
+		trackerModule:MarkDirty()
+	end
+end
+
+--[[ World map: the zone you're viewing, in the corner; a percent per zone on a continent ]]
+
+LegacyHereZoneOverlayMixin = {}
+
+-- Called by the world map whenever it changes map.
+function LegacyHereZoneOverlayMixin:Refresh()
+	local map = self:GetParent()
+	local uiMapID = map:GetMapID()
+	self.result = Settings().map and Completion.Of(uiMapID)
+	if not self.result then
+		self:Hide()
+		return
+	end
+	self.name = C_Map.GetMapInfo(uiMapID).name
+	self.Title:SetText(("%s  %s"):format(self.name, PercentText(self.result)))
+	self.Counts:SetText(CountsText(self.result, 16))
+	self.Counts:SetShown(not Settings().mapCollapsed)
+	local height = self.Title:GetStringHeight() + (Settings().mapCollapsed and 0 or self.Counts:GetStringHeight() + 4)
+	self:SetSize(math.max(self.Title:GetStringWidth(), self.Counts:GetStringWidth()), height)
+	self:Show()
+end
+
+function LegacyHereZoneOverlayMixin:OnClick()
+	Settings().mapCollapsed = not Settings().mapCollapsed
+	self:Refresh()
+	self:OnEnter()
+end
+
+function LegacyHereZoneOverlayMixin:OnEnter()
+	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+	AddTooltip(GameTooltip, self.name, self.result)
+	GameTooltip_AddInstructionLine(GameTooltip, Settings().mapCollapsed and "Click to expand." or "Click to collapse.")
+	GameTooltip:Show()
+end
+
+function LegacyHereZoneOverlayMixin:OnLeave()
+	GameTooltip:Hide()
+end
+
+LegacyHereZonePercentPinMixin = CreateFromMixins(MapCanvasPinMixin)
+
+function LegacyHereZonePercentPinMixin:OnLoad()
+	self:UseFrameLevelType("PIN_FRAME_LEVEL_AREA_POI")
+	self:SetScalingLimits(1, 1.0, 1.2)
+end
+
+function LegacyHereZonePercentPinMixin:OnAcquired(x, y, result)
+	self.Text:SetText(PercentText(result))
+	self.Text:SetTextColor((result.done == result.total and GREEN_FONT_COLOR or NORMAL_FONT_COLOR):GetRGB())
+	self:SetPosition(x, y)
+	self:ApplyCurrentScale()
+end
+
+local function CreatePercentProvider()
+	local provider = CreateFromMixins(MapCanvasDataProviderMixin)
+
+	function provider:RemoveAllData()
+		self:GetMap():RemoveAllPinsByTemplate(PERCENT_PIN_TEMPLATE)
+	end
+
+	function provider:RefreshAllData()
+		self:RemoveAllData()
+		local map = self:GetMap()
+		local continentID = map:GetMapID()
+		local info = continentID and C_Map.GetMapInfo(continentID)
+		if not (Settings().map and info and info.mapType == Enum.UIMapType.Continent) then
+			return
+		end
+		for uiMapID in pairs(ns.Data.completion) do
+			local zoneInfo = C_Map.GetMapInfo(uiMapID)
+			local result = zoneInfo and zoneInfo.parentMapID == continentID and Completion.Of(uiMapID)
+			local left, right, top, bottom = C_Map.GetMapRectOnMap(uiMapID, continentID)
+			if result and left then
+				map:AcquirePin(PERCENT_PIN_TEMPLATE, (left + right) / 2, (top + bottom) / 2, result)
+			end
+		end
+	end
+
+	return provider
+end
+
+local function AttachMap()
+	local map = WorldMapFrame
+	local provider = CreatePercentProvider()
+	map:AddDataProvider(provider)
+	-- Right of the floor dropdown and Camelot's tracking pin button, which share the corner.
+	local overlay = map:AddOverlayFrame(
+		"LegacyHereZoneOverlayTemplate",
+		"BUTTON",
+		"TOPLEFT",
+		map:GetCanvasContainer(),
+		"TOPLEFT",
+		44,
+		-10
+	)
+	listeners[#listeners + 1] = function()
+		if map:IsShown() then
+			provider:RefreshAllData()
+			overlay:Refresh()
+		end
+	end
+end
+
+EventUtil.ContinueOnAddOnLoaded("Blizzard_WorldMap", AttachMap)
+ns.Live.OnChange(Refresh)
+
+--[[ Settings, in the Legacy map menu ]]
+
+local function IsShown(surface)
+	return Settings()[surface] == true
+end
+
+local function Toggle(surface)
+	Settings()[surface] = not IsShown(surface)
+	Refresh()
+end
+
+function Completion.AddMenu(root)
+	root:CreateTitle("Zone completion")
+	root:CreateCheckbox("In the objective tracker", IsShown, Toggle, "tracker")
+	root:CreateCheckbox("On the world map", IsShown, Toggle, "map")
+end
+
+-- For /lh audit: the current zone's counts against what the game reports.
+function Completion.Audit()
+	local uiMapID = ns.Live.CurrentZone()
+	if not uiMapID then
+		ns.Print("zone completion: no data for the zone you're in.")
+		return
+	end
+	local zone = ns.Data.completion[uiMapID]
+	local snapshot = ns.Live.ZoneSnapshot(uiMapID)
+	local result = ns.Model.ZoneCompletion(zone, snapshot)
+	local parts = {}
+	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
+		local category = result[key]
+		parts[#parts + 1] = category and ("%s %d/%d"):format(key, category.done, category.total) or (key .. " -")
+	end
+	ns.Print(
+		("zone completion for %s (map %d): %s"):format(
+			C_Map.GetMapInfo(uiMapID).name,
+			uiMapID,
+			table.concat(parts, ", ")
+		)
+	)
+
+	local known = {}
+	for _, area in ipairs(zone.areas or {}) do
+		known[area.key] = true
+	end
+	for key in pairs(snapshot.explored or {}) do
+		if not known[key] then
+			ns.Print("  explored area not in the data: " .. key)
+		end
+	end
+	if not snapshot.explored then
+		ns.Print("  the game reported no exploration for this zone")
+	end
+
+	local nodes = {}
+	for _, taxi in ipairs(zone.taxis or {}) do
+		nodes[taxi.node] = true
+	end
+	for nodeID in pairs(snapshot.taxis) do
+		if not nodes[nodeID] then
+			ns.Print(("  flight path %d not in the data for this zone"):format(nodeID))
+		end
+	end
+	for _, taxi in ipairs(zone.taxis or {}) do
+		if (taxi.faction == "Neutral" or taxi.faction == snapshot.faction) and snapshot.taxis[taxi.node] == nil then
+			ns.Print(("  flight path %d (%s) not listed by the game here"):format(taxi.node, taxi.name))
+		end
+	end
+end

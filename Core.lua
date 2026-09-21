@@ -8,11 +8,7 @@ end
 
 -- Compares the bundled data with what the game reports, so a data problem shows
 -- up as a count and a list of IDs rather than as a silently missing pin.
-local function Audit()
-	local data = ns.Data
-	local version, build = GetBuildInfo()
-	ns.Print(("data from build %s, client build %s.%s"):format(data.build, version, build))
-
+local function AuditChallenges(data)
 	local visible = ns.Live.Visible()
 	local numVisible = 0
 	for _ in pairs(visible) do
@@ -49,6 +45,14 @@ local function Audit()
 			ns.Tracker.IsAttached() and "in the objective tracker" or "NOT in the objective tracker"
 		)
 	)
+end
+
+local function Audit()
+	local data = ns.Data
+	local version, build = GetBuildInfo()
+	ns.Print(("data from build %s, client build %s.%s"):format(data.build, version, build))
+	AuditChallenges(data)
+	ns.Completion.Audit()
 end
 
 -- Every criterion the game reports for one achievement, for reporting data mismatches.

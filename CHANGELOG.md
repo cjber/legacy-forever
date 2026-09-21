@@ -11,7 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
-Nothing yet.
+- **Zone completion**, an optional extension turned on from the map menu: each zone shows how much of it you've done, as areas explored, flight paths learned and dungeons cleared for Legacy, with the rest listed on hover. It can sit in the objective tracker for the zone you're in, in the world map's corner for the zone you're viewing, or both, and each collapses to just the zone and its percentage. Continent maps show every zone's percentage.
+- **`/lh audit`** now also checks the zone you're in against what the game reports for areas and flight paths, and runs even when no Legacy challenges are listed yet.
 
 ## [0.1.0] - 2026-09-21
 

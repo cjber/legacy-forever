@@ -138,18 +138,99 @@ local function Notify()
 	end
 end
 
-function Live.Invalidate()
-	visible = nil
-	criteriaCache = {}
+local snapshots = {}
+
+local function Changed()
 	if not pending then
 		pending = true
 		C_Timer.After(0.5, Notify)
 	end
 end
 
+function Live.Invalidate()
+	visible = nil
+	criteriaCache = {}
+	snapshots = {}
+	Changed()
+end
+
+-- A wing counts as cleared when any Legacy step for it (either variant set) is done.
+local function WingDone(refs)
+	local state
+	for _, ref in ipairs(refs) do
+		local progress = (Live.Criteria(ref[1]) or {})[ref[2]]
+		if progress then
+			if progress.completed then
+				return true
+			end
+			state = false
+		end
+	end
+	return state
+end
+
+local function OverlayKey(texture)
+	return ("%d:%d:%d:%d"):format(texture.offsetX, texture.offsetY, texture.textureWidth, texture.textureHeight)
+end
+
+-- Live progress for Model.ZoneCompletion.
+function Live.ZoneSnapshot(uiMapID)
+	local snapshot = snapshots[uiMapID]
+	if snapshot then
+		return snapshot
+	end
+	snapshot = { taxis = {}, faction = UnitFactionGroup("player"), wingDone = WingDone }
+	local textures = C_MapExplorationInfo.GetExploredMapTextures(uiMapID)
+	if textures then
+		snapshot.explored = {}
+		for _, texture in ipairs(textures) do
+			snapshot.explored[OverlayKey(texture)] = true
+		end
+	end
+	for _, node in ipairs(C_TaxiMap.GetTaxiNodesForMap(uiMapID) or {}) do
+		snapshot.taxis[node.nodeID] = not node.isUndiscovered
+	end
+	snapshots[uiMapID] = snapshot
+	return snapshot
+end
+
+-- The zone the player is in, walking up from a cave or city sub-map to the first map
+-- with completion data; nil on a continent or anywhere the data doesn't cover.
+function Live.CurrentZone()
+	local uiMapID = C_Map.GetBestMapForUnit("player")
+	while uiMapID and not ns.Data.completion[uiMapID] do
+		local info = C_Map.GetMapInfo(uiMapID)
+		if not info or info.mapType <= Enum.UIMapType.Continent then
+			return nil
+		end
+		uiMapID = info.parentMapID
+	end
+	return uiMapID
+end
+
+local INVALIDATING = {
+	"CRITERIA_UPDATE",
+	"ACHIEVEMENT_EARNED",
+	"RECEIVED_ACHIEVEMENT_LIST",
+	"PLAYER_ENTERING_WORLD",
+	"MAP_EXPLORATION_UPDATED",
+	"TAXI_NODE_STATUS_CHANGED",
+	"TAXIMAP_OPENED",
+}
+-- Moving between zones changes which zone is shown, not anyone's progress.
+local ZONE_CHANGES = { "ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA" }
+
 local events = CreateFrame("Frame")
-events:RegisterEvent("CRITERIA_UPDATE")
-events:RegisterEvent("ACHIEVEMENT_EARNED")
-events:RegisterEvent("RECEIVED_ACHIEVEMENT_LIST")
-events:RegisterEvent("PLAYER_ENTERING_WORLD")
-events:SetScript("OnEvent", Live.Invalidate)
+for _, event in ipairs(INVALIDATING) do
+	events:RegisterEvent(event)
+end
+for _, event in ipairs(ZONE_CHANGES) do
+	events:RegisterEvent(event)
+end
+events:SetScript("OnEvent", function(_, event)
+	if tContains(ZONE_CHANGES, event) then
+		Changed()
+	else
+		Live.Invalidate()
+	end
+end)
