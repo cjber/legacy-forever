@@ -40,21 +40,4 @@
 			<OnLeave method="OnLeave"/>
 		</Scripts>
 	</Button>
-
-	<!-- A zone's completion percent on a continent map, under its Legacy count. No mouse, so clicks reach the map. -->
-	<Frame name="LegacyHereZonePercentPinTemplate" mixin="LegacyHereZonePercentPinMixin" virtual="true">
-		<Size x="40" y="14"/>
-		<Layers>
-			<Layer level="OVERLAY">
-				<FontString parentKey="Text" inherits="GameFontHighlightSmall">
-					<Anchors>
-						<Anchor point="TOP" y="-10"/>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
-		<Scripts>
-			<OnLoad method="OnLoad"/>
-		</Scripts>
-	</Frame>
 </Ui>

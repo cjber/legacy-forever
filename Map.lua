@@ -104,6 +104,7 @@ local function AddZoneTooltip(tooltip, zone)
 			or ("%s: %d left"):format(ns.Live.Name(group.challenge), #group.objectives)
 		GameTooltip_AddNormalLine(tooltip, text)
 	end
+	ns.Completion.AddSummary(tooltip, zone.uiMapID)
 	GameTooltip_AddInstructionLine(tooltip, "Click the zone to see where.")
 end
 
@@ -124,6 +125,7 @@ local function ContinentZones(continentID, includeAreas)
 			local left, right, top, bottom = C_Map.GetMapRectOnMap(uiMapID, continentID)
 			if count > 0 and left then
 				zones[#zones + 1] = {
+					uiMapID = uiMapID,
 					name = info.name,
 					groups = groups,
 					count = count,

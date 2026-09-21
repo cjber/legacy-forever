@@ -23,7 +23,6 @@ local LABELS = {
 }
 -- Names listed per category in a tooltip before "and N more".
 local MAX_LEFT = 6
-local PERCENT_PIN_TEMPLATE = "LegacyHereZonePercentPinTemplate"
 
 local function Settings()
 	return ns.SavedTable("zoneCompletion")
@@ -216,7 +215,7 @@ if trackerModule then
 	end
 end
 
---[[ World map: the zone you're viewing, in the corner; a percent per zone on a continent ]]
+--[[ World map: the zone you're viewing, in the corner; on a continent, in each zone badge's tooltip ]]
 
 LegacyHereZoneOverlayMixin = {}
 
@@ -270,46 +269,13 @@ function LegacyHereZoneOverlayMixin:OnLeave()
 	GameTooltip:Hide()
 end
 
-LegacyHereZonePercentPinMixin = CreateFromMixins(MapCanvasPinMixin)
-
-function LegacyHereZonePercentPinMixin:OnLoad()
-	self:UseFrameLevelType("PIN_FRAME_LEVEL_AREA_POI")
-	self:SetScalingLimits(1, 1.0, 1.2)
-end
-
-function LegacyHereZonePercentPinMixin:OnAcquired(x, y, result)
-	self.Text:SetText(PercentText(result))
-	self.Text:SetTextColor((result.complete and GREEN_FONT_COLOR or NORMAL_FONT_COLOR):GetRGB())
-	self:SetPosition(x, y)
-	self:ApplyCurrentScale()
-end
-
--- One provider drives both map surfaces: the map refreshes providers on show and on
--- every map change, but its overlay frames only on a map change.
+-- The map refreshes providers on show and on every map change, but its overlay frames
+-- only on a map change, so a provider keeps the corner current.
 local function CreateProvider(overlay)
 	local provider = CreateFromMixins(MapCanvasDataProviderMixin)
 
-	function provider:RemoveAllData()
-		self:GetMap():RemoveAllPinsByTemplate(PERCENT_PIN_TEMPLATE)
-	end
-
 	function provider:RefreshAllData()
-		self:RemoveAllData()
 		overlay:Refresh()
-		local map = self:GetMap()
-		local continentID = map:GetMapID()
-		local info = continentID and C_Map.GetMapInfo(continentID)
-		if not (IsShown("map") and info and info.mapType == Enum.UIMapType.Continent) then
-			return
-		end
-		for uiMapID in pairs(ns.Data.completion) do
-			local zoneInfo = C_Map.GetMapInfo(uiMapID)
-			local result = zoneInfo and zoneInfo.parentMapID == continentID and Completion.Of(uiMapID)
-			local left, right, top, bottom = C_Map.GetMapRectOnMap(uiMapID, continentID)
-			if result and left then
-				map:AcquirePin(PERCENT_PIN_TEMPLATE, (left + right) / 2, (top + bottom) / 2, result)
-			end
-		end
 	end
 
 	return provider
@@ -349,6 +315,26 @@ end
 local function ToggleCounted(category)
 	Settings()["count_" .. category] = not IsCounted(category)
 	Refresh()
+end
+
+-- A zone's completion under a continent badge's tooltip: percent, then one row of counts.
+function Completion.AddSummary(tooltip, uiMapID)
+	local result = IsShown("map") and Completion.Of(uiMapID)
+	if not result then
+		return
+	end
+	GameTooltip_AddBlankLineToTooltip(tooltip)
+	tooltip:AddDoubleLine(
+		"Zone completion",
+		PercentText(result),
+		NORMAL_FONT_COLOR.r,
+		NORMAL_FONT_COLOR.g,
+		NORMAL_FONT_COLOR.b,
+		HIGHLIGHT_FONT_COLOR.r,
+		HIGHLIGHT_FONT_COLOR.g,
+		HIGHLIGHT_FONT_COLOR.b
+	)
+	GameTooltip_AddHighlightLine(tooltip, CountsText(result, 14))
 end
 
 function Completion.AddMenu(root)
