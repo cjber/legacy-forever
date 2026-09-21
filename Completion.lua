@@ -376,18 +376,13 @@ function Completion.Audit()
 		ns.Print("  the game reported no exploration for this zone")
 	end
 
-	local nodes = {}
 	for _, taxi in ipairs(zone.taxis or {}) do
-		nodes[taxi.node] = true
-	end
-	for nodeID in pairs(snapshot.taxis) do
-		if not nodes[nodeID] then
-			ns.Print(("  flight path %d not in the data for this zone"):format(nodeID))
-		end
-	end
-	for _, taxi in ipairs(zone.taxis or {}) do
-		if (taxi.faction == "Neutral" or taxi.faction == snapshot.faction) and snapshot.taxis[taxi.node] == nil then
-			ns.Print(("  flight path %d (%s) not listed by the game here"):format(taxi.node, taxi.name))
+		if taxi.faction == "Neutral" or taxi.faction == snapshot.faction then
+			local learned = snapshot.taxis[taxi.node]
+			local state = learned == nil and "unknown until you open a flight master on this continent"
+				or learned and "known"
+				or "not known"
+			ns.Print(("  flight path %d (%s): %s"):format(taxi.node, taxi.name, state))
 		end
 	end
 end

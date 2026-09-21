@@ -24,7 +24,7 @@ read_globals = {
 	"GetAchievementNumCriteria", "GetBuildInfo", "GetCategoryInfo", "GetCategoryList", "GetCategoryNumAchievements", "hooksecurefunc",
 	"LegacySystemFrame", "MenuUtil", "OTHER", "Mixin", "OBJECTIVE_DASH_STYLE_HIDE", "ObjectiveTrackerFrame",
 	"ObjectiveTrackerManager", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "strtrim",
-	"tContains", "ToggleLegacySystemUI", "ToggleWorldMap", "OpenWorldMap", "UnitFactionGroup", "UIParent", "WHITE_FONT_COLOR", "WorldMapFrame",
+	"tContains", "ToggleLegacySystemUI", "ToggleWorldMap", "OpenWorldMap", "UnitFactionGroup", "UnitGUID", "UIParent", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 
 files["Data/Legacy.lua"] = { max_line_length = false }
