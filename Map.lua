@@ -359,26 +359,22 @@ local function CreatePinProvider()
 	LegacyHereAreaPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
 	-- Pools are made on first acquire, as MapExplorationPinMixin does; see LegacyHerePinMixin:OnAcquired.
-	-- One hover layer over the canvas picks the area under the cursor (Model.AreaAt) among all
-	-- the zone's areas, explored or not, so an explored label never lights up the unexplored
-	-- neighbour whose rectangle overlaps it. It takes mouse motion only, so clicks, drags and
-	-- the wheel still reach the map.
+	-- Hover is polled rather than caught by a mouse-enabled frame, which would swallow the
+	-- map's own clicks (right-click to zoom out, drag to pan). While the cursor is on bare map
+	-- (no pin or button above it), the area under it is picked (Model.AreaAt) among all the
+	-- zone's areas, explored or not, so an explored label never lights up the unexplored
+	-- neighbour whose rectangle overlaps it.
 	function LegacyHereAreaPinMixin:CreatePools()
 		self:SetIgnoreGlobalPinScale(true)
 		self:UseFrameLevelType("PIN_FRAME_LEVEL_MAP_EXPLORATION")
+		self:EnableMouse(false)
 		self.textures = CreateTexturePool(self, "OVERLAY")
-		self.hover = CreateFrame("Frame", nil, self)
-		self.hover:SetAllPoints()
-		self.hover:SetMouseMotionEnabled(true)
-		self.hover:SetMouseClickEnabled(false)
-		self.hover:SetScript("OnEnter", function(hover)
-			hover:SetScript("OnUpdate", function()
+		self:SetScript("OnUpdate", function()
+			if self:GetMap():IsCanvasMouseFocus() then
 				self:HoverAt(self:CursorPosition())
-			end)
-		end)
-		self.hover:SetScript("OnLeave", function(hover)
-			hover:SetScript("OnUpdate", nil)
-			self:Highlight(nil)
+			elseif self.hovered then
+				self:Highlight(nil)
+			end
 		end)
 	end
 
@@ -425,7 +421,7 @@ local function CreatePinProvider()
 		for _, texture in ipairs(self.drawn[area.key]) do
 			texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
 		end
-		GameTooltip:SetOwner(self.hover, "ANCHOR_CURSOR_RIGHT")
+		GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
 		local objective = self.legacy[area.key]
 		if objective then
 			AddPinTooltip(GameTooltip, objective.group, objective.objective)
