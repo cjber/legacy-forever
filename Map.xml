@@ -12,7 +12,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="OVERLAY">
-				<FontString parentKey="Count" inherits="NumberFontNormalSmall" justifyH="LEFT">
+				<FontString parentKey="Count" inherits="GameFontHighlightSmall" justifyH="LEFT">
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="RIGHT" x="-2" y="0"/>
 					</Anchors>
@@ -28,6 +28,10 @@
 			</Layer>
 		</Layers>
 	</Frame>
+
+	<!-- Every undiscovered area of the viewed zone, shaded. Sized to the canvas in code;
+	     only its per-area hover frames take the mouse, and only for motion. -->
+	<Frame name="LegacyHereAreaPinTemplate" mixin="LegacyHereAreaPinMixin" virtual="true"/>
 
 	<!-- A bare Legacy icon in the map's top-right button column, with its count. -->
 	<DropdownButton name="LegacyHereMapButtonTemplate" frameStrata="HIGH" mixin="LegacyHereMapButtonMixin" virtual="true">

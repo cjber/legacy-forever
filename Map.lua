@@ -1,6 +1,11 @@
 local _, ns = ...
 
 local PIN_TEMPLATE = "LegacyHerePinTemplate"
+local AREA_TEMPLATE = "LegacyHereAreaPinTemplate"
+-- Undiscovered ground in see-through gold: plain to spot, with the map still readable
+-- underneath. Brighter under the mouse.
+local AREA_COLOR = { r = 1, g = 0.82, b = 0.25 }
+local AREA_ALPHA, AREA_HOVER_ALPHA = 0.45, 0.75
 local POINTS_ICON = "UI-Legacy-Points-icon-c60"
 
 local KIND_LABEL = {
@@ -351,10 +356,110 @@ local function CreatePinProvider()
 		GameTooltip:Hide()
 	end
 
+	-- One pin per zone map holding every undiscovered area, drawn from the same map
+	-- tiles Blizzard reveals on discovery (see MapExplorationPinMixin:RefreshOverlays).
+	LegacyHereAreaPinMixin = CreateFromMixins(MapCanvasPinMixin)
+
+	function LegacyHereAreaPinMixin:OnLoad()
+		self:SetIgnoreGlobalPinScale(true)
+		self:UseFrameLevelType("PIN_FRAME_LEVEL_MAP_EXPLORATION")
+		self.textures = CreateTexturePool(self, "OVERLAY")
+		self.hits = CreateFramePool("Frame", self)
+	end
+
+	function LegacyHereAreaPinMixin:OnReleased()
+		self.textures:ReleaseAll()
+		self.hits:ReleaseAll()
+	end
+
+	function LegacyHereAreaPinMixin:DrawTile(tileID, x, y, width, height, u, v)
+		local texture = self.textures:Acquire()
+		self:GetMap():AddMaskableTexture(texture)
+		texture:SetTexture(tileID, nil, nil, "TRILINEAR")
+		texture:SetSize(width, height)
+		texture:SetTexCoord(0, u, 0, v)
+		texture:SetPoint("TOPLEFT", x, -y)
+		texture:SetDesaturated(true)
+		texture:SetVertexColor(AREA_COLOR.r, AREA_COLOR.g, AREA_COLOR.b, AREA_ALPHA)
+		texture:Show()
+		return texture
+	end
+
+	-- `areas`, largest first, so a smaller area's hover sits above one it overlaps.
+	function LegacyHereAreaPinMixin:OnAcquired(zone, areas, legacy)
+		self:SetSize(self:GetMap():GetCanvas():GetSize())
+		self:SetPosition(0.5, 0.5)
+		for index, area in ipairs(areas) do
+			local offsetX, offsetY, width, height = ns.Model.OverlayRect(area.key)
+			local textures = {}
+			for _, tile in ipairs(ns.Model.OverlayTiles(width, height, zone.tileWidth, zone.tileHeight)) do
+				textures[#textures + 1] = self:DrawTile(
+					area.tiles[tile.index],
+					offsetX + tile.x,
+					offsetY + tile.y,
+					tile.width,
+					tile.height,
+					tile.u,
+					tile.v
+				)
+			end
+			local hit = self.hits:Acquire()
+			hit:SetFrameLevel(self:GetFrameLevel() + index)
+			hit:SetSize(width, height)
+			hit:SetPoint("TOPLEFT", offsetX, -offsetY)
+			hit:SetMouseMotionEnabled(true)
+			hit:SetMouseClickEnabled(false)
+			hit:SetScript("OnEnter", function()
+				for _, texture in ipairs(textures) do
+					texture:SetAlpha(AREA_HOVER_ALPHA / AREA_ALPHA)
+				end
+				GameTooltip:SetOwner(hit, "ANCHOR_CURSOR_RIGHT")
+				local objective = legacy[area.key]
+				if objective then
+					AddPinTooltip(GameTooltip, objective.group, objective.objective)
+				else
+					GameTooltip_SetTitle(GameTooltip, area.name)
+					GameTooltip_AddNormalLine(GameTooltip, KIND_LABEL.explore)
+				end
+				GameTooltip:Show()
+			end)
+			hit:SetScript("OnLeave", function()
+				for _, texture in ipairs(textures) do
+					texture:SetAlpha(1)
+				end
+				GameTooltip:Hide()
+			end)
+			hit:Show()
+		end
+	end
+
+	-- The zone's undiscovered areas that have map tiles, largest first; nil when the game reports no
+	-- exploration for the map, so nothing is claimed undiscovered.
+	local function UndiscoveredAreas(mapID)
+		local zone = ns.Data.completion[mapID]
+		local explored = zone and zone.tileWidth and ns.Live.ZoneSnapshot(mapID).explored
+		if not explored then
+			return nil
+		end
+		local areas = {}
+		for _, area in ipairs(zone.areas) do
+			if area.tiles and not explored[area.key] then
+				areas[#areas + 1] = area
+			end
+		end
+		table.sort(areas, function(a, b)
+			local _, _, aw, ah = ns.Model.OverlayRect(a.key)
+			local _, _, bw, bh = ns.Model.OverlayRect(b.key)
+			return aw * ah > bw * bh
+		end)
+		return zone, areas
+	end
+
 	local provider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 	function provider:RemoveAllData()
 		self:GetMap():RemoveAllPinsByTemplate(PIN_TEMPLATE)
+		self:GetMap():RemoveAllPinsByTemplate(AREA_TEMPLATE)
 	end
 
 	function provider:RefreshAllData()
@@ -367,12 +472,28 @@ local function CreatePinProvider()
 			end
 			return
 		end
+		-- Undiscovered areas are shaded rather than pinned; an area the shading can't
+		-- draw keeps its pin.
+		local zone, areas = nil, nil
+		if ShowAreas() then
+			zone, areas = UndiscoveredAreas(mapID)
+		end
+		local shaded, legacy = {}, {}
+		for _, area in ipairs(areas or {}) do
+			shaded[area.key] = true
+		end
 		for _, group in ipairs(ZoneGroups(mapID)) do
 			for _, objective in ipairs(group.objectives) do
-				if objective.entry.x and (objective.entry.kind ~= "explore" or ShowAreas()) then
+				local entry = objective.entry
+				if entry.kind == "explore" and shaded[entry.key] then
+					legacy[entry.key] = { group = group, objective = objective }
+				elseif entry.x and (entry.kind ~= "explore" or ShowAreas()) then
 					self:GetMap():AcquirePin(PIN_TEMPLATE, group, objective)
 				end
 			end
+		end
+		if areas and #areas > 0 then
+			self:GetMap():AcquirePin(AREA_TEMPLATE, zone, areas, legacy)
 		end
 	end
 

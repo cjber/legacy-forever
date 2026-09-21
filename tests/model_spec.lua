@@ -115,4 +115,15 @@ snapshot.explored = nil
 equal(Model.ZoneCompletion(zone, snapshot).areas, nil, "unknown exploration drops the category")
 equal(Model.ZoneCompletion({}, snapshot).percent, nil, "empty zone has no percent")
 
+-- Overlay tiles, laid out like Blizzard's exploration overlays.
+local ox, oy, ow, oh = Model.OverlayRect("413:476:256:128")
+equal(ox + oy + ow + oh, 413 + 476 + 256 + 128, "overlay key parses to integers")
+local tiles = Model.OverlayTiles(549, 241, 256, 256)
+equal(#tiles, 3, "549x241 needs three 256px tiles in one row")
+equal(tiles[3].x, 512, "third tile offset")
+equal(tiles[3].width, 37, "last tile keeps the remainder")
+equal(tiles[3].u, 37 / 64, "partial tile samples its power-of-two file")
+equal(tiles[1].u, 1, "full tile samples the whole file")
+equal(#Model.OverlayTiles(512, 512, 256, 256), 4, "exact multiples add no partial tile")
+
 print(("model_spec: %d checks passed"):format(checks))

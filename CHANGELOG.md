@@ -12,6 +12,9 @@ verbatim rather than rewritten as the addon moves.
 ## [Unreleased]
 
 - **Zone completion**, an optional extension turned on from the map menu: each zone shows how much of it you've done, as areas explored, flight paths learned and dungeons cleared for Legacy, with the rest listed on hover. It can sit in the objective tracker for the zone you're in, in the world map's corner for the zone you're viewing, or both, and each collapses to just the zone and its percentage. Continent maps show every zone's percentage.
+- **Undiscovered areas are shaded instead of pinned.** Turning on "Show undiscovered areas" now tints each area you haven't found in see-through gold, in the area's own shape, rather than dropping a Legacy icon in its middle. Areas are big, and the shading shows where they start and end.
+- **More dungeon objectives have a place.** 56 objectives that sat under "No fixed location" are now pinned at their dungeon's entrance, including Lord Valthalak Laid to Rest at Upper Blackrock Spire. Raid bosses stay unpinned for now: the client data doesn't yet tie them to their raid.
+- **Counts on the map read more cleanly**, in the game's regular small font with a soft shadow instead of the heavy outlined numbers.
 - **`/lh audit`** now also checks the zone you're in against what the game reports for areas and flight paths, and runs even when no Legacy challenges are listed yet.
 
 ## [0.1.0] - 2026-09-21

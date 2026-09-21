@@ -191,3 +191,49 @@ function Model.ZoneCompletion(zone, snapshot)
 	result.percent = result.total > 0 and math.floor(100 * result.done / result.total) or nil
 	return result
 end
+
+-- offsetX, offsetY, width, height from an overlay key ("offsetX:offsetY:width:height").
+function Model.OverlayRect(key)
+	local offsetX, offsetY, width, height = key:match("^(%d+):(%d+):(%d+):(%d+)$")
+	return tonumber(offsetX), tonumber(offsetY), tonumber(width), tonumber(height)
+end
+
+-- A tile's drawn size and how much of its power-of-two file that covers; only the last
+-- tile in a row or column is partial.
+local function TileSpan(total, tileSize, index, count)
+	if index < count then
+		return tileSize, 1
+	end
+	local pixels = total % tileSize
+	if pixels == 0 then
+		pixels = tileSize
+	end
+	local file = 16
+	while file < pixels do
+		file = file * 2
+	end
+	return pixels, pixels / file
+end
+
+-- How an overlay's tiles lay out, as Blizzard's MapExplorationPinMixin:RefreshOverlays
+-- does it: row-major, `index` into the overlay's tile list, x/y from its top-left.
+function Model.OverlayTiles(width, height, tileWidth, tileHeight)
+	local wide, tall = math.ceil(width / tileWidth), math.ceil(height / tileHeight)
+	local tiles = {}
+	for row = 1, tall do
+		local tileH, v = TileSpan(height, tileHeight, row, tall)
+		for col = 1, wide do
+			local tileW, u = TileSpan(width, tileWidth, col, wide)
+			tiles[#tiles + 1] = {
+				index = (row - 1) * wide + col,
+				x = tileWidth * (col - 1),
+				y = tileHeight * (row - 1),
+				width = tileW,
+				height = tileH,
+				u = u,
+				v = v,
+			}
+		end
+	end
+	return tiles
+end
