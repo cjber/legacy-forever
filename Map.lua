@@ -100,24 +100,22 @@ end
 local function AddZoneTooltip(tooltip, zone)
 	GameTooltip_SetTitle(tooltip, zone.name)
 	for _, group in ipairs(zone.groups) do
-		local text = IsExploreGroup(group) and AreasLeftText(group)
-			or ("%s: %d left"):format(ns.Live.Name(group.challenge), #group.objectives)
-		GameTooltip_AddNormalLine(tooltip, text)
+		GameTooltip_AddNormalLine(tooltip, ("%s: %d left"):format(ns.Live.Name(group.challenge), #group.objectives))
 	end
 	ns.Completion.AddSummary(tooltip, zone.uiMapID)
 	GameTooltip_AddInstructionLine(tooltip, "Click the zone to see where.")
 end
 
 -- On a continent, one badge per zone with its unfinished count, instead of every pin.
--- Exploration groups count only while area pins are shown.
-local function ContinentZones(continentID, includeAreas)
+-- Exploration is left to the zone map's shading, so badges count place-bound objectives only.
+local function ContinentZones(continentID)
 	local zones = {}
 	for uiMapID in pairs(ns.Data.zones) do
 		local info = C_Map.GetMapInfo(uiMapID)
 		if info and info.parentMapID == continentID then
 			local groups = {}
 			for _, group in ipairs(ZoneGroups(uiMapID)) do
-				if includeAreas or not IsExploreGroup(group) then
+				if not IsExploreGroup(group) then
 					groups[#groups + 1] = group
 				end
 			end
@@ -314,8 +312,6 @@ end
 local function CreatePinProvider()
 	LegacyHerePinMixin = CreateFromMixins(MapCanvasPinMixin)
 
-	-- Areas are many and minor, so they sit smaller and quieter than dungeons,
-	-- bosses and quests. Pins are pooled, so every acquire sets both looks.
 	-- Setup lives here rather than in OnLoad, as Blizzard's own map pins do:
 	-- this client doesn't reliably run OnLoad for addon pins.
 	function LegacyHerePinMixin:OnAcquired(group, objective, zone)
@@ -324,21 +320,12 @@ local function CreatePinProvider()
 		self.objective = objective
 		self.zone = zone
 		self.Count:SetText(zone and zone.count or "")
+		self:SetScalingLimits(1, 1.0, 1.2)
 		if zone then
-			self:SetScalingLimits(1, 1.0, 1.2)
-			self:SetAlpha(1)
 			self:SetPosition(zone.x, zone.y)
-			self:ApplyCurrentScale()
-			return
-		end
-		if objective.entry.kind == "explore" then
-			self:SetScalingLimits(1, 0.9, 1.1)
-			self:SetAlpha(0.85)
 		else
-			self:SetScalingLimits(1, 1.0, 1.2)
-			self:SetAlpha(1)
+			self:SetPosition(objective.entry.x, objective.entry.y)
 		end
-		self:SetPosition(objective.entry.x, objective.entry.y)
 		self:ApplyCurrentScale()
 	end
 
@@ -502,13 +489,13 @@ local function CreatePinProvider()
 		local mapID = self:GetMap():GetMapID()
 		local info = mapID and C_Map.GetMapInfo(mapID)
 		if info and info.mapType == Enum.UIMapType.Continent then
-			for _, zone in ipairs(ContinentZones(mapID, ShowAreas())) do
+			for _, zone in ipairs(ContinentZones(mapID)) do
 				self:GetMap():AcquirePin(PIN_TEMPLATE, nil, nil, zone)
 			end
 			return
 		end
-		-- Undiscovered areas are shaded rather than pinned; an area the shading can't
-		-- draw keeps its pin.
+		-- Exploration is never pinned: undiscovered areas are shaded, carrying their Legacy
+		-- step in the hover, and only place-bound objectives (bosses, dungeons, quests) get pins.
 		local zone, areas = nil, nil
 		if ShowAreas() then
 			zone, areas = UndiscoveredAreas(mapID)
@@ -522,7 +509,7 @@ local function CreatePinProvider()
 				local entry = objective.entry
 				if entry.kind == "explore" and shaded[entry.key] then
 					legacy[entry.key] = { group = group, objective = objective }
-				elseif entry.x and (entry.kind ~= "explore" or ShowAreas()) then
+				elseif entry.x and entry.kind ~= "explore" then
 					self:GetMap():AcquirePin(PIN_TEMPLATE, group, objective)
 				end
 			end
