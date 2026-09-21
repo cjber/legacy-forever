@@ -890,7 +890,7 @@ ns.Data = {
 			{ achievement = 63684, criteria = 116913, kind = "explore", key = "81:0:620:344" },
 		},
 	},
-	-- Character exploration/taxis and account-wide Spelunker wings.
+	-- Zone completion: areas, taxis, dungeon wings, Legacy objectives, and reputations.
 	completion = {
 		[1411] = {
 			tileWidth = 256,
@@ -927,6 +927,8 @@ ns.Data = {
 				{ node = 23, faction = "Horde", name = "Orgrimmar" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1412] = {
 			tileWidth = 256,
@@ -1007,6 +1009,8 @@ ns.Data = {
 				{ node = 22, faction = "Horde", name = "Thunder Bluff" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1413] = {
 			tileWidth = 256,
@@ -1088,6 +1092,10 @@ ns.Data = {
 				{ name = "Razorfen Kraul", refs = { { 62032, 18528 }, { 64017, 117739 } } },
 				{ name = "Wailing Caverns", refs = { { 62031, 18524 }, { 64016, 117732 } } },
 			},
+			legacy = {},
+			reputations = {
+				{ faction = 470, name = "Ratchet" },
+			},
 		},
 		[1416] = {
 			tileWidth = 256,
@@ -1168,6 +1176,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "City of Dalaran", refs = { { 62032, 116050 }, { 64017, 117735 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1417] = {
 			tileWidth = 256,
@@ -1235,6 +1245,8 @@ ns.Data = {
 				{ node = 17, faction = "Horde", name = "Hammerfall" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1418] = {
 			tileWidth = 256,
@@ -1306,6 +1318,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "Uldaman", refs = { { 62033, 18531 }, { 64018, 117746 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1419] = {
 			tileWidth = 256,
@@ -1345,6 +1359,8 @@ ns.Data = {
 				{ node = 45, faction = "Alliance", name = "Nethergarde Keep" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1420] = {
 			tileWidth = 256,
@@ -1413,6 +1429,8 @@ ns.Data = {
 				{ name = "Scarlet Monastery: Graveyard", refs = { { 62032, 116058 }, { 64017, 117740 } } },
 				{ name = "Scarlet Monastery: Library", refs = { { 62032, 116059 }, { 64017, 117741 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1421] = {
 			tileWidth = 256,
@@ -1480,6 +1498,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "Shadowfang Keep", refs = { { 62031, 3263 }, { 64016, 117734 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1422] = {
 			tileWidth = 256,
@@ -1550,6 +1570,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "Scholomance", refs = { { 62033, 19263 }, { 64018, 117754 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1423] = {
 			tileWidth = 256,
@@ -1681,6 +1703,8 @@ ns.Data = {
 				{ name = "Stratholme: Dead", refs = { { 62033, 18471 }, { 64018, 117756 } } },
 				{ name = "Stratholme: Live", refs = { { 62033, 550 }, { 64018, 117755 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1424] = {
 			tileWidth = 256,
@@ -1749,6 +1773,8 @@ ns.Data = {
 				{ node = 14, faction = "Alliance", name = "Southshore" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1425] = {
 			tileWidth = 256,
@@ -1814,6 +1840,8 @@ ns.Data = {
 				{ node = 76, faction = "Horde", name = "Revantusk Village" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1426] = {
 			tileWidth = 256,
@@ -1894,6 +1922,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "Gnomeregan", refs = { { 62032, 18529 }, { 64017, 117738 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1427] = {
 			tileWidth = 256,
@@ -1948,6 +1978,10 @@ ns.Data = {
 			},
 			dungeons = {
 				{ name = "Blackrock Depths", refs = { { 62033, 3266 }, { 64018, 117751 } } },
+			},
+			legacy = {},
+			reputations = {
+				{ faction = 59, name = "Thorium Brotherhood" },
 			},
 		},
 		[1428] = {
@@ -2013,6 +2047,13 @@ ns.Data = {
 				{ name = "Lower Blackrock Spire", refs = { { 62033, 18534 }, { 64018, 117752 } } },
 				{ name = "Upper Blackrock Spire", refs = { { 62033, 3268 }, { 64018, 117753 } } },
 			},
+			legacy = {
+				{
+					name = "Complete the questline beginning with An Earnest Proposition, and ending with Saving the Best for Last.",
+					refs = { { 62054, 111555 }, { 64014, 117727 } },
+				},
+			},
+			reputations = {},
 		},
 		[1429] = {
 			tileWidth = 256,
@@ -2075,6 +2116,8 @@ ns.Data = {
 				{ node = 2, faction = "Alliance", name = "Stormwind" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1430] = {
 			tileWidth = 256,
@@ -2101,6 +2144,8 @@ ns.Data = {
 			},
 			taxis = {},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1431] = {
 			tileWidth = 256,
@@ -2184,6 +2229,8 @@ ns.Data = {
 				{ node = 12, faction = "Alliance", name = "Darkshire" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1432] = {
 			tileWidth = 256,
@@ -2255,6 +2302,8 @@ ns.Data = {
 				{ node = 8, faction = "Alliance", name = "Thelsamar" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1433] = {
 			tileWidth = 256,
@@ -2331,6 +2380,8 @@ ns.Data = {
 				{ node = 5, faction = "Alliance", name = "Lakeshire" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1434] = {
 			tileWidth = 256,
@@ -2445,6 +2496,11 @@ ns.Data = {
 				{ node = 20, faction = "Horde", name = "Grom'gol" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {
+				{ faction = 21, name = "Booty Bay" },
+				{ faction = 270, name = "Zandalar Tribe" },
+			},
 		},
 		[1435] = {
 			tileWidth = 256,
@@ -2513,6 +2569,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "The Temple of Atal'Hakkar", refs = { { 62033, 18533 }, { 64018, 117750 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1436] = {
 			tileWidth = 256,
@@ -2574,6 +2632,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "The Deadmines", refs = { { 62031, 3262 }, { 64016, 117731 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1437] = {
 			tileWidth = 256,
@@ -2626,6 +2686,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "Excavation Site: Wetlands", refs = { { 62031, 116054 }, { 64016, 117730 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1438] = {
 			tileWidth = 256,
@@ -2677,6 +2739,8 @@ ns.Data = {
 				{ node = 27, faction = "Alliance", name = "Rut'theran Village" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1439] = {
 			tileWidth = 256,
@@ -2726,6 +2790,8 @@ ns.Data = {
 				{ node = 26, faction = "Alliance", name = "Auberdine" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1440] = {
 			tileWidth = 256,
@@ -2813,6 +2879,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "Blackfathom Deeps", refs = { { 62032, 18526 }, { 64017, 117737 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1441] = {
 			tileWidth = 256,
@@ -2857,6 +2925,8 @@ ns.Data = {
 				{ node = 30, faction = "Horde", name = "Freewind Post" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1442] = {
 			tileWidth = 256,
@@ -2914,6 +2984,8 @@ ns.Data = {
 				{ node = 33, faction = "Alliance", name = "Stonetalon Peak" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1443] = {
 			tileWidth = 256,
@@ -2982,6 +3054,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "Maraudon", refs = { { 62033, 18532 }, { 64018, 117748 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1444] = {
 			tileWidth = 256,
@@ -3064,6 +3138,8 @@ ns.Data = {
 				{ name = "Diremaul: North", refs = { { 62033, 18535 }, { 64018, 117758 } } },
 				{ name = "Diremaul: West", refs = { { 62033, 546 }, { 64018, 117759 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1445] = {
 			tileWidth = 256,
@@ -3109,6 +3185,10 @@ ns.Data = {
 			dungeons = {
 				{ name = "Alcaz Prison", refs = { { 62033, 116057 }, { 64018, 117749 } } },
 			},
+			legacy = {
+				{ name = "Onyxia", refs = { { 684, 3271 }, { 64030, 117792 } } },
+			},
+			reputations = {},
 		},
 		[1446] = {
 			tileWidth = 256,
@@ -3212,6 +3292,10 @@ ns.Data = {
 			dungeons = {
 				{ name = "Zul'farrak", refs = { { 62033, 3265 }, { 64018, 117747 } } },
 			},
+			legacy = {},
+			reputations = {
+				{ faction = 369, name = "Gadgetzan" },
+			},
 		},
 		[1447] = {
 			tileWidth = 256,
@@ -3314,6 +3398,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "Blackmaw Hold", refs = { { 62033, 116055 }, { 64018, 117761 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1448] = {
 			tileWidth = 256,
@@ -3367,6 +3453,8 @@ ns.Data = {
 				{ node = 65, faction = "Alliance", name = "Talonbranch Glade" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1449] = {
 			tileWidth = 256,
@@ -3421,6 +3509,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "The Shaper's Terrace", refs = { { 62033, 116056 }, { 64018, 117760 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[1450] = {
 			tileWidth = 256,
@@ -3439,6 +3529,8 @@ ns.Data = {
 				{ node = 69, faction = "Horde", name = "Moonglade" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1451] = {
 			tileWidth = 256,
@@ -3487,6 +3579,8 @@ ns.Data = {
 				{ node = 73, faction = "Alliance", name = "Cenarion Hold" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[1452] = {
 			tileWidth = 256,
@@ -3551,6 +3645,11 @@ ns.Data = {
 				{ node = 53, faction = "Horde", name = "Everlook" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {
+				{ faction = 577, name = "Everlook" },
+				{ faction = 589, name = "Wintersaber Trainers", side = "Alliance" },
+			},
 		},
 		[2482] = {
 			tileWidth = 256,
@@ -3616,6 +3715,8 @@ ns.Data = {
 				{ node = 3242, faction = "Neutral", name = "Tainted Foothills" },
 			},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 		[2548] = {
 			tileWidth = 256,
@@ -3692,6 +3793,8 @@ ns.Data = {
 			dungeons = {
 				{ name = "Krol'dok Stronghold", refs = { { 62032, 116052 }, { 64017, 117744 } } },
 			},
+			legacy = {},
+			reputations = {},
 		},
 		[2652] = {
 			tileWidth = 256,
@@ -3715,6 +3818,8 @@ ns.Data = {
 			},
 			taxis = {},
 			dungeons = {},
+			legacy = {},
+			reputations = {},
 		},
 	},
 }

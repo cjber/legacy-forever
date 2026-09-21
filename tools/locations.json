@@ -23,6 +23,51 @@
       "evidence": "Build 1.60.1.69913: reviewed quest-to-encounter curation for Lord Valthalak Laid to Rest, explicitly approved for the Upper Blackrock Spire entrance. Achievement 62054 (CriteriaTree root 221563, leaf 221564, Criteria 111555) and variant 64014 (root 234126, leaf 234127, Criteria 117727) both use Type 27, Asset 84195; QuestV2 84195 has UniqueBitFlag 3380. The achievement description is 'Complete the questline beginning with An Earnest Proposition, and ending with Saving the Best for Last.' The leaf descriptions are empty. DungeonEncounter 3070 (Lord Valthalak) has MapID 229. Map 229 (Blackrock Spire, InstanceType 1) has CorpseMapID 0 and Corpse (-7522.5268554688, -1233.0415039062). Reuse dungeonWings 10363/9568: exterior AreaTable 254 (Blackrock Mountain) -> 46, UiMapAssignment 46738 -> UiMap 1428 (Burning Steppes); WMOAreaTable 15493 assigns exterior AreaTable 254. The quest-to-encounter association is reviewed curation, not a DB2 foreign key or generated name match; the criterion remains quest completion."
     }
   },
+  "reputations": {
+    "21": {
+      "uiMap": 1434,
+      "name": "Booty Bay",
+      "area": 35,
+      "evidence": "Build 1.60.1.69913: Faction 21 describes the Blackwater Raiders' coastal city and its rivalry with Bloodsail Buccaneers. AreaTable 35 (Booty Bay) -> 33 (Stranglethorn Vale); UiMapAssignment 46744 -> UiMap 1434. Reviewed normal Friendly route: Booty Bay quests and local pirate kills, available to both sides. Reputation slot 0 has unrestricted race/class masks, base 500 and max 42999. Bloodsail Buccaneers (Faction 87) is deliberately excluded; Steamwheedle spillover does not change this city's home zone."
+    },
+    "59": {
+      "uiMap": 1427,
+      "name": "Thorium Brotherhood",
+      "area": 1446,
+      "evidence": "Build 1.60.1.69913: Faction 59 describes dwarven craftsmen investigating Blackrock Mountain. Reviewed base: Thorium Point, AreaTable 1446 -> 51 (Searing Gorge); UiMapAssignment 46737 -> UiMap 1427. Normal Friendly route is Thorium Point quests and repeatable material turn-ins to Master Smith Burninate; later Blackrock Depths/Molten Core turn-ins are not required for Friendly. Reputation slot 0 has unrestricted race/class masks, base 0 and max 42999, so this is not an Alliance-only dwarf faction. The reviewed Thorium Point association is curation, not a Faction-to-Area foreign key."
+    },
+    "270": {
+      "uiMap": 1434,
+      "name": "Zandalar Tribe",
+      "area": 3357,
+      "evidence": "Build 1.60.1.69913: Faction 270 places the tribe on Yojamba Isle recruiting against Hakkar in Zul'Gurub. AreaTable 3357 (Yojamba Isle) -> 33 (Stranglethorn Vale); UiMapAssignment 46744 -> UiMap 1434. Reviewed normal Friendly route: Zul'Gurub kills and Yojamba Isle turn-ins, available to both sides; the local raid is part of this zone association. Reputation slot 0 has unrestricted race/class masks, base 0 and max 42999. This is the classic Zandalar Tribe, not the later Horde Zandalari faction."
+    },
+    "369": {
+      "uiMap": 1446,
+      "name": "Gadgetzan",
+      "area": 976,
+      "evidence": "Build 1.60.1.69913: Faction 369 identifies Gadgetzan as the Steamwheedle Cartel capital. AreaTable 976 (Gadgetzan) -> 440 (Tanaris); UiMapAssignment 46756 -> UiMap 1446. Reviewed normal Friendly route: Gadgetzan quests and local pirate kills, available to both sides. Reputation slot 0 has unrestricted race/class masks, base 500 and max 42999. Steamwheedle spillover does not change this city's home zone; the opposed Bloodsail Buccaneers are excluded."
+    },
+    "470": {
+      "uiMap": 1413,
+      "name": "Ratchet",
+      "area": 392,
+      "evidence": "Build 1.60.1.69913: Faction 470 explicitly describes a neutral goblin trading haven in the Barrens. AreaTable 392 (Ratchet) -> 17 (The Barrens); UiMapAssignment 46723 -> UiMap 1413. Reviewed normal Friendly route: Ratchet quests and local Southsea pirate kills, available to both sides despite the surrounding Horde quest hubs. Reputation slot 0 has unrestricted race/class masks, base 500 and max 42999. Steamwheedle spillover does not change this city's home zone; Bloodsail Buccaneers are excluded."
+    },
+    "577": {
+      "uiMap": 1452,
+      "name": "Everlook",
+      "area": 2255,
+      "evidence": "Build 1.60.1.69913: Faction 577 explicitly places the Steamwheedle trading post on Winterspring's trade routes. AreaTable 2255 (Everlook) -> 618 (Winterspring); UiMapAssignment 46762 -> UiMap 1452. Reviewed normal Friendly route: Everlook's local quests for both sides. Reputation slot 0 has unrestricted race/class masks, base 500 and max 42999. Steamwheedle spillover does not change this city's home zone; Bloodsail Buccaneers are excluded."
+    },
+    "589": {
+      "uiMap": 1452,
+      "name": "Wintersaber Trainers",
+      "area": 2241,
+      "side": "Alliance",
+      "evidence": "Build 1.60.1.69913: Faction 589 explicitly places the wintersaber trainers in Winterspring. Reviewed base: Frostsaber Rock, AreaTable 2241 -> 618; UiMapAssignment 46762 -> UiMap 1452. Normal Friendly route: Rivern Frostwind's repeatable Frostsaber Provisions quest using local beasts. Client reputation slot 0 covers Horde race bits (ReputationRaceMasks0_0 1309324210) and fixes both base and max at -42000; slot 1 covers Alliance bits (ReputationRaceMasks1_0 -1321907123), with base 0, max 42999 and no class restriction. Therefore side is Alliance; Horde cannot reach Friendly."
+    }
+  },
   "taxiNodes": {
     "2": {
       "uiMap": 1429,

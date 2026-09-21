@@ -1,13 +1,26 @@
 local addonName, ns = ...
 
--- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths and
--- dungeons are done, as a section in the objective tracker (the zone you're in) and in
+-- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths, dungeons,
+-- Legacy objectives and local reputations are done, as a section in the objective tracker (the zone you're in) and in
 -- the world map's corner (the zone you're viewing). Each is optional and collapsible.
 local Completion = {}
 ns.Completion = Completion
 
-local ICONS = { areas = "islands-queue-prop-compass", taxis = "flightmaster", dungeons = "dungeon" }
-local LABELS = { areas = "Areas explored", taxis = "Flight paths", dungeons = "Dungeons" }
+local ICONS = {
+	areas = { atlas = "islands-queue-prop-compass" },
+	taxis = { atlas = "flightmaster" },
+	dungeons = { atlas = "dungeon" },
+	legacy = { atlas = "UI-Legacy-Points-icon-c60", aspect = 50 / 73 },
+	-- No atlas reads as reputation, so the classic handshake icon, trimmed of its border.
+	reputations = { file = "Interface\\Icons\\Achievement_Reputation_01" },
+}
+local LABELS = {
+	areas = "Areas explored",
+	taxis = "Flight paths",
+	dungeons = "Dungeons",
+	legacy = "Legacy objectives",
+	reputations = "Reputations (Friendly)",
+}
 -- Names listed per category in a tooltip before "and N more".
 local MAX_LEFT = 6
 local PERCENT_PIN_TEMPLATE = "LegacyHereZonePercentPinTemplate"
@@ -49,6 +62,14 @@ function Completion.Of(uiMapID)
 	return result.total > 0 and result or nil
 end
 
+local function Icon(key, size)
+	local icon = ICONS[key]
+	if icon.file then
+		return ("|T%s:%d:%d:0:0:64:64:5:59:5:59|t"):format(icon.file, size, size)
+	end
+	return CreateAtlasMarkup(icon.atlas, math.floor(size * (icon.aspect or 1) + 0.5), size)
+end
+
 local function PercentText(result)
 	return ("%d%%"):format(result.percent)
 end
@@ -61,7 +82,7 @@ local function CountsText(result, iconSize)
 		if category then
 			local color = category.done == category.total and GREEN_FONT_COLOR or HIGHLIGHT_FONT_COLOR
 			parts[#parts + 1] = ("%s %s"):format(
-				CreateAtlasMarkup(ICONS[key], iconSize, iconSize),
+				Icon(key, iconSize),
 				color:WrapTextInColorCode(("%d/%d"):format(category.done, category.total))
 			)
 		end
@@ -75,7 +96,7 @@ local function AddTooltip(tooltip, name, result)
 		local category = result[key]
 		if category then
 			tooltip:AddDoubleLine(
-				("%s %s"):format(CreateAtlasMarkup(ICONS[key], 14, 14), LABELS[key]),
+				("%s %s"):format(Icon(key, 14), LABELS[key]),
 				("%d/%d"):format(category.done, category.total),
 				NORMAL_FONT_COLOR.r,
 				NORMAL_FONT_COLOR.g,
@@ -93,8 +114,8 @@ local function AddTooltip(tooltip, name, result)
 			end
 		end
 	end
-	if result.dungeons then
-		GameTooltip_AddDisabledLine(tooltip, "Dungeons count your Legacy clears on any character.")
+	if result.dungeons or result.legacy then
+		GameTooltip_AddDisabledLine(tooltip, "Dungeons and Legacy objectives count your progress on any character.")
 	end
 end
 
@@ -315,12 +336,7 @@ function Completion.AddMenu(root)
 	root:CreateCheckbox("On the world map", IsShown, Toggle, "map")
 	local counts = root:CreateButton("What counts")
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
-		counts:CreateCheckbox(
-			("%s %s"):format(CreateAtlasMarkup(ICONS[key], 14, 14), LABELS[key]),
-			IsCounted,
-			ToggleCounted,
-			key
-		)
+		counts:CreateCheckbox(("%s %s"):format(Icon(key, 14), LABELS[key]), IsCounted, ToggleCounted, key)
 	end
 end
 

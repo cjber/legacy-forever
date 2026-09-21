@@ -93,15 +93,29 @@ local zone = {
 		{ name = "Gnomeregan", refs = { { 1, 1 } } },
 		{ name = "Unknown wing", refs = { { 2, 2 } } },
 	},
+	legacy = {
+		{ name = "Lord Valthalak Laid to Rest", refs = { { 3, 3 }, { 4, 4 } } },
+	},
+	reputations = {
+		{ faction = 21, name = "Booty Bay" },
+		{ faction = 589, name = "Wintersaber Trainers", side = "Alliance" },
+		{ faction = 530, name = "Darkspear Trolls", side = "Horde" },
+	},
 }
 local snapshot = {
 	explored = { ["0:0:10:10"] = true },
 	taxis = { [6] = true, [7] = false, [8] = false },
 	faction = "Alliance",
-	wingDone = function(refs)
+	refsDone = function(refs)
 		if refs[1][1] == 1 then
 			return false
 		end
+		if refs[1][1] == 3 then
+			return refs[2][1] == 4
+		end
+	end,
+	reaction = function(factionID)
+		return factionID == 21 and 5 or 4
 	end,
 }
 local completion = Model.ZoneCompletion(zone, snapshot)
@@ -109,8 +123,12 @@ equal(completion.areas.done, 1, "one area explored")
 equal(completion.areas.left[1], "Gol'Bolar Quarry", "unexplored area named")
 equal(completion.taxis.total, 2, "other faction's and unlisted flight paths left out")
 equal(completion.dungeons.total, 1, "wing with unknown progress left out")
-equal(completion.total, 5, "items across categories")
-equal(completion.percent, 40, "percent floors")
+equal(completion.legacy.done, 1, "a Legacy objective is done when any variant is")
+equal(completion.reputations.total, 2, "the other faction's reputation is left out")
+equal(completion.reputations.done, 1, "Friendly counts, Neutral doesn't")
+equal(completion.reputations.left[1], "Wintersaber Trainers", "reputation still to earn named")
+equal(completion.total, 8, "items across categories")
+equal(completion.percent, 50, "percent floors")
 snapshot.explored = nil
 equal(Model.ZoneCompletion(zone, snapshot).areas, nil, "unknown exploration drops the category")
 equal(Model.ZoneCompletion({}, snapshot).percent, nil, "empty zone has no percent")

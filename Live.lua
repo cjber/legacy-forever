@@ -154,8 +154,8 @@ function Live.Invalidate()
 	Changed()
 end
 
--- A wing counts as cleared when any Legacy step for it (either variant set) is done.
-local function WingDone(refs)
+-- A wing or Legacy objective counts as done when any of its Legacy steps (either variant) is.
+local function RefsDone(refs)
 	local state
 	for _, ref in ipairs(refs) do
 		local progress = (Live.Criteria(ref[1]) or {})[ref[2]]
@@ -169,6 +169,12 @@ local function WingDone(refs)
 	return state
 end
 
+-- A faction the player hasn't met yet has no data, which is simply not Friendly yet.
+local function Reaction(factionID)
+	local data = C_Reputation.GetFactionDataByID(factionID)
+	return data and data.reaction or 0
+end
+
 local function OverlayKey(texture)
 	return ("%d:%d:%d:%d"):format(texture.offsetX, texture.offsetY, texture.textureWidth, texture.textureHeight)
 end
@@ -179,7 +185,7 @@ function Live.ZoneSnapshot(uiMapID)
 	if snapshot then
 		return snapshot
 	end
-	snapshot = { taxis = {}, faction = UnitFactionGroup("player"), wingDone = WingDone }
+	snapshot = { taxis = {}, faction = UnitFactionGroup("player"), refsDone = RefsDone, reaction = Reaction }
 	local textures = C_MapExplorationInfo.GetExploredMapTextures(uiMapID)
 	if textures then
 		snapshot.explored = {}
@@ -215,8 +221,8 @@ local INVALIDATING = {
 	"PLAYER_ENTERING_WORLD",
 	"MAP_EXPLORATION_UPDATED",
 }
--- Flight paths feed only the zone snapshots.
-local TAXI_CHANGES = { "TAXI_NODE_STATUS_CHANGED", "TAXIMAP_OPENED" }
+-- Flight paths and reputation feed only the zone snapshots.
+local SNAPSHOT_CHANGES = { "TAXI_NODE_STATUS_CHANGED", "TAXIMAP_OPENED", "UPDATE_FACTION" }
 -- Moving between zones changes which zone is shown, not anyone's progress.
 local ZONE_CHANGES = { "ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA" }
 
@@ -227,13 +233,13 @@ end
 for _, event in ipairs(ZONE_CHANGES) do
 	events:RegisterEvent(event)
 end
-for _, event in ipairs(TAXI_CHANGES) do
+for _, event in ipairs(SNAPSHOT_CHANGES) do
 	events:RegisterEvent(event)
 end
 events:SetScript("OnEvent", function(_, event)
 	if tContains(ZONE_CHANGES, event) then
 		Changed()
-	elseif tContains(TAXI_CHANGES, event) then
+	elseif tContains(SNAPSHOT_CHANGES, event) then
 		snapshots = {}
 		Changed()
 	else

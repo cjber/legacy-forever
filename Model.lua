@@ -153,30 +153,47 @@ local function CompletionCategory(items, state)
 	return category.total > 0 and category or nil
 end
 
-Model.COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons" }
+Model.COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons", "legacy", "reputations" }
 
--- A zone's completion, GW2 style: every area, flight path and dungeon counts once.
--- `snapshot` = { explored = set of overlay keys or nil, taxis = { [node] = discovered } for
--- the nodes the game lists (any other node is unknown), faction = "Alliance" | "Horde",
--- wingDone = function(refs) -> true/false/nil }.
--- Areas and flight paths are per character; dungeon wings are account-wide Legacy steps.
--- `counted(key)`, when given, says which categories the player counts; the rest are left out entirely.
-function Model.ZoneCompletion(zone, snapshot, counted)
-	local ownTaxis = {}
-	for _, taxi in ipairs(zone.taxis or {}) do
-		if taxi.faction == "Neutral" or taxi.faction == snapshot.faction then
-			ownTaxis[#ownTaxis + 1] = taxi
+-- A zone's reputation counts once the player is Friendly (reaction 5) or better with it.
+Model.REPUTATION_TARGET = 5
+
+-- Entries for the player's side: those with no `side`, and those whose side is the player's faction.
+local function ForFaction(items, faction, sideKey)
+	local own = {}
+	for _, item in ipairs(items or {}) do
+		local side = item[sideKey]
+		if side == nil or side == "Neutral" or side == faction then
+			own[#own + 1] = item
 		end
 	end
+	return own
+end
+
+-- A zone's completion, GW2 style: every area, flight path, dungeon, Legacy objective and
+-- local reputation counts once.
+-- `snapshot` = { explored = set of overlay keys or nil, taxis = { [node] = discovered } for
+-- the nodes the game lists (any other node is unknown), faction = "Alliance" | "Horde",
+-- refsDone = function(refs) -> true/false/nil, reaction = function(factionID) -> number }.
+-- Areas, flight paths and reputations are per character; dungeon wings and Legacy
+-- objectives are account-wide Legacy steps, done when any of their refs is.
+-- `counted(key)`, when given, says which categories the player counts; the rest are left out entirely.
+function Model.ZoneCompletion(zone, snapshot, counted)
 	local result = {
 		areas = snapshot.explored and CompletionCategory(zone.areas, function(area)
 			return snapshot.explored[area.key] == true
 		end),
-		taxis = CompletionCategory(ownTaxis, function(taxi)
+		taxis = CompletionCategory(ForFaction(zone.taxis, snapshot.faction, "faction"), function(taxi)
 			return snapshot.taxis[taxi.node]
 		end),
 		dungeons = CompletionCategory(zone.dungeons, function(wing)
-			return snapshot.wingDone(wing.refs)
+			return snapshot.refsDone(wing.refs)
+		end),
+		legacy = CompletionCategory(zone.legacy, function(objective)
+			return snapshot.refsDone(objective.refs)
+		end),
+		reputations = CompletionCategory(ForFaction(zone.reputations, snapshot.faction, "side"), function(rep)
+			return snapshot.reaction(rep.faction) >= Model.REPUTATION_TARGET
 		end),
 		done = 0,
 		total = 0,

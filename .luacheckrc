@@ -17,8 +17,8 @@ globals = {
 }
 
 read_globals = {
-	"AchievementFrame_SelectAchievement", "C_Map", "C_MapExplorationInfo", "C_TaxiMap", "C_Timer", "C_Traits", "CreateAtlasMarkup",
-	"CreateFrame", "CreateFramePool", "CreateFromMixins", "CreateTexturePool", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
+	"AchievementFrame_SelectAchievement", "C_Map", "C_MapExplorationInfo", "C_Reputation", "C_TaxiMap", "C_Timer", "C_Traits", "CreateAtlasMarkup",
+	"CreateFrame", "CreateFromMixins", "CreateTexturePool", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameTooltip_AddColoredLine", "GameTooltip_AddDisabledLine", "GetCursorPosition", "GREEN_FONT_COLOR", "HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",
 	"GameTooltip_AddNormalLine", "GameTooltip_SetTitle", "GetAchievementCategory", "GetAchievementCriteriaInfo", "GetAchievementInfo",
 	"GetAchievementNumCriteria", "GetBuildInfo", "GetCategoryInfo", "GetCategoryList", "GetCategoryNumAchievements", "hooksecurefunc",

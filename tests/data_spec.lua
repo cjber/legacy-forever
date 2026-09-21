@@ -63,7 +63,6 @@ for zone, entries in pairs(data.zones) do
 		end
 		local key = entry.achievement .. ":" .. entry.criteria
 		assert(not seen[key], "duplicate objective within zone")
-		assert(not located[key], "objective has one verified location")
 		located[key] = entry
 		seen[key] = true
 		if previous then
@@ -138,19 +137,37 @@ for _, key in ipairs({
 	assert(not located[key], "unresolved client joins remain unlocated: " .. key)
 end
 
-local totals =
-	{ zones = 0, areas = 0, tiles = 0, tileless = 0, Alliance = 0, Horde = 0, Neutral = 0, wings = 0, refs = 0 }
+local totals = {
+	zones = 0,
+	areas = 0,
+	tiles = 0,
+	tileless = 0,
+	Alliance = 0,
+	Horde = 0,
+	Neutral = 0,
+	wings = 0,
+	refs = 0,
+	legacy = 0,
+	legacyRefs = 0,
+	legacyCollapsed = 0,
+	reputations = 0,
+	reputationAlliance = 0,
+}
 local taxiZones, wingZones, completionAreas = {}, {}, {}
+local dungeonRefs, legacyRefs, reputationZones = {}, {}, {}
 local areaKeys = {}
 local mirrors = { [62031] = 64016, [62032] = 64017, [62033] = 64018 }
 assert(type(data.completion) == "table", "completion data")
 for zone, entry in pairs(data.completion) do
 	assert(positiveInteger(zone), "completion zone ID")
 	assert(zone ~= 2521 and zone ~= 1459 and zone ~= 1460 and zone ~= 1461, "excluded completion maps")
-	for _, category in ipairs({ "areas", "taxis", "dungeons" }) do
+	for _, category in ipairs({ "areas", "taxis", "dungeons", "legacy", "reputations" }) do
 		assert(type(entry[category]) == "table", "completion categories always present, including empty lists")
 	end
-	assert(#entry.areas + #entry.taxis + #entry.dungeons > 0, "only populated completion zones")
+	assert(
+		#entry.areas + #entry.taxis + #entry.dungeons + #entry.legacy + #entry.reputations > 0,
+		"only populated completion zones"
+	)
 	assert(entry.tileWidth == 256 and entry.tileHeight == 256, "pinned build base-layer tile dimensions")
 	totals.zones = totals.zones + 1
 	local keys = {}
@@ -202,6 +219,7 @@ for zone, entry in pairs(data.completion) do
 			local key = ref[1] .. ":" .. ref[2]
 			assert(not refs[key], "unique wing reference")
 			refs[key] = true
+			dungeonRefs[zone .. ":" .. key] = true
 			achievements[ref[1]] = true
 			totals.refs = totals.refs + 1
 		end
@@ -210,6 +228,58 @@ for zone, entry in pairs(data.completion) do
 		end
 		wingZones[wing.name] = zone
 		totals.wings = totals.wings + 1
+	end
+	local previousName
+	for _, objective in ipairs(entry.legacy) do
+		assert(type(objective.name) == "string" and objective.name:find("%S"), "nonempty Legacy objective text")
+		assert(not previousName or previousName <= objective.name, "Legacy entries sorted by name")
+		previousName = objective.name
+		assert(type(objective.refs) == "table" and #objective.refs > 0, "Legacy references")
+		local previousRef
+		for _, ref in ipairs(objective.refs) do
+			assert(
+				#ref == 2 and positiveInteger(ref[1]) and positiveInteger(ref[2]),
+				"Legacy achievement/criteria pair"
+			)
+			local key = zone .. ":" .. ref[1] .. ":" .. ref[2]
+			local source = assert(samples[key], "Legacy reference is located in this zone")
+			assert(source.kind ~= "explore" and not dungeonRefs[key], "areas and dungeon wings do not count twice")
+			assert(not legacyRefs[key], "Legacy reference appears once per zone")
+			assert(
+				not previousRef or previousRef[1] < ref[1] or (previousRef[1] == ref[1] and previousRef[2] < ref[2]),
+				"Legacy references sorted and unique"
+			)
+			previousRef = ref
+			legacyRefs[key] = objective
+			totals.legacyRefs = totals.legacyRefs + 1
+		end
+		if #objective.refs > 1 then
+			totals.legacyCollapsed = totals.legacyCollapsed + 1
+		end
+		totals.legacy = totals.legacy + 1
+	end
+	previousName = nil
+	for _, reputation in ipairs(entry.reputations) do
+		assert(
+			positiveInteger(reputation.faction) and not reputationZones[reputation.faction],
+			"faction has exactly one zone"
+		)
+		assert(type(reputation.name) == "string" and reputation.name:find("%S"), "nonempty Faction name")
+		assert(not previousName or previousName <= reputation.name, "reputations sorted by name")
+		previousName = reputation.name
+		assert(
+			reputation.side == nil or reputation.side == "Alliance" or reputation.side == "Horde",
+			"optional reputation side"
+		)
+		if reputation.side then
+			assert(
+				reputation.faction == 589 and reputation.side == "Alliance",
+				"only Wintersaber Trainers are restricted"
+			)
+			totals.reputationAlliance = totals.reputationAlliance + 1
+		end
+		reputationZones[reputation.faction] = { zone = zone, name = reputation.name, side = reputation.side }
+		totals.reputations = totals.reputations + 1
 	end
 end
 local matched, unmatched = 0, 0
@@ -224,6 +294,8 @@ for zone, entries in pairs(data.zones) do
 			end
 		else
 			assert(entry.key == nil, "only exploration objectives carry area keys")
+			local key = zone .. ":" .. entry.achievement .. ":" .. entry.criteria
+			assert(dungeonRefs[key] or legacyRefs[key], "every located non-explore objective counts in its zone")
 		end
 	end
 end
@@ -241,6 +313,53 @@ end
 assert(bloodhoof.key == "357:328:238:206" and remapped.key == "295:385:256:128", "exact current-art keys")
 assert(located["768:1050"].key == "746:125:256:256", "empty hit rectangle still links to its drawable overlay")
 assert(totals.wings == 31 and totals.refs == 62, "32 individual wings, one unplaced, both variants")
+assert(totals.legacy == 2 and totals.legacyRefs == 4, "four non-dungeon references become two Legacy objectives")
+assert(
+	totals.legacyCollapsed == 2 and totals.legacyRefs - totals.legacy == 2,
+	"two variant pairs remove two duplicate entries"
+)
+assert(#data.completion[1428].legacy == 1, "Burning Steppes counts Valthalak once alongside its dungeon wings")
+assert(
+	#data.completion[1434].legacy == 0 and #data.completion[1439].legacy == 0,
+	"Stranglethorn and Darkshore have no remaining located Legacy objectives"
+)
+local valthalak = assert(legacyRefs["1428:62054:111555"], "Valthalak Legacy objective")
+assert(
+	valthalak == legacyRefs["1428:64014:117727"] and #valthalak.refs == 2,
+	"same Type 27 / Asset 84195 / Amount 1 collapses Valthalak variants"
+)
+assert(
+	valthalak.name
+		== "Complete the questline beginning with An Earnest Proposition, and ending with Saving the Best for Last.",
+	"empty criterion descriptions use the single-step achievement description"
+)
+local onyxia = assert(legacyRefs["1445:684:3271"], "Onyxia Legacy objective")
+assert(
+	onyxia == legacyRefs["1445:64030:117792"] and #onyxia.refs == 2 and onyxia.name == "Onyxia",
+	"Onyxia variants share the owning CriteriaTree description"
+)
+assert(
+	totals.reputations == 7 and totals.reputationAlliance == 1,
+	"six neutral reputations plus one Alliance-only reputation"
+)
+for faction, expected in pairs({
+	[21] = { 1434, "Booty Bay" },
+	[59] = { 1427, "Thorium Brotherhood" },
+	[270] = { 1434, "Zandalar Tribe" },
+	[369] = { 1446, "Gadgetzan" },
+	[470] = { 1413, "Ratchet" },
+	[577] = { 1452, "Everlook" },
+	[589] = { 1452, "Wintersaber Trainers", "Alliance" },
+}) do
+	local reputation = assert(reputationZones[faction], "curated Faction ID")
+	assert(
+		reputation.zone == expected[1] and reputation.name == expected[2] and reputation.side == expected[3],
+		"exact client faction name, home zone, and eligibility"
+	)
+end
+for _, faction in ipairs({ 70, 87, 349, 509, 510, 529, 576, 609, 729, 730, 889, 890 }) do
+	assert(not reputationZones[faction], "opposed, battleground, multi-zone, or ambiguous factions excluded")
+end
 assert(not wingZones["The Drowned City"], "wing without verified entrance geography remains unplaced")
 assert(wingZones["Gnomeregan"] == 1426 and wingZones["The Deadmines"] == 1436, "distinct Spelunker wings")
 assert(taxiZones[25] == 1413 and taxiZones[21] == 1418, "Crossroads and Kargath use their correct suffixes")

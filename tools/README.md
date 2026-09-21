@@ -19,7 +19,7 @@ copied unchanged from SkillUp Forever and only reports the newest Forever build.
 
 Sources: `TraitCurrencySource`, `Achievement`, `Criteria`, `CriteriaTree`,
 `WorldMapOverlay`, `WorldMapOverlayTile`, `AreaTable`, `UiMap`, `UiMapAssignment`, `UiMapXMapArt`,
-`UiMapArt`, `UiMapArtStyleLayer`, `Map`, `DungeonEncounter`, `QuestV2`, and `TaxiNodes`. Currency 4225
+`UiMapArt`, `UiMapArtStyleLayer`, `Map`, `DungeonEncounter`, `QuestV2`, `TaxiNodes`, and `Faction`. Currency 4225
 selects both reward variants. Type-8 criteria recursively populate `feeds`;
 objectives retain the owning achievement and actual Criteria.ID, never a tree
 node ID or a copied parent achievement ID.
@@ -157,13 +157,13 @@ an instance or invent a corpse entrance.
 
 ## Zone completion
 
-`completion[uiMapID]` is independent of Legacy objectives. Each populated zone
-always has `areas`, `taxis`, and `dungeons` arrays, including empty arrays for
+`completion[uiMapID]` combines map content with located Legacy objectives. Each populated zone
+always has `areas`, `taxis`, `dungeons`, `legacy`, and `reputations` arrays, including empty arrays for
 categories with no items, and `tileWidth`/`tileHeight` from
 UiMapXMapArt (PhaseID 0) → UiMapArt.UiMapArtStyleID → UiMapArtStyleLayer (LayerIndex 0).
 All 43 completion zones use **256 × 256** tiles. Names come from the pinned
-English client export; no progress, faction eligibility rules, or runtime state
-is emitted.
+English client export. Only static content and faction restrictions are emitted;
+runtime supplies progress and applies eligibility filters.
 
 - **Areas:** enumerate WorldMapOverlay on the zone's current phase-0 UiMap art,
   reusing Geography's art join. The key is exactly
@@ -210,11 +210,44 @@ is emitted.
   `instance` IDs validate the exterior AreaTable ancestry and Map entrance.
   Facts with a verified `instance` also locate Legacy objectives for the exact
   boss ID, using the instance entrance rules above; names are validation only.
+- **Legacy:** start with the objectives already in `zones[uiMapID]`, including
+  zone-only objectives without pins. Exclude `kind = "explore"` and each exact
+  `(achievement, criteria)` pair present in that zone's `dungeons.refs`.
+  Group the remainder by **Criteria.Type + Criteria.Asset + CriteriaTree.Amount**,
+  so variants describe the same client objective and required quantity. Names
+  never establish equivalence. A reference located in multiple zones counts in
+  every such zone; exclusions and grouping are local to each zone.
+  Emit the dungeon shape `{ name, refs = { {achievement, criteria}, ... } }`,
+  sorted by name with sorted, unique refs. Read the description from the owning
+  achievement's CriteriaTree, not an unrelated tree reusing the criterion.
+  If it is empty and the achievement has exactly one criterion, use
+  Achievement.Description_lang, then Title_lang, matching Live.WholeAchievement's
+  fallback. Empty names, invalid amounts, conflicting tree facts or variant
+  names, and duplicate references fail generation.
+  Runtime completes an entry when **any** ref is done; the refs are alternatives.
+- **Reputations:** `locations.json.reputations`, keyed by Faction.ID, curates one
+  home zone per faction. Each fact requires `uiMap`, the exact client `name`, an
+  exterior `area`, and build-stamped `evidence`; optional `side` is `Alliance` or
+  `Horde`. Emit `{ faction = Faction.ID, name = Faction.Name_lang }` plus `side`
+  only for restricted factions, sorted by name. Neutral entries omit `side`.
+  Require a reputation-bearing Faction row, nonempty description, exact name,
+  and AreaTable ancestry identifying only the curated zone. Client reputation
+  caps and unrestricted class slots must support Friendly for all original
+  playable races of each listed side; masks must agree with the side curation.
+  Curation separately reviews an ordinary local quest, kill, or turn-in route:
+  a client cap alone does not prove that route exists. Include local instance
+  play, but exclude opposed included factions, battleground reputations,
+  multiple home zones, and uncertain class eligibility. Geography associations
+  are reviewed facts, not inferred Faction-to-Area foreign keys or name joins.
+  Runtime uses a constant **Friendly** target for every entry and filters `side`
+  like taxis; no target or progress is stored here. This category does not
+  locate the separate Legacy reputation achievement criteria.
 
 Completion curation must cite its verification build and client row facts. Unknown,
 unreachable, renamed, or redundant taxi overrides and stale wing curation fail
 before output is replaced. Unassigned taxis, duplicate wing names/references,
-and unexpected Spelunker step types also fail. A wing without verified entrance
+unexpected Spelunker step types, and stale reputation names, ancestry, or side
+eligibility also fail. A wing without verified entrance
 geography is omitted and printed by name and boss ID; it is not assigned by
 nearest map rectangle. Instance entrances can overlap multiple zone rectangles,
 so curation selects the documented exterior approach (Blackrock Depths uses
@@ -224,6 +257,41 @@ Build **1.60.1.69913**: **43 completion zones, 555 areas, 937 tiles** (one area
 without tiles), **71 taxis** (32 Alliance,
 31 Horde, 8 Neutral; 40 Alliance-usable and 39 Horde-usable), and **31 of 32 wings**
 with **62 references**. Twelve taxi exceptions and 31 wing locations are curated.
+The **four** remaining located non-exploration references collapse into **two
+Legacy entries** (two merged groups; two duplicate entries removed):
+Onyxia in Dustwallow (1445), Type 0 / Asset 10184 / Amount 1, and Valthalak in
+Burning Steppes (1428), Type 27 / Asset 84195 / Amount 1. Valthalak retains
+`{62054, 111555}` and `{64014, 117727}` in one entry and uses the achievement's
+questline description because both leaf descriptions are empty. Legacy entry
+counts for **1428 / 1434 / 1439 are 1 / 0 / 0**. Exploration and located dungeon
+wing references account for everything else; no unlocated objectives are added.
+
+**Seven reputations** are curated: six neutral and one Alliance-only. All facts
+below were reviewed against build **1.60.1.69913**; full evidence is in
+`locations.json.reputations`.
+
+| Faction ID / name | Zone | Client geography and normal Friendly route |
+| --- | --- | --- |
+| 21 Booty Bay | 1434 Stranglethorn Vale | Faction describes the coastal city; Area 35 → 33. Local quests and pirate kills; both sides. |
+| 270 Zandalar Tribe | 1434 Stranglethorn Vale | Faction names Yojamba Isle and Zul'Gurub; Area 3357 → 33. Local raid kills and island turn-ins; both sides. |
+| 369 Gadgetzan | 1446 Tanaris | Faction describes the cartel capital; Area 976 → 440. Local quests and pirate kills; both sides. |
+| 470 Ratchet | 1413 The Barrens | Faction explicitly names the Barrens; Area 392 → 17. Local quests and Southsea pirate kills; both sides. |
+| 577 Everlook | 1452 Winterspring | Faction explicitly names Winterspring; Area 2255 → 618. Local quests; both sides. |
+| 59 Thorium Brotherhood | 1427 Searing Gorge | Blackrock craftsmen based at Thorium Point, Area 1446 → 51. Local quests and material turn-ins reach Friendly before later instance turn-ins; both sides. |
+| 589 Wintersaber Trainers | 1452 Winterspring | Faction names Winterspring; Frostsaber Rock, Area 2241 → 618. Local repeatable provisions quest; Alliance only, with Horde capped at -42000. |
+
+Rejected candidates: **Timbermaw Hold (576)** has Area 1769 in Felwood and
+Timbermaw Post (2243) in Winterspring; **Cenarion Circle (609)** explicitly calls
+Moonglade home while Cenarion Hold (3425) is in Silithus; **Argent Dawn (529)**
+explicitly describes strongholds in both Plaguelands. None has one clear zone.
+**Ravenholdt (349)** has a verified manor (Area 3486 → 36, Alterac Mountains), but
+the client rows do not establish normal Friendly access for every class: the
+classic emblem route requires rogue pickpocketing, and an unrestricted Syndicate
+kill route is not verified for this build. Keep it out rather than assuming
+retail behavior. **Bloodsail Buccaneers (87)** oppose included Booty Bay and the
+cartel; **Syndicate (70)** cannot reach Friendly (client maximum 0). Battleground
+factions and broader faction umbrellas are outside this curation.
+
 **The Drowned City** (boss 260274) remains unplaced: WMOAreaTable 144590 names it
 but points to AreaTable 17037, which is absent from this build; Map and AreaTable
 supply no verified entrance zone. The separate compound step is excluded, not
