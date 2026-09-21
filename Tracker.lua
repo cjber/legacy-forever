@@ -89,11 +89,18 @@ function ModuleMixin:LayoutContents()
 	end
 end
 
--- Attaching is a no-op until Blizzard's manager has added its own container, and
--- that runs on the same events as ours, so attach now if it has and again after its
--- Init either way. uiOrder 0 puts Legacy at the top, wherever the tracker is placed.
+-- Attaching is a no-op until Blizzard's manager has added ObjectiveTrackerFrame as a
+-- container. Its Init is scheduled as a closure over the original function, so hooking
+-- Init never fires; AddContainer is looked up on the table and can be hooked.
+-- uiOrder 0 puts Legacy at the top, wherever the tracker is placed.
 local function Attach()
 	ObjectiveTrackerManager:SetModuleContainer(module, ObjectiveTrackerFrame)
+end
+
+local function OnContainerAdded(_, container)
+	if container == ObjectiveTrackerFrame then
+		Attach()
+	end
 end
 
 function Tracker.IsAttached()
@@ -113,7 +120,7 @@ local function Register()
 	Mixin(module, ModuleMixin)
 	module:SetHeader(ModuleMixin.headerText)
 	module.uiOrder = 0
-	hooksecurefunc(ObjectiveTrackerManager, "Init", Attach)
+	hooksecurefunc(ObjectiveTrackerManager, "AddContainer", OnContainerAdded)
 	Attach()
 	C_Timer.After(5, function()
 		if not Tracker.IsAttached() then
