@@ -301,7 +301,7 @@ for zone, entries in pairs(data.zones) do
 end
 assert(matched == 500 and unmatched == 49, "Legacy exploration current-art area matches")
 assert(totals.zones == 43 and totals.areas == 555, "current-art completion coverage")
-assert(totals.Alliance == 32 and totals.Horde == 31 and totals.Neutral == 8, "71 supported player taxis")
+assert(totals.Alliance == 31 and totals.Horde == 30 and totals.Neutral == 4, "65 learnable player taxis")
 assert(totals.tiles == 937, "verified layer-zero overlay file IDs")
 assert(totals.tileless == 1, "exactly one countable area has no shading tiles")
 local zulgurub = assert(samples["1434:781:1222"], "Zul'Gurub exploration objective retained")

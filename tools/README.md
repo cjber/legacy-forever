@@ -189,7 +189,9 @@ runtime supplies progress and applies eligibility filters.
   Legacy `kind = "explore"` entries carry the same `key` when their current-art
   overlay occurs in their zone's completion areas: **500 matched, 49 unmatched**.
   Unmatched entries remain in `zones` without a key and are printed individually.
-- **Taxis:** take TaxiNodes with `Flags & 3`, excluding names beginning `zz`
+- **Taxis:** take TaxiNodes with `Flags & 3` and a nonzero `CharacterBitNumber`
+  (zero marks special services such as the Nighthaven druid flights and Eastern
+  Plaguelands tower hops, which no character learns), excluding names beginning `zz`
   (case insensitive) and battleground destinations. Bits 1/2/3 become
   `Alliance`/`Horde`/`Neutral`. Match the exact suffix after the last `", "` to
   UiMap.Name_lang. `locations.json.taxiNodes`, keyed by TaxiNodes.ID, supplies
@@ -254,8 +256,8 @@ so curation selects the documented exterior approach (Blackrock Depths uses
 Searing Gorge; both Spire wings use Burning Steppes).
 
 Build **1.60.1.69913**: **43 completion zones, 555 areas, 937 tiles** (one area
-without tiles), **71 taxis** (32 Alliance,
-31 Horde, 8 Neutral; 40 Alliance-usable and 39 Horde-usable), and **31 of 32 wings**
+without tiles), **65 taxis** (31 Alliance,
+30 Horde, 4 Neutral; 35 Alliance-usable and 34 Horde-usable), and **31 of 32 wings**
 with **62 references**. Twelve taxi exceptions and 31 wing locations are curated.
 The **four** remaining located non-exploration references collapse into **two
 Legacy entries** (two merged groups; two duplicate entries removed):

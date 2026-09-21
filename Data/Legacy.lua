@@ -1694,10 +1694,6 @@ ns.Data = {
 			taxis = {
 				{ node = 67, faction = "Alliance", name = "Light's Hope Chapel" },
 				{ node = 68, faction = "Horde", name = "Light's Hope Chapel" },
-				{ node = 84, faction = "Neutral", name = "Plaguewood Tower" },
-				{ node = 85, faction = "Neutral", name = "Northpass Tower" },
-				{ node = 86, faction = "Neutral", name = "Eastwall Tower" },
-				{ node = 87, faction = "Neutral", name = "Crown Guard Tower" },
 			},
 			dungeons = {
 				{ name = "Stratholme: Dead", refs = { { 62033, 18471 }, { 64018, 117756 } } },
@@ -3524,8 +3520,6 @@ ns.Data = {
 			},
 			taxis = {
 				{ node = 49, faction = "Alliance", name = "Moonglade" },
-				{ node = 62, faction = "Alliance", name = "Nighthaven" },
-				{ node = 63, faction = "Horde", name = "Nighthaven" },
 				{ node = 69, faction = "Horde", name = "Moonglade" },
 			},
 			dungeons = {},

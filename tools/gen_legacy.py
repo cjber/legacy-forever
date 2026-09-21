@@ -43,7 +43,7 @@ SCHEMAS = {
     "WorldMapOverlayTile": ("RowIndex", "ColIndex", "LayerIndex", "FileDataID", "WorldMapOverlayID"),
     "AreaTable": ("ParentAreaID", "AreaName_lang"),
     "UiMap": ("Type", "System", "Name_lang"),
-    "TaxiNodes": ("Name_lang", "Flags"),
+    "TaxiNodes": ("Name_lang", "Flags", "CharacterBitNumber"),
     "Faction": ("Name_lang", "Description_lang", "ReputationIndex") + tuple(
         f"{field}_{index}" for index in range(4)
         for field in ("ReputationMax", "ReputationClassMask")
@@ -526,7 +526,9 @@ def generate_completion(tables, geography, graph, curated, zones, counts):
     for node, row in sorted(tables["TaxiNodes"].items()):
         mask = row["Flags"] & 3
         name = row["Name_lang"]
-        if not mask or name.lower().startswith("zz"):
+        # CharacterBitNumber 0 = a special service (Nighthaven druid flights, the Eastern
+        # Plaguelands tower hops) with no discovery bit, so no character ever learns it.
+        if not mask or row["CharacterBitNumber"] == 0 or name.lower().startswith("zz"):
             continue
         suffix = name.rpartition(", ")[2] if ", " in name else ""
         candidates = zone_names.get(suffix, set())
