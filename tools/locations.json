@@ -13,6 +13,16 @@
       "evidence": "Build 1.60.1.69913: Achievement 64030 owns Criteria 117792 (Type 0, Asset 10184) and Instance_ID 249, the second reward variant of Achievement 684 / Criteria 3271. Onyxia's Lair is in the Wyrmbog, Dustwallow Marsh (AreaTable 511 -> 15; UiMapAssignment 46755 -> UiMap 1445). Map 249's CorpseMapID 1 and Corpse coordinates project to (0.529, 0.777); the zone selection is the same verified geography fact as Criteria 3271."
     }
   },
+  "questInstances": {
+    "84195": {
+      "uiMap": 1428,
+      "name": "Lord Valthalak",
+      "area": 254,
+      "instance": 229,
+      "encounter": 3070,
+      "evidence": "Build 1.60.1.69913: reviewed quest-to-encounter curation for Lord Valthalak Laid to Rest, explicitly approved for the Upper Blackrock Spire entrance. Achievement 62054 (CriteriaTree root 221563, leaf 221564, Criteria 111555) and variant 64014 (root 234126, leaf 234127, Criteria 117727) both use Type 27, Asset 84195; QuestV2 84195 has UniqueBitFlag 3380. The achievement description is 'Complete the questline beginning with An Earnest Proposition, and ending with Saving the Best for Last.' The leaf descriptions are empty. DungeonEncounter 3070 (Lord Valthalak) has MapID 229. Map 229 (Blackrock Spire, InstanceType 1) has CorpseMapID 0 and Corpse (-7522.5268554688, -1233.0415039062). Reuse dungeonWings 10363/9568: exterior AreaTable 254 (Blackrock Mountain) -> 46, UiMapAssignment 46738 -> UiMap 1428 (Burning Steppes); WMOAreaTable 15493 assigns exterior AreaTable 254. The quest-to-encounter association is reviewed curation, not a DB2 foreign key or generated name match; the criterion remains quest completion."
+    }
+  },
   "taxiNodes": {
     "2": {
       "uiMap": 1429,

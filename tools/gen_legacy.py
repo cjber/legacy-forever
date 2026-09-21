@@ -39,6 +39,7 @@ SCHEMAS = {
         "AreaID_0", "AreaID_1", "AreaID_2", "AreaID_3",
         "OffsetX", "OffsetY", "TextureWidth", "TextureHeight",
     ),
+    "WorldMapOverlayTile": ("RowIndex", "ColIndex", "LayerIndex", "FileDataID", "WorldMapOverlayID"),
     "AreaTable": ("ParentAreaID", "AreaName_lang"),
     "UiMap": ("Type", "System", "Name_lang"),
     "TaxiNodes": ("Name_lang", "Flags"),
@@ -49,9 +50,10 @@ SCHEMAS = {
     ),
     "UiMapXMapArt": ("UiMapID", "UiMapArtID", "PhaseID"),
     "UiMapArt": ("UiMapArtStyleID",),
-    "UiMapArtStyleLayer": ("UiMapArtStyleID", "LayerIndex", "LayerWidth", "LayerHeight"),
+    "UiMapArtStyleLayer": ("UiMapArtStyleID", "LayerIndex", "LayerWidth", "LayerHeight", "TileWidth", "TileHeight"),
     "Map": ("InstanceType", "CorpseMapID", "Corpse_0", "Corpse_1"),
-    "DungeonEncounter": ("MapID",),
+    "DungeonEncounter": ("MapID", "Name_lang"),
+    "QuestV2": (),
 }
 
 
@@ -186,13 +188,18 @@ def overlay_areas(overlay):
     return frozenset(overlay[f"AreaID_{index}"] for index in range(4) if overlay[f"AreaID_{index}"])
 
 
+def overlay_key(overlay):
+    return ":".join(str(overlay[k]) for k in ("OffsetX", "OffsetY", "TextureWidth", "TextureHeight"))
+
+
 class Geography:
     def __init__(self, tables):
         self.tables = tables
         self.by_area = defaultdict(set)
         self.by_art = defaultdict(set)
         self.by_map = defaultdict(list)
-        self.layers = defaultdict(set)
+        self.layers = {}
+        self.tiles = defaultdict(list)
         self.current_overlays = defaultdict(list)
         self.zone_art = {}
         for row in tables["UiMapAssignment"].values():
@@ -216,7 +223,46 @@ class Geography:
                 self.current_overlays[area_ids].append(row)
         for row in tables["UiMapArtStyleLayer"].values():
             if row["LayerIndex"] == 0:
-                self.layers[row["UiMapArtStyleID"]].add((row["LayerWidth"], row["LayerHeight"]))
+                style = row["UiMapArtStyleID"]
+                if style in self.layers:
+                    raise ValueError(f"UiMapArtStyle {style}: duplicate base layer")
+                self.layers[style] = row
+        for row in tables["WorldMapOverlayTile"].values():
+            self.tiles[row["WorldMapOverlayID"]].append(row)
+
+    def base_layer(self, art_id):
+        art = required(self.tables["UiMapArt"], art_id, "UiMapArt")
+        layer = required(self.layers, art["UiMapArtStyleID"], f"UiMapArt {art_id} base layer")
+        if any(layer[k] <= 0 for k in ("LayerWidth", "LayerHeight", "TileWidth", "TileHeight")):
+            raise ValueError(f"UiMapArt {art_id}: invalid layer/tile size")
+        return layer
+
+    def overlay_tiles(self, overlay):
+        layer = self.base_layer(overlay["UiMapArtID"])
+        width, height = overlay["TextureWidth"], overlay["TextureHeight"]
+        if width <= 0 or height <= 0:
+            raise ValueError(f"WorldMapOverlay {overlay['ID']}: invalid texture size")
+        wide = (width + layer["TileWidth"] - 1) // layer["TileWidth"]
+        tall = (height + layer["TileHeight"] - 1) // layer["TileHeight"]
+        source_tiles = self.tiles[overlay["ID"]]
+        if not source_tiles:
+            return None
+        tiles = [tile for tile in source_tiles if tile["LayerIndex"] == 0]
+        if len(tiles) != wide * tall:
+            raise ValueError(f"WorldMapOverlay {overlay['ID']}: expected {wide * tall} layer-0 tiles ({wide} x {tall}), got {len(tiles)}")
+        cells = {}
+        files = set()
+        for tile in tiles:
+            cell = tile["RowIndex"], tile["ColIndex"]
+            file_id = tile["FileDataID"]
+            if cell in cells or not (0 <= cell[0] < tall and 0 <= cell[1] < wide):
+                raise ValueError(f"WorldMapOverlay {overlay['ID']}: duplicate/out-of-grid tile {cell}")
+            if file_id <= 0 or file_id in files:
+                raise ValueError(f"WorldMapOverlay {overlay['ID']}: missing/duplicate tile FileDataID {file_id}")
+            cells[cell] = file_id
+            files.add(file_id)
+        # DB2 indices are zero-based; Lua's dense array is one-based.
+        return [cells[row, col] for row in range(tall) for col in range(wide)]
 
     def is_zone(self, key):
         row = required(self.tables["UiMap"], key, "UiMap")
@@ -270,13 +316,9 @@ class Geography:
         if art_zones:
             if areas and areas != art_zones:
                 counts["art overrides area zone"] += 1
-            art = required(self.tables["UiMapArt"], overlay["UiMapArtID"], "UiMapArt")
-            sizes = self.layers[art["UiMapArtStyleID"]]
-            if len(sizes) != 1:
-                raise ValueError(f"UiMapArt {art['ID']}: ambiguous/missing base layer size")
-            width, height = next(iter(sizes))
-            if width <= 0 or height <= 0:
-                raise ValueError(f"UiMapArt {art['ID']}: invalid layer size")
+            layer = self.base_layer(overlay["UiMapArtID"])
+            width, height = layer["LayerWidth"], layer["LayerHeight"]
+            entry["key"] = overlay_key(overlay)
             top, bottom, left, right = (overlay[f"HitRect{k}"] for k in ("Top", "Bottom", "Left", "Right"))
             if top == bottom == left == right == 0:
                 counts["empty hit rectangle"] += 1
@@ -310,6 +352,19 @@ class Geography:
                     results[zone].add((x, y))
         return {zone: next(iter(points)) for zone, points in results.items() if len(points) == 1}
 
+    def instance_location(self, instance, zone=None):
+        entrances = self.entrances(instance)
+        if zone is None:
+            if len(entrances) != 1:
+                return None
+            zone = next(iter(entrances))
+        elif entrances and zone not in entrances:
+            raise ValueError(f"Map {instance}: curated zone {zone} excludes the client entrance")
+        entry = {"kind": "instance", "instance": instance}
+        if zone in entrances:
+            entry["x"], entry["y"] = entrances[zone]
+        return zone, entry
+
 
 def unique_object(pairs):
     result = {}
@@ -322,9 +377,9 @@ def unique_object(pairs):
 
 def curated_locations(tables, geography):
     data = json.loads(LOCATIONS.read_text(encoding="utf-8"), object_pairs_hook=unique_object)
-    sections = {"criteria", "taxiNodes", "dungeonWings"}
+    sections = {"criteria", "taxiNodes", "dungeonWings", "questInstances"}
     if not isinstance(data, dict) or set(data) != sections or any(not isinstance(data[k], dict) for k in sections):
-        raise ValueError("locations.json must contain criteria, taxiNodes, and dungeonWings objects")
+        raise ValueError("locations.json must contain criteria, taxiNodes, dungeonWings, and questInstances objects")
     result = {}
     for key, row in data["criteria"].items():
         if not re.fullmatch(r"[1-9][0-9]*", key):
@@ -352,22 +407,25 @@ def curated_locations(tables, geography):
                 raise ValueError(f"locations.json {cid}: Map is not a dungeon/raid")
         result[cid] = row
     completion = {}
-    for section in ("taxiNodes", "dungeonWings"):
+    for section in ("taxiNodes", "dungeonWings", "questInstances"):
         completion[section] = {}
         for key, row in data[section].items():
             label = f"locations.json {section} {key}"
             if not re.fullmatch(r"[1-9][0-9]*", key):
                 raise ValueError(f"{label}: invalid ID")
             fields = {"uiMap", "name", "evidence"}
-            optional = {"area", "instance"} if section == "dungeonWings" else set()
+            optional = {"area", "instance"} if section != "taxiNodes" else set()
+            if section == "questInstances":
+                fields |= {"instance", "encounter"}
             if not isinstance(row, dict) or not fields <= row.keys() or row.keys() - (fields | optional):
                 raise ValueError(f"{label}: unexpected/missing fields")
             if type(row["uiMap"]) is not int or not geography.is_zone(row["uiMap"]) or row["uiMap"] in BATTLEGROUNDS:
                 raise ValueError(f"{label}: invalid completion zone")
             if any(not isinstance(row[k], str) or not row[k].strip() for k in ("name", "evidence")):
                 raise ValueError(f"{label}: name and evidence required")
-            if not row["evidence"].startswith(f"Build {BUILD}:"):
-                raise ValueError(f"{label}: evidence must be reviewed for build {BUILD}")
+            # Evidence records its review build; current rows below decide validity.
+            if not re.match(r"^Build [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:", row["evidence"]):
+                raise ValueError(f"{label}: evidence must record its verification build")
             if "area" in row:
                 if type(row["area"]) is not int or geography.area_zones(row["area"]) != {row["uiMap"]}:
                     raise ValueError(f"{label}: area no longer identifies curated zone")
@@ -376,8 +434,16 @@ def curated_locations(tables, geography):
                     raise ValueError(f"{label}: invalid instance ID")
                 instance = required(tables["Map"], row["instance"], label)
                 entrances = geography.entrances(row["instance"])
-                if instance["InstanceType"] != 1 or (entrances and row["uiMap"] not in entrances):
-                    raise ValueError(f"{label}: invalid dungeon or conflicting client entrance")
+                instance_types = (1,) if section == "dungeonWings" else (1, 2)
+                if instance["InstanceType"] not in instance_types or (entrances and row["uiMap"] not in entrances):
+                    raise ValueError(f"{label}: invalid instance or conflicting client entrance")
+            if section == "questInstances":
+                required(tables["QuestV2"], int(key), label)
+                if type(row["encounter"]) is not int:
+                    raise ValueError(f"{label}: invalid encounter ID")
+                encounter = required(tables["DungeonEncounter"], row["encounter"], label)
+                if encounter["MapID"] != row["instance"] or encounter["Name_lang"] != row["name"]:
+                    raise ValueError(f"{label}: stale encounter name/instance")
             completion[section][int(key)] = row
     return result, completion
 
@@ -387,18 +453,25 @@ def generate_completion(tables, geography, graph, curated, counts):
     keys = defaultdict(set)
     for overlay in sorted(tables["WorldMapOverlay"].values(), key=lambda r: r["ID"]):
         for zone in sorted(geography.by_art[overlay["UiMapArtID"]] - BATTLEGROUNDS - {2521}):
-            values = [overlay[k] for k in ("OffsetX", "OffsetY", "TextureWidth", "TextureHeight")]
             # A zero-size overlay never draws, so there is nothing on the map to reveal.
             if not (overlay["TextureWidth"] and overlay["TextureHeight"]):
                 continue
-            key = ":".join(map(str, values))
+            key = overlay_key(overlay)
             if key in keys[zone]:
                 raise ValueError(f"WorldMapOverlay {overlay['ID']}: duplicate completion key {key} in UiMap {zone}")
             keys[zone].add(key)
             name = required(tables["AreaTable"], overlay["AreaID_0"], f"WorldMapOverlay {overlay['ID']}")["AreaName_lang"]
             if not name.strip():
                 raise ValueError(f"WorldMapOverlay {overlay['ID']}: empty area name")
-            completion[zone]["areas"].append({"key": key, "name": name})
+            tiles = geography.overlay_tiles(overlay)
+            area = {"key": key, "name": name}
+            if tiles is None:
+                counts["completion areas without tiles"] += 1
+                print(f"  Tile-less area: WorldMapOverlay {overlay['ID']}, UiMap {zone}, key {key} ({name}; zero tile rows)", file=sys.stderr)
+            else:
+                area["tiles"] = tiles
+                counts["completion tiles"] += len(tiles)
+            completion[zone]["areas"].append(area)
             counts["completion areas"] += 1
 
     zone_names = defaultdict(set)
@@ -482,6 +555,10 @@ def generate_completion(tables, geography, graph, curated, counts):
         else:
             unplaced.append((boss, wing["name"]))
     counts["completion wings unplaced"] = len(unplaced)
+    for zone, entry in completion.items():
+        art = required(geography.zone_art, zone, "Completion zone art")
+        layer = geography.base_layer(art)
+        entry.update(tileWidth=layer["TileWidth"], tileHeight=layer["TileHeight"])
     counts["completion zones"] = len(completion)
     return completion, unplaced
 
@@ -490,6 +567,13 @@ def generate(tables):
     graph = Achievements(tables)
     geography = Geography(tables)
     curated, completion_curated = curated_locations(tables, geography)
+    instance_zones = {}
+    for fact in [*completion_curated["dungeonWings"].values(), *completion_curated["questInstances"].values()]:
+        if "instance" in fact:
+            instance, zone = fact["instance"], fact["uiMap"]
+            if instance in instance_zones and instance_zones[instance] != zone:
+                raise ValueError(f"Map {instance}: conflicting curated entrance zones")
+            instance_zones[instance] = zone
     rewards = {r["AchievementID"] for r in tables["TraitCurrencySource"].values() if r["TraitCurrencyID"] == 4225}
     if not rewards or 0 in rewards:
         raise ValueError("TraitCurrencySource 4225: missing reward achievements")
@@ -503,6 +587,7 @@ def generate(tables):
     })
     unresolved = Counter()
     used_curated = set()
+    used_quests = set()
     explore_achievements = set()
     for achievement in sorted(rewards | feeds.keys()):
         for cid in sorted(graph.leaves(achievement)):
@@ -522,6 +607,19 @@ def generate(tables):
                     encounter = tables["DungeonEncounter"].get(criterion["Asset"])
                     if encounter:
                         instance_ids.add(encounter["MapID"])
+                if criterion["Type"] == 0:
+                    # Reuse reviewed boss-ID facts, never match encounter names.
+                    wing = completion_curated["dungeonWings"].get(criterion["Asset"])
+                    if wing and "instance" in wing:
+                        instance_ids.add(wing["instance"])
+            if criterion["Type"] == 27:
+                quest = completion_curated["questInstances"].get(criterion["Asset"])
+                if quest:
+                    used_quests.add(criterion["Asset"])
+                    instance_ids.add(quest["instance"])
+                    owner_instance = tables["Achievement"][achievement]["Instance_ID"]
+                    if owner_instance > 0:
+                        instance_ids.add(owner_instance)
             if len(instance_ids) > 1:
                 raise ValueError(f"Achievement {achievement}, criteria {cid}: conflicting instance IDs")
             if kind == "explore":
@@ -529,10 +627,7 @@ def generate(tables):
                 location = geography.explore(cid, counts)
             elif instance_ids:
                 instance = next(iter(instance_ids))
-                entrances = geography.entrances(instance)
-                if len(entrances) == 1:
-                    zone, (x, y) = next(iter(entrances.items()))
-                    location = zone, {"kind": "instance", "instance": instance, "x": x, "y": y}
+                location = geography.instance_location(instance, instance_zones.get(instance))
             if cid in curated:
                 used_curated.add(cid)
                 fact = curated[cid]
@@ -547,12 +642,7 @@ def generate(tables):
                         instance = fact["instance"]
                         if instance_ids and instance_ids != {instance}:
                             raise ValueError(f"Criteria {cid}: curated instance conflicts with client data")
-                        entry["instance"] = instance
-                        entrances = geography.entrances(instance)
-                        if entrances and fact["uiMap"] not in entrances:
-                            raise ValueError(f"Criteria {cid}: curated zone excludes the client entrance")
-                        if fact["uiMap"] in entrances:
-                            entry["x"], entry["y"] = entrances[fact["uiMap"]]
+                        _, entry = geography.instance_location(instance, fact["uiMap"])
                     location = fact["uiMap"], entry
             if location:
                 zone, entry = location
@@ -565,11 +655,26 @@ def generate(tables):
                 counts["unresolved supporting " + kind] += 1
     if curated.keys() - used_curated:
         raise ValueError(f"Curated criteria no longer reachable from rewards: {sorted(curated.keys() - used_curated)}")
+    stale_quests = completion_curated["questInstances"].keys() - used_quests
+    if stale_quests:
+        raise ValueError(f"Curated quests no longer reachable from rewards: {sorted(stale_quests)}")
     if counts["explore pinned"] + counts["explore unpinned"] < 500:
         raise ValueError("Fewer than 500 exploration entries; refusing a likely broken join")
     counts["exploration achievements"] = len(explore_achievements)
     counts["curated criteria"] = len(used_curated)
+    counts["curated instance quests"] = len(used_quests)
     completion, unplaced = generate_completion(tables, geography, graph, completion_curated, counts)
+    for zone, entries in sorted(zones.items()):
+        keys = {area["key"] for area in completion.get(zone, {}).get("areas", [])}
+        for entry in entries:
+            if entry["kind"] != "explore":
+                continue
+            if entry.get("key") in keys:
+                counts["explore area matched"] += 1
+            else:
+                entry.pop("key", None)
+                counts["explore area unmatched"] += 1
+                print(f"  Unmatched explore area: UiMap {zone}, achievement {entry['achievement']}, criteria {entry['criteria']}", file=sys.stderr)
     return rewards, feeds, zones, completion, counts, unresolved, unplaced
 
 
@@ -598,13 +703,22 @@ def render(rewards, feeds, zones, completion):
             fields = [f"achievement = {entry['achievement']}", f"criteria = {entry['criteria']}", f'kind = "{entry["kind"]}"']
             if "instance" in entry:
                 fields.append(f"instance = {entry['instance']}")
+            if "key" in entry:
+                fields.append(f"key = {lua_string(entry['key'])}")
             if "x" in entry:
                 fields.extend((f"x = {entry['x']:.3f}", f"y = {entry['y']:.3f}"))
-            lines.append("\t\t\t{ " + ", ".join(fields) + " },")
+            compact = "{ " + ", ".join(fields) + " },"
+            if len(compact) + 3 * 4 <= 120:
+                lines.append("\t\t\t" + compact)
+            else:
+                lines.append("\t\t\t{")
+                lines.extend("\t\t\t\t" + field + "," for field in fields)
+                lines.append("\t\t\t},")
         lines.append("\t\t},")
     lines.extend(["\t},", "\t-- Character exploration/taxis and account-wide Spelunker wings.", "\tcompletion = {"])
     for zone, categories in sorted(completion.items()):
         lines.append(f"\t\t[{zone}] = {{")
+        lines.extend(f"\t\t\t{key} = {categories[key]}," for key in ("tileWidth", "tileHeight"))
         for category in ("areas", "taxis", "dungeons"):
             entries = categories[category]
             if not entries:
@@ -615,6 +729,9 @@ def render(rewards, feeds, zones, completion):
             for entry in sorted(entries, key=lambda e: e[order]):
                 if category == "areas":
                     fields = [f"key = {lua_string(entry['key'])}", f"name = {lua_string(entry['name'])}"]
+                    if "tiles" in entry:
+                        tiles = ", ".join(map(str, entry["tiles"]))
+                        fields.append(f"tiles = {{ {tiles} }}")
                 elif category == "taxis":
                     fields = [f"node = {entry['node']}", f"faction = {lua_string(entry['faction'])}", f"name = {lua_string(entry['name'])}"]
                 else:
