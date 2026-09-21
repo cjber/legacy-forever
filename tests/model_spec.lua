@@ -80,4 +80,39 @@ equal(lines[2].detail, nil, "single step has no count")
 equal(lines[3].detail, "1/4", "earn-achievement step shows its criteria done")
 equal(#Model.TrackerLines(999, criteria), 0, "unknown challenge has no lines")
 
+-- Zone completion: own-faction and neutral flight paths only, unknown wings left out.
+local zone = {
+	areas = { { key = "0:0:10:10", name = "Kharanos" }, { key = "10:0:10:10", name = "Gol'Bolar Quarry" } },
+	taxis = {
+		{ node = 6, faction = "Alliance", name = "Ironforge" },
+		{ node = 7, faction = "Horde", name = "Kargath" },
+		{ node = 8, faction = "Neutral", name = "Ratchet" },
+		{ node = 9, faction = "Neutral", name = "Unlisted" },
+	},
+	dungeons = {
+		{ name = "Gnomeregan", refs = { { 1, 1 } } },
+		{ name = "Unknown wing", refs = { { 2, 2 } } },
+	},
+}
+local snapshot = {
+	explored = { ["0:0:10:10"] = true },
+	taxis = { [6] = true, [7] = false, [8] = false },
+	faction = "Alliance",
+	wingDone = function(refs)
+		if refs[1][1] == 1 then
+			return false
+		end
+	end,
+}
+local completion = Model.ZoneCompletion(zone, snapshot)
+equal(completion.areas.done, 1, "one area explored")
+equal(completion.areas.left[1], "Gol'Bolar Quarry", "unexplored area named")
+equal(completion.taxis.total, 2, "other faction's and unlisted flight paths left out")
+equal(completion.dungeons.total, 1, "wing with unknown progress left out")
+equal(completion.total, 5, "items across categories")
+equal(completion.percent, 40, "percent floors")
+snapshot.explored = nil
+equal(Model.ZoneCompletion(zone, snapshot).areas, nil, "unknown exploration drops the category")
+equal(Model.ZoneCompletion({}, snapshot).percent, nil, "empty zone has no percent")
+
 print(("model_spec: %d checks passed"):format(checks))

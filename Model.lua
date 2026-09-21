@@ -130,3 +130,64 @@ function Model.TrackerLines(challenge, criteria)
 	end
 	return lines
 end
+
+-- One category of a zone's completion: { done, total, left = { names } }, or nil when
+-- the zone has none or its progress is unknown. `state(item)` returns true (done),
+-- false (not done) or nil (unknown, left out of the count).
+local function CompletionCategory(items, state)
+	if not items or #items == 0 then
+		return nil
+	end
+	local category = { done = 0, total = 0, left = {} }
+	for _, item in ipairs(items) do
+		local done = state(item)
+		if done ~= nil then
+			category.total = category.total + 1
+			if done then
+				category.done = category.done + 1
+			else
+				category.left[#category.left + 1] = item.name
+			end
+		end
+	end
+	return category.total > 0 and category or nil
+end
+
+Model.COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons" }
+
+-- A zone's completion, GW2 style: every area, flight path and dungeon counts once.
+-- `snapshot` = { explored = set of overlay keys or nil, taxis = { [node] = discovered } for
+-- the nodes the game lists (any other node is unknown), faction = "Alliance" | "Horde",
+-- wingDone = function(refs) -> true/false/nil }.
+-- Areas and flight paths are per character; dungeon wings are account-wide Legacy steps.
+function Model.ZoneCompletion(zone, snapshot)
+	local ownTaxis = {}
+	for _, taxi in ipairs(zone.taxis or {}) do
+		if taxi.faction == "Neutral" or taxi.faction == snapshot.faction then
+			ownTaxis[#ownTaxis + 1] = taxi
+		end
+	end
+	local result = {
+		areas = snapshot.explored and CompletionCategory(zone.areas, function(area)
+			return snapshot.explored[area.key] == true
+		end),
+		taxis = CompletionCategory(ownTaxis, function(taxi)
+			return snapshot.taxis[taxi.node]
+		end),
+		dungeons = CompletionCategory(zone.dungeons, function(wing)
+			return snapshot.wingDone(wing.refs)
+		end),
+		done = 0,
+		total = 0,
+	}
+	for _, key in ipairs(Model.COMPLETION_CATEGORIES) do
+		local category = result[key]
+		if category then
+			result.done = result.done + category.done
+			result.total = result.total + category.total
+		end
+	end
+	-- Floored, so 100% means nothing is left.
+	result.percent = result.total > 0 and math.floor(100 * result.done / result.total) or nil
+	return result
+end
