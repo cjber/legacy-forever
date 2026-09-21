@@ -5,7 +5,7 @@ local AREA_TEMPLATE = "LegacyHereAreaPinTemplate"
 -- Undiscovered ground in see-through gold: plain to spot, with the map still readable
 -- underneath. Brighter under the mouse.
 -- Unseen ground reads darker, the fog-of-war convention; a warm tint vanished on the parchment.
-local AREA_ALPHA, AREA_HOVER_ALPHA = 0.4, 0.6
+local AREA_ALPHA, AREA_HOVER_ALPHA = 0.25, 0.4
 local POINTS_ICON = "UI-Legacy-Points-icon-c60"
 
 local KIND_LABEL = {
@@ -367,11 +367,16 @@ local function CreatePinProvider()
 		self.hits = CreateFramePool("Frame", self)
 	end
 
-	function LegacyHereAreaPinMixin:OnReleased()
+	function LegacyHereAreaPinMixin:ReleaseAreas()
 		if self.textures then
 			self.textures:ReleaseAll()
 			self.hits:ReleaseAll()
 		end
+	end
+
+	function LegacyHereAreaPinMixin:OnReleased()
+		MapCanvasPinMixin.OnReleased(self)
+		self:ReleaseAreas()
 	end
 
 	function LegacyHereAreaPinMixin:DrawTile(tileID, x, y, width, height, u, v)
@@ -380,6 +385,7 @@ local function CreatePinProvider()
 		texture:SetTexture(tileID, nil, nil, "TRILINEAR")
 		texture:SetSize(width, height)
 		texture:SetTexCoord(0, u, 0, v)
+		texture:ClearAllPoints()
 		texture:SetPoint("TOPLEFT", x, -y)
 		texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
 		texture:Show()
@@ -391,6 +397,8 @@ local function CreatePinProvider()
 		if not self.textures then
 			self:CreatePools()
 		end
+		-- Cleared here too: a pooled pin that missed OnReleased would otherwise stack another shade.
+		self:ReleaseAreas()
 		self:SetSize(self:GetMap():GetCanvas():GetSize())
 		self:SetPosition(0.5, 0.5)
 		for index, area in ipairs(areas) do
@@ -409,13 +417,18 @@ local function CreatePinProvider()
 			end
 			local hit = self.hits:Acquire()
 			hit:SetFrameLevel(self:GetFrameLevel() + index)
-			hit:SetSize(width, height)
-			hit:SetPoint("TOPLEFT", offsetX, -offsetY)
+			local left, top, right, bottom = offsetX, offsetY, offsetX + width, offsetY + height
+			if area.hit then
+				left, top, right, bottom = unpack(area.hit)
+			end
+			hit:SetSize(right - left, bottom - top)
+			hit:ClearAllPoints()
+			hit:SetPoint("TOPLEFT", left, -top)
 			hit:SetMouseMotionEnabled(true)
 			hit:SetMouseClickEnabled(false)
 			hit:SetScript("OnEnter", function()
 				for _, texture in ipairs(textures) do
-					texture:SetAlpha(AREA_HOVER_ALPHA / AREA_ALPHA)
+					texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
 				end
 				GameTooltip:SetOwner(hit, "ANCHOR_CURSOR_RIGHT")
 				local objective = legacy[area.key]
@@ -429,7 +442,7 @@ local function CreatePinProvider()
 			end)
 			hit:SetScript("OnLeave", function()
 				for _, texture in ipairs(textures) do
-					texture:SetAlpha(1)
+					texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
 				end
 				GameTooltip:Hide()
 			end)

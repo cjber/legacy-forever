@@ -178,6 +178,8 @@ is emitted.
   print its ID, zone and key. This build has exactly one: **5252, Zul'Gurub** in
   Stranglethorn (1434), key **`483:8:256:256`**. Its Legacy criterion 1222 keeps
   its key and pin; runtime skips shading when `tiles` is absent.
+  Areas with a nonempty WorldMapOverlay hit rectangle carry `hit = {left, top, right, bottom}`
+  (536 of 555 in this build), Blizzard's own hover target; runtime falls back to the texture rect.
   Reject partial, duplicate, out-of-grid, nonpositive, or mis-sized layer-0 grids
   before replacing output, including overlays with only nonzero-layer rows.
   DB2 RowIndex/ColIndex start at zero; the emitted dense Lua array is

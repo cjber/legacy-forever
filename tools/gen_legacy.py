@@ -465,6 +465,10 @@ def generate_completion(tables, geography, graph, curated, counts):
                 raise ValueError(f"WorldMapOverlay {overlay['ID']}: empty area name")
             tiles = geography.overlay_tiles(overlay)
             area = {"key": key, "name": name}
+            # Blizzard's own hover target for the area (MapExplorationPinMixin's hitRect); absent when zero.
+            hit = tuple(overlay[f"HitRect{side}"] for side in ("Left", "Top", "Right", "Bottom"))
+            if hit[2] > hit[0] and hit[3] > hit[1]:
+                area["hit"] = hit
             if tiles is None:
                 counts["completion areas without tiles"] += 1
                 print(f"  Tile-less area: WorldMapOverlay {overlay['ID']}, UiMap {zone}, key {key} ({name}; zero tile rows)", file=sys.stderr)
@@ -729,6 +733,8 @@ def render(rewards, feeds, zones, completion):
             for entry in sorted(entries, key=lambda e: e[order]):
                 if category == "areas":
                     fields = [f"key = {lua_string(entry['key'])}", f"name = {lua_string(entry['name'])}"]
+                    if "hit" in entry:
+                        fields.append("hit = { " + ", ".join(map(str, entry["hit"])) + " }")
                     if "tiles" in entry:
                         tiles = ", ".join(map(str, entry["tiles"]))
                         fields.append(f"tiles = {{ {tiles} }}")
