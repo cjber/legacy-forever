@@ -1,6 +1,7 @@
 name: Refresh Legacy data
 
-# Opens a PR when wago.tools lists a newer Forever build whose Legacy data differs.
+# Opens a PR with regenerated data when wago.tools lists a newer Forever build.
+# PRs opened with GITHUB_TOKEN don't trigger CI, so this job runs the full checks itself.
 # Daily: beta builds have shipped several times a week.
 on:
   schedule:
@@ -31,7 +32,17 @@ jobs:
       - if: steps.build.outputs.new == 'true'
         run: python3 tools/gen_legacy.py
       - if: steps.build.outputs.new == 'true'
-        run: sudo apt-get update && sudo apt-get install -y luajit && luajit tests/data_spec.lua && luajit tests/model_spec.lua
+        run: |
+          sudo apt-get update && sudo apt-get install -y luajit lua-check
+          luacheck .
+          luajit tests/data_spec.lua
+          luajit tests/model_spec.lua
+      - if: steps.build.outputs.new == 'true'
+        uses: JohnnyMorganz/stylua-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --check .
       - if: steps.build.outputs.new == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
