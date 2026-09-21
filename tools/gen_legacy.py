@@ -181,7 +181,6 @@ class Geography:
         self.by_art = defaultdict(set)
         self.by_map = defaultdict(list)
         self.layers = defaultdict(set)
-        self.current_art = {row["UiMapArtID"] for row in tables["UiMapXMapArt"].values()}
         self.current_overlays = defaultdict(list)
         for row in tables["UiMapAssignment"].values():
             if not self.is_zone(row["UiMapID"]):
@@ -197,7 +196,7 @@ class Geography:
                 self.by_art[row["UiMapArtID"]].add(row["UiMapID"])
         for row in tables["WorldMapOverlay"].values():
             area_ids = overlay_areas(row)
-            if area_ids and row["UiMapArtID"] in self.current_art:
+            if area_ids and row["UiMapArtID"] in self.by_art:
                 self.current_overlays[area_ids].append(row)
         for row in tables["UiMapArtStyleLayer"].values():
             if row["LayerIndex"] == 0:
@@ -239,8 +238,6 @@ class Geography:
         entry = {"kind": "explore"}
         if not art_zones:
             counts["overlay art not on current zone"] += 1
-            if overlay["UiMapArtID"] in self.current_art:
-                return zone, entry
             matches = self.current_overlays[overlay_areas(overlay)]
             if len(matches) != 1:
                 counts["current-art remap missing" if not matches else "current-art remap ambiguous"] += 1

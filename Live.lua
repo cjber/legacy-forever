@@ -12,7 +12,8 @@ local criteriaCache = {}
 local listeners = {}
 
 -- The unfinished challenges the game lists for this character, exactly as the Legacy
--- panel enumerates them. Only reward-bearing ones count; the list also holds helpers.
+-- panel enumerates them. The game's list also holds the helper achievements that feed
+-- them; only reward-bearing challenges go in this set.
 -- Completed ones are dropped here: an alt's own exploration can't advance a challenge
 -- the account has already earned.
 function Live.Visible()
