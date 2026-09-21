@@ -82,11 +82,15 @@ function Live.ToggleTracked(achievementID)
 	end
 end
 
--- Opens Blizzard's Legacy panel on this challenge.
+-- Opens Blizzard's Legacy panel on this challenge. The panel opens on its first
+-- page and only Legacy.SelectPage switches to the challenges page.
+local CHALLENGES_PAGE = 2
+
 function Live.ShowInLegacyPanel(achievementID)
 	if not (LegacySystemFrame and LegacySystemFrame:IsShown()) then
 		ToggleLegacySystemUI()
 	end
+	EventRegistry:TriggerEvent("Legacy.SelectPage", CHALLENGES_PAGE)
 	if AchievementFrame_SelectAchievement then
 		AchievementFrame_SelectAchievement(achievementID, true)
 	end

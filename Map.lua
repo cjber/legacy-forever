@@ -41,18 +41,23 @@ end
 
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]
 
-local function OnObjectiveClick(achievementID)
+-- Tracks the achievement holding the objectives; the Legacy panel only lists challenges.
+local function OnObjectiveClick(ids)
 	if IsShiftKeyDown() then
-		ns.Live.ShowInLegacyPanel(achievementID)
+		ns.Live.ShowInLegacyPanel(ids.challenge)
 	else
-		ns.Live.ToggleTracked(achievementID)
+		ns.Live.ToggleTracked(ids.achievement)
 	end
+end
+
+local function IsTracked(ids)
+	return ns.Live.IsTracked(ids.achievement)
 end
 
 local function AddGroup(root, group)
 	local name = ns.Live.Name(group.achievement)
 	local text = ("%s |cffffffff(%d)|r"):format(name, #group.objectives)
-	local button = root:CreateCheckbox(text, ns.Live.IsTracked, OnObjectiveClick, group.achievement)
+	local button = root:CreateCheckbox(text, IsTracked, OnObjectiveClick, group)
 	button:SetTooltip(function(tooltip)
 		AddGroupTooltip(tooltip, group, group.objectives)
 		GameTooltip_AddInstructionLine(tooltip, "Click to track. Shift-click to open in the Legacy panel.")
@@ -67,7 +72,12 @@ local function AddUnlocated(root)
 	local submenu = root:CreateButton(("No fixed location |cffffffff(%d)|r"):format(#unlocated))
 	for _, item in ipairs(unlocated) do
 		local text = ("%s |cffffffff(%d)|r"):format(ns.Live.Name(item.challenge), item.open)
-		local button = submenu:CreateCheckbox(text, ns.Live.IsTracked, OnObjectiveClick, item.challenge)
+		local button = submenu:CreateCheckbox(
+			text,
+			IsTracked,
+			OnObjectiveClick,
+			{ achievement = item.challenge, challenge = item.challenge }
+		)
 		button:SetTooltip(function(tooltip)
 			GameTooltip_SetTitle(tooltip, ns.Live.Name(item.challenge))
 			GameTooltip_AddNormalLine(tooltip, "Levels, skills, ranks and anything without a fixed place.")
@@ -201,9 +211,6 @@ local function Attach()
 		offsetY
 	)
 
-	hooksecurefunc(map, "OnMapChanged", function()
-		button:Refresh()
-	end)
 	ns.Live.OnChange(function()
 		if map:IsShown() then
 			provider:RefreshAllData()

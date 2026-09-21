@@ -13,5 +13,5 @@ Data\Legacy.lua
 Core.lua
 Model.lua
 Live.lua
-Map.lua
 Map.xml
+Map.lua
