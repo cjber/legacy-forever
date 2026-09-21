@@ -12,12 +12,22 @@ local LABELS = { areas = "Areas explored", taxis = "Flight paths", dungeons = "D
 local MAX_LEFT = 6
 local PERCENT_PIN_TEMPLATE = "LegacyHereZonePercentPinTemplate"
 
--- All off by default.
 local function Settings()
 	return ns.SavedTable("zoneCompletion")
 end
 
 local listeners = {}
+
+-- The map is on out of the box so the feature is visible; the tracker takes screen space, so it waits to be asked.
+local DEFAULT_SHOWN = { tracker = false, map = true }
+
+local function IsShown(surface)
+	local shown = Settings()[surface]
+	if shown == nil then
+		return DEFAULT_SHOWN[surface]
+	end
+	return shown
+end
 
 local function Refresh()
 	for _, callback in ipairs(listeners) do
@@ -107,7 +117,7 @@ end
 local TrackerMixin = {}
 
 function TrackerMixin:LayoutContents()
-	local uiMapID = Settings().tracker and ns.Live.CurrentZone()
+	local uiMapID = IsShown("tracker") and ns.Live.CurrentZone()
 	local result = Completion.Of(uiMapID)
 	if not result then
 		return
@@ -179,7 +189,7 @@ end
 function LegacyHereZoneOverlayMixin:Refresh()
 	local map = self:GetParent()
 	local uiMapID = map:GetMapID()
-	self.result = Settings().map and Completion.Of(uiMapID)
+	self.result = IsShown("map") and Completion.Of(uiMapID)
 	if not self.result then
 		self:Hide()
 		return
@@ -244,7 +254,7 @@ local function CreateProvider(overlay)
 		local map = self:GetMap()
 		local continentID = map:GetMapID()
 		local info = continentID and C_Map.GetMapInfo(continentID)
-		if not (Settings().map and info and info.mapType == Enum.UIMapType.Continent) then
+		if not (IsShown("map") and info and info.mapType == Enum.UIMapType.Continent) then
 			return
 		end
 		for uiMapID in pairs(ns.Data.completion) do
@@ -285,10 +295,6 @@ EventUtil.ContinueOnAddOnLoaded("Blizzard_WorldMap", AttachMap)
 ns.Live.OnChange(Refresh)
 
 --[[ Settings, in the Legacy map menu ]]
-
-local function IsShown(surface)
-	return Settings()[surface] == true
-end
 
 local function Toggle(surface)
 	Settings()[surface] = not IsShown(surface)

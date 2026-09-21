@@ -137,9 +137,9 @@ local function ContinentZones(continentID, includeAreas)
 	return zones
 end
 
--- Off by default, since areas are many; kept across sessions only where SavedVariables load.
+-- On by default: the shading is the quickest way to see what a zone still hides.
 local function ShowAreas()
-	return LegacyHereDB and LegacyHereDB.showAreas or false
+	return not (LegacyHereDB and LegacyHereDB.showAreas == false)
 end
 
 local function ToggleAreas()
