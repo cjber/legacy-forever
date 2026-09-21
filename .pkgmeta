@@ -1,0 +1,15 @@
+package-as: LegacyHere
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
+
+ignore:
+  - tools
+  - tests
+  - docs
+  - media/icon.svg
+  - media/icon-400.png
+  - .luacheckrc
+  - .luarc.json
+  - stylua.toml

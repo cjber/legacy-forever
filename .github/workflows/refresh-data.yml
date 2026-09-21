@@ -1,0 +1,44 @@
+name: Refresh Legacy data
+
+# Opens a PR when wago.tools lists a newer Forever build whose Legacy data differs.
+# Daily: beta builds have shipped several times a week.
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pin the newest Forever build
+        id: build
+        run: |
+          build=$(python3 tools/latest_build.py)
+          echo "version=$build" >> "$GITHUB_OUTPUT"
+          if grep -q "^BUILD = \"$build\"" tools/gen_legacy.py; then
+            echo "already on $build"
+            echo "new=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "new=true" >> "$GITHUB_OUTPUT"
+          sed -i -E "s/^BUILD = \".*\"/BUILD = \"$build\"/; s/^SOURCE_DATE = \".*\"/SOURCE_DATE = \"$(date -u +%F)\"/" tools/gen_legacy.py
+      - if: steps.build.outputs.new == 'true'
+        run: python3 tools/gen_legacy.py
+      - if: steps.build.outputs.new == 'true'
+        run: sudo apt-get update && sudo apt-get install -y luajit && luajit tests/data_spec.lua && luajit tests/model_spec.lua
+      - if: steps.build.outputs.new == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: data/forever-${{ steps.build.outputs.version }}
+          title: "data: Legacy data for Forever ${{ steps.build.outputs.version }}"
+          commit-message: "data: Legacy data for Forever ${{ steps.build.outputs.version }}"
+          body: |
+            Regenerated `Data/Legacy.lua` from the achievement, criteria and world map DB2s of Forever build ${{ steps.build.outputs.version }}.
+
+            Before merging, run `/lh audit` in-game to confirm every located objective is one the client knows.
