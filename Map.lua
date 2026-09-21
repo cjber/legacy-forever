@@ -2,9 +2,8 @@ local _, ns = ...
 
 local PIN_TEMPLATE = "LegacyHerePinTemplate"
 local AREA_TEMPLATE = "LegacyHereAreaPinTemplate"
--- Undiscovered ground in see-through gold: plain to spot, with the map still readable
--- underneath. Brighter under the mouse.
--- Unseen ground reads darker, the fog-of-war convention; a warm tint vanished on the parchment.
+-- Unseen ground reads darker, the fog-of-war convention (a warm tint vanished on the
+-- parchment); darker still under the mouse.
 local AREA_ALPHA, AREA_HOVER_ALPHA = 0.25, 0.4
 local POINTS_ICON = "UI-Legacy-Points-icon-c60"
 
@@ -360,8 +359,10 @@ local function CreatePinProvider()
 	LegacyHereAreaPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
 	-- Pools are made on first acquire, as MapExplorationPinMixin does; see LegacyHerePinMixin:OnAcquired.
-	-- One hover layer over the canvas picks the area under the cursor (Model.AreaAt); it takes mouse
-	-- motion only, so clicks, drags and the wheel still reach the map.
+	-- One hover layer over the canvas picks the area under the cursor (Model.AreaAt) among all
+	-- the zone's areas, explored or not, so an explored label never lights up the unexplored
+	-- neighbour whose rectangle overlaps it. It takes mouse motion only, so clicks, drags and
+	-- the wheel still reach the map.
 	function LegacyHereAreaPinMixin:CreatePools()
 		self:SetIgnoreGlobalPinScale(true)
 		self:UseFrameLevelType("PIN_FRAME_LEVEL_MAP_EXPLORATION")
@@ -386,7 +387,7 @@ local function CreatePinProvider()
 			self:Highlight(nil)
 			self.textures:ReleaseAll()
 		end
-		self.areas, self.drawn = {}, {}
+		self.zone, self.drawn = nil, {}
 	end
 
 	function LegacyHereAreaPinMixin:OnReleased()
@@ -402,27 +403,28 @@ local function CreatePinProvider()
 	end
 
 	function LegacyHereAreaPinMixin:HoverAt(x, y)
-		local index = ns.Model.AreaAt(self.areas, x, y)
-		if index ~= self.hovered then
-			self:Highlight(index)
+		local index = self.zone and ns.Model.AreaAt(self.zone.areas, x, y)
+		local area = index and self.zone.areas[index]
+		local shaded = area and self.drawn[area.key] and area or nil
+		if shaded ~= self.hovered then
+			self:Highlight(shaded)
 		end
 	end
 
-	function LegacyHereAreaPinMixin:Highlight(index)
+	function LegacyHereAreaPinMixin:Highlight(area)
 		if self.hovered then
-			for _, texture in ipairs(self.drawn[self.hovered]) do
+			for _, texture in ipairs(self.drawn[self.hovered.key]) do
 				texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
 			end
 			GameTooltip:Hide()
 		end
-		self.hovered = index
-		if not index then
+		self.hovered = area
+		if not area then
 			return
 		end
-		for _, texture in ipairs(self.drawn[index]) do
+		for _, texture in ipairs(self.drawn[area.key]) do
 			texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
 		end
-		local area = self.areas[index]
 		GameTooltip:SetOwner(self.hover, "ANCHOR_CURSOR_RIGHT")
 		local objective = self.legacy[area.key]
 		if objective then
@@ -455,8 +457,8 @@ local function CreatePinProvider()
 		self:ReleaseAreas()
 		self:SetSize(self:GetMap():GetCanvas():GetSize())
 		self:SetPosition(0.5, 0.5)
-		self.areas, self.legacy = areas, legacy
-		for index, area in ipairs(areas) do
+		self.zone, self.legacy = zone, legacy
+		for _, area in ipairs(areas) do
 			local offsetX, offsetY, width, height = ns.Model.OverlayRect(area.key)
 			local textures = {}
 			for _, tile in ipairs(ns.Model.OverlayTiles(width, height, zone.tileWidth, zone.tileHeight)) do
@@ -470,7 +472,7 @@ local function CreatePinProvider()
 					tile.v
 				)
 			end
-			self.drawn[index] = textures
+			self.drawn[area.key] = textures
 		end
 	end
 
