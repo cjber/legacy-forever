@@ -6,6 +6,8 @@
 ## Category: Map
 ## X-License: GPL-3.0-or-later
 ## X-Website: https://github.com/cjber/legacy-here
+## X-Curse-Project-ID: 1705879
+## X-Wago-ID: b6mzA7KP
 ## IconAtlas: UI-Legacy-Points-icon-c60
 ## SavedVariables: LegacyHereDB
 ## AddonCompartmentFunc: LegacyHere_OnAddonCompartmentClick
