@@ -9,11 +9,8 @@ ns.Tracker = Tracker
 -- Matches Blizzard's achievement section: five steps, then "...".
 local MAX_STEPS = 5
 
--- Session default is empty; kept across sessions only where SavedVariables load.
 local function Tracked()
-	LegacyHereDB = LegacyHereDB or {}
-	LegacyHereDB.tracked = LegacyHereDB.tracked or {}
-	return LegacyHereDB.tracked
+	return ns.SavedTable("tracked")
 end
 
 local function IndexOf(list, value)

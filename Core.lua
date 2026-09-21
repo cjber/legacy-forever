@@ -2,6 +2,13 @@ local _, ns = ...
 
 ns.TITLE = "Legacy Here"
 
+-- A table in the saved variables, empty for the session until they load.
+function ns.SavedTable(key)
+	LegacyHereDB = LegacyHereDB or {}
+	LegacyHereDB[key] = LegacyHereDB[key] or {}
+	return LegacyHereDB[key]
+end
+
 function ns.Print(msg)
 	DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99" .. ns.TITLE .. "|r " .. msg)
 end

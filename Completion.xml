@@ -36,7 +36,7 @@
 		<Size x="40" y="14"/>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString parentKey="Text" inherits="NumberFontNormal">
+				<FontString parentKey="Text" inherits="GameFontHighlightSmall">
 					<Anchors>
 						<Anchor point="TOP" y="-10"/>
 					</Anchors>

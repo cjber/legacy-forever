@@ -12,11 +12,9 @@ local LABELS = { areas = "Areas explored", taxis = "Flight paths", dungeons = "D
 local MAX_LEFT = 6
 local PERCENT_PIN_TEMPLATE = "LegacyHereZonePercentPinTemplate"
 
--- All off by default; kept across sessions only where SavedVariables load.
+-- All off by default.
 local function Settings()
-	LegacyHereDB = LegacyHereDB or {}
-	LegacyHereDB.zoneCompletion = LegacyHereDB.zoneCompletion or {}
-	return LegacyHereDB.zoneCompletion
+	return ns.SavedTable("zoneCompletion")
 end
 
 local listeners = {}
@@ -190,7 +188,9 @@ function LegacyHereZonePercentPinMixin:OnAcquired(x, y, result)
 	self:ApplyCurrentScale()
 end
 
-local function CreatePercentProvider()
+-- One provider drives both map surfaces: the map refreshes providers on show and on
+-- every map change, but its overlay frames only on a map change.
+local function CreateProvider(overlay)
 	local provider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 	function provider:RemoveAllData()
@@ -199,6 +199,7 @@ local function CreatePercentProvider()
 
 	function provider:RefreshAllData()
 		self:RemoveAllData()
+		overlay:Refresh()
 		local map = self:GetMap()
 		local continentID = map:GetMapID()
 		local info = continentID and C_Map.GetMapInfo(continentID)
@@ -220,8 +221,6 @@ end
 
 local function AttachMap()
 	local map = WorldMapFrame
-	local provider = CreatePercentProvider()
-	map:AddDataProvider(provider)
 	-- Right of the floor dropdown and Camelot's tracking pin button, which share the corner.
 	local overlay = map:AddOverlayFrame(
 		"LegacyHereZoneOverlayTemplate",
@@ -232,10 +231,11 @@ local function AttachMap()
 		44,
 		-10
 	)
+	local provider = CreateProvider(overlay)
+	map:AddDataProvider(provider)
 	listeners[#listeners + 1] = function()
 		if map:IsShown() then
 			provider:RefreshAllData()
-			overlay:Refresh()
 		end
 	end
 end

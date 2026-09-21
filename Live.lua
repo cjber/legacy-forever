@@ -214,9 +214,9 @@ local INVALIDATING = {
 	"RECEIVED_ACHIEVEMENT_LIST",
 	"PLAYER_ENTERING_WORLD",
 	"MAP_EXPLORATION_UPDATED",
-	"TAXI_NODE_STATUS_CHANGED",
-	"TAXIMAP_OPENED",
 }
+-- Flight paths feed only the zone snapshots.
+local TAXI_CHANGES = { "TAXI_NODE_STATUS_CHANGED", "TAXIMAP_OPENED" }
 -- Moving between zones changes which zone is shown, not anyone's progress.
 local ZONE_CHANGES = { "ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA" }
 
@@ -227,8 +227,14 @@ end
 for _, event in ipairs(ZONE_CHANGES) do
 	events:RegisterEvent(event)
 end
+for _, event in ipairs(TAXI_CHANGES) do
+	events:RegisterEvent(event)
+end
 events:SetScript("OnEvent", function(_, event)
 	if tContains(ZONE_CHANGES, event) then
+		Changed()
+	elseif tContains(TAXI_CHANGES, event) then
+		snapshots = {}
 		Changed()
 	else
 		Live.Invalidate()
