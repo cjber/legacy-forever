@@ -2,18 +2,17 @@
 """Generate Legacy objectives and zone completion for a pinned Forever build (stdlib only)."""
 
 import argparse
-from collections import Counter, defaultdict
 import csv
 import io
 import json
 import math
-from pathlib import Path
 import re
 import sys
 import tempfile
 import urllib.error
 import urllib.request
-
+from collections import Counter, defaultdict
+from pathlib import Path
 
 BUILD = "1.60.1.69913"
 SOURCE_DATE = "2026-09-21"
@@ -26,8 +25,16 @@ BATTLEGROUNDS = {1459, 1460, 1461}
 SPELUNKER = (62031, 62032, 62033, 64016, 64017, 64018)
 COMPLETION_CATEGORIES = ("areas", "taxis", "dungeons", "raids", "legacy", "reputations")
 CRITERIA_KINDS = {
-    0: "kill", 5: "level", 7: "skill", 8: "meta", 27: "quest",
-    43: "explore", 78: "kill", 165: "instance", 243: "reputation", 261: "rank",
+    0: "kill",
+    5: "level",
+    7: "skill",
+    8: "meta",
+    27: "quest",
+    43: "explore",
+    78: "kill",
+    165: "instance",
+    243: "reputation",
+    261: "rank",
 }
 SCHEMAS = {
     "TraitCurrencySource": ("TraitCurrencyID", "AchievementID"),
@@ -36,22 +43,41 @@ SCHEMAS = {
     "ModifierTree": ("Parent", "Operator", "Amount", "Type", "Asset", "SecondaryAsset", "TertiaryAsset"),
     "CriteriaTree": ("Parent", "CriteriaID", "Description_lang", "Amount"),
     "WorldMapOverlay": (
-        "UiMapArtID", "HitRectTop", "HitRectBottom", "HitRectLeft", "HitRectRight",
-        "AreaID_0", "AreaID_1", "AreaID_2", "AreaID_3",
-        "OffsetX", "OffsetY", "TextureWidth", "TextureHeight",
+        "UiMapArtID",
+        "HitRectTop",
+        "HitRectBottom",
+        "HitRectLeft",
+        "HitRectRight",
+        "AreaID_0",
+        "AreaID_1",
+        "AreaID_2",
+        "AreaID_3",
+        "OffsetX",
+        "OffsetY",
+        "TextureWidth",
+        "TextureHeight",
     ),
     "WorldMapOverlayTile": ("RowIndex", "ColIndex", "LayerIndex", "FileDataID", "WorldMapOverlayID"),
     "AreaTable": ("ParentAreaID", "AreaName_lang"),
     "UiMap": ("Type", "System", "Name_lang"),
     "TaxiNodes": ("Name_lang", "Flags", "CharacterBitNumber"),
-    "Faction": ("Name_lang", "Description_lang", "ReputationIndex") + tuple(
-        f"{field}_{index}" for index in range(4)
-        for field in ("ReputationMax", "ReputationClassMask")
-    ) + tuple(f"ReputationRaceMasks{index}_0" for index in range(4)),
+    "Faction": ("Name_lang", "Description_lang", "ReputationIndex")
+    + tuple(f"{field}_{index}" for index in range(4) for field in ("ReputationMax", "ReputationClassMask"))
+    + tuple(f"ReputationRaceMasks{index}_0" for index in range(4)),
     "UiMapAssignment": (
-        "UiMapID", "MapID", "AreaID", "WMODoodadPlacementID", "WMOGroupID",
-        "UiMin_0", "UiMin_1", "UiMax_0", "UiMax_1",
-        "Region_0", "Region_1", "Region_3", "Region_4",
+        "UiMapID",
+        "MapID",
+        "AreaID",
+        "WMODoodadPlacementID",
+        "WMOGroupID",
+        "UiMin_0",
+        "UiMin_1",
+        "UiMax_0",
+        "UiMax_1",
+        "Region_0",
+        "Region_1",
+        "Region_3",
+        "Region_4",
     ),
     "UiMapXMapArt": ("UiMapID", "UiMapArtID", "PhaseID"),
     "UiMapArt": ("UiMapArtStyleID",),
@@ -99,7 +125,8 @@ def download(url, filename, refresh=False, offline=False):
 def db2(name, columns, **options):
     content = download(
         f"https://wago.tools/db2/{name}/csv?build={BUILD}",
-        f"{name}-{BUILD}.csv", **options,
+        f"{name}-{BUILD}.csv",
+        **options,
     )
     reader = csv.DictReader(io.StringIO(content), strict=True)
     fields = reader.fieldnames or []
@@ -192,10 +219,13 @@ class Achievements:
         owner = self.achievements[achievement]
         steps = {
             (row["Description_lang"], row["Amount"])
-            for row in self.walk(owner["Criteria_tree"], set()) if row["CriteriaID"] == cid
+            for row in self.walk(owner["Criteria_tree"], set())
+            if row["CriteriaID"] == cid
         }
         if len(steps) != 1:
-            raise ValueError(f"Achievement {achievement}, criteria {cid}: missing/conflicting objective descriptions or amounts")
+            raise ValueError(
+                f"Achievement {achievement}, criteria {cid}: missing/conflicting objective descriptions or amounts"
+            )
         name, amount = next(iter(steps))
         # Live.WholeAchievement uses the description, then title, for single steps.
         if not name.strip() and len(self.leaves(achievement)) == 1:
@@ -270,7 +300,10 @@ class Geography:
             return None
         tiles = [tile for tile in source_tiles if tile["LayerIndex"] == 0]
         if len(tiles) != wide * tall:
-            raise ValueError(f"WorldMapOverlay {overlay['ID']}: expected {wide * tall} layer-0 tiles ({wide} x {tall}), got {len(tiles)}")
+            raise ValueError(
+                f"WorldMapOverlay {overlay['ID']}: expected {wide * tall} layer-0 tiles "
+                f"({wide} x {tall}), got {len(tiles)}"
+            )
         cells = {}
         files = set()
         for tile in tiles:
@@ -386,8 +419,12 @@ class Geography:
                 if r["Region_0"] == r["Region_3"] or r["Region_1"] == r["Region_4"]:
                     raise ValueError(f"UiMapAssignment {r['ID']}: zero-size world rectangle")
                 # World +Y is left and +X is up; UI axes run right and down.
-                x = r["UiMin_0"] + (r["Region_4"] - py) / (r["Region_4"] - r["Region_1"]) * (r["UiMax_0"] - r["UiMin_0"])
-                y = r["UiMin_1"] + (r["Region_3"] - px) / (r["Region_3"] - r["Region_0"]) * (r["UiMax_1"] - r["UiMin_1"])
+                x = r["UiMin_0"] + (r["Region_4"] - py) / (r["Region_4"] - r["Region_1"]) * (
+                    r["UiMax_0"] - r["UiMin_0"]
+                )
+                y = r["UiMin_1"] + (r["Region_3"] - px) / (r["Region_3"] - r["Region_0"]) * (
+                    r["UiMax_1"] - r["UiMin_1"]
+                )
                 if 0 <= x <= 1 and 0 <= y <= 1:
                     results[zone].add((x, y))
         return {zone: next(iter(points)) for zone, points in results.items() if len(points) == 1}
@@ -427,10 +464,16 @@ def curated_locations(tables, geography):
         cid = int(key)
         criterion = required(tables["Criteria"], cid, "locations.json criteria")
         fields = {"uiMap", "kind", "achievement", "type", "asset", "evidence"}
-        if not isinstance(row, dict) or not fields <= row.keys() or row.keys() - (fields | {"instance", "instanceType"}):
+        if (
+            not isinstance(row, dict)
+            or not fields <= row.keys()
+            or row.keys() - (fields | {"instance", "instanceType"})
+        ):
             raise ValueError(f"locations.json {cid}: unexpected/missing fields")
-        if (any(type(row[k]) is not int for k in ("achievement", "type", "asset"))
-                or (row["type"], row["asset"]) != (criterion["Type"], criterion["Asset"])):
+        if any(type(row[k]) is not int for k in ("achievement", "type", "asset")) or (row["type"], row["asset"]) != (
+            criterion["Type"],
+            criterion["Asset"],
+        ):
             raise ValueError(f"locations.json {cid}: stale criterion type/asset")
         owner = required(tables["Achievement"], row["achievement"], f"locations.json {cid} achievement")
         if type(row["uiMap"]) is not int or not geography.is_zone(row["uiMap"]):
@@ -440,7 +483,9 @@ def curated_locations(tables, geography):
         expected = CRITERIA_KINDS.get(tables["Criteria"][cid]["Type"])
         if row["kind"] != expected and not (row["kind"] == "instance" and expected == "kill"):
             raise ValueError(f"locations.json {cid}: kind disagrees with criteria type")
-        if not isinstance(row["evidence"], str) or not re.match(r"^Build [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:", row["evidence"]):
+        if not isinstance(row["evidence"], str) or not re.match(
+            r"^Build [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:", row["evidence"]
+        ):
             raise ValueError(f"locations.json {cid}: evidence must record its verification build")
         if any((row["kind"] == "instance") != (field in row) for field in ("instance", "instanceType")):
             raise ValueError(f"locations.json {cid}: only instance entries require an instance ID and type")
@@ -448,7 +493,11 @@ def curated_locations(tables, geography):
             if type(row["instance"]) is not int:
                 raise ValueError(f"locations.json {cid}: invalid instance ID")
             instance = required(tables["Map"], row["instance"], "locations.json instance")
-            if type(row["instanceType"]) is not int or row["instanceType"] not in (1, 2) or instance["InstanceType"] != row["instanceType"]:
+            if (
+                type(row["instanceType"]) is not int
+                or row["instanceType"] not in (1, 2)
+                or instance["InstanceType"] != row["instanceType"]
+            ):
                 raise ValueError(f"locations.json {cid}: stale dungeon/raid instance type")
             if instance["InstanceType"] == 2 and owner["Instance_ID"] != row["instance"]:
                 raise ValueError(f"locations.json {cid}: raid instance no longer verified by owning achievement")
@@ -504,7 +553,11 @@ def curated_locations(tables, geography):
                     raise ValueError(f"{label}: stale encounter name/instance")
             elif section == "reputations":
                 faction = required(tables["Faction"], int(key), label)
-                if faction["Name_lang"] != row["name"] or not faction["Description_lang"].strip() or faction["ReputationIndex"] < 0:
+                if (
+                    faction["Name_lang"] != row["name"]
+                    or not faction["Description_lang"].strip()
+                    or faction["ReputationIndex"] < 0
+                ):
                     raise ValueError(f"{label}: stale faction name/description or non-reputation faction")
                 if "side" in row and row["side"] not in ("Alliance", "Horde"):
                     raise ValueError(f"{label}: invalid faction side")
@@ -525,17 +578,26 @@ def curated_locations(tables, geography):
 def validate_compound_tree(tables, root, fact):
     label = f"ModifierTree {root} compound instance"
     alternatives = fact["alternatives"]
-    if (not isinstance(alternatives, dict) or len(alternatives) < 2
-            or any(not re.fullmatch(r"[1-9][0-9]*", key) or type(boss) is not int or boss <= 0
-                   for key, boss in alternatives.items())
-            or len(set(alternatives.values())) != len(alternatives)
-            or type(fact["boss"]) is not int or fact["boss"] not in alternatives.values()):
+    if (
+        not isinstance(alternatives, dict)
+        or len(alternatives) < 2
+        or any(
+            not re.fullmatch(r"[1-9][0-9]*", key) or type(boss) is not int or boss <= 0
+            for key, boss in alternatives.items()
+        )
+        or len(set(alternatives.values())) != len(alternatives)
+        or type(fact["boss"]) is not int
+        or fact["boss"] not in alternatives.values()
+    ):
         raise ValueError(f"{label}: invalid alternative creature leaves")
     expected = {
         root: dict(ID=root, Parent=0, Operator=8, Amount=1, Type=0, Asset=0, SecondaryAsset=0, TertiaryAsset=0),
-        **{int(key): dict(ID=int(key), Parent=root, Operator=2, Amount=1, Type=4,
-                         Asset=boss, SecondaryAsset=0, TertiaryAsset=0)
-           for key, boss in alternatives.items()},
+        **{
+            int(key): dict(
+                ID=int(key), Parent=root, Operator=2, Amount=1, Type=4, Asset=boss, SecondaryAsset=0, TertiaryAsset=0
+            )
+            for key, boss in alternatives.items()
+        },
     }
     if root in {int(key) for key in alternatives}:
         raise ValueError(f"{label}: root cannot be an alternative")
@@ -557,9 +619,12 @@ def compound_objectives(tables, graph, curated):
                 raise ValueError(f"ModifierTree {root}: invalid compound reference")
             achievement, cid = ref
             criterion = required(tables["Criteria"], cid, "Compound criteria")
-            if (achievement not in SPELUNKER or cid not in graph.leaves(achievement)
-                    or (criterion["Type"], criterion["Asset"], criterion["Modifier_tree_ID"]) != (78, 0, root)
-                    or graph.objective_details(achievement, cid) != (fact["name"], 1)):
+            if (
+                achievement not in SPELUNKER
+                or cid not in graph.leaves(achievement)
+                or (criterion["Type"], criterion["Asset"], criterion["Modifier_tree_ID"]) != (78, 0, root)
+                or graph.objective_details(achievement, cid) != (fact["name"], 1)
+            ):
                 raise ValueError(f"ModifierTree {root}: stale compound reference {ref}")
             if tuple(ref) in objectives:
                 raise ValueError(f"ModifierTree {root}: duplicate compound reference {ref}")
@@ -597,7 +662,9 @@ def generate_completion(tables, geography, graph, curated, compounds, zones, cou
             if key in keys[zone]:
                 raise ValueError(f"WorldMapOverlay {overlay['ID']}: duplicate completion key {key} in UiMap {zone}")
             keys[zone].add(key)
-            name = required(tables["AreaTable"], overlay["AreaID_0"], f"WorldMapOverlay {overlay['ID']}")["AreaName_lang"]
+            name = required(tables["AreaTable"], overlay["AreaID_0"], f"WorldMapOverlay {overlay['ID']}")[
+                "AreaName_lang"
+            ]
             if not name.strip():
                 raise ValueError(f"WorldMapOverlay {overlay['ID']}: empty area name")
             tiles = geography.overlay_tiles(overlay)
@@ -608,7 +675,11 @@ def generate_completion(tables, geography, graph, curated, compounds, zones, cou
                 area["hit"] = hit
             if tiles is None:
                 counts["completion areas without tiles"] += 1
-                print(f"  Tile-less area: WorldMapOverlay {overlay['ID']}, UiMap {zone}, key {key} ({name}; zero tile rows)", file=sys.stderr)
+                print(
+                    f"  Tile-less area: WorldMapOverlay {overlay['ID']}, UiMap {zone}, key {key} "
+                    f"({name}; zero tile rows)",
+                    file=sys.stderr,
+                )
             else:
                 area["tiles"] = tiles
                 counts["completion tiles"] += len(tiles)
@@ -702,9 +773,7 @@ def generate_completion(tables, geography, graph, curated, compounds, zones, cou
         # In particular the compound RFC pin must not add Orgrimmar completion.
         if zone not in completion:
             continue
-        dungeon_refs = {
-            ref for wing in completion[zone]["dungeons"] for ref in wing["refs"]
-        }
+        dungeon_refs = {ref for wing in completion[zone]["dungeons"] for ref in wing["refs"]}
         raids = defaultdict(list)
         for objective in objectives:
             if objective["kind"] != "instance":
@@ -729,9 +798,12 @@ def generate_completion(tables, geography, graph, curated, compounds, zones, cou
             counts["completion raid refs"] += len(refs)
         if raid_refs & dungeon_refs:
             raise ValueError(f"UiMap {zone}: raid references also occur in dungeon wings")
-        refs = [(objective["achievement"], objective["criteria"]) for objective in objectives
-                if objective["kind"] != "explore"
-                and (objective["achievement"], objective["criteria"]) not in dungeon_refs | raid_refs]
+        refs = [
+            (objective["achievement"], objective["criteria"])
+            for objective in objectives
+            if objective["kind"] != "explore"
+            and (objective["achievement"], objective["criteria"]) not in dungeon_refs | raid_refs
+        ]
         for entry in group_objectives(tables, graph, refs, f"UiMap {zone} Legacy"):
             completion[zone]["legacy"].append(entry)
             counts["completion legacy entries"] += 1
@@ -759,8 +831,11 @@ def generate(tables):
     curated, completion_curated = curated_locations(tables, geography)
     compounds = compound_objectives(tables, graph, completion_curated["compoundInstances"])
     instance_zones = {}
-    for fact in [*completion_curated["dungeonWings"].values(), *completion_curated["questInstances"].values(),
-                 *completion_curated["compoundInstances"].values()]:
+    for fact in [
+        *completion_curated["dungeonWings"].values(),
+        *completion_curated["questInstances"].values(),
+        *completion_curated["compoundInstances"].values(),
+    ]:
         if "instance" in fact:
             instance, zone = fact["instance"], fact["uiMap"]
             if instance in instance_zones and instance_zones[instance] != zone:
@@ -773,10 +848,14 @@ def generate(tables):
     for reward in sorted(rewards):
         graph.expand(reward, reward, feeds, set())
     zones = defaultdict(list)
-    counts = Counter({
-        "current-art overlay remaps": 0, "current-art remap missing": 0,
-        "current-art remap ambiguous": 0, "current-art remap zone mismatch": 0,
-    })
+    counts = Counter(
+        {
+            "current-art overlay remaps": 0,
+            "current-art remap missing": 0,
+            "current-art remap ambiguous": 0,
+            "current-art remap zone mismatch": 0,
+        }
+    )
     unresolved = Counter()
     used_curated = set()
     used_quests = set()
@@ -858,7 +937,9 @@ def generate(tables):
     if stale_quests:
         raise ValueError(f"Curated quests no longer reachable from rewards: {sorted(stale_quests)}")
     if compounds.keys() - used_compounds:
-        raise ValueError(f"Curated compound references no longer reachable from rewards: {sorted(compounds.keys() - used_compounds)}")
+        raise ValueError(
+            f"Curated compound references no longer reachable from rewards: {sorted(compounds.keys() - used_compounds)}"
+        )
     if counts["explore pinned"] + counts["explore unpinned"] < 500:
         raise ValueError("Fewer than 500 exploration entries; refusing a likely broken join")
     counts["exploration achievements"] = len(explore_achievements)
@@ -876,15 +957,22 @@ def generate(tables):
             else:
                 entry.pop("key", None)
                 counts["explore area unmatched"] += 1
-                print(f"  Unmatched explore area: UiMap {zone}, achievement {entry['achievement']}, criteria {entry['criteria']}", file=sys.stderr)
+                print(
+                    f"  Unmatched explore area: UiMap {zone}, achievement {entry['achievement']}, "
+                    f"criteria {entry['criteria']}",
+                    file=sys.stderr,
+                )
     return rewards, feeds, zones, completion, counts, unresolved, unplaced
 
 
 def lua_string(value):
-    return '"' + "".join(
-        "\\" + char if char in ('"', "\\") else f"\\{ord(char):03d}" if ord(char) < 32 else char
-        for char in value
-    ) + '"'
+    return (
+        '"'
+        + "".join(
+            "\\" + char if char in ('"', "\\") else f"\\{ord(char):03d}" if ord(char) < 32 else char for char in value
+        )
+        + '"'
+    )
 
 
 def render_entry(fields, depth, refs=()):
@@ -908,8 +996,12 @@ def render(rewards, feeds, zones, completion):
     lines = [
         f"-- Generated by tools/gen_legacy.py from WoW: Forever build {BUILD}. Do not edit by hand.",
         f"-- Source snapshot: {SOURCE_DATE}; https://wago.tools/db2/ (pinned CSV exports).",
-        "local _, ns = ...", "", "ns.Data = {", f'\tbuild = "{BUILD}",',
-        "\t-- Reward-bearing Legacy challenges (both variant sets).", "\trewards = {",
+        "local _, ns = ...",
+        "",
+        "ns.Data = {",
+        f'\tbuild = "{BUILD}",',
+        "\t-- Reward-bearing Legacy challenges (both variant sets).",
+        "\trewards = {",
     ]
     lines.extend(f"\t\t[{key}] = true," for key in sorted(rewards))
     lines.extend(["\t},", "\t-- Supporting achievement -> reward-bearing challenges it counts toward.", "\tfeeds = {"])
@@ -919,7 +1011,11 @@ def render(rewards, feeds, zones, completion):
     for zone, entries in sorted(zones.items()):
         lines.append(f"\t\t[{zone}] = {{")
         for entry in sorted(entries, key=lambda e: (e["kind"], e["achievement"], e["criteria"])):
-            fields = [f"achievement = {entry['achievement']}", f"criteria = {entry['criteria']}", f'kind = "{entry["kind"]}"']
+            fields = [
+                f"achievement = {entry['achievement']}",
+                f"criteria = {entry['criteria']}",
+                f'kind = "{entry["kind"]}"',
+            ]
             if "instance" in entry:
                 fields.append(f"instance = {entry['instance']}")
             if "key" in entry:
@@ -934,7 +1030,13 @@ def render(rewards, feeds, zones, completion):
                 lines.extend("\t\t\t\t" + field + "," for field in fields)
                 lines.append("\t\t\t},")
         lines.append("\t\t},")
-    lines.extend(["\t},", "\t-- Zone completion: areas, taxis, dungeon wings, raids, Legacy objectives, and reputations.", "\tcompletion = {"])
+    lines.extend(
+        [
+            "\t},",
+            "\t-- Zone completion: areas, taxis, dungeon wings, raids, Legacy objectives, and reputations.",
+            "\tcompletion = {",
+        ]
+    )
     for zone, categories in sorted(completion.items()):
         lines.append(f"\t\t[{zone}] = {{")
         lines.extend(f"\t\t\t{key} = {categories[key]}," for key in ("tileWidth", "tileHeight"))
@@ -947,7 +1049,9 @@ def render(rewards, feeds, zones, completion):
             order = {"areas": "key", "taxis": "node"}.get(category, "name")
             for entry in sorted(entries, key=lambda e: (e[order], e.get("refs", []), e.get("faction", 0))):
                 if category == "raids":
-                    lines.extend(["\t\t\t\t{", f"\t\t\t\t\tname = {lua_string(entry['name'])},", "\t\t\t\t\tbosses = {"])
+                    lines.extend(
+                        ["\t\t\t\t{", f"\t\t\t\t\tname = {lua_string(entry['name'])},", "\t\t\t\t\tbosses = {"]
+                    )
                     for boss in entry["bosses"]:
                         refs = ", ".join(f"{{ {a}, {c} }}" for a, c in boss["refs"])
                         fields = [f"name = {lua_string(boss['name'])}", f"refs = {{ {refs} }}"]
@@ -962,7 +1066,11 @@ def render(rewards, feeds, zones, completion):
                         tiles = ", ".join(map(str, entry["tiles"]))
                         fields.append(f"tiles = {{ {tiles} }}")
                 elif category == "taxis":
-                    fields = [f"node = {entry['node']}", f"faction = {lua_string(entry['faction'])}", f"name = {lua_string(entry['name'])}"]
+                    fields = [
+                        f"node = {entry['node']}",
+                        f"faction = {lua_string(entry['faction'])}",
+                        f"name = {lua_string(entry['name'])}",
+                    ]
                 elif category == "reputations":
                     fields = [f"faction = {entry['faction']}", f"name = {lua_string(entry['name'])}"]
                     if "side" in entry:
@@ -988,10 +1096,17 @@ def main():
     rewards, feeds, zones, completion, counts, unresolved, unplaced = generate(tables)
     output = render(rewards, feeds, zones, completion)
     atomic_write(OUTPUT, output.encode("utf-8"))
-    print(f"Build {BUILD} ({SOURCE_DATE}): {len(rewards)} rewards; {len(feeds)} supporting achievements; {len(zones)} zones", file=sys.stderr)
+    print(
+        f"Build {BUILD} ({SOURCE_DATE}): {len(rewards)} rewards; {len(feeds)} supporting achievements; "
+        f"{len(zones)} zones",
+        file=sys.stderr,
+    )
     for key, count in sorted(counts.items()):
         print(f"  {key}: {count}", file=sys.stderr)
-    print("  Unresolved direct reward criteria (achievement, criteria pairs; both variants; metas expanded):", file=sys.stderr)
+    print(
+        "  Unresolved direct reward criteria (achievement, criteria pairs; both variants; metas expanded):",
+        file=sys.stderr,
+    )
     for key in sorted(set(CRITERIA_KINDS.values()) - {"meta"}):
         print(f"    {key}: {unresolved[key]}", file=sys.stderr)
     for boss, name in unplaced:
