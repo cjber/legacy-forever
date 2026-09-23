@@ -26,11 +26,14 @@ Run in order from the repository root. All must pass before and after any audit 
 | Tests | `for s in tests/*_spec.lua; do luajit "$s" \|\| exit 1; done` | exit 0 (`model_spec: N checks passed`) |
 | Workflows | `actionlint && zizmor --offline .github` | exit 0, no findings |
 | Secrets | `gitleaks git --redact --no-banner .` | `no leaks found` |
+| Structure | `uvx --from "$SIFT" sift check` and `sift agents check` (`SIFT` pinned in `ci.yml`) | exit 0; `tools/gen_legacy.py` over 1000 lines warns but must not grow |
 
-CI (`.github/workflows/ci.yml`) runs all of these with the versions above pinned.
+CI (`.github/workflows/ci.yml`) runs all of these with the versions above pinned. Where actionlint
+or zizmor is not installed, run `uvx --from actionlint-py==1.7.12.24 actionlint` and
+`uvx zizmor==1.30.1 --offline .github`.
 Ruff ignores `NO_COLOR` when `FORCE_COLOR` is set in the shell; `unset FORCE_COLOR` for
-parseable output. Python type checking is not gated: `uvx ty check tools` reports 2
-diagnostics on untyped JSON/CSV values (see backlog in the setup report).
+parseable output. Python type checking is not gated: `uvx ty check tools` reports a handful of
+diagnostics (11 in 2026-09) on untyped JSON/CSV dict values; they are not defects.
 
 ## Evidence
 
@@ -45,6 +48,9 @@ On-demand tools for audits. Output is candidates, never verdicts.
 
 `rg` with no path argument reads stdin in a non-interactive shell and hangs: always pass `.`. Plain `rg` skips
 hidden paths; add `--hidden` when a search must cover `.github/`.
+
+sift's inventory marks `Model.lua` and `tools/legacy_render.py` as generated because the word
+appears in their first five lines; only `Data/Legacy.lua` is generated.
 
 ## Live roots
 
@@ -67,15 +73,18 @@ hidden paths; add `--hidden` when a search must cover `.github/`.
   in another with no import. Search all `.lua` files, including `tests/`.
 - `tools/gen_legacy.py` output format: `Data/Legacy.lua` keys are the contract read by
   `Model.lua`, `Live.lua`, `Map.lua`, `Completion.lua` and `tests/data_spec.lua`.
+- `tools/legacy_render.py` — imported by `gen_legacy.py` and `screenshots.py`;
+  `tools/screenshots.py` — run by hand after UI changes (needs Pillow and `wowmock`);
+  `tools/check_diagnostics.py`, `tools/lint_multivalue.py` — run by `tools/typecheck.sh`.
 - `tools/latest_build.py`, `tools/changelog.py` — run by `.github/workflows/refresh-data.yml`
   and `release.yml`; `refresh-data.yml` also rewrites the `BUILD = "..."` and
   `SOURCE_DATE = "..."` lines of `gen_legacy.py` with `sed` — keep them single-line.
 
 ## Open questions for reviewers
 
-- SavedVariables timing: `LegacyForever.toc` sets `LoadSavedVariablesFirst: 1`, but Core.lua and
-  Completion.lua comments assume saved data arrives after every file runs. Until confirmed in
-  game, `LegacyForeverDB = LegacyForeverDB or {}` guards are not defensive noise.
+- SavedVariables timing: `LegacyForever.toc` sets `LoadSavedVariablesFirst: 1` and Core.lua relies
+  on it, but Completion.lua still defers for a client that might ignore the directive. Until that
+  is confirmed in game, `LegacyForeverDB = LegacyForeverDB or {}` guards are not defensive noise.
 - FrameXML helpers (`tContains`, `tIndexOf`, `CountTable`, `Mixin`) are the platform for the
   reinvented-wheel lens, but only `tContains` and `Mixin` are confirmed on this client.
 
@@ -115,5 +124,6 @@ Audit slices from lowest to highest risk:
 
 ## Project rules and lenses
 
-- Rules: none yet.
+- Rules: the BigWigs packager drops every dot-prefixed path itself, so `.pkgmeta` lists only
+  non-dot ignores; a dot entry there is dead config.
 - Lenses: none yet.

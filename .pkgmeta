@@ -4,18 +4,14 @@ manual-changelog:
   filename: .release-notes.md
   markup-type: markdown
 
+# The packager already drops every dot-prefixed path (release.sh), so only the rest is listed.
 ignore:
   - AGENTS.md
-  - .release-notes.md
   - tools
   - types
-  - .types
   - tests
   - docs
   - media/icon.svg
   - media/icon-400.png
-  - .luacheckrc
-  - .luarc.json
   - stylua.toml
   - ruff.toml
-  - .agents

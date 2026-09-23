@@ -21,6 +21,7 @@ if not (WOWMOCK / "wowmock.py").exists():
     sys.exit(f"wowmock.py not found in {WOWMOCK}; clone cjber/skills or set WOWMOCK")
 sys.path.insert(0, str(WOWMOCK))
 
+from legacy_render import COMPLETION_CATEGORIES
 from PIL import Image
 from wowmock import (
     FONTS,
@@ -343,7 +344,6 @@ def tracked_blocks(data, live):
     return result
 
 
-CATEGORIES = ("areas", "taxis", "dungeons", "raids", "legacy", "reputations")
 # Completion.lua's COUNTED_BY_DEFAULT: a new player counts only the Legacy categories.
 COUNTED = {"areas", "dungeons", "raids", "legacy"}
 
@@ -378,10 +378,10 @@ def zone_completion(live, zone):
         "legacy": completion_category(zone["legacy"], lambda objective: live.refs_done(objective["refs"])),
         "reputations": completion_category(own(zone["reputations"], "side"), lambda rep: False),
     }
-    for key in CATEGORIES:
+    for key in COMPLETION_CATEGORIES:
         if key not in COUNTED:
             result[key] = None
-    counted = [result[key] for key in CATEGORIES if result[key]]
+    counted = [result[key] for key in COMPLETION_CATEGORIES if result[key]]
     done, total = sum(c["done"] for c in counted), sum(c["total"] for c in counted)
     complete = done == total and not any(c["pending"] for c in counted)
     percent = math.floor(100 * done / total)
@@ -399,14 +399,6 @@ ICONS = {
     "legacy": ("UI-Legacy-Points-icon-c60", 50 / 73),
     "reputations": ("Interface\\Icons\\Achievement_Reputation_01", None),
 }
-LABELS = {
-    "areas": "Areas explored",
-    "taxis": "Flight paths",
-    "dungeons": "Dungeons",
-    "raids": "Raids",
-    "legacy": "Legacy objectives",
-    "reputations": "Reputations (Friendly)",
-}
 POINTS_ICON = "UI-Legacy-Points-icon-c60"
 WHITE = (1, 1, 1)
 
@@ -421,7 +413,7 @@ def icon(key, size):
 def counts_text(ui, result, size):
     green, white = ui.global_color("GREEN_FONT_COLOR"), WHITE
     parts = []
-    for key in CATEGORIES:
+    for key in COMPLETION_CATEGORIES:
         category = result[key]
         if category:
             text = f"{category['done']}/{category['total']}"
@@ -449,7 +441,7 @@ def unlocated_tree(live, data):
     return tops
 
 
-def main_menu(live, data, hover=None):
+def main_menu(live, data):
     groups = zone_objectives(data, live, ASHENVALE)
     entries = [MenuTitle("Ashenvale")]
     for group in groups:
@@ -461,7 +453,7 @@ def main_menu(live, data, hover=None):
     entries += [
         MenuDivider(),
         MenuCheckbox("Show undiscovered areas", True),
-        MenuButton(f"No fixed location |cffffffff({open_total})|r", True, hover == "unlocated"),
+        MenuButton(f"No fixed location |cffffffff({open_total})|r", True),
         MenuDivider(),
         MenuTitle("Zone completion"),
         MenuCheckbox("In the objective tracker", True),
@@ -470,7 +462,7 @@ def main_menu(live, data, hover=None):
         MenuDivider(),
         MenuButton("Open the Legacy panel"),
     ]
-    return entries, groups
+    return entries
 
 
 # ------------------------------------------------------------------------------------------ the scenes
@@ -496,8 +488,9 @@ def world_map(ui, data, live):
         for objective in group["objectives"]:
             entry = objective["entry"]
             if entry["kind"] != "explore" and "x" in entry:
-                pin_x, pin_y = mx + entry["x"] * mw, my + entry["y"] * mh
-                canvas.draw(ui.atlas(POINTS_ICON), pin_x - 7, pin_y - 10, 14, 20)
+                # Ashenvale has no raid entrance, so Map.lua's RAIDS never picks the "Raid" portal here.
+                portal = "Dungeon" if "instance" in entry else None
+                zone_pin(ui, canvas, mx + entry["x"] * mw, my + entry["y"] * mh, portal)
     completion_corner(ui, canvas, rects, live, zone)
     button = map_button(ui, canvas, rects, count_objectives(groups))
     return canvas, button
@@ -546,7 +539,7 @@ def menu_at(ui, entries, right=None, top=None, left=None):
 def render_map(ui, data, live):
     canvas, button = world_map(ui, data, live)
     bx, by, bw, bh = button
-    entries, _ = main_menu(live, data)
+    entries = main_menu(live, data)
     menu, x, y, _ = menu_at(ui, entries, right=bx + bw, top=by + bh)
     return scene(ui, [(canvas, 0, 0), (menu, x, y)])
 
@@ -555,7 +548,7 @@ def render_menu(ui, data, live):
     """The menu's "No fixed location" cascade open down to one skill's challenges, over the map's corner."""
     canvas, button = world_map(ui, data, live)
     bx, by, bw, bh = button
-    entries, _ = main_menu(live, data)
+    entries = main_menu(live, data)
     layers = []
     menu, x, y, rows = menu_at(ui, entries, right=bx + bw, top=by + bh)
     layers.append((menu, x, y))
@@ -629,9 +622,14 @@ def continent_zones(ui, data, live, continent):
     return zones
 
 
-def zone_pin(ui, canvas, x, y):
-    """LegacyForeverPinTemplate centred on (x, y): the bare 14x20 icon; its count is only in the tooltip."""
-    canvas.draw(ui.atlas(POINTS_ICON), x - 7, y - 10, 14, 20)
+def zone_pin(ui, canvas, x, y, portal=None):
+    """LegacyForeverPinMixin:Layout centred on (x, y): the bare 14x20 icon, or at an entrance the 32x32 portal
+    atlas with a 12x17 icon at its BOTTOMRIGHT offset (2, -2). A count is only ever in the tooltip."""
+    if portal is None:
+        canvas.draw(ui.atlas(POINTS_ICON), x - 7, y - 10, 14, 20)
+        return
+    canvas.draw(ui.atlas(portal), x - 16, y - 16, 32, 32)
+    canvas.draw(ui.atlas(POINTS_ICON), x + 18 - 12, y + 18 - 17, 12, 17)
 
 
 def render_continent(ui, data, live):
