@@ -21,8 +21,8 @@ if not (WOWMOCK / "wowmock.py").exists():
     sys.exit(f"wowmock.py not found in {WOWMOCK}; clone cjber/skills or set WOWMOCK")
 sys.path.insert(0, str(WOWMOCK))
 
-from PIL import Image  # noqa: E402
-from wowmock import (  # noqa: E402
+from PIL import Image
+from wowmock import (
     FONTS,
     MenuButton,
     MenuCheckbox,
@@ -292,7 +292,7 @@ def zone_completion(live, zone):
     def own(items, key):
         return [i for i in items if i.get(key) in (None, "Neutral", FACTION)]
 
-    raids = lambda raid: all(live.refs_done(boss["refs"]) for boss in raid["bosses"])  # noqa: E731
+    raids = lambda raid: all(live.refs_done(boss["refs"]) for boss in raid["bosses"])
     result = {
         "areas": completion_category(zone["areas"], lambda area: area["key"] in live.explored),
         "taxis": completion_category(own(zone["taxis"], "faction"), lambda taxi: taxi["node"] in KNOWN_TAXIS),
