@@ -132,7 +132,7 @@ function Model.TrackerLines(challenge, criteria)
 end
 
 -- One category of a zone's completion: { done, total, left = { names } }, or nil when
--- the zone has none or its progress is unknown. `state(item)` returns true (done),
+-- the zone has none. `state(item)` returns true (done),
 -- false (not done) or nil (unknown, left out of the count).
 local function CompletionCategory(items, state)
 	if not items or #items == 0 then
@@ -153,7 +153,7 @@ local function CompletionCategory(items, state)
 		end
 	end
 	category.complete = category.done == category.total and category.pending == 0
-	return (category.total > 0 or category.pending > 0) and category or nil
+	return category
 end
 
 Model.COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons", "raids", "legacy", "reputations" }
@@ -174,7 +174,7 @@ end
 -- A zone's reputation counts once the player is Friendly (reaction 5) or better with it.
 Model.REPUTATION_TARGET = 5
 
--- Entries for the player's side: those with no `side`, and those whose side is the player's faction.
+-- Entries for the player's side: those with no side under `sideKey`, Neutral ones, and the player's faction's.
 local function ForFaction(items, faction, sideKey)
 	local own = {}
 	for _, item in ipairs(items or {}) do

@@ -229,7 +229,7 @@ function Live.ZoneSnapshot(uiMapID)
 	end
 	local record = FlightRecord()
 	if record.continents[Live.ContinentOf(uiMapID) or 0] then
-		for _, taxi in ipairs(ns.Data.completion[uiMapID].taxis or {}) do
+		for _, taxi in ipairs(ns.Data.completion[uiMapID].taxis) do
 			snapshot.taxis[taxi.node] = record.known[taxi.node] == true
 		end
 	end
