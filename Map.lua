@@ -361,8 +361,7 @@ end
      Built once Blizzard_WorldMap (and so MapCanvas) is loaded; the XML template
      resolves its mixin by name when the first pin is created. ]]
 
----@return MapCanvasDataProviderMixin
-local function CreatePinProvider()
+local function DefinePinMixin()
 	---@class LegacyHerePinMixin : Frame, MapCanvasPinMixin
 	---@field Icon Texture
 	---@field group? LegacyGroup
@@ -402,7 +401,9 @@ local function CreatePinProvider()
 	function LegacyHerePinMixin:OnMouseLeave()
 		GameTooltip:Hide()
 	end
+end
 
+local function DefineAreaPinMixin()
 	-- One pin per zone map holding every undiscovered area, drawn from the same map
 	-- tiles Blizzard reveals on discovery (see MapExplorationPinMixin:RefreshOverlays).
 	---@class LegacyHereAreaPinMixin : Frame, MapCanvasPinMixin
@@ -444,55 +445,6 @@ local function CreatePinProvider()
 	function LegacyHereAreaPinMixin:OnReleased()
 		MapCanvasPinMixin.OnReleased(self)
 		self:ReleaseAreas()
-	end
-
-	-- The cursor in canvas pixels, the space overlay offsets are in.
-	---@return number x
-	---@return number y
-	function LegacyHereAreaPinMixin:CursorPosition()
-		local scale = self:GetEffectiveScale()
-		local x, y = GetCursorPosition()
-		return x / scale - self:GetLeft(), self:GetTop() - y / scale
-	end
-
-	---@param x number
-	---@param y number
-	function LegacyHereAreaPinMixin:HoverAt(x, y)
-		local index = self.zone and ns.Model.AreaAt(self.zone.areas, x, y)
-		local area = index and self.zone.areas[index]
-		local shaded = area and self.drawn[area.key] and area or nil
-		if shaded ~= self.hovered then
-			self:Highlight(shaded)
-		end
-	end
-
-	---@param area LegacyArea?
-	function LegacyHereAreaPinMixin:Highlight(area)
-		if self.hovered then
-			for _, texture in ipairs(self.drawn[self.hovered.key]) do
-				texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
-			end
-			-- Only our own tooltip: a pin the cursor just moved onto has already shown its own.
-			if GameTooltip:GetOwner() == self then
-				GameTooltip:Hide()
-			end
-		end
-		self.hovered = area
-		if not area then
-			return
-		end
-		for _, texture in ipairs(self.drawn[area.key]) do
-			texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
-		end
-		GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
-		local objective = self.legacy[area.key]
-		if objective then
-			AddPinTooltip(GameTooltip, objective.group, objective.objective)
-		else
-			GameTooltip_SetTitle(GameTooltip, area.name)
-			GameTooltip_AddNormalLine(GameTooltip, KIND_LABEL.explore)
-		end
-		GameTooltip:Show()
 	end
 
 	---@param tileID number
@@ -545,26 +497,84 @@ local function CreatePinProvider()
 			self.drawn[area.key] = textures
 		end
 	end
+end
 
-	-- The zone's undiscovered areas that have map tiles; nil for a map without shading data.
-	---@param mapID number
-	---@return LegacyZone?
-	---@return LegacyArea[]?
-	local function UndiscoveredAreas(mapID)
-		local zone = ns.Data.completion[mapID]
-		if not (zone and zone.tileWidth and zone.tileHeight) then
-			return nil
-		end
-		local explored = ns.Live.ZoneSnapshot(mapID).explored
-		local areas = {}
-		for _, area in ipairs(zone.areas) do
-			if area.tiles and not explored[area.key] then
-				areas[#areas + 1] = area
-			end
-		end
-		return zone, areas
+-- Hover is polled by the OnUpdate CreatePools installs; see the note there.
+local function DefineAreaPinHover()
+	-- The cursor in canvas pixels, the space overlay offsets are in.
+	---@return number x
+	---@return number y
+	function LegacyHereAreaPinMixin:CursorPosition()
+		local scale = self:GetEffectiveScale()
+		local x, y = GetCursorPosition()
+		return x / scale - self:GetLeft(), self:GetTop() - y / scale
 	end
 
+	---@param x number
+	---@param y number
+	function LegacyHereAreaPinMixin:HoverAt(x, y)
+		local index = self.zone and ns.Model.AreaAt(self.zone.areas, x, y)
+		local area = index and self.zone.areas[index]
+		local shaded = area and self.drawn[area.key] and area or nil
+		if shaded ~= self.hovered then
+			self:Highlight(shaded)
+		end
+	end
+
+	---@param area LegacyArea?
+	function LegacyHereAreaPinMixin:Highlight(area)
+		if self.hovered then
+			for _, texture in ipairs(self.drawn[self.hovered.key]) do
+				texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
+			end
+			-- Only our own tooltip: a pin the cursor just moved onto has already shown its own.
+			if GameTooltip:GetOwner() == self then
+				GameTooltip:Hide()
+			end
+		end
+		self.hovered = area
+		if not area then
+			return
+		end
+		for _, texture in ipairs(self.drawn[area.key]) do
+			texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
+		end
+		GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
+		local objective = self.legacy[area.key]
+		if objective then
+			AddPinTooltip(GameTooltip, objective.group, objective.objective)
+		else
+			GameTooltip_SetTitle(GameTooltip, area.name)
+			GameTooltip_AddNormalLine(GameTooltip, KIND_LABEL.explore)
+		end
+		GameTooltip:Show()
+	end
+end
+
+-- The zone's undiscovered areas that have map tiles; nil for a map without shading data.
+---@param mapID number
+---@return LegacyZone?
+---@return LegacyArea[]?
+local function UndiscoveredAreas(mapID)
+	local zone = ns.Data.completion[mapID]
+	if not (zone and zone.tileWidth and zone.tileHeight) then
+		return nil
+	end
+	local explored = ns.Live.ZoneSnapshot(mapID).explored
+	local areas = {}
+	for _, area in ipairs(zone.areas) do
+		if area.tiles and not explored[area.key] then
+			areas[#areas + 1] = area
+		end
+	end
+	return zone, areas
+end
+
+---@return MapCanvasDataProviderMixin
+local function CreatePinProvider()
+	DefinePinMixin()
+	DefineAreaPinMixin()
+	DefineAreaPinHover()
 	local provider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 	function provider:RemoveAllData()
