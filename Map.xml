@@ -11,10 +11,12 @@
 					</Anchors>
 				</Texture>
 			</Layer>
+			<!-- A zone badge's count sits on the icon's corner, as a stack count sits on a bag slot:
+			     in the 20x20 hit rect, and read as part of the pin rather than a label beside it. -->
 			<Layer level="OVERLAY">
-				<FontString parentKey="Count" inherits="GameFontHighlightSmall" justifyH="LEFT">
+				<FontString parentKey="Count" inherits="NumberFont_Shadow_Small" justifyH="RIGHT">
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" x="-2" y="0"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="2" y="1"/>
 					</Anchors>
 				</FontString>
 			</Layer>

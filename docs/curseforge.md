@@ -4,15 +4,17 @@ Legacy Here puts your unfinished WoW: Forever Legacy challenges on the world map
 
 ![The Legacy map menu with tick boxes to track challenges, grouped by type](https://raw.githubusercontent.com/cjber/legacy-here/main/docs/screenshots/menu.png)
 
+![Kalimdor on the world map with a Legacy badge and count on each zone that still has dungeon objectives](https://raw.githubusercontent.com/cjber/legacy-here/main/docs/screenshots/continent.png)
+
 ![The objective tracker with Ashenvale's completion and the tracked Legacy challenges](https://raw.githubusercontent.com/cjber/legacy-here/main/docs/screenshots/tracker.png)
 
 ## Features
 
 - **Map button** in the world map's button column, with a count of the unfinished objectives on the map you're viewing. Its menu lists them by challenge, with a tick box to track each one.
-- **Tracker**: a Legacy section at the top of the objective tracker shows each tracked challenge's unfinished steps with live progress. Click one to open it in the Legacy panel.
+- **Tracker**: a Legacy section at the top of the objective tracker shows what you track with live progress. A zone ticked in the map menu tracks just that zone, such as "0/12 Explore Felwood" under Explorer. Click one to open it in the Legacy panel.
 - **Map pins** on dungeon entrances, with the challenge each counts toward and its Legacy points.
 - **Undiscovered areas** are shaded in their real shape on the zone map. Hover one to see which challenge counts it and how many of the zone's areas are left.
-- **Zone completion**, Guild Wars 2 style: areas explored, flight paths, local reputations, dungeons, raids and the zone's other Legacy objectives, as a percentage in the map's corner and, if you choose, in the tracker. A zone reaching 100% gets a toast and a sound.
+- **Zone completion**, Guild Wars 2 style: areas explored, dungeons, raids and the zone's other Legacy objectives, as a percentage in the map's corner and, if you choose, in the tracker. Flight paths and local reputations can be added under "What counts". A zone reaching 100% gets a toast and a sound.
 - **No fixed location** lists challenges whose remaining work isn't tied to a place, such as levels, skills and ranks.
 
 Progress comes from the game each time, so it always matches the Legacy panel.

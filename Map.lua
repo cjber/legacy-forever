@@ -111,6 +111,7 @@ end
 
 -- On a continent, one badge per zone with its unfinished count, instead of every pin.
 -- Exploration is left to the zone map's shading, so badges count place-bound objectives only.
+-- They follow zone completion's "On the world map" switch, so turning it off leaves continents bare.
 local function ContinentZones(continentID)
 	local zones = {}
 	for uiMapID in pairs(ns.Data.zones) do
@@ -152,8 +153,9 @@ end
 
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]
 
--- Each challenge is a checkbox for our own tracker (Forever refuses Blizzard's);
--- the tracker's challenge names open the Legacy panel.
+-- Each entry is a checkbox for our own tracker (Forever refuses Blizzard's): a zone's
+-- entry tracks only this zone's share of its challenge (Model.ZoneKey), "No fixed location"
+-- the whole challenge. The tracker's challenge names open the Legacy panel.
 local TRACK_HINT = "Click to track, with live progress."
 
 local function ChallengeText(name, count)
@@ -169,7 +171,7 @@ local function AddGroup(root, group)
 		ChallengeText(name, #group.objectives),
 		ns.Tracker.IsTracked,
 		ns.Tracker.Toggle,
-		group.challenge
+		ns.Model.ZoneKey(group)
 	)
 	button:SetTooltip(function(tooltip)
 		AddGroupTooltip(tooltip, group)
@@ -494,8 +496,10 @@ local function CreatePinProvider()
 		local mapID = self:GetMap():GetMapID()
 		local info = mapID and C_Map.GetMapInfo(mapID)
 		if info and info.mapType == Enum.UIMapType.Continent then
-			for _, zone in ipairs(ContinentZones(mapID)) do
-				self:GetMap():AcquirePin(PIN_TEMPLATE, nil, nil, zone)
+			if ns.Completion.ShownOnMap() then
+				for _, zone in ipairs(ContinentZones(mapID)) do
+					self:GetMap():AcquirePin(PIN_TEMPLATE, nil, nil, zone)
+				end
 			end
 			return
 		end
@@ -544,6 +548,7 @@ local function Attach()
 		end
 	end
 	ns.Live.OnChange(ns.RefreshMap)
+	ns.Completion.OnToggle(ns.RefreshMap)
 	button:Refresh()
 end
 

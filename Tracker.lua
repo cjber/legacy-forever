@@ -2,7 +2,8 @@ local _, ns = ...
 
 -- Forever's ruleset refuses achievement tracking (C_ContentTracking reports
 -- Untrackable), so tracked challenges get their own section in Blizzard's
--- objective tracker, laid out like its achievement section.
+-- objective tracker, laid out like its achievement section. Entries are whole
+-- challenges or one zone's share of one (Model.ZoneKey).
 local Tracker = {}
 ns.Tracker = Tracker
 
@@ -21,8 +22,8 @@ local function IndexOf(list, value)
 	end
 end
 
-function Tracker.IsTracked(challenge)
-	return IndexOf(Tracked(), challenge) ~= nil
+function Tracker.IsTracked(key)
+	return IndexOf(Tracked(), key) ~= nil
 end
 
 local module
@@ -33,13 +34,24 @@ function Tracker.Refresh()
 	end
 end
 
-function Tracker.Toggle(challenge)
+function Tracker.Toggle(key)
 	local tracked = Tracked()
-	local index = IndexOf(tracked, challenge)
+	local index = IndexOf(tracked, key)
 	if index then
 		table.remove(tracked, index)
 	else
-		tracked[#tracked + 1] = challenge
+		tracked[#tracked + 1] = key
+	end
+	Tracker.Refresh()
+end
+
+-- Everything tracked under a challenge: the whole challenge and every zone share of it.
+local function StopTracking(challenge)
+	local tracked, visible = Tracked(), ns.Live.Visible()
+	for index = #tracked, 1, -1 do
+		if ns.Model.TrackedChallenge(ns.Data, tracked[index], visible) == challenge then
+			table.remove(tracked, index)
+		end
 	end
 	Tracker.Refresh()
 end
@@ -58,30 +70,28 @@ function ModuleMixin:OnBlockHeaderClick(block, mouseButton)
 			ns.Live.ShowInLegacyPanel(block.id)
 		end)
 		root:CreateButton("Stop tracking", function()
-			Tracker.Toggle(block.id)
+			StopTracking(block.id)
 		end)
 	end)
 end
 
--- Quest style: "12/20 Reach level 20". A challenge the game no longer lists (earned,
--- or not this character's variant) is skipped but stays tracked.
+-- The challenge as the block header, then quest-style lines: "12/20 Reach level 20",
+-- "0/12 Explore Felwood". A challenge the game no longer lists (earned, or not this
+-- character's variant) is skipped but stays tracked.
 function ModuleMixin:LayoutContents()
-	local visible = ns.Live.Visible()
-	for _, challenge in ipairs(Tracked()) do
-		if visible[challenge] then
-			local block = self:GetBlock(challenge)
-			block:SetHeader(ns.Live.Name(challenge))
-			local lines = ns.Model.TrackerLines(challenge, ns.Live.Criteria)
-			for index, line in ipairs(lines) do
-				if index > MAX_STEPS then
-					block:AddObjective("Extra", "...", nil, nil, OBJECTIVE_DASH_STYLE_HIDE)
-					break
-				end
-				block:AddObjective(index, line.detail and (line.detail .. " " .. line.text) or line.text)
+	local blocks = ns.Model.TrackedBlocks(ns.Data, Tracked(), ns.Live.Visible(), ns.Live.Criteria, ns.Live.Name)
+	for _, tracked in ipairs(blocks) do
+		local block = self:GetBlock(tracked.challenge)
+		block:SetHeader(ns.Live.Name(tracked.challenge))
+		for index, line in ipairs(tracked.lines) do
+			if index > MAX_STEPS then
+				block:AddObjective("Extra", "...", nil, nil, OBJECTIVE_DASH_STYLE_HIDE)
+				break
 			end
-			if not self:LayoutBlock(block) then
-				return
-			end
+			block:AddObjective(index, line.detail and (line.detail .. " " .. line.text) or line.text)
+		end
+		if not self:LayoutBlock(block) then
+			return
 		end
 	end
 end
