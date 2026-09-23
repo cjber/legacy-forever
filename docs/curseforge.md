@@ -10,7 +10,7 @@ Legacy Here puts your unfinished WoW: Forever Legacy challenges on the world map
 
 ## Features
 
-- **Map button** in the world map's button column, with a count of the unfinished objectives on the map you're viewing. Its menu lists them by challenge, with a tick box to track each one.
+- **Map button** in the world map's button column: a Legacy shield with a number inside, the unfinished objectives on the map you're viewing. Its menu lists them by challenge, with a tick box to track each one.
 - **Tracker**: a Legacy section at the top of the objective tracker shows what you track with live progress. A zone ticked in the map menu tracks just that zone, such as "0/12 Explore Felwood" under Explorer. Click one to open it in the Legacy panel.
 - **Map pins** on dungeon entrances, with the challenge each counts toward and its Legacy points.
 - **Undiscovered areas** are shaded in their real shape on the zone map. Hover one to see which challenge counts it and how many of the zone's areas are left.

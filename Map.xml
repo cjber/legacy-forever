@@ -26,7 +26,7 @@
 	     it never takes the mouse: hover is found by polling the cursor. -->
 	<Frame name="LegacyHereAreaPinTemplate" mixin="LegacyHereAreaPinMixin" virtual="true"/>
 
-	<!-- A bare Legacy icon in the map's top-right button column, with its count. -->
+	<!-- The Legacy shield in the map's top-right button column, with its count inside. -->
 	<DropdownButton name="LegacyHereMapButtonTemplate" frameStrata="HIGH" mixin="LegacyHereMapButtonMixin" virtual="true">
 		<Size x="32" y="32"/>
 		<KeyValues>
@@ -36,22 +36,22 @@
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture parentKey="Icon" atlas="UI-Legacy-Points-icon-c60">
-					<Size x="20" y="29"/>
+					<Size x="24" y="35"/>
 					<Anchors>
 						<Anchor point="CENTER"/>
 					</Anchors>
 				</Texture>
 			</Layer>
 			<Layer level="OVERLAY">
-				<FontString parentKey="Count" inherits="NumberFontNormal" justifyH="RIGHT">
+				<FontString parentKey="Count" inherits="GameFontNormal" justifyH="CENTER">
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="2" y="0"/>
+						<Anchor point="CENTER" relativeKey="$parent.Icon" x="0" y="-3"/>
 					</Anchors>
 				</FontString>
 			</Layer>
 			<Layer level="HIGHLIGHT">
 				<Texture atlas="UI-Legacy-Points-icon-c60" alphaMode="ADD" alpha="0.5">
-					<Size x="20" y="29"/>
+					<Size x="24" y="35"/>
 					<Anchors>
 						<Anchor point="CENTER"/>
 					</Anchors>
