@@ -342,6 +342,8 @@ def tracked_blocks(data, live):
 
 
 CATEGORIES = ("areas", "taxis", "dungeons", "raids", "legacy", "reputations")
+# Completion.lua's COUNTED_BY_DEFAULT: a new player counts only the Legacy categories.
+COUNTED = {"areas", "dungeons", "raids", "legacy"}
 
 
 def completion_category(items, state):
@@ -374,6 +376,9 @@ def zone_completion(live, zone):
         "legacy": completion_category(zone["legacy"], lambda objective: live.refs_done(objective["refs"])),
         "reputations": completion_category(own(zone["reputations"], "side"), lambda rep: False),
     }
+    for key in CATEGORIES:
+        if key not in COUNTED:
+            result[key] = None
     counted = [result[key] for key in CATEGORIES if result[key]]
     done, total = sum(c["done"] for c in counted), sum(c["total"] for c in counted)
     complete = done == total and not any(c["pending"] for c in counted)

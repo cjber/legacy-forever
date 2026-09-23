@@ -43,9 +43,26 @@ local function IsShown(surface)
 	return shown
 end
 
--- Every category counts until the player unticks it under "What counts".
+-- Out of the box only Legacy objectives count: areas (each an "Explore <zone>" step toward
+-- Explorer), Spelunker dungeons, Conqueror raids and the zone's other Legacy steps. No Legacy
+-- challenge asks for flight paths or these reputations, so they wait under "What counts" to be
+-- ticked. The saved setting is nil until the player ticks or unticks it, so a choice made
+-- before these defaults keeps its saved true or false.
+local COUNTED_BY_DEFAULT = {
+	areas = true,
+	taxis = false,
+	dungeons = true,
+	raids = true,
+	legacy = true,
+	reputations = false,
+}
+
 local function IsCounted(category)
-	return Settings()["count_" .. category] ~= false
+	local counted = Settings()["count_" .. category]
+	if counted == nil then
+		return COUNTED_BY_DEFAULT[category]
+	end
+	return counted
 end
 
 local function Refresh()
@@ -348,10 +365,10 @@ ns.Live.OnChange(Refresh)
 
 --[[ A zone reaching 100%: a toast and a sound, GW2 style ]]
 
--- Every category counts toward the reward, whatever "What counts" shows, so unticking one
--- never hands out toasts.
+-- The reward follows "What counts", as the percentage does, so 100% on screen is what earns it.
+-- Unticking a category isn't progress, so a zone that completes is noted without a toast.
 local function IsZoneComplete(uiMapID)
-	local result = ns.Model.ZoneCompletion(ns.Data.completion[uiMapID], ns.Live.ZoneSnapshot(uiMapID))
+	local result = ns.Model.ZoneCompletion(ns.Data.completion[uiMapID], ns.Live.ZoneSnapshot(uiMapID), IsCounted)
 	return ns.Model.CompletionCounts(result) and result.complete
 end
 
@@ -406,9 +423,9 @@ local QUIET_SECONDS = 10
 local quietUntil
 local rewarded = {}
 
-local function CheckRewards()
+local function CheckRewards(silent)
 	quietUntil = quietUntil or GetTime() + QUIET_SECONDS
-	local quiet = GetTime() < quietUntil
+	local quiet = silent or GetTime() < quietUntil
 	for uiMapID in pairs(ns.Data.completion) do
 		if not rewarded[uiMapID] and IsZoneComplete(uiMapID) then
 			rewarded[uiMapID] = true
@@ -426,6 +443,7 @@ ns.Live.OnChange(CheckRewards)
 
 local function ToggleCounted(category)
 	Settings()["count_" .. category] = not IsCounted(category)
+	CheckRewards(true)
 	Refresh()
 end
 
