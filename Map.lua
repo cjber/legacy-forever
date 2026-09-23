@@ -1,12 +1,14 @@
----@type string, LegacyHereNamespace
+---@type string, LegacyForeverNamespace
 local _, ns = ...
 
-local PIN_TEMPLATE = "LegacyHerePinTemplate"
-local AREA_TEMPLATE = "LegacyHereAreaPinTemplate"
+local PIN_TEMPLATE = "LegacyForeverPinTemplate"
+local AREA_TEMPLATE = "LegacyForeverAreaPinTemplate"
 -- Unseen ground reads darker, the fog-of-war convention (a warm tint vanished on the
 -- parchment); darker still under the mouse.
 local AREA_ALPHA, AREA_HOVER_ALPHA = 0.25, 0.4
 local POINTS_ICON = "UI-Legacy-Points-icon-c60"
+-- The original game's raids by instance map ID; every other instance entrance is a dungeon.
+local RAIDS = { [249] = true, [309] = true, [409] = true, [469] = true, [509] = true, [531] = true, [533] = true }
 
 local KIND_LABEL = {
 	explore = "Undiscovered area",
@@ -168,12 +170,12 @@ end
 
 -- On by default: the shading is the quickest way to see what a zone still hides.
 local function ShowAreas()
-	return not (LegacyHereDB and LegacyHereDB.showAreas == false)
+	return not (LegacyForeverDB and LegacyForeverDB.showAreas == false)
 end
 
 local function ToggleAreas()
-	LegacyHereDB = LegacyHereDB or {}
-	LegacyHereDB.showAreas = not ShowAreas()
+	LegacyForeverDB = LegacyForeverDB or {}
+	LegacyForeverDB.showAreas = not ShowAreas()
 	ns.RefreshMap()
 end
 
@@ -296,14 +298,14 @@ local function BuildMenu(root, uiMapID)
 	root:CreateButton("Open the Legacy panel", ToggleLegacySystemUI)
 end
 
----@class LegacyHereMapButtonMixin : DropdownButton
----@field GetParent fun(self: LegacyHereMapButtonMixin): WorldMapFrame
+---@class LegacyForeverMapButtonMixin : DropdownButton
+---@field GetParent fun(self: LegacyForeverMapButtonMixin): WorldMapFrame
 ---@field Count FontString
 ---@field Icon Texture
 ---@field count number
-LegacyHereMapButtonMixin = {}
+LegacyForeverMapButtonMixin = {}
 
-function LegacyHereMapButtonMixin:OnLoad()
+function LegacyForeverMapButtonMixin:OnLoad()
 	self:SetupMenu(function(_, root)
 		BuildMenu(root, self:GetParent():GetMapID())
 	end)
@@ -327,7 +329,7 @@ local function TopRightOffset(map)
 	return offsetY
 end
 
-function LegacyHereMapButtonMixin:Refresh()
+function LegacyForeverMapButtonMixin:Refresh()
 	---@type WorldMapFrame
 	local map = self:GetParent()
 	self:ClearAllPoints()
@@ -341,11 +343,11 @@ function LegacyHereMapButtonMixin:Refresh()
 	self.count = count
 end
 
-function LegacyHereMapButtonMixin:OnShow()
+function LegacyForeverMapButtonMixin:OnShow()
 	self:Refresh()
 end
 
-function LegacyHereMapButtonMixin:OnEnter()
+function LegacyForeverMapButtonMixin:OnEnter()
 	GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 	GameTooltip_SetTitle(GameTooltip, ns.TITLE)
 	if self.count and self.count > 0 then
@@ -356,7 +358,7 @@ function LegacyHereMapButtonMixin:OnEnter()
 	GameTooltip:Show()
 end
 
-function LegacyHereMapButtonMixin:OnLeave()
+function LegacyForeverMapButtonMixin:OnLeave()
 	GameTooltip:Hide()
 end
 
@@ -365,24 +367,27 @@ end
      resolves its mixin by name when the first pin is created. ]]
 
 local function DefinePinMixin()
-	---@class LegacyHerePinMixin : Frame, MapCanvasPinMixin
+	---@class LegacyForeverPinMixin : Frame, MapCanvasPinMixin
 	---@field Icon Texture
+	---@field Portal Texture
+	---@field Highlight Texture
 	---@field group? LegacyGroup
 	---@field objective? LegacyObjective
 	---@field zone? LegacyContinentZone
-	LegacyHerePinMixin = CreateFromMixins(MapCanvasPinMixin)
+	LegacyForeverPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
 	-- Setup lives here rather than in OnLoad, as Blizzard's own map pins do:
 	-- this client doesn't reliably run OnLoad for addon pins.
 	---@param group LegacyGroup?
 	---@param objective LegacyObjective?
 	---@param zone LegacyContinentZone?
-	function LegacyHerePinMixin:OnAcquired(group, objective, zone)
+	function LegacyForeverPinMixin:OnAcquired(group, objective, zone)
 		self:UseFrameLevelType("PIN_FRAME_LEVEL_AREA_POI")
 		self.group = group
 		self.objective = objective
 		self.zone = zone
 		self:SetScalingLimits(1, 1.0, 1.2)
+		self:Layout(objective and objective.entry.instance)
 		if zone then
 			self:SetPosition(zone.x, zone.y)
 		elseif objective then
@@ -391,7 +396,32 @@ local function DefinePinMixin()
 		self:ApplyCurrentScale()
 	end
 
-	function LegacyHerePinMixin:OnMouseEnter()
+	-- At an entrance: the retail portal the map already uses there, with a small shield on its corner, so the
+	-- entrance still reads as one and the Legacy step as a badge on it. Anywhere else: the shield alone.
+	---@param instance number?
+	function LegacyForeverPinMixin:Layout(instance)
+		self.Icon:ClearAllPoints()
+		self.Highlight:ClearAllPoints()
+		self.Portal:SetShown(instance ~= nil)
+		if instance then
+			local atlas = RAIDS[instance] and "Raid" or "Dungeon"
+			self:SetSize(32, 32)
+			self.Portal:SetAtlas(atlas)
+			self.Icon:SetSize(12, 17)
+			self.Icon:SetPoint("BOTTOMRIGHT", 2, -2)
+			self.Highlight:SetAtlas(atlas)
+			self.Highlight:SetAllPoints(self.Portal)
+		else
+			self:SetSize(20, 20)
+			self.Icon:SetSize(14, 20)
+			self.Icon:SetPoint("CENTER")
+			self.Highlight:SetAtlas(POINTS_ICON)
+			self.Highlight:SetAllPoints(self.Icon)
+		end
+	end
+
+	function LegacyForeverPinMixin:OnMouseEnter()
+		self.Highlight:Show()
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		if self.zone then
 			AddZoneTooltip(GameTooltip, self.zone)
@@ -401,7 +431,8 @@ local function DefinePinMixin()
 		GameTooltip:Show()
 	end
 
-	function LegacyHerePinMixin:OnMouseLeave()
+	function LegacyForeverPinMixin:OnMouseLeave()
+		self.Highlight:Hide()
 		GameTooltip:Hide()
 	end
 end
@@ -409,21 +440,21 @@ end
 local function DefineAreaPinMixin()
 	-- One pin per zone map holding every undiscovered area, drawn from the same map
 	-- tiles Blizzard reveals on discovery (see MapExplorationPinMixin:RefreshOverlays).
-	---@class LegacyHereAreaPinMixin : Frame, MapCanvasPinMixin
+	---@class LegacyForeverAreaPinMixin : Frame, MapCanvasPinMixin
 	---@field textures? LegacyTexturePool
 	---@field zone? LegacyZone
 	---@field hovered? LegacyArea
 	---@field drawn table<string, Texture[]>
 	---@field legacy table<string, LegacyAreaObjective>
-	LegacyHereAreaPinMixin = CreateFromMixins(MapCanvasPinMixin)
+	LegacyForeverAreaPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
-	-- Pools are made on first acquire, as MapExplorationPinMixin does; see LegacyHerePinMixin:OnAcquired.
+	-- Pools are made on first acquire, as MapExplorationPinMixin does; see LegacyForeverPinMixin:OnAcquired.
 	-- Hover is polled rather than caught by a mouse-enabled frame, which would swallow the
 	-- map's own clicks (right-click to zoom out, drag to pan). While the cursor is on bare map
 	-- (no pin or button above it), the area under it is picked (Model.AreaAt) among all the
 	-- zone's areas, explored or not, so an explored label never lights up the unexplored
 	-- neighbour whose rectangle overlaps it.
-	function LegacyHereAreaPinMixin:CreatePools()
+	function LegacyForeverAreaPinMixin:CreatePools()
 		self:SetIgnoreGlobalPinScale(true)
 		self:UseFrameLevelType("PIN_FRAME_LEVEL_MAP_EXPLORATION")
 		self:EnableMouse(false)
@@ -437,7 +468,7 @@ local function DefineAreaPinMixin()
 		end)
 	end
 
-	function LegacyHereAreaPinMixin:ReleaseAreas()
+	function LegacyForeverAreaPinMixin:ReleaseAreas()
 		if self.textures then
 			self:Highlight(nil)
 			self.textures:ReleaseAll()
@@ -445,7 +476,7 @@ local function DefineAreaPinMixin()
 		self.zone, self.drawn = nil, {}
 	end
 
-	function LegacyHereAreaPinMixin:OnReleased()
+	function LegacyForeverAreaPinMixin:OnReleased()
 		MapCanvasPinMixin.OnReleased(self)
 		self:ReleaseAreas()
 	end
@@ -458,7 +489,7 @@ local function DefineAreaPinMixin()
 	---@param u number
 	---@param v number
 	---@return Texture
-	function LegacyHereAreaPinMixin:DrawTile(tileID, x, y, width, height, u, v)
+	function LegacyForeverAreaPinMixin:DrawTile(tileID, x, y, width, height, u, v)
 		local texture = self.textures:Acquire()
 		self:GetMap():AddMaskableTexture(texture)
 		texture:SetTexture(tileID, nil, nil, "TRILINEAR")
@@ -474,7 +505,7 @@ local function DefineAreaPinMixin()
 	---@param zone LegacyZone
 	---@param areas LegacyArea[]
 	---@param legacy table<string, LegacyAreaObjective>
-	function LegacyHereAreaPinMixin:OnAcquired(zone, areas, legacy)
+	function LegacyForeverAreaPinMixin:OnAcquired(zone, areas, legacy)
 		if not self.textures then
 			self:CreatePools()
 		end
@@ -507,7 +538,7 @@ local function DefineAreaPinHover()
 	-- The cursor in canvas pixels, the space overlay offsets are in.
 	---@return number x
 	---@return number y
-	function LegacyHereAreaPinMixin:CursorPosition()
+	function LegacyForeverAreaPinMixin:CursorPosition()
 		local scale = self:GetEffectiveScale()
 		local x, y = GetCursorPosition()
 		return x / scale - self:GetLeft(), self:GetTop() - y / scale
@@ -515,7 +546,7 @@ local function DefineAreaPinHover()
 
 	---@param x number
 	---@param y number
-	function LegacyHereAreaPinMixin:HoverAt(x, y)
+	function LegacyForeverAreaPinMixin:HoverAt(x, y)
 		local index = self.zone and ns.Model.AreaAt(self.zone.areas, x, y)
 		local area = index and self.zone.areas[index]
 		local shaded = area and self.drawn[area.key] and area or nil
@@ -525,7 +556,7 @@ local function DefineAreaPinHover()
 	end
 
 	---@param area LegacyArea?
-	function LegacyHereAreaPinMixin:Highlight(area)
+	function LegacyForeverAreaPinMixin:Highlight(area)
 		if self.hovered then
 			for _, texture in ipairs(self.drawn[self.hovered.key]) do
 				texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
@@ -633,8 +664,8 @@ local function Attach()
 	map:AddDataProvider(provider)
 
 	-- Refresh anchors it; see TopRightOffset.
-	---@type LegacyHereMapButtonMixin
-	local button = map:AddOverlayFrame("LegacyHereMapButtonTemplate", "DROPDOWNBUTTON")
+	---@type LegacyForeverMapButtonMixin
+	local button = map:AddOverlayFrame("LegacyForeverMapButtonTemplate", "DROPDOWNBUTTON")
 
 	function ns.RefreshMap()
 		if map:IsShown() then

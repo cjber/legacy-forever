@@ -1,4 +1,4 @@
----@type string, LegacyHereNamespace
+---@type string, LegacyForeverNamespace
 local _, ns = ...
 
 -- Reads progress from the game, rebuilt from live APIs each session. The one thing the

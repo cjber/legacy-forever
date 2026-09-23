@@ -1,4 +1,4 @@
----@type string, LegacyHereNamespace
+---@type string, LegacyForeverNamespace
 local _, ns = ...
 
 -- Pure logic over the generated data and a snapshot of live progress; no WoW API

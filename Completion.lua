@@ -1,4 +1,4 @@
----@type string, LegacyHereNamespace
+---@type string, LegacyForeverNamespace
 local addonName, ns = ...
 
 -- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths, dungeons, raids,
@@ -301,7 +301,7 @@ function TrackerMixin:OnBlockHeaderClick(block, mouseButton)
 	end)
 end
 
-local trackerModule = ns.Tracker.AddModule("LegacyHereZoneTracker", TrackerMixin, -1)
+local trackerModule = ns.Tracker.AddModule("LegacyForeverZoneTracker", TrackerMixin, -1)
 if trackerModule then
 	local header = trackerModule.Header
 	header.Percent = header:CreateFontString(nil, "ARTWORK", "ObjectiveTrackerHeaderFont")
@@ -324,26 +324,26 @@ end
 
 --[[ World map: the zone you're viewing, in the corner; on a continent, in each zone badge's tooltip ]]
 
----@class LegacyHereZoneOverlayMixin : Button
----@field GetParent fun(self: LegacyHereZoneOverlayMixin): WorldMapFrame
+---@class LegacyForeverZoneOverlayMixin : Button
+---@field GetParent fun(self: LegacyForeverZoneOverlayMixin): WorldMapFrame
 ---@field Title FontString
 ---@field Counts FontString
 ---@field Progress StatusBar
 ---@field result? LegacyZoneResult
 ---@field name string
-LegacyHereZoneOverlayMixin = {}
+LegacyForeverZoneOverlayMixin = {}
 
 -- Room for the text, the bar and a fade on the right, so it never looks boxed.
 local OVERLAY_MIN_WIDTH = 140
 
-function LegacyHereZoneOverlayMixin:OnLoad()
+function LegacyForeverZoneOverlayMixin:OnLoad()
 	self.Progress = CreateProgressBar(self)
 	self.Progress:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT", 0, -4)
 	self.Progress:SetPoint("RIGHT")
 end
 
 -- Called by the world map whenever it changes map.
-function LegacyHereZoneOverlayMixin:Refresh()
+function LegacyForeverZoneOverlayMixin:Refresh()
 	---@type WorldMapFrame
 	local map = self:GetParent()
 	local uiMapID = map:GetMapID()
@@ -370,26 +370,26 @@ function LegacyHereZoneOverlayMixin:Refresh()
 	self:Show()
 end
 
-function LegacyHereZoneOverlayMixin:OnClick()
+function LegacyForeverZoneOverlayMixin:OnClick()
 	Settings().mapCollapsed = not Settings().mapCollapsed
 	self:Refresh()
 	self:OnEnter()
 end
 
-function LegacyHereZoneOverlayMixin:OnEnter()
+function LegacyForeverZoneOverlayMixin:OnEnter()
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
 	AddTooltip(GameTooltip, self.name, self.result)
 	GameTooltip_AddInstructionLine(GameTooltip, Settings().mapCollapsed and "Click to expand." or "Click to collapse.")
 	GameTooltip:Show()
 end
 
-function LegacyHereZoneOverlayMixin:OnLeave()
+function LegacyForeverZoneOverlayMixin:OnLeave()
 	GameTooltip:Hide()
 end
 
 -- The map refreshes providers on show and on every map change, but its overlay frames
 -- only on a map change, so a provider keeps the corner current.
----@param overlay LegacyHereZoneOverlayMixin
+---@param overlay LegacyForeverZoneOverlayMixin
 ---@return MapCanvasDataProviderMixin
 local function CreateProvider(overlay)
 	local provider = CreateFromMixins(MapCanvasDataProviderMixin)
@@ -404,9 +404,9 @@ end
 local function AttachMap()
 	local map = WorldMapFrame
 	-- Right of the floor dropdown and Camelot's tracking pin button, which share the corner.
-	---@type LegacyHereZoneOverlayMixin
+	---@type LegacyForeverZoneOverlayMixin
 	local overlay = map:AddOverlayFrame(
-		"LegacyHereZoneOverlayTemplate",
+		"LegacyForeverZoneOverlayTemplate",
 		"BUTTON",
 		"TOPLEFT",
 		map:GetCanvasContainer(),
@@ -566,7 +566,7 @@ function Completion.AddMenu(root)
 	end
 end
 
--- For /lh audit: the current zone's counts against what the game reports.
+-- For /lf audit: the current zone's counts against what the game reports.
 function Completion.Audit()
 	local uiMapID = ns.Live.CurrentZone()
 	if not uiMapID then

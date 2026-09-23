@@ -1,11 +1,11 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/AddOns/Blizzard_SharedXML/UI.xsd">
 	<!-- The viewed zone's completion in the world map's top-left corner: bare text, no box. -->
-	<Button name="LegacyHereZoneOverlayTemplate" mixin="LegacyHereZoneOverlayMixin" frameStrata="HIGH" virtual="true">
+	<Button name="LegacyForeverZoneOverlayTemplate" mixin="LegacyForeverZoneOverlayMixin" frameStrata="HIGH" virtual="true">
 		<Size x="1" y="1"/>
 		<Layers>
 			<Layer level="BACKGROUND">
 				<!-- A feathered dark wash keeps the text legible on pale parchment, with no edge to read as a box. -->
-				<Texture parentKey="Shade" file="Interface\AddOns\LegacyHere\media\Shade" alpha="0.6">
+				<Texture parentKey="Shade" file="Interface\AddOns\LegacyForever\media\Shade" alpha="0.6">
 					<Anchors>
 						<Anchor point="TOPLEFT" x="-48" y="22"/>
 						<Anchor point="BOTTOMRIGHT" x="64" y="-22"/>

@@ -1,6 +1,6 @@
 -- Run from the repository root: luajit tests/model_spec.lua
 local ns = {}
-assert(loadfile("Model.lua"))("LegacyHere", ns)
+assert(loadfile("Model.lua"))("LegacyForever", ns)
 local Model = ns.Model
 local checks = 0
 

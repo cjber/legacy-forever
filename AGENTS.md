@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Legacy Here is a WoW: Forever addon (Interface 16001) that puts unfinished Legacy challenges on the
+Legacy Forever is a WoW: Forever addon (Interface 16001) that puts unfinished Legacy challenges on the
 world map and in the objective tracker. Players install the zip the BigWigs packager builds on a `v*` tag.
 
 ## Commands
@@ -26,7 +26,7 @@ The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and
 
 ## Rules
 
-- Lua 5.1 in the game's sandbox: no `require`. The client loads the files `LegacyHere.toc` lists, in
+- Lua 5.1 in the game's sandbox: no `require`. The client loads the files `LegacyForever.toc` lists, in
   that order, each receiving `local addonName, ns = ...`; a new file goes in the TOC or never runs.
 - The specs are a headless harness with stubbed client APIs. Anything they cannot reach (frames,
   menus, tooltips, the tracker) is checked in game: list those checks in the PR as `/reload` tests

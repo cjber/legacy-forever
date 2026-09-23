@@ -1,6 +1,6 @@
 local _, addon = ...
 
----@class LegacyHereNamespace
+---@class LegacyForeverNamespace
 ---@field TITLE string
 ---@field Data LegacyData
 ---@field Model LegacyModel
@@ -10,7 +10,7 @@ local _, addon = ...
 ---@field RefreshMap fun()
 local ns = addon
 
-ns.TITLE = "Legacy Here"
+ns.TITLE = "Legacy Forever"
 
 -- A table in the saved variables. The toc loads them before any file runs (LoadSavedVariablesFirst), so this
 -- is safe at file scope; callers still look it up each time rather than holding on to it.
@@ -20,9 +20,9 @@ ns.TITLE = "Legacy Here"
 ---@param key 'tracked'|'zoneCompletion'|'flightPaths'
 ---@return LegacyTrackingKey[]|LegacySettings|table<string, LegacyFlightRecord>
 function ns.SavedTable(key)
-	LegacyHereDB = LegacyHereDB or {}
-	LegacyHereDB[key] = LegacyHereDB[key] or {}
-	return LegacyHereDB[key]
+	LegacyForeverDB = LegacyForeverDB or {}
+	LegacyForeverDB[key] = LegacyForeverDB[key] or {}
+	return LegacyForeverDB[key]
 end
 
 ---@param msg string
@@ -103,9 +103,9 @@ local function Criteria(achievementID)
 	end
 end
 
-SLASH_LEGACYHERE1 = "/lh"
-SLASH_LEGACYHERE2 = "/legacyhere"
-SlashCmdList.LEGACYHERE = function(msg)
+SLASH_LEGACYFOREVER1 = "/lf"
+SLASH_LEGACYFOREVER2 = "/legacyforever"
+SlashCmdList.LEGACYFOREVER = function(msg)
 	local command = strtrim(msg or ""):lower()
 	-- Lenient: "criteria 684", "criteria <684>" and a bare "684" all work.
 	local achievementID = (command:find("^criteria") or command:find("^%d+$")) and tonumber(command:match("%d+"))
@@ -114,14 +114,14 @@ SlashCmdList.LEGACYHERE = function(msg)
 	elseif achievementID then
 		Criteria(achievementID)
 	elseif command:find("^criteria") then
-		ns.Print("usage: /lh criteria 684")
+		ns.Print("usage: /lf criteria 684")
 	else
 		ns.Print("open the world map and use the Legacy button in its top-right corner.")
-		ns.Print("/lh audit - check the bundled data against the game")
-		ns.Print("/lh criteria 684 - list what the game reports for one achievement")
+		ns.Print("/lf audit - check the bundled data against the game")
+		ns.Print("/lf criteria 684 - list what the game reports for one achievement")
 	end
 end
 
-function LegacyHere_OnAddonCompartmentClick()
+function LegacyForever_OnAddonCompartmentClick()
 	ToggleWorldMap()
 end

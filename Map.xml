@@ -1,33 +1,28 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/AddOns/Blizzard_SharedXML/UI.xsd">
-	<!-- An unfinished Legacy objective on the world map. Mouse motion only, so clicks still reach the map. -->
-	<Frame name="LegacyHerePinTemplate" mixin="LegacyHerePinMixin" enableMouseMotion="true" virtual="true">
+	<!-- An unfinished Legacy objective on the world map. Mouse motion only, so clicks still reach the map.
+	     At a dungeon or raid entrance it is the game's entrance portal wearing the shield as a badge; the
+	     layout is set per pin in LegacyForeverPinMixin:OnAcquired. -->
+	<Frame name="LegacyForeverPinTemplate" mixin="LegacyForeverPinMixin" enableMouseMotion="true" virtual="true">
 		<Size x="20" y="20"/>
 		<Layers>
-			<Layer level="ARTWORK">
-				<Texture parentKey="Icon" atlas="UI-Legacy-Points-icon-c60">
-					<Size x="14" y="20"/>
-					<Anchors>
-						<Anchor point="CENTER"/>
-					</Anchors>
-				</Texture>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Portal" setAllPoints="true" hidden="true"/>
 			</Layer>
-			<Layer level="HIGHLIGHT">
-				<Texture atlas="UI-Legacy-Points-icon-c60" alphaMode="ADD" alpha="0.5">
-					<Size x="14" y="20"/>
-					<Anchors>
-						<Anchor point="CENTER"/>
-					</Anchors>
-				</Texture>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Icon" atlas="UI-Legacy-Points-icon-c60"/>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="Highlight" alphaMode="ADD" alpha="0.5" hidden="true"/>
 			</Layer>
 		</Layers>
 	</Frame>
 
 	<!-- Every undiscovered area of the viewed zone, shaded. Sized to the canvas in code;
 	     it never takes the mouse: hover is found by polling the cursor. -->
-	<Frame name="LegacyHereAreaPinTemplate" mixin="LegacyHereAreaPinMixin" virtual="true"/>
+	<Frame name="LegacyForeverAreaPinTemplate" mixin="LegacyForeverAreaPinMixin" virtual="true"/>
 
 	<!-- The Legacy shield in the map's top-right button column, with its count inside. -->
-	<DropdownButton name="LegacyHereMapButtonTemplate" frameStrata="HIGH" mixin="LegacyHereMapButtonMixin" virtual="true">
+	<DropdownButton name="LegacyForeverMapButtonTemplate" frameStrata="HIGH" mixin="LegacyForeverMapButtonMixin" virtual="true">
 		<Size x="32" y="44"/>
 		<KeyValues>
 			<KeyValue key="menuPoint" type="string" value="TOPRIGHT"/>

@@ -1,17 +1,17 @@
 ## Interface: 16001
-## Title: Legacy Here
+## Title: Legacy Forever
 ## Notes: Shows which of your unfinished Legacy challenges you can advance in the zone on the world map.
 ## Author: cjber
 ## Version: @project-version@
 ## Category: Map
 ## X-License: GPL-3.0-or-later
-## X-Website: https://github.com/cjber/legacy-here
+## X-Website: https://github.com/cjber/legacy-forever
 ## X-Curse-Project-ID: 1705879
 ## X-Wago-ID: b6mzA7KP
-## IconTexture: Interface\AddOns\LegacyHere\media\Icon
-## SavedVariables: LegacyHereDB
+## IconTexture: Interface\AddOns\LegacyForever\media\Icon
+## SavedVariables: LegacyForeverDB
 ## LoadSavedVariablesFirst: 1
-## AddonCompartmentFunc: LegacyHere_OnAddonCompartmentClick
+## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick
 
 Data\Legacy.lua
 Core.lua

@@ -5,7 +5,7 @@ import json
 import urllib.request
 
 # wow_classic_beta carries other Classic betas too; Forever builds are 1.6x.
-request = urllib.request.Request("https://wago.tools/api/builds", headers={"User-Agent": "LegacyHere/1.0"})
+request = urllib.request.Request("https://wago.tools/api/builds", headers={"User-Agent": "LegacyForever/1.0"})
 with urllib.request.urlopen(request, timeout=60) as response:
     builds = json.load(response)["wow_classic_beta"]
 forever = [b["version"] for b in builds if b["version"].startswith("1.6")]
