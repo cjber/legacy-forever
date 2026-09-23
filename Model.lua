@@ -39,7 +39,7 @@ function Model.ZoneObjectives(data, uiMapID, visible, criteria)
 		if progress and not progress.completed then
 			local group = byAchievement[entry.achievement]
 			if not group then
-				group = { achievement = entry.achievement, challenge = challenge, objectives = {} }
+				group = { achievement = entry.achievement, challenge = challenge, uiMapID = uiMapID, objectives = {} }
 				byAchievement[entry.achievement] = group
 				groups[#groups + 1] = group
 			end
@@ -100,35 +100,137 @@ function Model.Unlocated(data, visible, criteria)
 	return result
 end
 
--- A tracked challenge's unfinished steps in game order, each with its progress:
--- "3/10" for counted criteria, and done/total of X's criteria for "earn achievement X".
+-- Done/total of an achievement's criteria.
+local function Tally(steps)
+	local done, total = 0, 0
+	for _, step in pairs(steps) do
+		total = total + 1
+		done = done + (step.completed and 1 or 0)
+	end
+	return done, total
+end
+
+-- One unfinished step as a tracker line: "3/10" for counted criteria, done/total of X's
+-- criteria for "earn achievement X". `seen` names the step, so a block never lists it twice.
+local function StepLine(criteriaID, progress, criteria)
+	local detail, seen
+	local sub = progress.type == EARN_ACHIEVEMENT and criteria(progress.asset)
+	if sub then
+		detail = ("%d/%d"):format(Tally(sub))
+		seen = "a" .. progress.asset
+	elseif progress.required and progress.required > 1 then
+		detail = ("%d/%d"):format(progress.quantity, progress.required)
+	end
+	return { text = progress.text, detail = detail, seen = seen or ("c" .. criteriaID) }
+end
+
+-- A tracked challenge's unfinished steps in game order, each with its progress.
 function Model.TrackerLines(challenge, criteria)
 	local open = {}
-	for _, progress in pairs(criteria(challenge) or {}) do
+	for criteriaID, progress in pairs(criteria(challenge) or {}) do
 		if not progress.completed then
-			open[#open + 1] = progress
+			open[#open + 1] = { id = criteriaID, progress = progress }
 		end
 	end
 	table.sort(open, function(a, b)
-		return a.index < b.index
+		return a.progress.index < b.progress.index
 	end)
 	local lines = {}
-	for _, progress in ipairs(open) do
-		local detail
-		local sub = progress.type == EARN_ACHIEVEMENT and criteria(progress.asset)
-		if sub then
-			local done, total = 0, 0
-			for _, step in pairs(sub) do
-				total = total + 1
-				done = done + (step.completed and 1 or 0)
-			end
-			detail = ("%d/%d"):format(done, total)
-		elseif progress.required and progress.required > 1 then
-			detail = ("%d/%d"):format(progress.quantity, progress.required)
-		end
-		lines[#lines + 1] = { text = progress.text, detail = detail }
+	for _, step in ipairs(open) do
+		lines[#lines + 1] = StepLine(step.id, step.progress, criteria)
 	end
 	return lines
+end
+
+-- What the map menu tracks for one zone's group: a number is a whole challenge (all 0.3.0
+-- stored, and what "No fixed location" still tracks); a string is one zone's share of it.
+-- A feeding achievement ("Explore Felwood") is tracked whole, as "<achievement>", wherever
+-- it is ticked; objectives a challenge places itself (its dungeons) as "<challenge>:<uiMapID>".
+function Model.ZoneKey(group)
+	if group.achievement ~= group.challenge then
+		return tostring(group.achievement)
+	end
+	return ("%d:%d"):format(group.challenge, group.uiMapID)
+end
+
+local function ParseKey(key)
+	local achievement, uiMapID = key:match("^(%d+):?(%d*)$")
+	return tonumber(achievement), tonumber(uiMapID)
+end
+
+-- The visible challenge a tracked entry belongs to, or nil while the game lists none.
+function Model.TrackedChallenge(data, key, visible)
+	if type(key) == "number" then
+		return visible[key] and key or nil
+	end
+	return Model.OwningChallenge(data, (ParseKey(key)), visible)
+end
+
+-- A tracked zone share's unfinished lines: a feeding achievement as one done/total line
+-- under its own name, a challenge's own objectives in that zone one line each.
+local function ZoneLines(data, key, criteria, name)
+	local achievement, uiMapID = ParseKey(key)
+	local steps = criteria(achievement)
+	if not steps then
+		return {}
+	end
+	if not uiMapID then
+		local done, total = Tally(steps)
+		if done == total then
+			return {}
+		end
+		return { { text = name(achievement), detail = ("%d/%d"):format(done, total), seen = "a" .. achievement } }
+	end
+	local lines = {}
+	for _, entry in ipairs(data.zones[uiMapID] or {}) do
+		local progress = entry.achievement == achievement and steps[entry.criteria]
+		if progress and not progress.completed then
+			lines[#lines + 1] = StepLine(entry.criteria, progress, criteria)
+		end
+	end
+	return lines
+end
+
+-- The tracker's blocks, one per visible challenge in the order first tracked: the zone shares
+-- ticked under it, then (when the whole challenge is tracked) its other unfinished steps.
+-- A challenge tracked only through zones drops out once none of them has anything left.
+function Model.TrackedBlocks(data, tracked, visible, criteria, name)
+	local blocks, byChallenge = {}, {}
+	for _, key in ipairs(tracked) do
+		local challenge = Model.TrackedChallenge(data, key, visible)
+		if challenge then
+			local block = byChallenge[challenge]
+			if not block then
+				block = { challenge = challenge, lines = {}, seen = {} }
+				byChallenge[challenge] = block
+				blocks[#blocks + 1] = block
+			end
+			if type(key) == "number" then
+				block.whole = true
+			else
+				for _, line in ipairs(ZoneLines(data, key, criteria, name)) do
+					if not block.seen[line.seen] then
+						block.seen[line.seen] = true
+						block.lines[#block.lines + 1] = line
+					end
+				end
+			end
+		end
+	end
+	local shown = {}
+	for _, block in ipairs(blocks) do
+		if block.whole then
+			for _, line in ipairs(Model.TrackerLines(block.challenge, criteria)) do
+				if not block.seen[line.seen] then
+					block.lines[#block.lines + 1] = line
+				end
+			end
+		end
+		if block.whole or #block.lines > 0 then
+			shown[#shown + 1] = block
+		end
+	end
+	return shown
 end
 
 -- One category of a zone's completion: { done, total, left = { names } }, or nil when

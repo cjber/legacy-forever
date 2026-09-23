@@ -120,8 +120,9 @@ KNOWN_TAXIS = {28}
 COMPLETED_ACHIEVEMENTS = {684}
 # The client shows this character one of Forever's two variant sets (Achievement.Flags).
 VARIANT_FLAG = 0x08000000
-# In the order they were ticked: the dungeon from the map menu, then the class levels.
-TRACKED = [62032, 62000, 61999, 61997, 61994]
+# In the order they were ticked: Ashenvale's exploration and its dungeon from the map menu (Model.ZoneKey),
+# then class levels from "No fixed location" (whole challenges).
+TRACKED = ["845", "62032:1440", 62000, 61999, 61994]
 EARN_ACHIEVEMENT = 8
 
 
@@ -247,7 +248,12 @@ def zone_objectives(data, live, ui_map_id):
         if progress and not progress.completed:
             group = by_achievement.get(entry["achievement"])
             if not group:
-                group = {"achievement": entry["achievement"], "challenge": challenge, "objectives": []}
+                group = {
+                    "achievement": entry["achievement"],
+                    "challenge": challenge,
+                    "ui_map": ui_map_id,
+                    "objectives": [],
+                }
                 by_achievement[entry["achievement"]] = group
                 groups.append(group)
             group["objectives"].append({"entry": entry, "text": progress.text})
@@ -275,17 +281,64 @@ def unlocated(data, live):
     return [item for item in result if item["open"] > 0]
 
 
+def step_line(criteria_id, progress, live):
+    sub = progress.type == EARN_ACHIEVEMENT and live.criteria(progress.asset)
+    if sub:
+        detail, seen = f"{sum(step.completed for step in sub.values())}/{len(sub)}", f"a{progress.asset}"
+    else:
+        counted = progress.required and progress.required > 1
+        detail, seen = (f"{progress.quantity}/{progress.required}" if counted else None), f"c{criteria_id}"
+    return (f"{detail} {progress.text}" if detail else progress.text), seen
+
+
 def tracker_lines(live, challenge):
-    lines = []
-    for progress in sorted((p for p in live.criteria(challenge).values() if not p.completed), key=lambda p: p.index):
-        detail = None
-        sub = progress.type == EARN_ACHIEVEMENT and live.criteria(progress.asset)
-        if sub:
-            detail = f"{sum(step.completed for step in sub.values())}/{len(sub)}"
-        elif progress.required and progress.required > 1:
-            detail = f"{progress.quantity}/{progress.required}"
-        lines.append(f"{detail} {progress.text}" if detail else progress.text)
-    return lines
+    steps = sorted(
+        ((cid, p) for cid, p in live.criteria(challenge).items() if not p.completed), key=lambda s: s[1].index
+    )
+    return [step_line(cid, progress, live) for cid, progress in steps]
+
+
+def zone_key(group):
+    if group["achievement"] != group["challenge"]:
+        return str(group["achievement"])
+    return f"{group['challenge']}:{group['ui_map']}"
+
+
+def zone_lines(data, live, key):
+    achievement, _, ui_map = key.partition(":")
+    steps = live.criteria(int(achievement))
+    if not ui_map:
+        done = sum(step.completed for step in steps.values())
+        return [] if done == len(steps) else [(f"{done}/{len(steps)} {live.name(int(achievement))}", f"a{achievement}")]
+    return [
+        step_line(entry["criteria"], steps[entry["criteria"]], live)
+        for entry in data["zones"][int(ui_map)]
+        if entry["achievement"] == int(achievement) and not steps[entry["criteria"]].completed
+    ]
+
+
+def tracked_blocks(data, live):
+    """Model.TrackedBlocks: (challenge, lines) per visible challenge, zone shares first."""
+    visible, blocks = live.visible(), {}
+    for key in TRACKED:
+        whole = isinstance(key, int)
+        challenge = (
+            (key if key in visible else None) if whole else owning_challenge(data, int(key.split(":")[0]), visible)
+        )
+        if challenge:
+            block = blocks.setdefault(challenge, {"whole": False, "lines": []})
+            if whole:
+                block["whole"] = True
+            else:
+                block["lines"] += zone_lines(data, live, key)
+    result = []
+    for challenge, block in blocks.items():
+        seen = {s for _, s in block["lines"]}
+        if block["whole"]:
+            block["lines"] += [line for line in tracker_lines(live, challenge) if line[1] not in seen]
+        if block["whole"] or block["lines"]:
+            result.append((challenge, [text for text, _ in block["lines"]]))
+    return result
 
 
 CATEGORIES = ("areas", "taxis", "dungeons", "raids", "legacy", "reputations")
@@ -396,7 +449,7 @@ def main_menu(live, data, hover=None):
         explore = group["objectives"][0]["entry"]["kind"] == "explore"
         mark = icon("areas", 14) if explore else atlas_markup(POINTS_ICON, 10, 14)
         text = challenge_text(f"{mark} {live.name(group['achievement'])}", len(group["objectives"]))
-        entries.append(MenuCheckbox(text, group["challenge"] in TRACKED))
+        entries.append(MenuCheckbox(text, zone_key(group) in TRACKED))
     open_total = len(unlocated(data, live))
     entries += [
         MenuDivider(),
@@ -598,13 +651,10 @@ def render_continent(ui, data, live):
 def render_tracker(ui, data, live):
     zone = data["completion"][ASHENVALE]
     result = zone_completion(live, zone)
-    visible = live.visible()
     legacy = []
-    for challenge in TRACKED:
-        if challenge in visible:
-            lines = tracker_lines(live, challenge)
-            shown = lines[:5] + ([("...", False)] if len(lines) > 5 else [])
-            legacy.append(TrackerBlock(live.name(challenge), shown))
+    for challenge, lines in tracked_blocks(data, live):
+        shown = lines[:5] + ([("...", False)] if len(lines) > 5 else [])
+        legacy.append(TrackerBlock(live.name(challenge), shown))
     modules = [
         TrackerModule("Ashenvale", [TrackerBlock(counts_text(ui, result, 14))]),
         TrackerModule("Legacy", legacy),

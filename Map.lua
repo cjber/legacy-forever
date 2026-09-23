@@ -152,8 +152,9 @@ end
 
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]
 
--- Each challenge is a checkbox for our own tracker (Forever refuses Blizzard's);
--- the tracker's challenge names open the Legacy panel.
+-- Each entry is a checkbox for our own tracker (Forever refuses Blizzard's): a zone's
+-- entry tracks only this zone's share of its challenge (Model.ZoneKey), "No fixed location"
+-- the whole challenge. The tracker's challenge names open the Legacy panel.
 local TRACK_HINT = "Click to track, with live progress."
 
 local function ChallengeText(name, count)
@@ -169,7 +170,7 @@ local function AddGroup(root, group)
 		ChallengeText(name, #group.objectives),
 		ns.Tracker.IsTracked,
 		ns.Tracker.Toggle,
-		group.challenge
+		ns.Model.ZoneKey(group)
 	)
 	button:SetTooltip(function(tooltip)
 		AddGroupTooltip(tooltip, group)

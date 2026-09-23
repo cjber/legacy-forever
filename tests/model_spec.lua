@@ -80,6 +80,52 @@ equal(lines[2].detail, nil, "single step has no count")
 equal(lines[3].detail, "1/4", "earn-achievement step shows its criteria done")
 equal(#Model.TrackerLines(999, criteria), 0, "unknown challenge has no lines")
 
+-- Tracking from the map menu keys one zone's share, not the whole challenge.
+equal(Model.ZoneKey(groups[1]), "10", "a feeding achievement is tracked as itself")
+equal(Model.ZoneKey(groups[2]), "100:1", "a challenge's own objectives are tracked per zone")
+equal(Model.TrackedChallenge(data, "10", { [200] = true }), 200, "a zone share follows the visible variant")
+equal(Model.TrackedChallenge(data, "100:1", visible), 100, "a zone share of a challenge")
+equal(Model.TrackedChallenge(data, 100, visible), 100, "a number is the whole challenge")
+equal(Model.TrackedChallenge(data, 100, {}), nil, "a challenge the game doesn't list")
+
+local function name(id)
+	return "Achievement " .. id
+end
+local function Blocks(tracked, lookup)
+	return Model.TrackedBlocks(data, tracked, visible, lookup or criteria, name)
+end
+local function Text(line)
+	return line.detail and (line.detail .. " " .. line.text) or line.text
+end
+
+local blocks = Blocks({ "10", "100:1" })
+equal(#blocks, 1, "zone shares of one challenge share its block")
+equal(blocks[1].challenge, 100, "the block is the challenge")
+equal(blocks[1].whole, nil, "tracked only through zones")
+equal(#blocks[1].lines, 2, "one line per zone share, no whole-challenge steps")
+equal(Text(blocks[1].lines[1]), "1/4 Achievement 10", "a feeding achievement's progress under its name")
+equal(Text(blocks[1].lines[2]), "Boss", "a challenge's own objective in that zone")
+
+blocks = Blocks({ 100 })
+equal(#blocks[1].lines, 3, "a saved whole challenge still shows every step")
+equal(Text(blocks[1].lines[1]), "12/20 Reach level 20", "whole-challenge steps in game order")
+
+blocks = Blocks({ "10", 100 })
+equal(blocks[1].whole, true, "whole and zone tracking together")
+equal(#blocks[1].lines, 3, "the step the zone line covers isn't repeated")
+equal(Text(blocks[1].lines[1]), "1/4 Achievement 10", "zone shares first")
+equal(Text(blocks[1].lines[3]), "Boss", "then the challenge's other steps")
+
+local explored = function(id)
+	if id == 10 then
+		return { [1] = { completed = true, index = 1 } }
+	end
+	return live[id]
+end
+equal(#Blocks({ "10" }, explored), 0, "a finished zone share leaves no empty header")
+equal(#Blocks({ "10", 100 }, explored)[1].lines, 3, "a whole challenge stays with its own steps")
+equal(#Blocks({ "10" }, function() end), 0, "unknown progress shows nothing")
+
 -- Zone completion: own-faction and neutral flight paths only, unknown wings left out.
 local zone = {
 	areas = { { key = "0:0:10:10", name = "Kharanos" }, { key = "10:0:10:10", name = "Gol'Bolar Quarry" } },
