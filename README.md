@@ -55,11 +55,19 @@ ln -s "$PWD" ".../World of Warcraft/_classic_beta_/Interface/AddOns/LegacyHere"
 
 luacheck .                     # lint
 stylua --check .               # format
-for s in tests/*_spec.lua; do luajit "$s"; done   # generated data, zone and challenge logic
+ruff format --check . && ruff check .
+tools/typecheck.sh             # LuaLS 3.19.1 + multi-value lint and Python self-tests
+for s in tests/*_spec.lua; do luajit "$s" || exit 1; done   # generated data, zone and challenge logic
 python3 tools/gen_legacy.py    # regenerate Data/Legacy.lua (see tools/README.md)
 ```
 
-CI runs these checks on every push. Each day a scheduled job checks wago.tools for a newer Forever build and, if the Legacy data differs, opens a pull request with the regenerated `Data/Legacy.lua`.
+Install LuaLS **3.19.1**, Python 3.12+ and Git before running `tools/typecheck.sh`. The first run
+fetches the pinned WoW API annotations and their pinned FrameXML submodule into ignored `.types/`;
+later runs verify and reuse that checkout. It checks every runtime Lua file, including generated
+data, and fails on every diagnostic. `types/` supplies the addon and missing Forever API contracts.
+See [the tooling notes](tools/README.md#type-checking) for the multi-value rule.
+
+CI runs these checks on main pushes and pull requests. Each day a scheduled job checks wago.tools for a newer Forever build and, if the Legacy data differs, opens a pull request with the regenerated `Data/Legacy.lua`.
 
 **Releasing:** move the `[Unreleased]` notes in `CHANGELOG.md` under `## [X.Y.Z] - YYYY-MM-DD`, then `git tag -s vX.Y.Z && git push --tags`. The [BigWigs packager](https://github.com/BigWigsMods/packager) builds the zip and uploads it to GitHub Releases, CurseForge and Wago, with that version's entry (`tools/changelog.py`) as the release notes.
 

@@ -1,11 +1,14 @@
+---@type string, LegacyHereNamespace
 local addonName, ns = ...
 
 -- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths, dungeons, raids,
 -- Legacy objectives and local reputations are done, as a section in the objective tracker (the zone you're in) and in
 -- the world map's corner (the zone you're viewing). Each is optional and collapsible.
+---@class LegacyCompletion
 local Completion = {}
 ns.Completion = Completion
 
+---@type table<LegacyCategoryKey, { atlas?: string, file?: string, aspect?: number }>
 local ICONS = {
 	areas = { atlas = "islands-queue-prop-compass" },
 	taxis = { atlas = "flightmaster" },
@@ -26,15 +29,19 @@ local LABELS = {
 -- Names listed per category in a tooltip before "and N more".
 local MAX_LEFT = 6
 
+---@return LegacySettings
 local function Settings()
 	return ns.SavedTable("zoneCompletion")
 end
 
+---@type (fun())[]
 local listeners = {}
 
 -- The map is on out of the box so the feature is visible; the tracker takes screen space, so it waits to be asked.
 local DEFAULT_SHOWN = { tracker = false, map = true }
 
+---@param surface LegacySurface
+---@return boolean
 local function IsShown(surface)
 	local shown = Settings()[surface]
 	if shown == nil then
@@ -57,6 +64,8 @@ local COUNTED_BY_DEFAULT = {
 	reputations = false,
 }
 
+---@param category LegacyCategoryKey
+---@return boolean
 local function IsCounted(category)
 	local counted = Settings()["count_" .. category]
 	if counted == nil then
@@ -71,17 +80,21 @@ local function Refresh()
 	end
 end
 
+---@type (fun())[]
 local toggleListeners = {}
 
 -- For what other files draw under these switches: the continent map's zone badges follow "map".
+---@param callback fun()
 function Completion.OnToggle(callback)
 	toggleListeners[#toggleListeners + 1] = callback
 end
 
+---@return boolean
 function Completion.ShownOnMap()
 	return IsShown("map")
 end
 
+---@param surface LegacySurface
 local function Toggle(surface)
 	Settings()[surface] = not IsShown(surface)
 	Refresh()
@@ -90,15 +103,20 @@ local function Toggle(surface)
 	end
 end
 
+---@param uiMapID number?
+---@return LegacyZoneResult?
 function Completion.Of(uiMapID)
 	local zone = uiMapID and ns.Data.completion[uiMapID]
-	if not zone then
+	if not uiMapID or not zone then
 		return nil
 	end
 	local result = ns.Model.ZoneCompletion(zone, ns.Live.ZoneSnapshot(uiMapID), IsCounted)
 	return result.total > 0 and result or nil
 end
 
+---@param key LegacyCategoryKey
+---@param size number
+---@return string
 function Completion.Icon(key, size)
 	local icon = ICONS[key]
 	if icon.file then
@@ -112,11 +130,16 @@ local PENDING_HINTS = {
 	taxis = "Open a flight master on this continent to check these.",
 }
 
+---@param result LegacyZoneResult
+---@return string
 local function PercentText(result)
 	return ("%d%%"):format(result.percent)
 end
 
 -- "3/5", or "?" while every item is pending; `colored` greens a finished category.
+---@param category LegacyCategory
+---@param colored? boolean
+---@return string
 local function CategoryText(category, colored)
 	if category.total == 0 then
 		return GRAY_FONT_COLOR:WrapTextInColorCode("?")
@@ -133,6 +156,9 @@ local function CategoryText(category, colored)
 end
 
 -- "[compass] 9/14   [gryphon] 1/1   [door] 0/1", a finished category in green.
+---@param result LegacyZoneResult
+---@param iconSize number
+---@return string
 local function CountsText(result, iconSize)
 	local parts = {}
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
@@ -144,6 +170,9 @@ local function CountsText(result, iconSize)
 	return table.concat(parts, "   ")
 end
 
+---@param tooltip GameTooltip
+---@param name string
+---@param result LegacyZoneResult
 local function AddTooltip(tooltip, name, result)
 	GameTooltip_SetTitle(tooltip, ("%s  %s"):format(name, PercentText(result)))
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
@@ -183,6 +212,8 @@ end
 -- A thin fill for the percent, in the tracker's gold; green once the zone is done.
 local BAR_HEIGHT = 2
 
+---@param parent Frame
+---@return StatusBar
 local function CreateProgressBar(parent)
 	local bar = CreateFrame("StatusBar", nil, parent)
 	bar:SetHeight(BAR_HEIGHT)
@@ -194,6 +225,8 @@ local function CreateProgressBar(parent)
 	return bar
 end
 
+---@param bar StatusBar
+---@param result LegacyZoneResult
 local function SetProgress(bar, result)
 	bar:SetValue(result.percent)
 	bar:SetStatusBarColor((result.complete and GREEN_FONT_COLOR or NORMAL_FONT_COLOR):GetRGB())
@@ -201,12 +234,13 @@ end
 
 --[[ Objective tracker: the zone you're in ]]
 
+---@class LegacyCompletionTracker : LegacyTrackerModule
 local TrackerMixin = {}
 
 function TrackerMixin:LayoutContents()
-	local uiMapID = IsShown("tracker") and ns.Live.CurrentZone()
+	local uiMapID = IsShown("tracker") and ns.Live.CurrentZone() or nil
 	local result = Completion.Of(uiMapID)
-	if not result then
+	if not uiMapID or not result then
 		return
 	end
 	self:SetHeader(C_Map.GetMapInfo(uiMapID).name)
@@ -217,6 +251,7 @@ function TrackerMixin:LayoutContents()
 	self:LayoutBlock(block)
 end
 
+---@param block LegacyTrackerBlock
 function TrackerMixin:OnBlockHeaderEnter(block)
 	local result = Completion.Of(block.id)
 	if result then
@@ -232,6 +267,8 @@ function TrackerMixin:OnBlockHeaderLeave()
 end
 
 -- Right-click opens a menu, as on the Legacy section.
+---@param block LegacyTrackerBlock
+---@param mouseButton string
 function TrackerMixin:OnBlockHeaderClick(block, mouseButton)
 	if mouseButton ~= "RightButton" then
 		OpenWorldMap(block.id)
@@ -272,6 +309,13 @@ end
 
 --[[ World map: the zone you're viewing, in the corner; on a continent, in each zone badge's tooltip ]]
 
+---@class LegacyHereZoneOverlayMixin : Button
+---@field GetParent fun(self: LegacyHereZoneOverlayMixin): WorldMapFrame
+---@field Title FontString
+---@field Counts FontString
+---@field Progress StatusBar
+---@field result? LegacyZoneResult
+---@field name string
 LegacyHereZoneOverlayMixin = {}
 
 -- Room for the text, the bar and a fade on the right, so it never looks boxed.
@@ -285,9 +329,10 @@ end
 
 -- Called by the world map whenever it changes map.
 function LegacyHereZoneOverlayMixin:Refresh()
+	---@type WorldMapFrame
 	local map = self:GetParent()
 	local uiMapID = map:GetMapID()
-	self.result = IsShown("map") and Completion.Of(uiMapID)
+	self.result = IsShown("map") and Completion.Of(uiMapID) or nil
 	if not self.result then
 		self:Hide()
 		return
@@ -329,6 +374,8 @@ end
 
 -- The map refreshes providers on show and on every map change, but its overlay frames
 -- only on a map change, so a provider keeps the corner current.
+---@param overlay LegacyHereZoneOverlayMixin
+---@return MapCanvasDataProviderMixin
 local function CreateProvider(overlay)
 	local provider = CreateFromMixins(MapCanvasDataProviderMixin)
 
@@ -342,6 +389,7 @@ end
 local function AttachMap()
 	local map = WorldMapFrame
 	-- Right of the floor dropdown and Camelot's tracking pin button, which share the corner.
+	---@type LegacyHereZoneOverlayMixin
 	local overlay = map:AddOverlayFrame(
 		"LegacyHereZoneOverlayTemplate",
 		"BUTTON",
@@ -367,12 +415,16 @@ ns.Live.OnChange(Refresh)
 
 -- The reward follows "What counts", as the percentage does, so 100% on screen is what earns it.
 -- Unticking a category isn't progress, so a zone that completes is noted without a toast.
+---@param uiMapID number
+---@return boolean
 local function IsZoneComplete(uiMapID)
 	local result = ns.Model.ZoneCompletion(ns.Data.completion[uiMapID], ns.Live.ZoneSnapshot(uiMapID), IsCounted)
 	return ns.Model.CompletionCounts(result) and result.complete
 end
 
 -- "Kalimdor: 3 of 20 zones complete (15%)", counting what the player counts.
+---@param continentID number
+---@return string?
 local function ContinentText(continentID)
 	local results = {}
 	for uiMapID, zone in pairs(ns.Data.completion) do
@@ -393,6 +445,9 @@ local function ContinentText(continentID)
 	)
 end
 
+---@param frame LegacyToast
+---@param button string
+---@param down boolean
 local function OnToastClick(frame, button, down)
 	if not AlertFrame_OnClick(frame, button, down) then
 		OpenWorldMap(frame.uiMapID)
@@ -400,6 +455,8 @@ local function OnToastClick(frame, button, down)
 end
 
 -- Blizzard's own achievement-progress toast, so it queues and stacks with the game's alerts.
+---@param frame LegacyToast
+---@param uiMapID number
 local function SetUpToast(frame, uiMapID)
 	frame.uiMapID = uiMapID
 	frame.Unlocked:SetText("Zone complete")
@@ -423,6 +480,7 @@ local QUIET_SECONDS = 10
 local quietUntil
 local rewarded = {}
 
+---@param silent? boolean
 local function CheckRewards(silent)
 	quietUntil = quietUntil or GetTime() + QUIET_SECONDS
 	local quiet = silent or GetTime() < quietUntil
@@ -441,6 +499,7 @@ ns.Live.OnChange(CheckRewards)
 
 --[[ Settings, in the Legacy map menu ]]
 
+---@param category LegacyCategoryKey
 local function ToggleCounted(category)
 	Settings()["count_" .. category] = not IsCounted(category)
 	CheckRewards(true)
@@ -448,8 +507,10 @@ local function ToggleCounted(category)
 end
 
 -- A zone's completion under a continent badge's tooltip: percent, then one row of counts.
+---@param tooltip GameTooltip
+---@param uiMapID number
 function Completion.AddSummary(tooltip, uiMapID)
-	local result = IsShown("map") and Completion.Of(uiMapID)
+	local result = IsShown("map") and Completion.Of(uiMapID) or nil
 	if not result then
 		return
 	end
@@ -472,6 +533,7 @@ function Completion.AddSummary(tooltip, uiMapID)
 	end
 end
 
+---@param root SharedMenuDescriptionProxy
 function Completion.AddMenu(root)
 	root:CreateTitle("Zone completion")
 	root:CreateCheckbox("In the objective tracker", IsShown, Toggle, "tracker")

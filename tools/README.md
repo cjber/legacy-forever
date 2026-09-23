@@ -350,7 +350,7 @@ The Deadmines uses `{62031, 3262}` and `{64016, 117731}`.
 
 Verify with two consecutive `python3 tools/gen_legacy.py --offline` runs and
 compare `Data/Legacy.lua` byte-for-byte, then run `luajit tests/data_spec.lua`,
-`luajit tests/model_spec.lua`, `luacheck .`, and `stylua --check .`.
+`luajit tests/model_spec.lua`, `luacheck .`, `stylua --check .`, and `tools/typecheck.sh`.
 The generator renders Lua in the repository's StyLua style without depending on
 a formatter or excluding the generated file from CI.
 
@@ -363,3 +363,28 @@ found in `~/.claude/skills/wow-mock-screenshots/` by default; set the
 `WOWMOCK` environment variable to the directory holding `wowmock.py` to use
 another checkout. Art is fetched from wago.tools once and cached, and reruns
 are byte-identical.
+
+## Type checking
+
+Run `tools/typecheck.sh` from any directory with LuaLS 3.19.1, Python 3.12+ and Git installed.
+`LUA_LANGUAGE_SERVER` can point to another installation of that same version. CI downloads
+3.19.1 and checks its SHA-256 before running this exact script.
+
+The script fetches [Ketho's WoW API annotations](https://github.com/Ketho/vscode-wow-api/tree/d0b5b51fac4c52c493371b9b18e66ce604ea4326)
+and their pinned FrameXML submodule into `.types/vscode-wow-api`, verifies the cached checkout,
+runs the tooling self-tests and multi-value lint, and rejects every LuaLS diagnostic at
+Information or higher. Hint diagnostics are promoted to Information so they also fail.
+Runtime files listed in the TOC, including `Data/Legacy.lua`, stay in scope; tests, tools,
+downloaded libraries and build/audit output are excluded from runtime diagnostics.
+`types/*.lua` contains checker-only contracts and missing Forever APIs and is not shipped.
+
+`python3 tools/lint_multivalue.py [paths...]` also runs independently. Lua expands a final
+`select(...)` in a call, table constructor or return. Use `(select(...))` to keep one result,
+or use a local. Intentional expansion needs a trailing comment with a reason:
+
+```lua
+return select(2, ...) -- multi-value: forward every argument after the event name
+```
+
+`python3 -m unittest discover -s tests -p '*_test.py'` exercises the tokenizer/parser and the
+LuaLS report reader, including Information diagnostics and missing/malformed reports.

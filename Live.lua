@@ -1,14 +1,19 @@
+---@type string, LegacyHereNamespace
 local _, ns = ...
 
 -- Reads progress from the game, rebuilt from live APIs each session. The one thing the
 -- game won't say is which flight paths a character knows, so that is recorded (FlightRecord).
+---@class LegacyLive
 local Live = {}
 ns.Live = Live
 
 local LEGACY_POINTS_CURRENCY = 4225
 
+---@type LegacySet?
 local visible
+---@type table<number, LegacyCriteria|false>
 local criteriaCache = {}
+---@type (fun())[]
 local listeners = {}
 
 -- The unfinished challenges the game lists for this character, exactly as the Legacy
@@ -16,6 +21,7 @@ local listeners = {}
 -- them; only reward-bearing challenges go in this set.
 -- Completed ones are dropped here: an alt's own exploration can't advance a challenge
 -- the account has already earned.
+---@return LegacySet
 function Live.Visible()
 	if visible then
 		return visible
@@ -33,7 +39,10 @@ function Live.Visible()
 end
 
 -- Criteria IDs the data places for each achievement, built once.
+---@type table<number, number[]>?
 local locatedByAchievement
+---@param achievementID number
+---@return number[]?
 local function LocatedCriteria(achievementID)
 	if not locatedByAchievement then
 		locatedByAchievement = {}
@@ -51,6 +60,8 @@ end
 -- A single-step achievement (e.g. Conqueror of the Lair) reports no criteria: the
 -- achievement is the step, described by its description. File its completion under
 -- the criterion the data placed, or under 0 (never placed) so it still counts as unplaced.
+---@param achievementID number
+---@return LegacyCriteria?
 local function WholeAchievement(achievementID)
 	local _, name, _, completed, _, _, _, description = GetAchievementInfo(achievementID)
 	if not name then
@@ -65,6 +76,8 @@ local function WholeAchievement(achievementID)
 end
 
 -- Criteria by ID rather than index: DB2 order and API order need not agree.
+---@param achievementID number
+---@return LegacyCriteria?
 function Live.Criteria(achievementID)
 	local cached = criteriaCache[achievementID]
 	if cached ~= nil then
@@ -97,11 +110,15 @@ function Live.Criteria(achievementID)
 	return result
 end
 
+---@param achievementID number
+---@return string
 function Live.Name(achievementID)
 	local _, name = GetAchievementInfo(achievementID)
 	return name
 end
 
+---@param achievementID number
+---@return number?
 function Live.Points(achievementID)
 	if not C_Traits or not C_Traits.GetTraitCurrencyForAchievement then
 		return nil
@@ -114,6 +131,7 @@ end
 -- page and only Legacy.SelectPage switches to the challenges page.
 local CHALLENGES_PAGE = 2
 
+---@param achievementID number
 function Live.ShowInLegacyPanel(achievementID)
 	if not (LegacySystemFrame and LegacySystemFrame:IsShown()) then
 		ToggleLegacySystemUI()
@@ -124,6 +142,7 @@ function Live.ShowInLegacyPanel(achievementID)
 	end
 end
 
+---@param callback fun()
 function Live.OnChange(callback)
 	listeners[#listeners + 1] = callback
 end
@@ -138,6 +157,7 @@ local function Notify()
 	end
 end
 
+---@type table<number, LegacySnapshot>
 local snapshots = {}
 
 local function Changed()
@@ -155,6 +175,8 @@ function Live.Invalidate()
 end
 
 -- A wing or Legacy objective counts as done when any of its Legacy steps (either variant) is.
+---@param refs LegacyRefs
+---@return boolean?
 local function RefsDone(refs)
 	local state
 	for _, ref in ipairs(refs) do
@@ -170,16 +192,21 @@ local function RefsDone(refs)
 end
 
 -- A faction the player hasn't met yet has no data, which is simply not Friendly yet.
+---@param factionID number
+---@return number
 local function Reaction(factionID)
 	local data = C_Reputation.GetFactionDataByID(factionID)
 	return data and data.reaction or 0
 end
 
+---@param texture UiMapExplorationInfo
 local function OverlayKey(texture)
 	return ("%d:%d:%d:%d"):format(texture.offsetX, texture.offsetY, texture.textureWidth, texture.textureHeight)
 end
 
 -- The continent a map sits on, or nil above continent level.
+---@param uiMapID number
+---@return number?
 function Live.ContinentOf(uiMapID)
 	local info = C_Map.GetMapInfo(uiMapID)
 	while info and info.mapType > Enum.UIMapType.Continent do
@@ -191,9 +218,14 @@ end
 -- Which flight paths this character knows. Zone maps report every node as discovered on
 -- Forever, so the only reliable source is a flight master's own list: opening one records
 -- the known nodes for its continent. Until then that continent's flight paths are unknown.
+---@return LegacyFlightRecord
 local function FlightRecord()
 	local records = ns.SavedTable("flightPaths")
 	local guid = UnitGUID("player")
+	-- UnitGUID can be absent before the player exists; do not index saved records with nil.
+	if not guid then
+		return { known = {}, continents = {} }
+	end
 	records[guid] = records[guid] or { known = {}, continents = {} }
 	return records[guid]
 end
@@ -215,15 +247,17 @@ local function RecordFlightMaster()
 end
 
 -- Live progress for Model.ZoneCompletion.
+---@param uiMapID number
+---@return LegacySnapshot
 function Live.ZoneSnapshot(uiMapID)
 	local snapshot = snapshots[uiMapID]
 	if snapshot then
 		return snapshot
 	end
-	snapshot = { taxis = {}, faction = UnitFactionGroup("player"), refsDone = RefsDone, reaction = Reaction }
+	snapshot =
+		{ explored = {}, taxis = {}, faction = UnitFactionGroup("player"), refsDone = RefsDone, reaction = Reaction }
 	-- A zone this character has never entered reports no textures at all (nil), which
 	-- means nothing explored yet rather than unknown.
-	snapshot.explored = {}
 	for _, texture in ipairs(C_MapExplorationInfo.GetExploredMapTextures(uiMapID) or {}) do
 		snapshot.explored[OverlayKey(texture)] = true
 	end
@@ -239,6 +273,7 @@ end
 
 -- The zone the player is in, walking up from a cave or city sub-map to the first map
 -- with completion data; nil on a continent or anywhere the data doesn't cover.
+---@return number?
 function Live.CurrentZone()
 	local uiMapID = C_Map.GetBestMapForUnit("player")
 	while uiMapID and not ns.Data.completion[uiMapID] do

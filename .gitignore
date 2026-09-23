@@ -4,3 +4,4 @@ __pycache__/
 .release/
 .release-notes.md
 .sift/runs/
+.types/

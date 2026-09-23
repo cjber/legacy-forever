@@ -1,3 +1,4 @@
+---@type string, LegacyHereNamespace
 local _, ns = ...
 
 -- Pure logic over the generated data and a snapshot of live progress; no WoW API
@@ -8,6 +9,7 @@ local _, ns = ...
 -- `criteria(achievementID)` returns { [criteriaID] = { text, completed, type, asset,
 -- quantity, required, index } }
 -- or nil when the game has no data for that achievement.
+---@class LegacyModel
 local Model = {}
 ns.Model = Model
 
@@ -15,6 +17,10 @@ ns.Model = Model
 local EARN_ACHIEVEMENT = 8
 
 -- The visible challenge an objective counts toward, or nil if none is visible.
+---@param data LegacyData
+---@param achievementID number
+---@param visible LegacySet
+---@return number?
 function Model.OwningChallenge(data, achievementID, visible)
 	if visible[achievementID] then
 		return achievementID
@@ -30,13 +36,19 @@ end
 -- Unfinished objectives in one zone, grouped by the achievement that holds them
 -- (a challenge, or the exploration achievement feeding it). Objectives whose live
 -- progress is unknown are left out rather than shown as unfinished; Audit reports them.
+---@param data LegacyData
+---@param uiMapID number
+---@param visible LegacySet
+---@param criteria LegacyCriteriaReader
+---@return LegacyGroup[]
 function Model.ZoneObjectives(data, uiMapID, visible, criteria)
+	---@type LegacyGroup[], table<number, LegacyGroup>
 	local groups, byAchievement = {}, {}
 	for _, entry in ipairs(data.zones[uiMapID] or {}) do
 		local challenge = Model.OwningChallenge(data, entry.achievement, visible)
 		local live = challenge and criteria(entry.achievement)
 		local progress = live and live[entry.criteria]
-		if progress and not progress.completed then
+		if challenge and progress and not progress.completed then
 			local group = byAchievement[entry.achievement]
 			if not group then
 				group = { achievement = entry.achievement, challenge = challenge, uiMapID = uiMapID, objectives = {} }
@@ -49,6 +61,8 @@ function Model.ZoneObjectives(data, uiMapID, visible, criteria)
 	return groups
 end
 
+---@param groups LegacyGroup[]
+---@return number
 function Model.CountObjectives(groups)
 	local count = 0
 	for _, group in ipairs(groups) do
@@ -57,6 +71,8 @@ function Model.CountObjectives(groups)
 	return count
 end
 
+---@param data LegacyData
+---@return LegacySet
 local function LocatedCriteria(data)
 	local located = {}
 	for _, entries in pairs(data.zones) do
@@ -69,6 +85,11 @@ end
 
 -- Unfinished criteria no zone places, counting through "earn achievement X" into
 -- X's own criteria when X is a feeding achievement (the generator rejects cycles).
+---@param data LegacyData
+---@param located LegacySet
+---@param criteria LegacyCriteriaReader
+---@param achievementID number
+---@return number
 local function OpenUnlocated(data, located, criteria, achievementID)
 	local open = 0
 	for criteriaID, progress in pairs(criteria(achievementID) or {}) do
@@ -85,6 +106,10 @@ end
 
 -- Visible challenges with unfinished criteria no zone accounts for: levels, skills,
 -- ranks, and anything whose location the data can't establish.
+---@param data LegacyData
+---@param visible LegacySet
+---@param criteria LegacyCriteriaReader
+---@return LegacyUnlocated[]
 function Model.Unlocated(data, visible, criteria)
 	local located = LocatedCriteria(data)
 	local result = {}
@@ -101,6 +126,9 @@ function Model.Unlocated(data, visible, criteria)
 end
 
 -- Done/total of an achievement's criteria.
+---@param steps LegacyCriteria
+---@return number done
+---@return number total
 local function Tally(steps)
 	local done, total = 0, 0
 	for _, step in pairs(steps) do
@@ -112,6 +140,10 @@ end
 
 -- One unfinished step as a tracker line: "3/10" for counted criteria, done/total of X's
 -- criteria for "earn achievement X". `seen` names the step, so a block never lists it twice.
+---@param criteriaID number
+---@param progress LegacyProgress
+---@param criteria LegacyCriteriaReader
+---@return LegacyTrackerLine
 local function StepLine(criteriaID, progress, criteria)
 	local detail, seen
 	local sub = progress.type == EARN_ACHIEVEMENT and criteria(progress.asset)
@@ -125,6 +157,9 @@ local function StepLine(criteriaID, progress, criteria)
 end
 
 -- A tracked challenge's unfinished steps in game order, each with its progress.
+---@param challenge number
+---@param criteria LegacyCriteriaReader
+---@return LegacyTrackerLine[]
 function Model.TrackerLines(challenge, criteria)
 	local open = {}
 	for criteriaID, progress in pairs(criteria(challenge) or {}) do
@@ -146,6 +181,8 @@ end
 -- stored, and what "No fixed location" still tracks); a string is one zone's share of it.
 -- A feeding achievement ("Explore Felwood") is tracked whole, as "<achievement>", wherever
 -- it is ticked; objectives a challenge places itself (its dungeons) as "<challenge>:<uiMapID>".
+---@param group LegacyGroup
+---@return string
 function Model.ZoneKey(group)
 	if group.achievement ~= group.challenge then
 		return tostring(group.achievement)
@@ -153,23 +190,42 @@ function Model.ZoneKey(group)
 	return ("%d:%d"):format(group.challenge, group.uiMapID)
 end
 
+---@param key string
+---@return number? achievement
+---@return number? uiMapID
 local function ParseKey(key)
 	local achievement, uiMapID = key:match("^(%d+):?(%d*)$")
 	return tonumber(achievement), tonumber(uiMapID)
 end
 
 -- The visible challenge a tracked entry belongs to, or nil while the game lists none.
+---@param data LegacyData
+---@param key LegacyTrackingKey
+---@param visible LegacySet
+---@return number?
 function Model.TrackedChallenge(data, key, visible)
 	if type(key) == "number" then
 		return visible[key] and key or nil
 	end
-	return Model.OwningChallenge(data, (ParseKey(key)), visible)
+	local achievement = ParseKey(key)
+	if not achievement then
+		return nil
+	end
+	return Model.OwningChallenge(data, achievement, visible)
 end
 
 -- A tracked zone share's unfinished lines: a feeding achievement as one done/total line
 -- under its own name, a challenge's own objectives in that zone one line each.
+---@param data LegacyData
+---@param key string
+---@param criteria LegacyCriteriaReader
+---@param name fun(achievementID: number): string
+---@return LegacyTrackerLine[]
 local function ZoneLines(data, key, criteria, name)
 	local achievement, uiMapID = ParseKey(key)
+	if not achievement then
+		return {}
+	end
 	local steps = criteria(achievement)
 	if not steps then
 		return {}
@@ -194,7 +250,14 @@ end
 -- The tracker's blocks, one per visible challenge in the order first tracked: the zone shares
 -- ticked under it, then (when the whole challenge is tracked) its other unfinished steps.
 -- A challenge tracked only through zones drops out once none of them has anything left.
+---@param data LegacyData
+---@param tracked LegacyTrackingKey[]
+---@param visible LegacySet
+---@param criteria LegacyCriteriaReader
+---@param name fun(achievementID: number): string
+---@return LegacyTrackedBlock[]
 function Model.TrackedBlocks(data, tracked, visible, criteria, name)
+	---@type LegacyTrackedBlock[], table<number, LegacyTrackedBlock>
 	local blocks, byChallenge = {}, {}
 	for _, key in ipairs(tracked) do
 		local challenge = Model.TrackedChallenge(data, key, visible)
@@ -236,6 +299,10 @@ end
 -- One category of a zone's completion: { done, total, left = { names } }, or nil when
 -- the zone has none. `state(item)` returns true (done),
 -- false (not done) or nil (unknown, left out of the count).
+---@generic T: { name: string }
+---@param items T[]?
+---@param state fun(item: T): boolean?
+---@return LegacyCategory?
 local function CompletionCategory(items, state)
 	if not items or #items == 0 then
 		return nil
@@ -258,9 +325,13 @@ local function CompletionCategory(items, state)
 	return category
 end
 
+---@type LegacyCategoryKey[]
 Model.COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons", "raids", "legacy", "reputations" }
 
 -- A raid is done when every boss is, and a boss when any of its refs is; unknown while any boss is.
+---@param raid LegacyRaid
+---@param refsDone fun(refs: LegacyRefs): boolean?
+---@return boolean?
 local function RaidDone(raid, refsDone)
 	local done = true
 	for _, boss in ipairs(raid.bosses) do
@@ -277,6 +348,11 @@ end
 Model.REPUTATION_TARGET = 5
 
 -- Entries for the player's side: those with no side under `sideKey`, Neutral ones, and the player's faction's.
+---@generic T
+---@param items T[]?
+---@param faction string
+---@param sideKey string
+---@return T[]
 local function ForFaction(items, faction, sideKey)
 	local own = {}
 	for _, item in ipairs(items or {}) do
@@ -298,7 +374,12 @@ end
 -- Areas, flight paths and reputations are per character; dungeon wings, raids and Legacy
 -- objectives are account-wide Legacy steps, done when any of their refs is (a raid: every boss).
 -- `counted(key)`, when given, says which categories the player counts; the rest are left out entirely.
+---@param zone LegacyZone
+---@param snapshot LegacySnapshot
+---@param counted? fun(key: LegacyCategoryKey): boolean
+---@return LegacyZoneResult
 function Model.ZoneCompletion(zone, snapshot, counted)
+	---@type LegacyZoneResult
 	local result = {
 		areas = CompletionCategory(zone.areas, function(area)
 			return snapshot.explored[area.key] == true
@@ -321,6 +402,7 @@ function Model.ZoneCompletion(zone, snapshot, counted)
 		done = 0,
 		total = 0,
 		pending = 0,
+		complete = false,
 	}
 	for _, key in ipairs(Model.COMPLETION_CATEGORIES) do
 		if counted and not counted(key) then
@@ -344,12 +426,16 @@ end
 
 -- Whether a zone completion counts anything at all: a zone with every category switched off
 -- (or none to count) is neither complete nor incomplete.
+---@param result LegacyZoneResult
+---@return boolean
 function Model.CompletionCounts(result)
 	return result.total > 0 or result.pending > 0
 end
 
 -- A continent's zone completion from its zones' results: { complete, zones, percent },
 -- or nil when none of them counts anything.
+---@param results LegacyZoneResult[]
+---@return LegacyContinentResult?
 function Model.ContinentCompletion(results)
 	local continent = { complete = 0, zones = 0 }
 	for _, result in ipairs(results) do
@@ -368,14 +454,24 @@ function Model.ContinentCompletion(results)
 end
 
 -- offsetX, offsetY, width, height from an overlay key ("offsetX:offsetY:width:height").
+---@param key string
+---@return number offsetX
+---@return number offsetY
+---@return number width
+---@return number height
 function Model.OverlayRect(key)
 	local offsetX, offsetY, width, height = key:match("^(%d+):(%d+):(%d+):(%d+)$")
-	return tonumber(offsetX), tonumber(offsetY), tonumber(width), tonumber(height)
+	-- The generator validates overlay keys; fail here if another caller violates that contract.
+	return assert(tonumber(offsetX)), assert(tonumber(offsetY)), assert(tonumber(width)), assert(tonumber(height))
 end
 
 -- The area under a point on the map canvas, or nil. Overlay textures are rectangles around
 -- irregular shapes and overlap, so of the areas whose texture holds the point, the one whose
 -- centre (its hit rectangle's, Blizzard's own label target, else the texture's) is nearest wins.
+---@param areas LegacyArea[]
+---@param x number
+---@param y number
+---@return number?
 function Model.AreaAt(areas, x, y)
 	local best, bestDistance
 	for index, area in ipairs(areas) do
@@ -397,6 +493,12 @@ end
 
 -- A tile's drawn size and how much of its power-of-two file that covers; only the last
 -- tile in a row or column is partial.
+---@param total number
+---@param tileSize number
+---@param index number
+---@param count number
+---@return number pixels
+---@return number fraction
 local function TileSpan(total, tileSize, index, count)
 	if index < count then
 		return tileSize, 1
@@ -414,6 +516,11 @@ end
 
 -- How an overlay's tiles lay out, as Blizzard's MapExplorationPinMixin:RefreshOverlays
 -- does it: row-major, `index` into the overlay's tile list, x/y from its top-left.
+---@param width number
+---@param height number
+---@param tileWidth number
+---@param tileHeight number
+---@return LegacyTile[]
 function Model.OverlayTiles(width, height, tileWidth, tileHeight)
 	local wide, tall = math.ceil(width / tileWidth), math.ceil(height / tileHeight)
 	local tiles = {}

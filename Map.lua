@@ -1,3 +1,4 @@
+---@type string, LegacyHereNamespace
 local _, ns = ...
 
 local PIN_TEMPLATE = "LegacyHerePinTemplate"
@@ -15,6 +16,8 @@ local KIND_LABEL = {
 	reputation = "Reputation",
 }
 
+---@param uiMapID number?
+---@return LegacyGroup[]
 local function ZoneGroups(uiMapID)
 	if not uiMapID then
 		return {}
@@ -22,6 +25,8 @@ local function ZoneGroups(uiMapID)
 	return ns.Model.ZoneObjectives(ns.Data, uiMapID, ns.Live.Visible(), ns.Live.Criteria)
 end
 
+---@param challenge number
+---@return string?
 local function PointsText(challenge)
 	local points = ns.Live.Points(challenge)
 	if points then
@@ -29,6 +34,8 @@ local function PointsText(challenge)
 	end
 end
 
+---@param tooltip GameTooltip
+---@param challenge number
 local function AddPointsLine(tooltip, challenge)
 	local text = PointsText(challenge)
 	if text then
@@ -36,12 +43,16 @@ local function AddPointsLine(tooltip, challenge)
 	end
 end
 
+---@param group LegacyGroup
+---@return boolean
 local function IsExploreGroup(group)
 	return group.objectives[1].entry.kind == "explore"
 end
 
 -- Points belong to the whole challenge, so a feeding achievement (an "Explore <zone>")
 -- names what it counts toward rather than implying each step is worth them.
+---@param tooltip GameTooltip
+---@param group LegacyGroup
 local function AddRewardLine(tooltip, group)
 	if group.achievement == group.challenge then
 		AddPointsLine(tooltip, group.challenge)
@@ -59,6 +70,8 @@ local function AddRewardLine(tooltip, group)
 end
 
 -- "9 of 12 areas left" for an exploration achievement, from live progress.
+---@param group LegacyGroup
+---@return string
 local function AreasLeftText(group)
 	local total, left = 0, 0
 	for _, progress in pairs(ns.Live.Criteria(group.achievement) or {}) do
@@ -70,6 +83,8 @@ local function AreasLeftText(group)
 	return ("%s: %d of %d areas left"):format(ns.Live.Name(group.achievement), left, total)
 end
 
+---@param tooltip GameTooltip
+---@param group LegacyGroup
 local function AddGroupTooltip(tooltip, group)
 	if IsExploreGroup(group) then
 		GameTooltip_SetTitle(tooltip, ns.Live.Name(group.achievement))
@@ -87,6 +102,9 @@ local function AddGroupTooltip(tooltip, group)
 	AddRewardLine(tooltip, group)
 end
 
+---@param tooltip GameTooltip
+---@param group LegacyGroup
+---@param objective LegacyObjective
 local function AddPinTooltip(tooltip, group, objective)
 	if objective.entry.kind == "explore" then
 		GameTooltip_SetTitle(tooltip, objective.text)
@@ -100,6 +118,8 @@ local function AddPinTooltip(tooltip, group, objective)
 	AddRewardLine(tooltip, group)
 end
 
+---@param tooltip GameTooltip
+---@param zone LegacyContinentZone
 local function AddZoneTooltip(tooltip, zone)
 	GameTooltip_SetTitle(tooltip, zone.name)
 	for _, group in ipairs(zone.groups) do
@@ -112,6 +132,8 @@ end
 -- On a continent, one badge per zone with its unfinished count, instead of every pin.
 -- Exploration is left to the zone map's shading, so badges count place-bound objectives only.
 -- They follow zone completion's "On the world map" switch, so turning it off leaves continents bare.
+---@param continentID number
+---@return LegacyContinentZone[]
 local function ContinentZones(continentID)
 	local zones = {}
 	for uiMapID in pairs(ns.Data.zones) do
@@ -158,12 +180,17 @@ end
 -- the whole challenge. The tracker's challenge names open the Legacy panel.
 local TRACK_HINT = "Click to track, with live progress."
 
+---@param name string
+---@param count number
+---@return string
 local function ChallengeText(name, count)
 	return ("%s |cffffffff(%d)|r"):format(name, count)
 end
 
 -- Each entry wears the icon it has on the map: the Legacy pin, or for exploration the
 -- compass of the undiscovered-area shading (as under "What counts").
+---@param root SharedMenuDescriptionProxy
+---@param group LegacyGroup
 local function AddGroup(root, group)
 	local icon = IsExploreGroup(group) and ns.Completion.Icon("areas", 14) or CreateAtlasMarkup(POINTS_ICON, 10, 14)
 	local name = ("%s %s"):format(icon, ns.Live.Name(group.achievement))
@@ -179,6 +206,8 @@ local function AddGroup(root, group)
 	end)
 end
 
+---@param menu SharedMenuDescriptionProxy
+---@param item LegacyUnlocated
 local function AddUnlocatedItem(menu, item)
 	local text = ChallengeText(ns.Live.Name(item.challenge), item.open)
 	local button = menu:CreateCheckbox(text, ns.Tracker.IsTracked, ns.Tracker.Toggle, item.challenge)
@@ -191,6 +220,10 @@ local function AddUnlocatedItem(menu, item)
 end
 
 -- Ordered groups keyed by name, so submenus keep the order items first appear in.
+---@param list LegacyMenuGroup[]
+---@param byName table<string, LegacyMenuGroup>
+---@param name string
+---@return LegacyMenuGroup
 local function Group(list, byName, name)
 	local group = byName[name]
 	if not group then
@@ -203,6 +236,7 @@ end
 
 -- Grouped like the Legacy panel: the game's category, under its parent when it has
 -- one (Classes > Priest, PvP > Ranks), so no submenu runs off the screen.
+---@param root SharedMenuDescriptionProxy
 local function AddUnlocated(root)
 	local unlocated = ns.Model.Unlocated(ns.Data, ns.Live.Visible(), ns.Live.Criteria)
 	if #unlocated == 0 then
@@ -236,6 +270,8 @@ local function AddUnlocated(root)
 	end
 end
 
+---@param root SharedMenuDescriptionProxy
+---@param uiMapID number?
 local function BuildMenu(root, uiMapID)
 	root:SetTag("MENU_LEGACY_HERE")
 	local mapInfo = uiMapID and C_Map.GetMapInfo(uiMapID)
@@ -256,6 +292,11 @@ local function BuildMenu(root, uiMapID)
 	root:CreateButton("Open the Legacy panel", ToggleLegacySystemUI)
 end
 
+---@class LegacyHereMapButtonMixin : DropdownButton
+---@field GetParent fun(self: LegacyHereMapButtonMixin): WorldMapFrame
+---@field Count FontString
+---@field Icon Texture
+---@field count number
 LegacyHereMapButtonMixin = {}
 
 function LegacyHereMapButtonMixin:OnLoad()
@@ -269,6 +310,8 @@ end
 local TOP_RIGHT_BUTTONS = { "WorldMapTrackingOptionsButton", "WorldMapTrackingPinButton" }
 local BUTTON_SPACING = -32
 
+---@param map WorldMapFrame
+---@return number
 local function TopRightOffset(map)
 	local offsetY = -2
 	for _, key in ipairs(TOP_RIGHT_BUTTONS) do
@@ -281,11 +324,12 @@ local function TopRightOffset(map)
 end
 
 function LegacyHereMapButtonMixin:Refresh()
+	---@type WorldMapFrame
 	local map = self:GetParent()
 	self:ClearAllPoints()
 	self:SetPoint("TOPRIGHT", map:GetCanvasContainer(), "TOPRIGHT", -4, TopRightOffset(map))
 	local count = ns.Model.CountObjectives(ZoneGroups(self:GetParent():GetMapID()))
-	self.Count:SetText(count > 0 and count or "")
+	self.Count:SetText(count > 0 and tostring(count) or "")
 	self.Icon:SetDesaturated(count == 0)
 	self.count = count
 end
@@ -313,21 +357,31 @@ end
      Built once Blizzard_WorldMap (and so MapCanvas) is loaded; the XML template
      resolves its mixin by name when the first pin is created. ]]
 
+---@return MapCanvasDataProviderMixin
 local function CreatePinProvider()
+	---@class LegacyHerePinMixin : Frame, MapCanvasPinMixin
+	---@field Count FontString
+	---@field Icon Texture
+	---@field group? LegacyGroup
+	---@field objective? LegacyObjective
+	---@field zone? LegacyContinentZone
 	LegacyHerePinMixin = CreateFromMixins(MapCanvasPinMixin)
 
 	-- Setup lives here rather than in OnLoad, as Blizzard's own map pins do:
 	-- this client doesn't reliably run OnLoad for addon pins.
+	---@param group LegacyGroup?
+	---@param objective LegacyObjective?
+	---@param zone LegacyContinentZone?
 	function LegacyHerePinMixin:OnAcquired(group, objective, zone)
 		self:UseFrameLevelType("PIN_FRAME_LEVEL_AREA_POI")
 		self.group = group
 		self.objective = objective
 		self.zone = zone
-		self.Count:SetText(zone and zone.count or "")
+		self.Count:SetText(zone and tostring(zone.count) or "")
 		self:SetScalingLimits(1, 1.0, 1.2)
 		if zone then
 			self:SetPosition(zone.x, zone.y)
-		else
+		elseif objective then
 			self:SetPosition(objective.entry.x, objective.entry.y)
 		end
 		self:ApplyCurrentScale()
@@ -337,7 +391,7 @@ local function CreatePinProvider()
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		if self.zone then
 			AddZoneTooltip(GameTooltip, self.zone)
-		else
+		elseif self.group and self.objective then
 			AddPinTooltip(GameTooltip, self.group, self.objective)
 		end
 		GameTooltip:Show()
@@ -349,6 +403,12 @@ local function CreatePinProvider()
 
 	-- One pin per zone map holding every undiscovered area, drawn from the same map
 	-- tiles Blizzard reveals on discovery (see MapExplorationPinMixin:RefreshOverlays).
+	---@class LegacyHereAreaPinMixin : Frame, MapCanvasPinMixin
+	---@field textures? LegacyTexturePool
+	---@field zone? LegacyZone
+	---@field hovered? LegacyArea
+	---@field drawn table<string, Texture[]>
+	---@field legacy table<string, LegacyAreaObjective>
 	LegacyHereAreaPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
 	-- Pools are made on first acquire, as MapExplorationPinMixin does; see LegacyHerePinMixin:OnAcquired.
@@ -385,12 +445,16 @@ local function CreatePinProvider()
 	end
 
 	-- The cursor in canvas pixels, the space overlay offsets are in.
+	---@return number x
+	---@return number y
 	function LegacyHereAreaPinMixin:CursorPosition()
 		local scale = self:GetEffectiveScale()
 		local x, y = GetCursorPosition()
 		return x / scale - self:GetLeft(), self:GetTop() - y / scale
 	end
 
+	---@param x number
+	---@param y number
 	function LegacyHereAreaPinMixin:HoverAt(x, y)
 		local index = self.zone and ns.Model.AreaAt(self.zone.areas, x, y)
 		local area = index and self.zone.areas[index]
@@ -400,6 +464,7 @@ local function CreatePinProvider()
 		end
 	end
 
+	---@param area LegacyArea?
 	function LegacyHereAreaPinMixin:Highlight(area)
 		if self.hovered then
 			for _, texture in ipairs(self.drawn[self.hovered.key]) do
@@ -428,6 +493,14 @@ local function CreatePinProvider()
 		GameTooltip:Show()
 	end
 
+	---@param tileID number
+	---@param x number
+	---@param y number
+	---@param width number
+	---@param height number
+	---@param u number
+	---@param v number
+	---@return Texture
 	function LegacyHereAreaPinMixin:DrawTile(tileID, x, y, width, height, u, v)
 		local texture = self.textures:Acquire()
 		self:GetMap():AddMaskableTexture(texture)
@@ -441,6 +514,9 @@ local function CreatePinProvider()
 		return texture
 	end
 
+	---@param zone LegacyZone
+	---@param areas LegacyArea[]
+	---@param legacy table<string, LegacyAreaObjective>
 	function LegacyHereAreaPinMixin:OnAcquired(zone, areas, legacy)
 		if not self.textures then
 			self:CreatePools()
@@ -469,9 +545,12 @@ local function CreatePinProvider()
 	end
 
 	-- The zone's undiscovered areas that have map tiles; nil for a map without shading data.
+	---@param mapID number
+	---@return LegacyZone?
+	---@return LegacyArea[]?
 	local function UndiscoveredAreas(mapID)
 		local zone = ns.Data.completion[mapID]
-		if not (zone and zone.tileWidth) then
+		if not (zone and zone.tileWidth and zone.tileHeight) then
 			return nil
 		end
 		local explored = ns.Live.ZoneSnapshot(mapID).explored
@@ -539,6 +618,7 @@ local function Attach()
 	map:AddDataProvider(provider)
 
 	-- Refresh anchors it; see TopRightOffset.
+	---@type LegacyHereMapButtonMixin
 	local button = map:AddOverlayFrame("LegacyHereMapButtonTemplate", "DROPDOWNBUTTON")
 
 	function ns.RefreshMap()
