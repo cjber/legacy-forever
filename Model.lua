@@ -13,7 +13,7 @@ local _, ns = ...
 local Model = {}
 ns.Model = Model
 
--- Achievement type 8: "earn achievement X", where X is the criterion's asset.
+-- Criteria type 8: "earn achievement X", where X is the criterion's asset.
 local EARN_ACHIEVEMENT = 8
 
 -- The visible challenge an objective counts toward, or nil if none is visible.
@@ -296,7 +296,7 @@ function Model.TrackedBlocks(data, tracked, visible, criteria, name)
 	return shown
 end
 
--- One category of a zone's completion: { done, total, left = { names } }, or nil when
+-- One category of a zone's completion: { done, total, pending, complete, left = { names } }, or nil when
 -- the zone has none. `state(item)` returns true (done),
 -- false (not done) or nil (unknown, left out of the count).
 ---@generic T: { name: string }
