@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Legacy Here is now Legacy Forever**, matching the other WoW: Forever addons. The addon folder is `LegacyForever`, the slash command is `/lf`, and settings start fresh under the new name.
+- **Dungeon and raid entrances keep their portal.** A Legacy step at an entrance used to replace the map's dungeon or raid icon with the Legacy shield. It now shows the portal with a small shield on its corner, so you can still see the entrance.
 - **The zone section in the objective tracker names what is left**, not just the counts. Under "Darkshore 77%" you now see the unexplored areas, missing dungeons and remaining Legacy steps by name, each with its icon, five at most with "..." after; the map tooltip still lists them all.
 - **The map button's count sits inside its Legacy shield**, in the game's gold lettering, and the shield is a little bigger so the number reads at a glance. Three-digit counts use a smaller size so they stay inside the shield.
 - **Ticking a zone's objective in the map menu tracks just that zone**, not the whole challenge. Ticking "Explore Felwood" adds Explorer to the tracker with one line under it, "0/12 Explore Felwood", counting up as you discover its areas; tick more zones and each gets its own line under the same challenge. A dungeon ticked from its zone's map shows that dungeon under its Spelunker challenge in the same way. Unticking a zone removes its line, and the challenge goes once nothing under it is tracked. Challenges ticked under "No fixed location", and anything you tracked before this version, still show every unfinished step.
