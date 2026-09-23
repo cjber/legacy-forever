@@ -26,8 +26,7 @@ jobs:
           echo "e9235d2d72ef55bc41cf8c99cda2ed64777682024b4bb81f5dea425060c5cbb8  $RUNNER_TEMP/luals.tgz" | sha256sum -c -
           mkdir -p "$RUNNER_TEMP/luals" && tar -xzf "$RUNNER_TEMP/luals.tgz" -C "$RUNNER_TEMP/luals"
           "$RUNNER_TEMP/luals/bin/lua-language-server" --check=. --checklevel=Warning --logpath="$RUNNER_TEMP/luals-log"
-      - run: luajit tests/data_spec.lua
-      - run: luajit tests/model_spec.lua
+      - run: for spec in tests/*_spec.lua; do luajit "$spec" || exit 1; done
       - uses: JohnnyMorganz/stylua-action@76fd70c03e6340ceaf673366712db9b20560b402 # v5.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

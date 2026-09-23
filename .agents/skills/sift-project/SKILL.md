@@ -23,7 +23,7 @@ Run in order from the repository root. All must pass before and after any audit 
 | Lint (Lua) | `luacheck .` | `0 warnings / 0 errors` |
 | Lint (Python) | `ruff check .` | `All checks passed!` |
 | Types (Lua) | `lua-language-server --check=. --checklevel=Warning --logpath=.sift/runs/luals` | exit 0, "no problems found" |
-| Tests | `luajit tests/data_spec.lua && luajit tests/model_spec.lua` | exit 0 (`model_spec: N checks passed`) |
+| Tests | `for s in tests/*_spec.lua; do luajit "$s" \|\| exit 1; done` | exit 0 (`model_spec: N checks passed`) |
 | Workflows | `actionlint && zizmor --offline .github` | exit 0, no findings |
 | Secrets | `gitleaks git --redact --no-banner .` | `no leaks found` |
 
