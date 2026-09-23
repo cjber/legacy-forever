@@ -111,6 +111,7 @@ end
 
 -- On a continent, one badge per zone with its unfinished count, instead of every pin.
 -- Exploration is left to the zone map's shading, so badges count place-bound objectives only.
+-- They follow zone completion's "On the world map" switch, so turning it off leaves continents bare.
 local function ContinentZones(continentID)
 	local zones = {}
 	for uiMapID in pairs(ns.Data.zones) do
@@ -495,8 +496,10 @@ local function CreatePinProvider()
 		local mapID = self:GetMap():GetMapID()
 		local info = mapID and C_Map.GetMapInfo(mapID)
 		if info and info.mapType == Enum.UIMapType.Continent then
-			for _, zone in ipairs(ContinentZones(mapID)) do
-				self:GetMap():AcquirePin(PIN_TEMPLATE, nil, nil, zone)
+			if ns.Completion.ShownOnMap() then
+				for _, zone in ipairs(ContinentZones(mapID)) do
+					self:GetMap():AcquirePin(PIN_TEMPLATE, nil, nil, zone)
+				end
 			end
 			return
 		end
@@ -545,6 +548,7 @@ local function Attach()
 		end
 	end
 	ns.Live.OnChange(ns.RefreshMap)
+	ns.Completion.OnToggle(ns.RefreshMap)
 	button:Refresh()
 end
 

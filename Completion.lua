@@ -54,9 +54,23 @@ local function Refresh()
 	end
 end
 
+local toggleListeners = {}
+
+-- For what other files draw under these switches: the continent map's zone badges follow "map".
+function Completion.OnToggle(callback)
+	toggleListeners[#toggleListeners + 1] = callback
+end
+
+function Completion.ShownOnMap()
+	return IsShown("map")
+end
+
 local function Toggle(surface)
 	Settings()[surface] = not IsShown(surface)
 	Refresh()
+	for _, callback in ipairs(toggleListeners) do
+		callback()
+	end
 end
 
 function Completion.Of(uiMapID)
@@ -443,7 +457,14 @@ end
 function Completion.AddMenu(root)
 	root:CreateTitle("Zone completion")
 	root:CreateCheckbox("In the objective tracker", IsShown, Toggle, "tracker")
-	root:CreateCheckbox("On the world map", IsShown, Toggle, "map")
+	local map = root:CreateCheckbox("On the world map", IsShown, Toggle, "map")
+	map:SetTooltip(function(tooltip)
+		GameTooltip_SetTitle(tooltip, "On the world map")
+		GameTooltip_AddNormalLine(
+			tooltip,
+			"The zone you're viewing in the map's corner, and a badge on each zone of a continent map."
+		)
+	end)
 	local counts = root:CreateButton("What counts")
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 		counts:CreateCheckbox(("%s %s"):format(Completion.Icon(key, 14), LABELS[key]), IsCounted, ToggleCounted, key)

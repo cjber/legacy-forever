@@ -12,6 +12,7 @@ verbatim rather than rewritten as the addon moves.
 ## [Unreleased]
 
 - **Ticking a zone's objective in the map menu tracks just that zone**, not the whole challenge. Ticking "Explore Felwood" adds Explorer to the tracker with one line under it, "0/12 Explore Felwood", counting up as you discover its areas; tick more zones and each gets its own line under the same challenge. A dungeon ticked from its zone's map shows that dungeon under its Spelunker challenge in the same way. Unticking a zone removes its line, and the challenge goes once nothing under it is tracked. Challenges ticked under "No fixed location", and anything you tracked before this version, still show every unfinished step.
+- **Unticking "On the world map" under Zone completion now also hides the zone badges on continent maps**, straight away, and ticking it brings them back. Pins on a zone's own map, such as dungeon entrances, stay.
 - **Zone badges on continent maps carry their count on the icon's corner**, like a stack count on a bag slot, in the game's small number font, instead of floating beside the icon.
 
 ## [0.3.0] - 2026-09-23
