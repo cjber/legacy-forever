@@ -200,7 +200,10 @@ end
 
 local function RecordFlightMaster()
 	local continent = Live.ContinentOf(C_Map.GetBestMapForUnit("player") or 0)
-	local nodes = continent and C_TaxiMap.GetAllTaxiNodes(continent)
+	if not continent then
+		return
+	end
+	local nodes = C_TaxiMap.GetAllTaxiNodes(continent)
 	if not nodes or #nodes == 0 then
 		return
 	end
