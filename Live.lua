@@ -200,7 +200,10 @@ end
 
 local function RecordFlightMaster()
 	local continent = Live.ContinentOf(C_Map.GetBestMapForUnit("player") or 0)
-	local nodes = continent and C_TaxiMap.GetAllTaxiNodes(continent)
+	if not continent then
+		return
+	end
+	local nodes = C_TaxiMap.GetAllTaxiNodes(continent)
 	if not nodes or #nodes == 0 then
 		return
 	end
@@ -226,7 +229,7 @@ function Live.ZoneSnapshot(uiMapID)
 	end
 	local record = FlightRecord()
 	if record.continents[Live.ContinentOf(uiMapID) or 0] then
-		for _, taxi in ipairs(ns.Data.completion[uiMapID].taxis or {}) do
+		for _, taxi in ipairs(ns.Data.completion[uiMapID].taxis) do
 			snapshot.taxis[taxi.node] = record.known[taxi.node] == true
 		end
 	end

@@ -5,17 +5,54 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - run: sudo apt-get update && sudo apt-get install -y luajit lua-check
       - run: luacheck .
+      - run: pipx run ruff==0.16.8 format --check .
+      - run: pipx run ruff==0.16.8 check .
+      - name: Lua Language Server diagnostics
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/luals.tgz" \
+            https://github.com/LuaLS/lua-language-server/releases/download/3.19.1/lua-language-server-3.19.1-linux-x64.tar.gz
+          echo "e9235d2d72ef55bc41cf8c99cda2ed64777682024b4bb81f5dea425060c5cbb8  $RUNNER_TEMP/luals.tgz" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/luals" && tar -xzf "$RUNNER_TEMP/luals.tgz" -C "$RUNNER_TEMP/luals"
+          "$RUNNER_TEMP/luals/bin/lua-language-server" --check=. --checklevel=Warning --logpath="$RUNNER_TEMP/luals-log"
       - run: luajit tests/data_spec.lua
       - run: luajit tests/model_spec.lua
-      - uses: JohnnyMorganz/stylua-action@v4
+      - uses: JohnnyMorganz/stylua-action@479972f01e665acfcba96ada452c36608bdbbb5e # v4.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          version: latest
+          version: 2.5.2
           args: --check .
+
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install gitleaks 8.30.1 and actionlint 1.7.12
+        run: |
+          cd "$RUNNER_TEMP"
+          curl -fsSLO https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz
+          curl -fsSLO https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+          sha256sum -c - <<'SUMS'
+          551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  gitleaks_8.30.1_linux_x64.tar.gz
+          8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  actionlint_1.7.12_linux_amd64.tar.gz
+          SUMS
+          tar -xzf gitleaks_8.30.1_linux_x64.tar.gz gitleaks
+          tar -xzf actionlint_1.7.12_linux_amd64.tar.gz actionlint
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+      - run: gitleaks git --redact --no-banner .
+      - run: actionlint
+      - run: pipx run zizmor==1.30.1 --offline .github

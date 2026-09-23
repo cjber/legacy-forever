@@ -1,7 +1,7 @@
 name: Refresh Legacy data
 
 # Opens a PR with regenerated data when wago.tools lists a newer Forever build.
-# PRs opened with GITHUB_TOKEN don't trigger CI, so this job runs the full checks itself.
+# PRs opened with GITHUB_TOKEN don't trigger CI, so this job runs the Lua lint, tests and format check itself.
 # Daily: beta builds have shipped several times a week.
 on:
   schedule:
@@ -16,7 +16,9 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - name: Pin the newest Forever build
         id: build
         run: |
@@ -38,13 +40,13 @@ jobs:
           luajit tests/data_spec.lua
           luajit tests/model_spec.lua
       - if: steps.build.outputs.new == 'true'
-        uses: JohnnyMorganz/stylua-action@v4
+        uses: JohnnyMorganz/stylua-action@479972f01e665acfcba96ada452c36608bdbbb5e # v4.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          version: latest
+          version: 2.5.2
           args: --check .
       - if: steps.build.outputs.new == 'true'
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7.0.11
         with:
           branch: data/forever-${{ steps.build.outputs.version }}
           title: "data: Legacy data for Forever ${{ steps.build.outputs.version }}"

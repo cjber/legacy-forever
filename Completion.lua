@@ -224,7 +224,6 @@ end
 
 LegacyHereZoneOverlayMixin = {}
 
--- Called by the world map whenever it changes map.
 -- Room for the text, the bar and a fade on the right, so it never looks boxed.
 local OVERLAY_MIN_WIDTH = 140
 

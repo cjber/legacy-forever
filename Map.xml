@@ -30,7 +30,7 @@
 	</Frame>
 
 	<!-- Every undiscovered area of the viewed zone, shaded. Sized to the canvas in code;
-	     only its per-area hover frames take the mouse, and only for motion. -->
+	     it never takes the mouse: hover is found by polling the cursor. -->
 	<Frame name="LegacyHereAreaPinTemplate" mixin="LegacyHereAreaPinMixin" virtual="true"/>
 
 	<!-- A bare Legacy icon in the map's top-right button column, with its count. -->

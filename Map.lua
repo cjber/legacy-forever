@@ -154,14 +154,6 @@ end
 
 -- Each challenge is a checkbox for our own tracker (Forever refuses Blizzard's);
 -- the tracker's challenge names open the Legacy panel.
-local function IsTracked(challenge)
-	return ns.Tracker.IsTracked(challenge)
-end
-
-local function ToggleTracked(challenge)
-	ns.Tracker.Toggle(challenge)
-end
-
 local TRACK_HINT = "Click to track, with live progress."
 
 local function ChallengeText(name, count)
@@ -173,8 +165,12 @@ end
 local function AddGroup(root, group)
 	local icon = IsExploreGroup(group) and ns.Completion.Icon("areas", 14) or CreateAtlasMarkup(POINTS_ICON, 10, 14)
 	local name = ("%s %s"):format(icon, ns.Live.Name(group.achievement))
-	local button =
-		root:CreateCheckbox(ChallengeText(name, #group.objectives), IsTracked, ToggleTracked, group.challenge)
+	local button = root:CreateCheckbox(
+		ChallengeText(name, #group.objectives),
+		ns.Tracker.IsTracked,
+		ns.Tracker.Toggle,
+		group.challenge
+	)
 	button:SetTooltip(function(tooltip)
 		AddGroupTooltip(tooltip, group)
 		GameTooltip_AddInstructionLine(tooltip, TRACK_HINT)
@@ -183,7 +179,7 @@ end
 
 local function AddUnlocatedItem(menu, item)
 	local text = ChallengeText(ns.Live.Name(item.challenge), item.open)
-	local button = menu:CreateCheckbox(text, IsTracked, ToggleTracked, item.challenge)
+	local button = menu:CreateCheckbox(text, ns.Tracker.IsTracked, ns.Tracker.Toggle, item.challenge)
 	button:SetTooltip(function(tooltip)
 		GameTooltip_SetTitle(tooltip, ns.Live.Name(item.challenge))
 		GameTooltip_AddNormalLine(tooltip, "Levels, skills, ranks and anything without a fixed place.")
