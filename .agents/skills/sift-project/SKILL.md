@@ -49,8 +49,8 @@ On-demand tools for audits. Output is candidates, never verdicts.
 `rg` with no path argument reads stdin in a non-interactive shell and hangs: always pass `.`. Plain `rg` skips
 hidden paths; add `--hidden` when a search must cover `.github/`.
 
-sift's inventory marks `Model.lua` and `tests/data_spec.lua` as generated because their
-comments mention "the generated data"; only `Data/Legacy.lua` is generated.
+sift's inventory marks `Model.lua` and `tools/legacy_render.py` as generated because the word
+appears in their first five lines; only `Data/Legacy.lua` is generated.
 
 ## Live roots
 
