@@ -1,6 +1,6 @@
 std = "lua51"
 max_line_length = 120
-exclude_files = { "tools/.cache/**", ".release/**" }
+exclude_files = { "tools/.cache/**", ".release/**", ".types/**", "types/**" }
 ignore = { "212/_.*", "212/self" } -- unused args prefixed with _, and self on mixin handlers
 
 globals = {
@@ -28,3 +28,8 @@ read_globals = {
 
 files["Data/Legacy.lua"] = { max_line_length = false }
 files["tests/"] = { std = "+luajit" }
+
+-- Headless API stubs are writable only in the Live regression harness.
+files["tests/live_spec.lua"] = {
+	globals = { "UnitGUID", "UnitFactionGroup", "Enum", "C_Map", "C_MapExplorationInfo", "C_TaxiMap", "C_Timer", "tContains", "CreateFrame" },
+}

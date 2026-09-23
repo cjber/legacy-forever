@@ -1,19 +1,25 @@
+---@type string, LegacyHereNamespace
 local _, ns = ...
 
 -- Forever's ruleset refuses achievement tracking (C_ContentTracking reports
 -- Untrackable), so tracked challenges get their own section in Blizzard's
 -- objective tracker, laid out like its achievement section. Entries are whole
 -- challenges or one zone's share of one (Model.ZoneKey).
+---@class LegacyTracker
 local Tracker = {}
 ns.Tracker = Tracker
 
 -- Matches Blizzard's achievement section: five steps, then "...".
 local MAX_STEPS = 5
 
+---@return LegacyTrackingKey[]
 local function Tracked()
 	return ns.SavedTable("tracked")
 end
 
+---@param list LegacyTrackingKey[]
+---@param value LegacyTrackingKey
+---@return number?
 local function IndexOf(list, value)
 	for index, item in ipairs(list) do
 		if item == value then
@@ -22,10 +28,13 @@ local function IndexOf(list, value)
 	end
 end
 
+---@param key LegacyTrackingKey
+---@return boolean
 function Tracker.IsTracked(key)
 	return IndexOf(Tracked(), key) ~= nil
 end
 
+---@type LegacyTrackerModule?
 local module
 
 function Tracker.Refresh()
@@ -34,6 +43,7 @@ function Tracker.Refresh()
 	end
 end
 
+---@param key LegacyTrackingKey
 function Tracker.Toggle(key)
 	local tracked = Tracked()
 	local index = IndexOf(tracked, key)
@@ -46,6 +56,7 @@ function Tracker.Toggle(key)
 end
 
 -- Everything tracked under a challenge: the whole challenge and every zone share of it.
+---@param challenge number
 local function StopTracking(challenge)
 	local tracked, visible = Tracked(), ns.Live.Visible()
 	for index = #tracked, 1, -1 do
@@ -56,8 +67,11 @@ local function StopTracking(challenge)
 	Tracker.Refresh()
 end
 
+---@class LegacyChallengeTracker : LegacyTrackerModule
 local ModuleMixin = { headerText = "Legacy" }
 
+---@param block LegacyTrackerBlock
+---@param mouseButton string
 function ModuleMixin:OnBlockHeaderClick(block, mouseButton)
 	if mouseButton ~= "RightButton" then
 		ns.Live.ShowInLegacyPanel(block.id)
@@ -100,12 +114,16 @@ end
 -- container. Its Init is scheduled as a closure over the original function, so hooking
 -- Init never fires; AddContainer is looked up on the table and can be hooked.
 -- uiOrder puts our sections at the top, wherever the tracker is placed.
+---@type LegacyTrackerModule[]
 local modules = {}
 
+---@param trackerModule LegacyTrackerModule
 local function Attach(trackerModule)
 	ObjectiveTrackerManager:SetModuleContainer(trackerModule, ObjectiveTrackerFrame)
 end
 
+---@param _ table
+---@param container Frame
 local function OnContainerAdded(_, container)
 	if container == ObjectiveTrackerFrame then
 		for _, trackerModule in ipairs(modules) do
@@ -114,14 +132,18 @@ local function OnContainerAdded(_, container)
 	end
 end
 
+---@param trackerModule LegacyTrackerModule
+---@return boolean
 local function IsAttached(trackerModule)
 	return ObjectiveTrackerManager:GetContainerForModule(trackerModule) ~= nil
 end
 
+---@return boolean
 function Tracker.IsAttached()
 	return module ~= nil and IsAttached(module)
 end
 
+---@return number
 function Tracker.Count()
 	return #Tracked()
 end
@@ -132,10 +154,19 @@ end
 
 -- A section of our own in the objective tracker, laid out by `mixin`. Returns nil
 -- when the tracker isn't available (Register reports that once).
+---@param name string
+---@param mixin LegacyTrackerModule
+---@param uiOrder number
+---@return LegacyTrackerModule?
 function Tracker.AddModule(name, mixin, uiOrder)
 	if not Available() then
 		return nil
 	end
+	---@class LegacyTrackerModule : ObjectiveTrackerModuleTemplate
+	---@field Header LegacyTrackerHeader
+	---@field headerText? string
+	---@field uiOrder number
+	---@field GetBlock fun(self: LegacyTrackerModule, id: number): LegacyTrackerBlock
 	local trackerModule = CreateFrame("Frame", name, UIParent, "ObjectiveTrackerModuleTemplate")
 	Mixin(trackerModule, mixin)
 	trackerModule:SetHeader(mixin.headerText or "")

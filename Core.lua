@@ -1,21 +1,38 @@
-local _, ns = ...
+local _, addon = ...
+
+---@class LegacyHereNamespace
+---@field TITLE string
+---@field Data LegacyData
+---@field Model LegacyModel
+---@field Live LegacyLive
+---@field Tracker LegacyTracker
+---@field Completion LegacyCompletion
+---@field RefreshMap fun()
+local ns = addon
 
 ns.TITLE = "Legacy Here"
 
 -- A table in the saved variables. The toc loads them before any file runs (LoadSavedVariablesFirst), so this
 -- is safe at file scope; callers still look it up each time rather than holding on to it.
+---@overload fun(key: 'tracked'): LegacyTrackingKey[]
+---@overload fun(key: 'zoneCompletion'): LegacySettings
+---@overload fun(key: 'flightPaths'): table<string, LegacyFlightRecord>
+---@param key 'tracked'|'zoneCompletion'|'flightPaths'
+---@return LegacyTrackingKey[]|LegacySettings|table<string, LegacyFlightRecord>
 function ns.SavedTable(key)
 	LegacyHereDB = LegacyHereDB or {}
 	LegacyHereDB[key] = LegacyHereDB[key] or {}
 	return LegacyHereDB[key]
 end
 
+---@param msg string
 function ns.Print(msg)
 	DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99" .. ns.TITLE .. "|r " .. msg)
 end
 
 -- Compares the bundled data with what the game reports, so a data problem shows
 -- up as a count and a list of IDs rather than as a silently missing pin.
+---@param data LegacyData
 local function AuditChallenges(data)
 	local visible = ns.Live.Visible()
 	local numVisible = 0
@@ -64,6 +81,7 @@ local function Audit()
 end
 
 -- Every criterion the game reports for one achievement, for reporting data mismatches.
+---@param achievementID number
 local function Criteria(achievementID)
 	local count = GetAchievementNumCriteria(achievementID) or 0
 	ns.Print(
