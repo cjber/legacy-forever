@@ -75,7 +75,7 @@ def tokenize(source: str) -> tuple[list[Token], set[int]]:
             kind = "name"
         else:
             symbol = next((s for s in ("...", "..", "==", "~=", "<=", ">=") if source.startswith(s, pos)), char)
-            if symbol not in {"...", "..", "==", "~=", "<=", ">="} and char not in "+-*/%^#=<>;:,().{}[]":
+            if symbol == char and char not in "+-*/%^#=<>;:,().{}[]":
                 raise LuaSyntaxError(f"{line}: unexpected character {char!r}")
             pos += len(symbol)
             kind = "symbol"
