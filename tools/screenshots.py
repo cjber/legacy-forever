@@ -523,10 +523,10 @@ def map_button(ui, canvas, rects, count):
     sits in that column on Forever (the tracking options button moves beside the NavBar)."""
     cx, cy, cw, _ = rects["container"]
     x, y = cx + cw - 4 - 32, cy + 2
-    canvas.draw(ui.atlas(POINTS_ICON), x + 4, y - 1.5, 24, 35)
+    canvas.draw(ui.atlas(POINTS_ICON), x + 1, y, 30, 44)
     font = FONTS["GameFontNormalSmall" if count >= 100 else "GameFontNormal"]
-    canvas.text(x - 4, y + 16 + 3 - font.height / 2, str(count) if count else "", font, justify="CENTER", width=40)
-    return x, y, 32, 32
+    canvas.text(x - 4 + 1, y + 22 + 4 - font.height / 2, str(count) if count else "", font, justify="CENTER", width=40)
+    return x, y, 32, 44
 
 
 def menu_at(ui, entries, right=None, top=None, left=None):
