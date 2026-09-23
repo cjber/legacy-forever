@@ -11,15 +11,6 @@
 					</Anchors>
 				</Texture>
 			</Layer>
-			<!-- A zone badge's count sits on the icon's corner, as a stack count sits on a bag slot:
-			     in the 20x20 hit rect, and read as part of the pin rather than a label beside it. -->
-			<Layer level="OVERLAY">
-				<FontString parentKey="Count" inherits="NumberFont_Shadow_Small" justifyH="RIGHT">
-					<Anchors>
-						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="2" y="1"/>
-					</Anchors>
-				</FontString>
-			</Layer>
 			<Layer level="HIGHLIGHT">
 				<Texture atlas="UI-Legacy-Points-icon-c60" alphaMode="ADD" alpha="0.5">
 					<Size x="14" y="20"/>

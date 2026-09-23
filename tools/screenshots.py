@@ -23,9 +23,7 @@ sys.path.insert(0, str(WOWMOCK))
 
 from PIL import Image
 from wowmock import (
-    ARIALN,
     FONTS,
-    Font,
     MenuButton,
     MenuCheckbox,
     MenuDivider,
@@ -615,7 +613,7 @@ def zone_center(ui, zone, continent):
 
 
 def continent_zones(ui, data, live, continent):
-    """Map.lua's ContinentZones: one badge per zone with its unfinished place-bound objectives."""
+    """Map.lua's ContinentZones: the centre of each zone with unfinished place-bound objectives, for its badge."""
     parents = ui.table("UiMap")
     zones = []
     for ui_map in data["zones"]:
@@ -623,20 +621,13 @@ def continent_zones(ui, data, live, continent):
             continue
         groups = [g for g in zone_objectives(data, live, ui_map) if g["objectives"][0]["entry"]["kind"] != "explore"]
         if count_objectives(groups):
-            zones.append((ui_map, count_objectives(groups), zone_center(ui, ui_map, continent)))
+            zones.append(zone_center(ui, ui_map, continent))
     return zones
 
 
-# NumberFont_Shadow_Small (Blizzard_Fonts_Shared/Mainline/Fonts.xml).
-PIN_COUNT_FONT = Font(ARIALN, 12, WHITE, (1, -1))
-
-
-def zone_pin(ui, canvas, x, y, count):
-    """LegacyHerePinTemplate centred on (x, y): the 14x20 icon, its count on the icon's BOTTOMRIGHT (2, 1)."""
-    icon_x, icon_y = x - 7, y - 10
-    canvas.draw(ui.atlas(POINTS_ICON), icon_x, icon_y, 14, 20)
-    font = PIN_COUNT_FONT
-    canvas.text(icon_x + 14 + 2 - 40, icon_y + 20 - 1 - font.height, str(count), font, justify="RIGHT", width=40)
+def zone_pin(ui, canvas, x, y):
+    """LegacyHerePinTemplate centred on (x, y): the bare 14x20 icon; its count is only in the tooltip."""
+    canvas.draw(ui.atlas(POINTS_ICON), x - 7, y - 10, 14, 20)
 
 
 def render_continent(ui, data, live):
@@ -645,8 +636,8 @@ def render_continent(ui, data, live):
     art = map_art(ui, KALIMDOR)
     canvas, rects = world_map_frame(ui, art, ("World", "Kalimdor"), arrows=("Kalimdor",))
     mx, my, mw, mh = rects["map"]
-    for _, count, (nx, ny) in continent_zones(ui, data, live, KALIMDOR):
-        zone_pin(ui, canvas, mx + nx * mw, my + ny * mh, count)
+    for nx, ny in continent_zones(ui, data, live, KALIMDOR):
+        zone_pin(ui, canvas, mx + nx * mw, my + ny * mh)
     cx, cy, cw, _ = rects["container"]
     grey = ui.atlas(POINTS_ICON).image.convert("LA").convert("RGBA")
     canvas.draw(grey, cx + cw - 4 - 32 + 6, cy + 2 + 1.5, 20, 29)
