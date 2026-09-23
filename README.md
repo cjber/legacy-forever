@@ -55,8 +55,7 @@ ln -s "$PWD" ".../World of Warcraft/_classic_beta_/Interface/AddOns/LegacyHere"
 
 luacheck .                     # lint
 stylua --check .               # format
-luajit tests/data_spec.lua     # generated data
-luajit tests/model_spec.lua    # zone / challenge logic
+for s in tests/*_spec.lua; do luajit "$s"; done   # generated data, zone and challenge logic
 python3 tools/gen_legacy.py    # regenerate Data/Legacy.lua (see tools/README.md)
 ```
 
