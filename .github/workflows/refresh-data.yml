@@ -1,23 +1,27 @@
 name: Refresh Legacy data
 
 # Opens a PR with regenerated data when wago.tools lists a newer Forever build.
-# PRs opened with GITHUB_TOKEN don't trigger CI, so this job runs the Lua lint, tests and format check itself.
 # Daily: beta builds have shipped several times a week.
 on:
   schedule:
     - cron: "0 6 * * *"
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      branch: ${{ steps.pr.outputs.pull-request-branch }}
+      operation: ${{ steps.pr.outputs.pull-request-operation }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # create-pull-request authenticates with its own `token` input.
           persist-credentials: false
       - name: Pin the newest Forever build
         id: build
@@ -34,18 +38,7 @@ jobs:
       - if: steps.build.outputs.new == 'true'
         run: python3 tools/gen_legacy.py
       - if: steps.build.outputs.new == 'true'
-        run: |
-          sudo apt-get update && sudo apt-get install -y luajit lua-check
-          luacheck .
-          luajit tests/data_spec.lua
-          luajit tests/model_spec.lua
-      - if: steps.build.outputs.new == 'true'
-        uses: JohnnyMorganz/stylua-action@76fd70c03e6340ceaf673366712db9b20560b402 # v5.0.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          version: 2.5.2
-          args: --check .
-      - if: steps.build.outputs.new == 'true'
+        id: pr
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           branch: data/forever-${{ steps.build.outputs.version }}
@@ -55,3 +48,17 @@ jobs:
             Regenerated `Data/Legacy.lua` from the achievement, criteria and world map DB2s of Forever build ${{ steps.build.outputs.version }}.
 
             Before merging, run `/lf audit` in-game to confirm every located objective is one the client knows.
+
+  # The data PR's own CI waits for approval because GITHUB_TOKEN opened it, so run CI on its branch
+  # now; a dispatched run shows under Actions, not in the PR's checks.
+  ci:
+    needs: refresh
+    if: needs.refresh.outputs.operation == 'created' || needs.refresh.outputs.operation == 'updated'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - run: gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref "$BRANCH"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ needs.refresh.outputs.branch }}
