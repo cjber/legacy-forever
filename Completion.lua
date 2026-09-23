@@ -28,6 +28,8 @@ local LABELS = {
 }
 -- Names listed per category in a tooltip before "and N more".
 local MAX_LEFT = 6
+-- Remaining names listed under the tracker's counts before "...", matching the challenge section.
+local MAX_TRACKER_LEFT = 5
 
 ---@return LegacySettings
 local function Settings()
@@ -248,6 +250,19 @@ function TrackerMixin:LayoutContents()
 	SetProgress(self.Header.Progress, result)
 	local block = self:GetBlock(uiMapID)
 	block:SetHeader(CountsText(result, 14))
+	local shown = 0
+	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
+		local category = result[key]
+		for _, left in ipairs(category and category.left or {}) do
+			if shown == MAX_TRACKER_LEFT then
+				block:AddObjective("Extra", "...", nil, nil, OBJECTIVE_DASH_STYLE_HIDE)
+				self:LayoutBlock(block)
+				return
+			end
+			shown = shown + 1
+			block:AddObjective(shown, ("%s %s"):format(Completion.Icon(key, 12), left))
+		end
+	end
 	self:LayoutBlock(block)
 end
 
