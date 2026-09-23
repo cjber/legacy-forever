@@ -147,7 +147,7 @@
 ---@field showAreas? boolean
 
 ---@type LegacySavedVariables?
-LegacyHereDB = nil
+LegacyForeverDB = nil
 
 ---@class LegacyContinentZone
 ---@field uiMapID number

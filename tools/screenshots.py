@@ -484,7 +484,7 @@ def world_map(ui, data, live):
     for overlay in map_overlays(ui, ASHENVALE):
         if overlay.key in live.explored:
             draw_overlay(ui, art, overlay.offset_x, overlay.offset_y, overlay.width, overlay.height, overlay.tiles)
-    # LegacyHereAreaPinMixin: every undiscovered area's tiles, black at AREA_ALPHA.
+    # LegacyForeverAreaPinMixin: every undiscovered area's tiles, black at AREA_ALPHA.
     for area in zone["areas"]:
         if area["key"] not in live.explored:
             x, y, w, h = (int(n) for n in area["key"].split(":"))
@@ -504,7 +504,7 @@ def world_map(ui, data, live):
 
 
 def completion_corner(ui, canvas, rects, live, zone):
-    """LegacyHereZoneOverlayTemplate at the canvas container's TOPLEFT (44, -18)."""
+    """LegacyForeverZoneOverlayTemplate at the canvas container's TOPLEFT (44, -18)."""
     result = zone_completion(live, zone)
     cx, cy, _, _ = rects["container"]
     x, y = cx + 44, cy + 18
@@ -523,7 +523,7 @@ def completion_corner(ui, canvas, rects, live, zone):
 
 
 def map_button(ui, canvas, rects, count):
-    """LegacyHereMapButtonTemplate at the canvas container's TOPRIGHT (-4, -2): nothing of Blizzard's
+    """LegacyForeverMapButtonTemplate at the canvas container's TOPRIGHT (-4, -2): nothing of Blizzard's
     sits in that column on Forever (the tracking options button moves beside the NavBar)."""
     cx, cy, cw, _ = rects["container"]
     x, y = cx + cw - 4 - 32, cy + 2
@@ -630,7 +630,7 @@ def continent_zones(ui, data, live, continent):
 
 
 def zone_pin(ui, canvas, x, y):
-    """LegacyHerePinTemplate centred on (x, y): the bare 14x20 icon; its count is only in the tooltip."""
+    """LegacyForeverPinTemplate centred on (x, y): the bare 14x20 icon; its count is only in the tooltip."""
     canvas.draw(ui.atlas(POINTS_ICON), x - 7, y - 10, 14, 20)
 
 

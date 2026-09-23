@@ -1,4 +1,4 @@
----@type string, LegacyHereNamespace
+---@type string, LegacyForeverNamespace
 local _, ns = ...
 
 -- Forever's ruleset refuses achievement tracking (C_ContentTracking reports
@@ -184,7 +184,7 @@ end
 local function WarnIfUnattached()
 	for _, trackerModule in ipairs(modules) do
 		if not IsAttached(trackerModule) then
-			ns.Print("couldn't add a section to the objective tracker; please report /lh audit.")
+			ns.Print("couldn't add a section to the objective tracker; please report /lf audit.")
 			return
 		end
 	end
@@ -195,7 +195,7 @@ local function Register()
 		ns.Print("the objective tracker isn't available, so tracked challenges can't be shown.")
 		return
 	end
-	module = Tracker.AddModule("LegacyHereObjectiveTracker", ModuleMixin, 0)
+	module = Tracker.AddModule("LegacyForeverObjectiveTracker", ModuleMixin, 0)
 	EventUtil.ContinueAfterAllEvents(function()
 		C_Timer.After(5, WarnIfUnattached)
 	end, "PLAYER_ENTERING_WORLD", "VARIABLES_LOADED")

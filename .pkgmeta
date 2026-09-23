@@ -1,4 +1,4 @@
-package-as: LegacyHere
+package-as: LegacyForever
 
 manual-changelog:
   filename: .release-notes.md

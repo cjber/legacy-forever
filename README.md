@@ -1,16 +1,16 @@
-<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-here/main/media/icon-400.png" width="96" alt=""></p>
+<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/media/icon-400.png" width="96" alt=""></p>
 
-<h1 align="center">Legacy Here</h1>
+<h1 align="center">Legacy Forever</h1>
 
 <p align="center">
 Your unfinished WoW: Forever Legacy challenges, on the world map, for the zone you're looking at.<br>
-<a href="https://github.com/cjber/legacy-here/actions/workflows/ci.yml"><img src="https://github.com/cjber/legacy-here/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-<a href="https://github.com/cjber/legacy-here/releases/latest"><img src="https://img.shields.io/github/v/release/cjber/legacy-here" alt="Latest release"></a>
+<a href="https://github.com/cjber/legacy-forever/actions/workflows/ci.yml"><img src="https://github.com/cjber/legacy-forever/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+<a href="https://github.com/cjber/legacy-forever/releases/latest"><img src="https://img.shields.io/github/v/release/cjber/legacy-forever" alt="Latest release"></a>
 </p>
 
 Legacy points are account-wide and come from challenges spread over the whole world: areas to discover, dungeons to clear, bosses, quests and reputations. The Legacy panel lists them, but it doesn't tell you which ones you can work on where you are. This addon adds that to the world map, and keeps a small tracker of the challenges you pick.
 
-<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-here/main/docs/screenshots/map.png" width="640" alt="Ashenvale on the world map with undiscovered areas shaded, the zone completion corner and the Legacy menu open"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/map.png" width="640" alt="Ashenvale on the world map with undiscovered areas shaded, the zone completion corner and the Legacy menu open"></p>
 
 ## Features
 
@@ -24,7 +24,7 @@ Legacy points are account-wide and come from challenges spread over the whole wo
 
 ## Install
 
-Install it from [CurseForge](https://www.curseforge.com/wow/addons/legacy-here) or [Wago Addons](https://addons.wago.io/addons/legacy-here), or download the zip from [Releases](https://github.com/cjber/legacy-here/releases). To install the zip by hand, extract it into `_classic_beta_/Interface/AddOns/` so you end up with `AddOns/LegacyHere/LegacyHere.toc`.
+Install it from [CurseForge](https://www.curseforge.com/wow/addons/legacy-forever) or [Wago Addons](https://addons.wago.io/addons/legacy-forever), or download the zip from [Releases](https://github.com/cjber/legacy-forever/releases). To install the zip by hand, extract it into `_classic_beta_/Interface/AddOns/` so you end up with `AddOns/LegacyForever/LegacyForever.toc`.
 
 ## Usage
 
@@ -32,9 +32,9 @@ Open the world map. The Legacy button sits below the map's own tracking buttons.
 
 | Command | What it does |
 |---|---|
-| `/lh` | Short help |
-| `/lh audit` | Compare the bundled data with what the game reports, and list any objective the game doesn't know |
-| `/lh criteria 684` | List every criterion the game reports for one achievement (useful alongside an audit's unknown IDs) |
+| `/lf` | Short help |
+| `/lf audit` | Compare the bundled data with what the game reports, and list any objective the game doesn't know |
+| `/lf criteria 684` | List every criterion the game reports for one achievement (useful alongside an audit's unknown IDs) |
 
 ## Where the locations come from
 
@@ -45,13 +45,13 @@ Everything is generated from the Forever client's own data (via [wago.tools](htt
 - **Zone completion:** areas are the zone's map overlays, the same ones the game reveals as you explore. Flight paths, counted only once ticked under "What counts", are the client's flight nodes for your faction, placed by the zone in each node's name. The game only says which ones a character knows at a flight master, so flight paths count once you've opened one on that continent, and show as "?" until then. Special services with nothing to learn, such as the Nighthaven druid flights, are left out. Dungeons are the single-boss clears in the Legacy Spelunker challenges, by the zone of the instance entrance. Raids are the Conqueror challenges' bosses, by the zone of the raid entrance, and count once every boss is down; only Onyxia's Lair has an entrance in the client data so far. Legacy objectives are the zone's other placed Legacy steps, with a step's variants counted once. Reputations, also counted only once ticked, are a short curated list of factions tied to a single zone, such as Booty Bay for Stranglethorn. Quests and rares are left out: the client doesn't say which belong to a zone, and no openly licensed list covers Forever.
 - **Kills, quests and reputations:** the client ships no spawn or encounter data for these (none of the 53 Legacy kill targets has a Creature row), so they stay unpinned. Track the challenge to follow their progress instead.
 
-**Found a wrong or missing objective?** Run `/lh audit` and [open an issue](https://github.com/cjber/legacy-here/issues/new) with the output.
+**Found a wrong or missing objective?** Run `/lf audit` and [open an issue](https://github.com/cjber/legacy-forever/issues/new) with the output.
 
 ## Development
 
 ```sh
 # link the checkout into the game
-ln -s "$PWD" ".../World of Warcraft/_classic_beta_/Interface/AddOns/LegacyHere"
+ln -s "$PWD" ".../World of Warcraft/_classic_beta_/Interface/AddOns/LegacyForever"
 
 luacheck .                     # lint
 stylua --check .               # format

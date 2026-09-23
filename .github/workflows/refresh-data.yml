@@ -54,4 +54,4 @@ jobs:
           body: |
             Regenerated `Data/Legacy.lua` from the achievement, criteria and world map DB2s of Forever build ${{ steps.build.outputs.version }}.
 
-            Before merging, run `/lh audit` in-game to confirm every located objective is one the client knows.
+            Before merging, run `/lf audit` in-game to confirm every located objective is one the client knows.

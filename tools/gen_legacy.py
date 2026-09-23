@@ -109,7 +109,7 @@ def download(url, filename, refresh=False, offline=False):
     else:
         if offline:
             raise ValueError(f"Missing cached source: {path}")
-        request = urllib.request.Request(url, headers={"User-Agent": "LegacyHere/1.0"})
+        request = urllib.request.Request(url, headers={"User-Agent": "LegacyForever/1.0"})
         with urllib.request.urlopen(request, timeout=60) as response:
             data = response.read()
         content = data.decode("utf-8-sig")

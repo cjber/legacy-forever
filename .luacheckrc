@@ -4,14 +4,14 @@ exclude_files = { "tools/.cache/**", ".release/**", ".types/**", "types/**" }
 ignore = { "212/_.*", "212/self" } -- unused args prefixed with _, and self on mixin handlers
 
 globals = {
-	"LegacyHereAreaPinMixin",
-	"LegacyHereMapButtonMixin",
-	"LegacyHereZoneOverlayMixin",
-	"LegacyHereDB",
-	"LegacyHerePinMixin",
-	"LegacyHere_OnAddonCompartmentClick",
-	"SLASH_LEGACYHERE1",
-	"SLASH_LEGACYHERE2",
+	"LegacyForeverAreaPinMixin",
+	"LegacyForeverMapButtonMixin",
+	"LegacyForeverZoneOverlayMixin",
+	"LegacyForeverDB",
+	"LegacyForeverPinMixin",
+	"LegacyForever_OnAddonCompartmentClick",
+	"SLASH_LEGACYFOREVER1",
+	"SLASH_LEGACYFOREVER2",
 	"SlashCmdList",
 }
 

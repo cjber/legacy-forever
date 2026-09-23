@@ -52,7 +52,7 @@ CreateFrame = function()
 	}
 end
 
-assert(loadfile("Live.lua"))("LegacyHere", ns)
+assert(loadfile("Live.lua"))("LegacyForever", ns)
 local snapshot = ns.Live.ZoneSnapshot(2)
 assert(next(records) == nil, "no GUID must not create a flight record")
 assert(snapshot.taxis[10] == nil, "flight paths remain unknown without a GUID")
