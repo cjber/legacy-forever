@@ -34,7 +34,7 @@ The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and
 - Runtime globals must be allowed by `.luacheckrc` and typed by the pinned WoW annotations or
   `types/forever.lua` for missing Forever APIs. Addon types belong in `types/addon.lua` or beside
   their definitions; do not restore a LuaLS globals whitelist.
-- `tools/typecheck.sh` fetches pinned WoW API/FrameXML annotations into ignored `.types/` and
+- `tools/typecheck.sh` fetches pinned WoW API/FrameXML annotations into an ignored types cache and
   rejects every LuaLS diagnostic, including Information. All TOC Lua files, including generated
   data, are checked. Install LuaLS 3.19.1 locally; CI verifies its release checksum.
 - A final `select(...)` argument, table element or return must be parenthesized to keep one value,
