@@ -353,3 +353,13 @@ compare `Data/Legacy.lua` byte-for-byte, then run `luajit tests/data_spec.lua`,
 `luajit tests/model_spec.lua`, `luacheck .`, and `stylua --check .`.
 The generator renders Lua in the repository's StyLua style without depending on
 a formatter or excluding the generated file from CI.
+
+## Screenshots
+
+`python3 tools/screenshots.py` redraws `docs/screenshots/{map,menu,tracker}.png`
+from the game's own art and `Data/Legacy.lua`; it never touches the client. It
+needs a checkout of the `cjber/skills` repository for the `wowmock` library,
+found in `~/.claude/skills/wow-mock-screenshots/` by default; set the
+`WOWMOCK` environment variable to the directory holding `wowmock.py` to use
+another checkout. Art is fetched from wago.tools once and cached, and reruns
+are byte-identical.

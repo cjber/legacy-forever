@@ -10,7 +10,7 @@ Your unfinished WoW: Forever Legacy challenges, on the world map, for the zone y
 
 Legacy points are account-wide and come from challenges spread over the whole world: areas to discover, dungeons to clear, bosses, quests and reputations. The Legacy panel lists them, but it doesn't tell you which ones you can work on where you are. This addon adds that to the world map, and keeps a small tracker of the challenges you pick.
 
-<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-here/main/docs/screenshots/map.png" width="640" alt="Ashenvale on the world map with a pin on each undiscovered area and the Legacy menu open"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-here/main/docs/screenshots/map.png" width="640" alt="Ashenvale on the world map with undiscovered areas shaded, the zone completion corner and the Legacy menu open"></p>
 
 ## Features
 
