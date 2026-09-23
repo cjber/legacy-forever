@@ -26,6 +26,6 @@ Open the world map: the Legacy button sits below the map's own tracking buttons.
 - `/lf` shows short help.
 - `/lf audit` compares the bundled data with what the game reports. Found a wrong or missing objective? Include its output in an issue on [GitHub](https://github.com/cjber/legacy-forever/issues).
 
-Locations are generated from the Forever client's own data; nothing is matched by name or scraped from a database site.
+Locations are generated from the Forever client's own data and joined by ID (flight paths by the zone in their name); nothing is scraped from a database site.
 
 Source code: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.

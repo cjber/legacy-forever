@@ -14,8 +14,8 @@ Python's standard library is sufficient. The generator pins `BUILD` and
 and atomically writes `Data/Legacy.lua`. The default reuses cached downloads;
 `--refresh` replaces them and `--offline` requires them. Coverage goes to stderr;
 malformed schemas, unknown relevant criteria types, graph cycles, and stale
-curated IDs fail without replacing the generated output. `latest_build.py` is
-copied unchanged from SkillUp Forever and only reports the newest Forever build.
+curated IDs fail without replacing the generated output. `latest_build.py` only
+reports the newest Forever build.
 
 Sources: `TraitCurrencySource`, `Achievement`, `Criteria`, `CriteriaTree`, `ModifierTree`,
 `WorldMapOverlay`, `WorldMapOverlayTile`, `AreaTable`, `UiMap`, `UiMapAssignment`, `UiMapXMapArt`,
@@ -33,7 +33,8 @@ precedence: its map owns the overlay's coordinate space. In particular, overlay
 202 / Criteria 911 outlines Thunder Bluff **on Mulgore**, not on the city map.
 
 If the criterion's overlay has no UiMapXMapArt row, an exact match of its nonzero
-AreaID set must identify exactly one overlay on current art. The replacement's
+AreaID set must identify exactly one overlay on current art; failing that, the one
+current overlay on the zone whose subzones the old set contains. The replacement's
 art/UiMap must agree with the area-derived zone. Its hit rectangle supplies the
 pin; achievement and Criteria.ID remain unchanged. Missing, ambiguous, or
 zone-conflicting matches stay unpinned and are counted.
@@ -356,7 +357,7 @@ a formatter or excluding the generated file from CI.
 
 ## Screenshots
 
-`python3 tools/screenshots.py` redraws `docs/screenshots/{map,menu,tracker}.png`
+`python3 tools/screenshots.py` redraws `docs/screenshots/{map,menu,tracker,continent}.png`
 from the game's own art and `Data/Legacy.lua`; it never touches the client. It
 needs a checkout of the `cjber/skills` repository for the `wowmock` library,
 found in `~/.claude/skills/wow-mock-screenshots/` by default; set the
