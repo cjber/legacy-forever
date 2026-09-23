@@ -42,7 +42,7 @@ Everything is generated from the Forever client's own data (via [wago.tools](htt
 
 - **Areas:** each exploration criterion names a world map overlay. The zone map shades that overlay on the zone's current map art; exploration is never pinned.
 - **Dungeons and raids:** placed at the client's entrance marker, only where the zone is certain.
-- **Zone completion:** areas are the zone's map overlays, the same ones the game reveals as you explore. Flight paths, counted only once ticked under "What counts", are the client's flight nodes for your faction, placed by the zone in each node's name. The game only says which ones a character knows at a flight master, so flight paths count once you've opened one on that continent, and show as "?" until then. Special services with nothing to learn, such as the Nighthaven druid flights, are left out. Dungeons are the single-boss clears in the Legacy Spelunker challenges, by the zone of the instance entrance. Raids are the Conqueror challenges' bosses, by the zone of the raid entrance, and count once every boss is down; only Onyxia's Lair has an entrance in the client data so far. Legacy objectives are the zone's other placed Legacy steps, with a step's variants counted once. Reputations, also counted only once ticked, are a short curated list of factions tied to a single zone, such as Booty Bay for Stranglethorn. Quests and rares are left out: the client doesn't say which belong to a zone, and no openly licensed list covers Forever.
+- **Zone completion:** what each category counts, and why quests and rares are left out, is in [docs/zone-completion.md](docs/zone-completion.md).
 - **Kills, quests and reputations:** the client ships no spawn or encounter data for these (none of the 53 Legacy kill targets has a Creature row), so they stay unpinned. Track the challenge to follow their progress instead.
 
 **Found a wrong or missing objective?** Run `/lf audit` and [open an issue](https://github.com/cjber/legacy-forever/issues/new) with the output.
@@ -70,6 +70,8 @@ See [the tooling notes](tools/README.md#type-checking) for the multi-value rule.
 CI runs these checks on main pushes and pull requests. Each day a scheduled job checks wago.tools for a newer Forever build and, if the Legacy data differs, opens a pull request with the regenerated `Data/Legacy.lua`.
 
 **Releasing:** move the `[Unreleased]` notes in `CHANGELOG.md` under `## [X.Y.Z] - YYYY-MM-DD`, then `git tag -s vX.Y.Z && git push --tags`. The [BigWigs packager](https://github.com/BigWigsMods/packager) builds the zip and uploads it to GitHub Releases, CurseForge and Wago, with that version's entry (`tools/changelog.py`) as the release notes.
+
+**Contributing:** read [CONTRIBUTING.md](https://github.com/cjber/.github/blob/main/CONTRIBUTING.md) and this repository's [AGENTS.md](AGENTS.md). Report security problems privately, as [SECURITY.md](https://github.com/cjber/.github/blob/main/SECURITY.md) describes.
 
 ## Licence
 
