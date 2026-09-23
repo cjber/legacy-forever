@@ -3,8 +3,8 @@
 
 No game client is involved: map tiles, atlases, fonts and achievement data come from wago.tools via
 wowmock (the wow-mock-screenshots skill in cjber/skills). What the addon draws is reproduced here from
-its Lua: the zone objectives, the menu, the zone completion corner and tracker section, and the Legacy
-tracker, computed from Data/Legacy.lua and the client's achievement tables for one plausible character.
+its Lua: the zone objectives, the menu, the continent badges, the zone completion corner and tracker section,
+and the Legacy tracker, computed from Data/Legacy.lua and the client's achievement tables for one plausible character.
 
     python3 tools/screenshots.py            # WOWMOCK=/path/to/wow-mock-screenshots to override
 """
@@ -23,7 +23,9 @@ sys.path.insert(0, str(WOWMOCK))
 
 from PIL import Image
 from wowmock import (
+    ARIALN,
     FONTS,
+    Font,
     MenuButton,
     MenuCheckbox,
     MenuDivider,
@@ -99,6 +101,7 @@ def load_data():
 # --------------------------------------------------------------------------- the character, as Live sees it
 
 ASHENVALE = 1440
+KALIMDOR = 1414
 # One plausible Alliance character: half of Ashenvale explored, the Astranaar flight path known, Onyxia
 # down on the account (the old captures' account had that one done), Blackfathom Deeps not yet cleared.
 EXPLORED = {
@@ -531,6 +534,67 @@ def render_menu(ui, data, live):
     return scene(ui, shifted)
 
 
+def zone_center(ui, zone, continent):
+    """The centre of C_Map.GetMapRectOnMap(zone, continent): the zone's world rectangle from its UiMapAssignment,
+    projected onto the continent's (world x north, y west, min at the southeast corner)."""
+
+    def assignment(ui_map):
+        whole = ("0", "0", "1", "1")
+        rows = [
+            r
+            for r in ui.table("UiMapAssignment").values()
+            if r["UiMapID"] == str(ui_map) and (r["UiMin_0"], r["UiMin_1"], r["UiMax_0"], r["UiMax_1"]) == whole
+        ]
+        row = min(rows, key=lambda r: (int(r["OrderIndex"]), int(r["ID"])))
+        return {key: float(value) for key, value in row.items()}
+
+    z, c = assignment(zone), assignment(continent)
+    world_x, world_y = (z["Region_0"] + z["Region_3"]) / 2, (z["Region_1"] + z["Region_4"]) / 2
+    return (
+        (c["Region_4"] - world_y) / (c["Region_4"] - c["Region_1"]),
+        (c["Region_3"] - world_x) / (c["Region_3"] - c["Region_0"]),
+    )
+
+
+def continent_zones(ui, data, live, continent):
+    """Map.lua's ContinentZones: one badge per zone with its unfinished place-bound objectives."""
+    parents = ui.table("UiMap")
+    zones = []
+    for ui_map in data["zones"]:
+        if parents[str(ui_map)]["ParentUiMapID"] != str(continent):
+            continue
+        groups = [g for g in zone_objectives(data, live, ui_map) if g["objectives"][0]["entry"]["kind"] != "explore"]
+        if count_objectives(groups):
+            zones.append((ui_map, count_objectives(groups), zone_center(ui, ui_map, continent)))
+    return zones
+
+
+# NumberFont_Shadow_Small (Blizzard_Fonts_Shared/Mainline/Fonts.xml).
+PIN_COUNT_FONT = Font(ARIALN, 12, WHITE, (1, -1))
+
+
+def zone_pin(ui, canvas, x, y, count):
+    """LegacyHerePinTemplate centred on (x, y): the 14x20 icon, its count on the icon's BOTTOMRIGHT (2, 1)."""
+    icon_x, icon_y = x - 7, y - 10
+    canvas.draw(ui.atlas(POINTS_ICON), icon_x, icon_y, 14, 20)
+    font = PIN_COUNT_FONT
+    canvas.text(icon_x + 14 + 2 - 40, icon_y + 20 - 1 - font.height, str(count), font, justify="RIGHT", width=40)
+
+
+def render_continent(ui, data, live):
+    """Kalimdor with a Legacy badge on each zone that still has dungeon objectives. The map button's count
+    is 0 here (a continent places nothing itself), so it is drawn desaturated with no number."""
+    art = map_art(ui, KALIMDOR)
+    canvas, rects = world_map_frame(ui, art, ("World", "Kalimdor"), arrows=("Kalimdor",))
+    mx, my, mw, mh = rects["map"]
+    for _, count, (nx, ny) in continent_zones(ui, data, live, KALIMDOR):
+        zone_pin(ui, canvas, mx + nx * mw, my + ny * mh, count)
+    cx, cy, cw, _ = rects["container"]
+    grey = ui.atlas(POINTS_ICON).image.convert("LA").convert("RGBA")
+    canvas.draw(grey, cx + cw - 4 - 32 + 6, cy + 2 + 1.5, 20, 29)
+    return scene(ui, [(canvas, 0, 0)])
+
+
 def render_tracker(ui, data, live):
     zone = data["completion"][ASHENVALE]
     result = zone_completion(live, zone)
@@ -565,7 +629,12 @@ def main():
     data = load_data()
     live = Live(ui, data)
     OUT.mkdir(parents=True, exist_ok=True)
-    for name, render in (("map", render_map), ("menu", render_menu), ("tracker", render_tracker)):
+    for name, render in (
+        ("map", render_map),
+        ("menu", render_menu),
+        ("continent", render_continent),
+        ("tracker", render_tracker),
+    ):
         render(ui, data, live).save(OUT / f"{name}.png")
         print(f"wrote {OUT / f'{name}.png'}")
 

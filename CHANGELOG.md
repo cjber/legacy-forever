@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Zone badges on continent maps carry their count on the icon's corner**, like a stack count on a bag slot, in the game's small number font, instead of floating beside the icon.
+
 ## [0.3.0] - 2026-09-23
 
 A menu on the zone completion tracker, a new icon that matches the other WoW: Forever addons, and two fixes.

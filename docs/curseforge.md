@@ -4,6 +4,8 @@ Legacy Here puts your unfinished WoW: Forever Legacy challenges on the world map
 
 ![The Legacy map menu with tick boxes to track challenges, grouped by type](https://raw.githubusercontent.com/cjber/legacy-here/main/docs/screenshots/menu.png)
 
+![Kalimdor on the world map with a Legacy badge and count on each zone that still has dungeon objectives](https://raw.githubusercontent.com/cjber/legacy-here/main/docs/screenshots/continent.png)
+
 ![The objective tracker with Ashenvale's completion and the tracked Legacy challenges](https://raw.githubusercontent.com/cjber/legacy-here/main/docs/screenshots/tracker.png)
 
 ## Features
