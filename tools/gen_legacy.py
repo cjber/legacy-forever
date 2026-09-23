@@ -9,7 +9,6 @@ import math
 import re
 import sys
 import tempfile
-import urllib.error
 import urllib.request
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -183,9 +182,9 @@ class Achievements:
         for child in sorted(self.children[key]):
             yield from self.walk(child, active | {key})
 
-    def tree(self, key, active):
+    def tree(self, key):
         leaves = set()
-        for row in self.walk(key, active):
+        for row in self.walk(key, set()):
             if row["CriteriaID"]:
                 required(self.criteria, row["CriteriaID"], f"CriteriaTree {row['ID']}")
                 leaves.add(row["CriteriaID"])
@@ -197,7 +196,7 @@ class Achievements:
             # Sharing semantics need a deliberate review if they enter this graph.
             if row["Shares_criteria"]:
                 raise ValueError(f"Achievement {achievement}: unsupported Shares_criteria")
-            leaves = self.tree(row["Criteria_tree"], set())
+            leaves = self.tree(row["Criteria_tree"])
             if not leaves:
                 raise ValueError(f"Achievement {achievement}: empty criteria tree")
             self.memo[achievement] = leaves
@@ -1117,5 +1116,5 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except (OSError, ValueError, csv.Error, urllib.error.URLError) as error:
+    except (OSError, ValueError, csv.Error) as error:
         sys.exit(f"error: {error}")
