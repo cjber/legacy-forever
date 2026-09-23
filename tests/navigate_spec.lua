@@ -73,9 +73,16 @@ Install()
 ShortestPathForever.API.version = 2
 ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
 check(#journeys == 2 and #waypoints == 3, "an unknown API version is treated as absent")
+ShortestPathForever = { API = { version = 1 } }
+check(ns.NavigateHint() == "Click to set a waypoint here.", "an API without Navigate is not named in the hint")
+ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
+check(#waypoints == 4, "an API without Navigate falls back to the native waypoint")
+ShortestPathForever = {}
+ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
+check(#waypoints == 5, "Shortest Path loaded without its API falls back to the native waypoint")
 
 -- A map that takes no waypoint: the place in chat, never nothing.
 ShortestPathForever, canSet = nil, false
 ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
-check(#waypoints == 3 and printed[1] == "Blackfathom Deeps is at 25.0, 50.0 in Ashenvale.", "the place goes to chat")
+check(#waypoints == 5 and printed[1] == "Blackfathom Deeps is at 25.0, 50.0 in Ashenvale.", "the place goes to chat")
 print(("navigate_spec: %d checks passed"):format(checks))
