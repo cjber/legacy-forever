@@ -333,6 +333,7 @@ function LegacyHereMapButtonMixin:Refresh()
 	self:ClearAllPoints()
 	self:SetPoint("TOPRIGHT", map:GetCanvasContainer(), "TOPRIGHT", -4, TopRightOffset(map))
 	local count = ns.Model.CountObjectives(ZoneGroups(self:GetParent():GetMapID()))
+	self.Count:SetFontObject(count >= 100 and GameFontNormalSmall or GameFontNormal)
 	self.Count:SetText(count > 0 and tostring(count) or "")
 	self.Icon:SetDesaturated(count == 0)
 	self.count = count
