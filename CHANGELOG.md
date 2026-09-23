@@ -14,6 +14,7 @@ verbatim rather than rewritten as the addon moves.
 - **Right-click a zone in the completion tracker for a menu**: open the map or hide the section, as on the Legacy section. A left click still opens the map.
 - **Fixed** the collapsed zone box on the world map keeping the width of the counts it hides.
 - **Fixed** a "couldn't add a section to the objective tracker" warning after a slow login, when the section attached a moment later.
+- **A new icon in the addon list**, drawn to match the other WoW: Forever addons, so it is easy to spot beside them.
 
 ## [0.2.0] - 2026-09-21
 
