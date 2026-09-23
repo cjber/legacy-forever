@@ -24,6 +24,8 @@ sys.path.insert(0, str(WOWMOCK))
 from PIL import Image
 from wowmock import (
     FONTS,
+    FRIZQT,
+    Font,
     MenuButton,
     MenuCheckbox,
     MenuDivider,
@@ -44,6 +46,8 @@ from wowmock import (
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "docs" / "screenshots"
+# GameFontNormalTiny: SystemFont_Tiny (Friz 9, no shadow) in gold; wowmock has no entry for it.
+TINY = Font(FRIZQT, 9, FONTS["GameFontNormal"].color, None)
 
 # --------------------------------------------------------------------------------------------- the data
 
@@ -524,8 +528,8 @@ def map_button(ui, canvas, rects, count):
     cx, cy, cw, _ = rects["container"]
     x, y = cx + cw - 4 - 32, cy + 2
     canvas.draw(ui.atlas(POINTS_ICON), x + 1, y, 30, 44)
-    font = FONTS["GameFontNormalSmall" if count >= 100 else "GameFontNormal"]
-    canvas.text(x - 4 + 1, y + 22 + 4 - font.height / 2, str(count) if count else "", font, justify="CENTER", width=40)
+    font = TINY if count >= 100 else FONTS["GameFontNormalSmall" if count >= 10 else "GameFontNormal"]
+    canvas.text(x - 4, y + 22 + 4 - font.height / 2, str(count) if count else "", font, justify="CENTER", width=40)
     return x, y, 32, 44
 
 
