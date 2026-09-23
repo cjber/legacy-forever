@@ -1,0 +1,4 @@
+* text=auto eol=lf
+
+# Written by tools/gen_legacy.py; collapsed in diffs and left out of language stats.
+Data/*.lua linguist-generated=true
