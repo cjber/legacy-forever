@@ -122,6 +122,10 @@ end
 ---@param zone LegacyContinentZone
 local function AddZoneTooltip(tooltip, zone)
 	GameTooltip_SetTitle(tooltip, zone.name)
+	GameTooltip_AddHighlightLine(
+		tooltip,
+		("%d Legacy %s left"):format(zone.count, zone.count == 1 and "objective" or "objectives")
+	)
 	for _, group in ipairs(zone.groups) do
 		GameTooltip_AddNormalLine(tooltip, ("%s: %d left"):format(ns.Live.Name(group.challenge), #group.objectives))
 	end
@@ -129,7 +133,7 @@ local function AddZoneTooltip(tooltip, zone)
 	GameTooltip_AddInstructionLine(tooltip, "Click the zone to see where.")
 end
 
--- On a continent, one badge per zone with its unfinished count, instead of every pin.
+-- On a continent, one badge per zone with unfinished objectives, instead of every pin; its tooltip gives the count.
 -- Exploration is left to the zone map's shading, so badges count place-bound objectives only.
 -- They follow zone completion's "On the world map" switch, so turning it off leaves continents bare.
 ---@param continentID number
@@ -360,7 +364,6 @@ end
 ---@return MapCanvasDataProviderMixin
 local function CreatePinProvider()
 	---@class LegacyHerePinMixin : Frame, MapCanvasPinMixin
-	---@field Count FontString
 	---@field Icon Texture
 	---@field group? LegacyGroup
 	---@field objective? LegacyObjective
@@ -377,7 +380,6 @@ local function CreatePinProvider()
 		self.group = group
 		self.objective = objective
 		self.zone = zone
-		self.Count:SetText(zone and tostring(zone.count) or "")
 		self:SetScalingLimits(1, 1.0, 1.2)
 		if zone then
 			self:SetPosition(zone.x, zone.y)
