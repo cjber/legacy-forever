@@ -7,7 +7,6 @@ globals = {
 	"LegacyHereAreaPinMixin",
 	"LegacyHereMapButtonMixin",
 	"LegacyHereZoneOverlayMixin",
-	"LegacyHereZonePercentPinMixin",
 	"LegacyHereDB",
 	"LegacyHerePinMixin",
 	"LegacyHere_OnAddonCompartmentClick",
@@ -28,4 +27,4 @@ read_globals = {
 }
 
 files["Data/Legacy.lua"] = { max_line_length = false }
-files["tests/"] = { std = "+luajit", globals = { "arg" } }
+files["tests/"] = { std = "+luajit" }

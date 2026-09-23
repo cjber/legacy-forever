@@ -1,7 +1,7 @@
 name: Refresh Legacy data
 
 # Opens a PR with regenerated data when wago.tools lists a newer Forever build.
-# PRs opened with GITHUB_TOKEN don't trigger CI, so this job runs the full checks itself.
+# PRs opened with GITHUB_TOKEN don't trigger CI, so this job runs the Lua lint, tests and format check itself.
 # Daily: beta builds have shipped several times a week.
 on:
   schedule:

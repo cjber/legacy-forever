@@ -46,7 +46,6 @@
     "LegacyHereMapButtonMixin",
     "LegacyHerePinMixin",
     "LegacyHereZoneOverlayMixin",
-    "LegacyHereZonePercentPinMixin",
     "LegacySystemFrame",
     "MapCanvasDataProviderMixin",
     "MapCanvasPinMixin",
