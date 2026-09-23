@@ -135,12 +135,18 @@ function Tracker.AddModule(name, mixin, uiOrder)
 	end
 	modules[#modules + 1] = trackerModule
 	Attach(trackerModule)
-	C_Timer.After(5, function()
+	return trackerModule
+end
+
+-- The manager adds its container only once both events have fired, so checking any sooner can
+-- warn about a section that is about to attach.
+local function WarnIfUnattached()
+	for _, trackerModule in ipairs(modules) do
 		if not IsAttached(trackerModule) then
 			ns.Print("couldn't add a section to the objective tracker; please report /lh audit.")
+			return
 		end
-	end)
-	return trackerModule
+	end
 end
 
 local function Register()
@@ -149,6 +155,9 @@ local function Register()
 		return
 	end
 	module = Tracker.AddModule("LegacyHereObjectiveTracker", ModuleMixin, 0)
+	EventUtil.ContinueAfterAllEvents(function()
+		C_Timer.After(5, WarnIfUnattached)
+	end, "PLAYER_ENTERING_WORLD", "VARIABLES_LOADED")
 end
 
 Register()

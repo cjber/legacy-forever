@@ -2,7 +2,8 @@ local _, ns = ...
 
 ns.TITLE = "Legacy Here"
 
--- A table in the saved variables, empty for the session until they load.
+-- A table in the saved variables. The toc loads them before any file runs (LoadSavedVariablesFirst), so this
+-- is safe at file scope; callers still look it up each time rather than holding on to it.
 function ns.SavedTable(key)
 	LegacyHereDB = LegacyHereDB or {}
 	LegacyHereDB[key] = LegacyHereDB[key] or {}

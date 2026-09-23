@@ -149,7 +149,10 @@ equal(Model.AreaAt(overlapping, 200, 50), nil, "outside every texture")
 
 -- Overlay tiles, laid out like Blizzard's exploration overlays.
 local ox, oy, ow, oh = Model.OverlayRect("413:476:256:128")
-equal(ox + oy + ow + oh, 413 + 476 + 256 + 128, "overlay key parses to integers")
+equal(ox, 413, "overlay key: offsetX")
+equal(oy, 476, "overlay key: offsetY")
+equal(ow, 256, "overlay key: width")
+equal(oh, 128, "overlay key: height")
 local tiles = Model.OverlayTiles(549, 241, 256, 256)
 equal(#tiles, 3, "549x241 needs three 256px tiles in one row")
 equal(tiles[3].x, 512, "third tile offset")

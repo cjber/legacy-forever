@@ -54,6 +54,11 @@ local function Refresh()
 	end
 end
 
+local function Toggle(surface)
+	Settings()[surface] = not IsShown(surface)
+	Refresh()
+end
+
 function Completion.Of(uiMapID)
 	local zone = uiMapID and ns.Data.completion[uiMapID]
 	if not zone then
@@ -186,7 +191,7 @@ function TrackerMixin:OnBlockHeaderEnter(block)
 	if result then
 		GameTooltip:SetOwner(block, "ANCHOR_LEFT")
 		AddTooltip(GameTooltip, C_Map.GetMapInfo(block.id).name, result)
-		GameTooltip_AddInstructionLine(GameTooltip, "Click to open the map.")
+		GameTooltip_AddInstructionLine(GameTooltip, "Click to open the map. Right-click for options.")
 		GameTooltip:Show()
 	end
 end
@@ -195,8 +200,22 @@ function TrackerMixin:OnBlockHeaderLeave()
 	GameTooltip:Hide()
 end
 
-function TrackerMixin:OnBlockHeaderClick(block)
-	OpenWorldMap(block.id)
+-- Right-click opens a menu, as on the Legacy section.
+function TrackerMixin:OnBlockHeaderClick(block, mouseButton)
+	if mouseButton ~= "RightButton" then
+		OpenWorldMap(block.id)
+		return
+	end
+	MenuUtil.CreateContextMenu(self:GetContextMenuParent(), function(_, root)
+		root:SetTag("MENU_LEGACY_HERE_ZONE_TRACKER", block)
+		root:CreateTitle(C_Map.GetMapInfo(block.id).name)
+		root:CreateButton("Open the map", function()
+			OpenWorldMap(block.id)
+		end)
+		root:CreateButton("Hide from the tracker", function()
+			Toggle("tracker")
+		end)
+	end)
 end
 
 local trackerModule = ns.Tracker.AddModule("LegacyHereZoneTracker", TrackerMixin, -1)
@@ -208,7 +227,7 @@ if trackerModule then
 	header.Progress = CreateProgressBar(header)
 	header.Progress:SetPoint("BOTTOMLEFT", 7, 1)
 	header.Progress:SetPoint("BOTTOMRIGHT", header.Percent, "BOTTOMRIGHT", 0, 1)
-	-- Saved variables arrive only once every file has run.
+	-- Deferred so the collapse state is restored even on a client that ignores LoadSavedVariablesFirst.
 	EventUtil.ContinueOnAddOnLoaded(addonName, function()
 		trackerModule:SetCollapsed(Settings().trackerCollapsed == true)
 		hooksecurefunc(trackerModule, "SetCollapsed", function(_, collapsed)
@@ -252,7 +271,11 @@ function LegacyHereZoneOverlayMixin:Refresh()
 	if not collapsed then
 		height = height + 6 + self.Counts:GetStringHeight()
 	end
-	self:SetSize(math.max(self.Title:GetStringWidth(), self.Counts:GetStringWidth(), OVERLAY_MIN_WIDTH), height)
+	local width = math.max(self.Title:GetStringWidth(), OVERLAY_MIN_WIDTH)
+	if not collapsed then
+		width = math.max(width, self.Counts:GetStringWidth())
+	end
+	self:SetSize(width, height)
 	self:Show()
 end
 
@@ -386,11 +409,6 @@ end
 ns.Live.OnChange(CheckRewards)
 
 --[[ Settings, in the Legacy map menu ]]
-
-local function Toggle(surface)
-	Settings()[surface] = not IsShown(surface)
-	Refresh()
-end
 
 local function ToggleCounted(category)
 	Settings()["count_" .. category] = not IsCounted(category)
