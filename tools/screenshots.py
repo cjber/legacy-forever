@@ -102,8 +102,15 @@ ASHENVALE = 1440
 # One plausible Alliance character: half of Ashenvale explored, the Astranaar flight path known, Onyxia
 # down on the account (the old captures' account had that one done), Blackfathom Deeps not yet cleared.
 EXPLORED = {
-    "The Zoram Strand", "Maestra's Post", "Astranaar", "Thistlefur Village", "Lake Falathim",
-    "The Shrine of Aessina", "Iris Lake", "The Ruins of Stardust", "Fire Scar Shrine",
+    "The Zoram Strand",
+    "Maestra's Post",
+    "Astranaar",
+    "Thistlefur Village",
+    "Lake Falathim",
+    "The Shrine of Aessina",
+    "Iris Lake",
+    "The Ruins of Stardust",
+    "Fire Scar Shrine",
 }
 FACTION = "Alliance"
 KNOWN_TAXIS = {28}
@@ -142,14 +149,16 @@ class Live:
         self.explored = {area["key"] for area in zone["areas"] if area["name"] in EXPLORED}
         assert len(self.explored) == len(EXPLORED), "an explored area name is not in the data"
         self.done_criteria = {
-            entry["criteria"] for entry in data["zones"][ASHENVALE]
+            entry["criteria"]
+            for entry in data["zones"][ASHENVALE]
             if entry["kind"] == "explore" and entry["key"] in self.explored
         }
         self.cache = {}
 
     def visible(self):
         return {
-            achievement for achievement in self.data["rewards"]
+            achievement
+            for achievement in self.data["rewards"]
             if int(self.achievements[str(achievement)]["Flags"]) & VARIANT_FLAG
             and achievement not in COMPLETED_ACHIEVEMENTS
         }
@@ -166,7 +175,9 @@ class Live:
         return found
 
     def located(self, achievement):
-        return [e["criteria"] for entries in self.data["zones"].values() for e in entries if e["achievement"] == achievement]
+        return [
+            e["criteria"] for entries in self.data["zones"].values() for e in entries if e["achievement"] == achievement
+        ]
 
     def criteria(self, achievement):
         if achievement not in self.cache:
@@ -187,9 +198,13 @@ class Live:
             cid = int(leaf["CriteriaID"])
             criteria = self.criteria_rows[leaf["CriteriaID"]]
             kind, asset = int(criteria["Type"]), int(criteria["Asset"])
-            done = completed or cid in self.done_criteria or (kind == EARN_ACHIEVEMENT and asset in COMPLETED_ACHIEVEMENTS)
+            done = (
+                completed or cid in self.done_criteria or (kind == EARN_ACHIEVEMENT and asset in COMPLETED_ACHIEVEMENTS)
+            )
             required = int(leaf["Amount"])
-            result[cid] = Progress(leaf["Description_lang"], done, index, kind, asset, required if done else 0, required)
+            result[cid] = Progress(
+                leaf["Description_lang"], done, index, kind, asset, required if done else 0, required
+            )
         return result
 
     def category(self, achievement):
@@ -292,7 +307,9 @@ def zone_completion(live, zone):
     def own(items, key):
         return [i for i in items if i.get(key) in (None, "Neutral", FACTION)]
 
-    raids = lambda raid: all(live.refs_done(boss["refs"]) for boss in raid["bosses"])
+    def raids(raid):
+        return all(live.refs_done(boss["refs"]) for boss in raid["bosses"])
+
     result = {
         "areas": completion_category(zone["areas"], lambda area: area["key"] in live.explored),
         "taxis": completion_category(own(zone["taxis"], "faction"), lambda taxi: taxi["node"] in KNOWN_TAXIS),
@@ -482,12 +499,20 @@ def render_menu(ui, data, live):
     tops = unlocated_tree(live, data)
     top_name = "Tradeskills"
     sub_name = next(iter(tops[top_name]["subs"]))
-    parent_row = rows[next(i for i, e in enumerate(entries) if isinstance(e, MenuButton) and e.text.startswith("No fixed"))]
+    parent_row = rows[
+        next(i for i, e in enumerate(entries) if isinstance(e, MenuButton) and e.text.startswith("No fixed"))
+    ]
     cascade = [
         [MenuButton(name, True) for name in tops],
         [MenuButton(name, True, name == sub_name) for name in tops[top_name]["subs"]]
-        + [MenuCheckbox(challenge_text(live.name(i["challenge"]), i["open"]), i["challenge"] in TRACKED) for i in tops[top_name]["items"]],
-        [MenuCheckbox(challenge_text(live.name(i["challenge"]), i["open"]), i["challenge"] in TRACKED) for i in tops[top_name]["subs"][sub_name]],
+        + [
+            MenuCheckbox(challenge_text(live.name(i["challenge"]), i["open"]), i["challenge"] in TRACKED)
+            for i in tops[top_name]["items"]
+        ],
+        [
+            MenuCheckbox(challenge_text(live.name(i["challenge"]), i["open"]), i["challenge"] in TRACKED)
+            for i in tops[top_name]["subs"][sub_name]
+        ],
     ]
     opened = [top_name, sub_name]
     for level, entries_at in enumerate(cascade):
