@@ -43,7 +43,8 @@ On-demand tools for audits. Output is candidates, never verdicts.
 | Duplication | `npx --yes jscpd@4 --silent --reporters json --output .sift/runs/jscpd --ignore "**/.sift/**,Data/**" .` | XML template blocks in `Map.xml`/`Completion.xml` (UI boilerplate) |
 | Globals drift | compare `.luacheckrc` `globals`+`read_globals` with `.luarc.json` `diagnostics.globals` | none: the two lists must be equal |
 
-`rg` with no path argument reads stdin in a non-interactive shell and hangs: always pass `.`.
+`rg` with no path argument reads stdin in a non-interactive shell and hangs: always pass `.`. Plain `rg` skips
+hidden paths; add `--hidden` when a search must cover `.github/`.
 
 ## Live roots
 
@@ -69,6 +70,14 @@ On-demand tools for audits. Output is candidates, never verdicts.
 - `tools/latest_build.py`, `tools/changelog.py` — run by `.github/workflows/refresh-data.yml`
   and `release.yml`; `refresh-data.yml` also rewrites the `BUILD = "..."` and
   `SOURCE_DATE = "..."` lines of `gen_legacy.py` with `sed` — keep them single-line.
+
+## Open questions for reviewers
+
+- SavedVariables timing: `LegacyHere.toc` sets `LoadSavedVariablesFirst: 1`, but Core.lua and
+  Completion.lua comments assume saved data arrives after every file runs. Until confirmed in
+  game, `LegacyHereDB = LegacyHereDB or {}` guards are not defensive noise.
+- FrameXML helpers (`tContains`, `tIndexOf`, `CountTable`, `Mixin`) are the platform for the
+  reinvented-wheel lens, but only `tContains` and `Mixin` are confirmed on this client.
 
 ## Zones
 
