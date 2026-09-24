@@ -42,6 +42,18 @@ jobs:
           mkdir -p "$RUNNER_TEMP/luals" && tar -xzf "$RUNNER_TEMP/luals.tgz" -C "$RUNNER_TEMP/luals"
           LUA_LANGUAGE_SERVER="$RUNNER_TEMP/luals/bin/lua-language-server" tools/typecheck.sh
 
+  sift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - env:
+          BASE: ${{ github.base_ref || github.event.repository.default_branch }}
+        run: python3 .sift/gate.py --base "origin/$BASE"
+      - run: python3 .sift/agents.py check
+
   workflows:
     runs-on: ubuntu-latest
     steps:
@@ -71,17 +83,3 @@ jobs:
           echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  $RUNNER_TEMP/gitleaks.tgz" | sha256sum -c -
           tar -xzf "$RUNNER_TEMP/gitleaks.tgz" -C "$RUNNER_TEMP" gitleaks
       - run: '"$RUNNER_TEMP/gitleaks" git --redact --no-banner .'
-
-  sift:
-    runs-on: ubuntu-latest
-    env:
-      SIFT: sift[treesitter] @ git+https://github.com/agent-labs-dev/sift@5f6949e653d009056e9ce12554f9248be6e03c80
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
-      # sift, pinned by commit: structural checks on the branch's diff, and AGENTS.md.
-      - run: uvx --from "$SIFT" sift check
-      - run: uvx --from "$SIFT" sift agents check
