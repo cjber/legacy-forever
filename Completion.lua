@@ -590,7 +590,7 @@ function Completion.Audit()
 	)
 
 	local known = {}
-	for _, area in ipairs(zone.areas or {}) do
+	for _, area in ipairs(zone.areas) do
 		known[area.key] = true
 	end
 	for key in pairs(snapshot.explored) do
@@ -602,7 +602,7 @@ function Completion.Audit()
 		ns.Print("  the game reports nothing explored in this zone")
 	end
 
-	for _, taxi in ipairs(zone.taxis or {}) do
+	for _, taxi in ipairs(zone.taxis) do
 		if taxi.faction == "Neutral" or taxi.faction == snapshot.faction then
 			local learned = snapshot.taxis[taxi.node]
 			local state = learned == nil and "unknown until you open a flight master on this continent"

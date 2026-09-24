@@ -22,6 +22,8 @@ CACHE = ROOT / "tools" / ".cache"
 OUTPUT = ROOT / "Data" / "Legacy.lua"
 LOCATIONS = ROOT / "tools" / "locations.json"
 KINDS = {"explore", "instance", "kill", "quest", "reputation"}
+CURATED_ID = re.compile(r"[1-9][0-9]*")
+EVIDENCE = re.compile(r"^Build [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:")
 BATTLEGROUNDS = {1459, 1460, 1461}
 SPELUNKER = (62031, 62032, 62033, 64016, 64017, 64018)
 CRITERIA_KINDS = {
@@ -104,21 +106,20 @@ def atomic_write(path, data):
 
 def download(url, filename, refresh=False, offline=False):
     path = CACHE / filename
-    if path.exists() and not refresh:
+    fetch = refresh or not path.exists()
+    if not fetch:
         data = path.read_bytes()
+    elif offline:
+        raise ValueError(f"Missing cached source: {path}")
     else:
-        if offline:
-            raise ValueError(f"Missing cached source: {path}")
         request = urllib.request.Request(url, headers={"User-Agent": "LegacyForever/1.0"})
         with urllib.request.urlopen(request, timeout=60) as response:
             data = response.read()
-        content = data.decode("utf-8-sig")
-        if not content.strip() or content.lstrip().startswith("<"):
-            raise ValueError(f"Expected CSV, received empty data or HTML from {url}")
-        atomic_write(path, data)
     content = data.decode("utf-8-sig")
     if not content.strip() or content.lstrip().startswith("<"):
-        raise ValueError(f"Expected CSV, received empty data or HTML in {path}")
+        raise ValueError(f"Expected CSV, received empty data or HTML {f'from {url}' if fetch else f'in {path}'}")
+    if fetch:
+        atomic_write(path, data)
     return content
 
 
@@ -453,7 +454,7 @@ def unique_object(pairs):
 
 
 def validate_criterion_row(tables, geography, key, row):
-    if not re.fullmatch(r"[1-9][0-9]*", key):
+    if not CURATED_ID.fullmatch(key):
         raise ValueError(f"locations.json: invalid criteria ID {key}")
     cid = int(key)
     criterion = required(tables["Criteria"], cid, "locations.json criteria")
@@ -470,10 +471,10 @@ def validate_criterion_row(tables, geography, key, row):
         raise ValueError(f"locations.json {cid}: invalid zone uiMap")
     if not isinstance(row["kind"], str) or row["kind"] not in KINDS:
         raise ValueError(f"locations.json {cid}: invalid kind")
-    expected = CRITERIA_KINDS.get(tables["Criteria"][cid]["Type"])
+    expected = CRITERIA_KINDS.get(criterion["Type"])
     if row["kind"] != expected and not (row["kind"] == "instance" and expected == "kill"):
         raise ValueError(f"locations.json {cid}: kind disagrees with criteria type")
-    if not isinstance(row["evidence"], str) or not re.match(r"^Build [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:", row["evidence"]):
+    if not isinstance(row["evidence"], str) or not EVIDENCE.match(row["evidence"]):
         raise ValueError(f"locations.json {cid}: evidence must record its verification build")
     if any((row["kind"] == "instance") != (field in row) for field in ("instance", "instanceType")):
         raise ValueError(f"locations.json {cid}: only instance entries require an instance ID and type")
@@ -494,7 +495,7 @@ def validate_criterion_row(tables, geography, key, row):
 
 def validate_completion_row(tables, geography, section, key, row):
     label = f"locations.json {section} {key}"
-    if not re.fullmatch(r"[1-9][0-9]*", key):
+    if not CURATED_ID.fullmatch(key):
         raise ValueError(f"{label}: invalid ID")
     fields = {"uiMap", "name", "evidence"}
     optional = {"area", "instance"} if section in ("dungeonWings", "questInstances") else set()
@@ -512,7 +513,7 @@ def validate_completion_row(tables, geography, section, key, row):
     if any(not isinstance(row[k], str) or not row[k].strip() for k in ("name", "evidence")):
         raise ValueError(f"{label}: name and evidence required")
     # Evidence records its review build; current rows below decide validity.
-    if not re.match(r"^Build [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:", row["evidence"]):
+    if not EVIDENCE.match(row["evidence"]):
         raise ValueError(f"{label}: evidence must record its verification build")
     if "area" in row:
         if type(row["area"]) is not int or geography.area_zones(row["area"]) != {row["uiMap"]}:
@@ -584,8 +585,7 @@ def validate_compound_tree(tables, root, fact):
         not isinstance(alternatives, dict)
         or len(alternatives) < 2
         or any(
-            not re.fullmatch(r"[1-9][0-9]*", key) or type(boss) is not int or boss <= 0
-            for key, boss in alternatives.items()
+            not CURATED_ID.fullmatch(key) or type(boss) is not int or boss <= 0 for key, boss in alternatives.items()
         )
         or len(set(alternatives.values())) != len(alternatives)
         or type(fact["boss"]) is not int

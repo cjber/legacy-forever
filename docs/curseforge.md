@@ -1,12 +1,20 @@
-Legacy Forever puts your unfinished WoW: Forever Legacy challenges on the world map, for the zone you're looking at. The Legacy panel lists every challenge, but not which ones you can work on where you are; this adds that to the map, and keeps a small tracker of the challenges you pick.
+The Legacy panel lists every challenge, but not which ones you can work on where you are. Legacy Forever puts that on the world map for the zone you're looking at, and keeps a small tracker of the challenges you pick. It uses the map's own buttons, menus, pins and the objective tracker, so it looks like it came with the game.
 
 ![Ashenvale on the world map with undiscovered areas shaded, the zone completion corner and the Legacy menu open](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/map.png)
 
-![The Legacy map menu with tick boxes to track challenges, grouped by type](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/menu.png)
+The zone you're looking at, with its Legacy objectives in the map's own menu.
 
 ![Kalimdor on the world map with a Legacy badge on each zone that still has dungeon objectives](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/continent.png)
 
+Zoom out and each zone with dungeon objectives left gets a badge.
+
 ![The objective tracker with Ashenvale's completion and the tracked Legacy challenges](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/tracker.png)
+
+Challenges you track sit at the top of the objective tracker, with live progress.
+
+![The Legacy map menu with tick boxes to track challenges, grouped by type](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/menu.png)
+
+Tick a challenge in the menu to track it.
 
 ## Features
 
@@ -26,6 +34,8 @@ Open the world map: the Legacy button sits below the map's own tracking buttons.
 - `/lf` shows short help.
 - `/lf audit` compares the bundled data with what the game reports. Found a wrong or missing objective? Include its output in an issue on [GitHub](https://github.com/cjber/legacy-forever/issues).
 
-Locations are generated from the Forever client's own data; nothing is matched by name or scraped from a database site.
+Locations are generated from the Forever client's own data and joined by ID (flight paths by the zone in their name); nothing is scraped from a database site.
+
+It only shows what the game already tracks; it doesn't add challenges or change how they count.
 
 Source code: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.

@@ -1,6 +1,7 @@
 -- Run from the repository root: luajit tests/data_spec.lua
 local ns = {}
 assert(loadfile("Data/Legacy.lua"))("LegacyForever", ns)
+assert(loadfile("Model.lua"))("LegacyForever", ns)
 local data = ns.Data
 assert(type(data) == "table", "generated data table")
 assert(type(data.build) == "string" and data.build:match("^%d+%.%d+%.%d+%.%d+$"), "build format")
@@ -172,7 +173,7 @@ assert(type(data.completion) == "table", "completion data")
 for zone, entry in pairs(data.completion) do
 	assert(positiveInteger(zone), "completion zone ID")
 	assert(zone ~= 2521 and zone ~= 1459 and zone ~= 1460 and zone ~= 1461, "excluded completion maps")
-	for _, category in ipairs({ "areas", "taxis", "dungeons", "raids", "legacy", "reputations" }) do
+	for _, category in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 		assert(type(entry[category]) == "table", "completion categories always present, including empty lists")
 	end
 	assert(

@@ -13,6 +13,11 @@ def lua_string(value):
     )
 
 
+def named_refs(entry):
+    refs = ", ".join(f"{{ {a}, {c} }}" for a, c in entry["refs"])
+    return [f"name = {lua_string(entry['name'])}", f"refs = {{ {refs} }}"]
+
+
 def render_entry(fields, depth, refs=()):
     indent = "\t" * depth
     compact = "{ " + ", ".join(fields) + " },"
@@ -86,9 +91,7 @@ def render(build, source_date, rewards, feeds, zones, completion):
                         ["\t\t\t\t{", f"\t\t\t\t\tname = {lua_string(entry['name'])},", "\t\t\t\t\tbosses = {"]
                     )
                     for boss in entry["bosses"]:
-                        refs = ", ".join(f"{{ {a}, {c} }}" for a, c in boss["refs"])
-                        fields = [f"name = {lua_string(boss['name'])}", f"refs = {{ {refs} }}"]
-                        lines.extend(render_entry(fields, 6, boss["refs"]))
+                        lines.extend(render_entry(named_refs(boss), 6, boss["refs"]))
                     lines.extend(["\t\t\t\t\t},", "\t\t\t\t},"])
                     continue
                 elif category == "areas":
@@ -109,8 +112,7 @@ def render(build, source_date, rewards, feeds, zones, completion):
                     if "side" in entry:
                         fields.append(f"side = {lua_string(entry['side'])}")
                 else:
-                    refs = ", ".join(f"{{ {a}, {c} }}" for a, c in entry["refs"])
-                    fields = [f"name = {lua_string(entry['name'])}", f"refs = {{ {refs} }}"]
+                    fields = named_refs(entry)
                 # Match the repository's StyLua width without a formatter dependency.
                 lines.extend(render_entry(fields, 4, entry.get("refs", ())))
             lines.append("\t\t\t},")
