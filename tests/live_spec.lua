@@ -32,6 +32,11 @@ C_TaxiMap = {
 		return { { nodeID = 10, state = 1 } }
 	end,
 }
+C_QuestLog = {
+	GetAllCompletedQuestIDs = function()
+		return { 1, 2 }
+	end,
+}
 C_Timer = { After = function() end }
 tContains = function(list, value)
 	for _, item in ipairs(list) do
@@ -65,4 +70,8 @@ assert(records[guid] and snapshot.taxis[10] == nil, "a new character has no know
 onEvent(nil, "TAXIMAP_OPENED")
 snapshot = ns.Live.ZoneSnapshot(2)
 assert(snapshot.taxis[10] == true, "a later flight-master visit records this character's known nodes")
-print("live_spec: 5 checks passed")
+assert(snapshot.completed[2] and not snapshot.completed[3], "turned-in quests come from the quest log")
+onEvent(nil, "QUEST_TURNED_IN", 3)
+snapshot = ns.Live.ZoneSnapshot(2)
+assert(snapshot.completed[3], "a quest turned in since is counted without rereading the log")
+print("live_spec: 7 checks passed")

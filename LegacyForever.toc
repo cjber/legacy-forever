@@ -11,12 +11,14 @@
 ## IconTexture: Interface\AddOns\LegacyForever\media\Icon
 ## SavedVariables: LegacyForeverDB
 ## LoadSavedVariablesFirst: 1
+## OptionalDeps: QuestieDB
 ## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick
 
 Data\Legacy.lua
 Core.lua
 Model.lua
 Live.lua
+Quests.lua
 Tracker.lua
 Completion.xml
 Completion.lua

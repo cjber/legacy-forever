@@ -5,6 +5,7 @@ local _, addon = ...
 ---@field Data LegacyData
 ---@field Model LegacyModel
 ---@field Live LegacyLive
+---@field Quests LegacyQuests
 ---@field Tracker LegacyTracker
 ---@field Completion LegacyCompletion
 ---@field RefreshMap fun()
