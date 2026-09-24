@@ -106,7 +106,7 @@ def load_data():
 ASHENVALE = 1440
 KALIMDOR = 1414
 # One plausible Alliance character: half of Ashenvale explored, the Astranaar flight path known, Onyxia
-# down on the account (the old captures' account had that one done), Blackfathom Deeps not yet cleared.
+# down on the account, Blackfathom Deeps not yet cleared.
 EXPLORED = {
     "The Zoram Strand",
     "Maestra's Post",
@@ -225,7 +225,7 @@ class Live:
     def refs_done(self, refs):
         state = None
         for achievement, criteria_id in refs:
-            progress = (self.criteria(achievement) or {}).get(criteria_id)
+            progress = self.criteria(achievement).get(criteria_id)
             if progress:
                 if progress.completed:
                     return True
@@ -247,7 +247,7 @@ def zone_objectives(data, live, ui_map_id):
     visible = live.visible()
     for entry in data["zones"].get(ui_map_id, []):
         challenge = owning_challenge(data, entry["achievement"], visible)
-        progress = challenge and (live.criteria(entry["achievement"]) or {}).get(entry["criteria"])
+        progress = challenge and live.criteria(entry["achievement"]).get(entry["criteria"])
         if progress and not progress.completed:
             group = by_achievement.get(entry["achievement"])
             if not group:
@@ -272,7 +272,7 @@ def unlocated(data, live):
 
     def open_count(achievement):
         count = 0
-        for criteria_id, progress in (live.criteria(achievement) or {}).items():
+        for criteria_id, progress in live.criteria(achievement).items():
             if not progress.completed and criteria_id not in located:
                 if progress.type == EARN_ACHIEVEMENT and progress.asset in data["feeds"]:
                     count += open_count(progress.asset)
@@ -429,7 +429,7 @@ def challenge_text(name, count):
 
 
 def unlocated_tree(live, data):
-    """AddUnlocated's grouping: [(top name, [(sub name, items)], items)] in first-appearance order."""
+    """AddUnlocated's grouping: {top name: {"subs": {sub name: items}, "items": items}} in first-appearance order."""
     tops = {}
     for item in unlocated(data, live):
         name, parent = live.category(item["challenge"])
