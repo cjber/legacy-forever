@@ -44,6 +44,8 @@ The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and
   work.
 - Progress is read from the game each time, so it matches the Legacy panel; the bundled data only
   says where objectives are.
+- Store copy, README and posts pitch the addon as looking like it came with the game, in cjber's
+  own voice, never AI marketing: `wow-forever-addon` WFA-23/24, checked before every store paste.
 
 ## Standards
 
