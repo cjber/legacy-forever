@@ -8,6 +8,8 @@ local _, addon = ...
 ---@field Tracker LegacyTracker
 ---@field Completion LegacyCompletion
 ---@field RefreshMap fun()
+---@field Navigate fun(uiMapID: number, x: number, y: number, title: string)
+---@field NavigateHint fun(): string
 local ns = addon
 
 ns.TITLE = "Legacy Forever"

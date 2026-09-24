@@ -387,6 +387,8 @@ local function DefinePinMixin()
 		self.objective = objective
 		self.zone = zone
 		self:SetScalingLimits(1, 1.0, 1.2)
+		-- Pins are pooled, so this is set on every acquire. A zone badge lets the click open the zone below it.
+		self:SetMouseClickEnabled(self:Destination() ~= nil)
 		self:Layout(objective and objective.entry.instance)
 		if zone then
 			self:SetPosition(zone.x, zone.y)
@@ -420,6 +422,17 @@ local function DefinePinMixin()
 		end
 	end
 
+	-- Where a click takes the player: only an objective with coordinates in the data, on the zone map they are for.
+	---@return number? uiMapID
+	---@return number? x
+	---@return number? y
+	function LegacyForeverPinMixin:Destination()
+		local entry = self.objective and self.objective.entry
+		if self.group and entry and entry.x and entry.y then
+			return self.group.uiMapID, entry.x, entry.y
+		end
+	end
+
 	function LegacyForeverPinMixin:OnMouseEnter()
 		self.Highlight:Show()
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -427,8 +440,19 @@ local function DefinePinMixin()
 			AddZoneTooltip(GameTooltip, self.zone)
 		elseif self.group and self.objective then
 			AddPinTooltip(GameTooltip, self.group, self.objective)
+			if self:Destination() then
+				GameTooltip_AddInstructionLine(GameTooltip, ns.NavigateHint())
+			end
 		end
 		GameTooltip:Show()
+	end
+
+	---@param button string
+	function LegacyForeverPinMixin:OnMouseClickAction(button)
+		local uiMapID, x, y = self:Destination()
+		if button == "LeftButton" and uiMapID and x and y and self.objective then
+			ns.Navigate(uiMapID, x, y, self.objective.text)
+		end
 	end
 
 	function LegacyForeverPinMixin:OnMouseLeave()

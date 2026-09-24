@@ -1,8 +1,9 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/AddOns/Blizzard_SharedXML/UI.xsd">
-	<!-- An unfinished Legacy objective on the world map. Mouse motion only, so clicks still reach the map.
+	<!-- An unfinished Legacy objective on the world map. Left-click travels there; right-click passes through to
+	     zoom the map out (MapCanvasPinMixin), and a continent's zone badge takes no clicks at all (OnAcquired).
 	     At a dungeon or raid entrance it is the game's entrance portal wearing the shield as a badge; the
 	     layout is set per pin in LegacyForeverPinMixin:OnAcquired. -->
-	<Frame name="LegacyForeverPinTemplate" mixin="LegacyForeverPinMixin" enableMouseMotion="true" virtual="true">
+	<Frame name="LegacyForeverPinTemplate" mixin="LegacyForeverPinMixin" enableMouse="true" virtual="true">
 		<Size x="20" y="20"/>
 		<Layers>
 			<Layer level="BACKGROUND">
