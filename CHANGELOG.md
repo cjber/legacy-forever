@@ -11,6 +11,7 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Left-click a Legacy pin to travel there.** With Shortest Path Forever installed and its journeys switched on, the click starts a journey to the pin, flights and boats included. Without it, or in combat, the click sets the game's own map waypoint instead. The pin's tooltip now ends with the click hint. Zone badges on continent maps still open the zone.
 - **Legacy Here is now Legacy Forever**, matching the other WoW: Forever addons. The addon folder is `LegacyForever`, the slash command is `/lf`, and settings start fresh under the new name.
 - **Dungeon and raid entrances keep their portal.** A Legacy step at an entrance used to replace the map's dungeon or raid icon with the Legacy shield. It now shows the portal with a small shield on its corner, so you can still see the entrance.
 - **The zone section in the objective tracker names what is left**, not just the counts. Under "Darkshore 77%" you now see the unexplored areas, missing dungeons and remaining Legacy steps by name, each with its icon, five at most with "..." after; the map tooltip still lists them all.

@@ -9,9 +9,9 @@
 ## X-Curse-Project-ID: 1705879
 ## X-Wago-ID: b6mzA7KP
 ## IconTexture: Interface\AddOns\LegacyForever\media\Icon
+## OptionalDeps: ShortestPathForever, QuestieDB
 ## SavedVariables: LegacyForeverDB
 ## LoadSavedVariablesFirst: 1
-## OptionalDeps: QuestieDB
 ## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick
 
 Data\Legacy.lua
@@ -19,6 +19,7 @@ Core.lua
 Model.lua
 Live.lua
 Quests.lua
+Navigate.lua
 Tracker.lua
 Completion.xml
 Completion.lua

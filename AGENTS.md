@@ -12,11 +12,10 @@ luacheck .
 tools/typecheck.sh           # LuaLS 3.19.1 + multi-value lint (Python self-tests included)
 for s in tests/*_spec.lua; do luajit "$s" || exit 1; done
 python3 tools/gen_legacy.py   # regenerate Data/Legacy.lua after a data change
-SIFT='sift[treesitter] @ git+https://github.com/agent-labs-dev/sift@5f6949e653d009056e9ce12554f9248be6e03c80'
-uvx --from "$SIFT" sift check && uvx --from "$SIFT" sift agents check   # local only: sift is private
+python3 .sift/gate.py --base origin/main && python3 .sift/agents.py check
 ```
 
-The same gate CI runs, except sift until its public release, plus actionlint, zizmor and gitleaks on the workflows and history.
+The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and history.
 
 ## Layout
 
@@ -51,5 +50,5 @@ The same gate CI runs, except sift until its public release, plus actionlint, zi
 
 ## Standards
 
-- `wow-forever-addon` — https://github.com/cjber/skills/tree/main/wow-forever-addon (UI look,
+- `wow-forever-addon` — https://github.com/cjber/skills/tree/c587d4c74fcc27c97f73f2f7cb3d70cccebeb34e/wow-forever-addon (UI look,
   icon, README and store page, CI and release requirements shared by every WoW: Forever addon)
