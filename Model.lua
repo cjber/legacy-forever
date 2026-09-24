@@ -569,7 +569,7 @@ local function RaidDone(raid, refsDone)
 end
 
 -- A zone's reputation counts once the player is Friendly (reaction 5) or better with it.
-Model.REPUTATION_TARGET = 5
+local REPUTATION_TARGET = 5
 
 -- Entries for the player's side: those with no side under `sideKey`, Neutral ones, and the player's faction's.
 ---@generic T
@@ -623,7 +623,7 @@ function Model.ZoneCompletion(zone, snapshot, counted)
 			return snapshot.refsDone(objective.refs)
 		end),
 		reputations = CompletionCategory(ForFaction(zone.reputations, snapshot.faction, "side"), function(rep)
-			return snapshot.reaction(rep.faction) >= Model.REPUTATION_TARGET
+			return snapshot.reaction(rep.faction) >= REPUTATION_TARGET
 		end),
 		-- Built from QuestieDB only when counted: the first zone reads its whole database.
 		quests = (not counted or counted("quests")) and QuestCategory(snapshot) or nil,

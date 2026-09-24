@@ -382,24 +382,23 @@ class Geography:
             overlay = replacement
             art_zones = replacement_zones
             counts["current-art overlay remaps"] += 1
-        if art_zones:
-            if areas and areas != art_zones:
-                counts["art overrides area zone"] += 1
-            layer = self.base_layer(overlay["UiMapArtID"])
-            width, height = layer["LayerWidth"], layer["LayerHeight"]
-            entry["key"] = overlay_key(overlay)
-            top, bottom, left, right = (overlay[f"HitRect{k}"] for k in ("Top", "Bottom", "Left", "Right"))
-            if top == bottom == left == right == 0:
-                counts["empty hit rectangle"] += 1
-            elif top > bottom or left > right:
-                # Client data defect (Kharanos 5136 has top and bottom swapped): no pin
-                # position, but the overlay's key and tiles still stand.
-                counts["inverted hit rectangle"] += 1
-                print(f"  Inverted hit rectangle: WorldMapOverlay {overlay['ID']}", file=sys.stderr)
-            elif not (0 <= left < right <= width and 0 <= top < bottom <= height):
-                raise ValueError(f"WorldMapOverlay {overlay['ID']}: invalid hit rectangle")
-            else:
-                entry.update(x=(left + right) / (2 * width), y=(top + bottom) / (2 * height))
+        if areas and areas != art_zones:
+            counts["art overrides area zone"] += 1
+        layer = self.base_layer(overlay["UiMapArtID"])
+        width, height = layer["LayerWidth"], layer["LayerHeight"]
+        entry["key"] = overlay_key(overlay)
+        top, bottom, left, right = (overlay[f"HitRect{k}"] for k in ("Top", "Bottom", "Left", "Right"))
+        if top == bottom == left == right == 0:
+            counts["empty hit rectangle"] += 1
+        elif top > bottom or left > right:
+            # Client data defect (Kharanos 5136 has top and bottom swapped): no pin
+            # position, but the overlay's key and tiles still stand.
+            counts["inverted hit rectangle"] += 1
+            print(f"  Inverted hit rectangle: WorldMapOverlay {overlay['ID']}", file=sys.stderr)
+        elif not (0 <= left < right <= width and 0 <= top < bottom <= height):
+            raise ValueError(f"WorldMapOverlay {overlay['ID']}: invalid hit rectangle")
+        else:
+            entry.update(x=(left + right) / (2 * width), y=(top + bottom) / (2 * height))
         return zone, entry
 
     def entrances(self, instance):
@@ -411,10 +410,9 @@ class Geography:
             return {}
         results = defaultdict(set)
         for zone, assignments in self.by_map.items():
-            for assignment in assignments:
-                if assignment["MapID"] != row["CorpseMapID"]:
+            for r in assignments:
+                if r["MapID"] != row["CorpseMapID"]:
                     continue
-                r = assignment
                 if not (r["Region_0"] <= px <= r["Region_3"] and r["Region_1"] <= py <= r["Region_4"]):
                     continue
                 if r["Region_0"] == r["Region_3"] or r["Region_1"] == r["Region_4"]:
@@ -430,7 +428,7 @@ class Geography:
                     results[zone].add((x, y))
         return {zone: next(iter(points)) for zone, points in results.items() if len(points) == 1}
 
-    def instance_location(self, instance, zone=None):
+    def instance_location(self, instance, zone):
         entrances = self.entrances(instance)
         if zone is None:
             if len(entrances) != 1:
