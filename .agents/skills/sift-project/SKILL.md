@@ -138,7 +138,7 @@ Audit slices from lowest to highest risk:
   type for LuaLS; removing it trades the branch for a `---@cast`. Tracker `uiOrder` `0` is
   Legacy Forever's registered slot in WFA-5, not a missing negative.
 - Rules: `file-size-no-growth` (`.sift/scripts/`, from the sift catalog) fails a change that adds
-  a file over 1000 lines or grows one; `tools/gen_legacy.py` (1039 lines) is the backlog it holds in
+  a file over 1000 lines or grows one; `tools/gen_legacy.py` (1037 lines) is the backlog it holds in
   place. Generated `Data/*.lua` is excluded.
 - The BigWigs packager drops every dot-prefixed path itself, so `.pkgmeta` lists only
   non-dot ignores; a dot entry there is dead config.
