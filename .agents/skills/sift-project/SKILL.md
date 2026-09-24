@@ -26,7 +26,7 @@ Run in order from the repository root. All must pass before and after any audit 
 | Tests | `for s in tests/*_spec.lua; do luajit "$s" \|\| exit 1; done` | exit 0 (`model_spec: N checks passed`) |
 | Workflows | `actionlint && zizmor --offline .github` | exit 0, no findings |
 | Secrets | `gitleaks git --redact --no-banner .` | `no leaks found` |
-| Structure | `uvx --from "$SIFT" sift check` and `sift agents check` (`SIFT` pinned in `ci.yml`) | exit 0; `tools/gen_legacy.py` over 1000 lines warns but must not grow |
+| Project rules | `python3 .sift/gate.py --base origin/main && python3 .sift/agents.py check` | exit 0 |
 
 CI (`.github/workflows/ci.yml`) runs all of these with the versions above pinned. Where actionlint
 or zizmor is not installed, run `uvx --from actionlint-py==1.7.12.24 actionlint` and
@@ -124,6 +124,9 @@ Audit slices from lowest to highest risk:
 
 ## Project rules and lenses
 
-- Rules: the BigWigs packager drops every dot-prefixed path itself, so `.pkgmeta` lists only
+- Rules: `file-size-no-growth` (`.sift/scripts/`, from the sift catalog) fails a change that adds
+  a file over 1000 lines or grows one; `tools/gen_legacy.py` (1039 lines) is the backlog it holds in
+  place. Generated `Data/*.lua` is excluded.
+- The BigWigs packager drops every dot-prefixed path itself, so `.pkgmeta` lists only
   non-dot ignores; a dot entry there is dead config.
 - Lenses: none yet.
