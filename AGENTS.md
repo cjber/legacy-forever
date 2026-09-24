@@ -12,9 +12,11 @@ luacheck .
 tools/typecheck.sh           # LuaLS 3.19.1 + multi-value lint (Python self-tests included)
 for s in tests/*_spec.lua; do luajit "$s" || exit 1; done
 python3 tools/gen_legacy.py   # regenerate Data/Legacy.lua after a data change
+SIFT='sift[treesitter] @ git+https://github.com/agent-labs-dev/sift@5f6949e653d009056e9ce12554f9248be6e03c80'
+uvx --from "$SIFT" sift check && uvx --from "$SIFT" sift agents check   # local only: sift is private
 ```
 
-The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and history.
+The same gate CI runs, except sift until its public release, plus actionlint, zizmor and gitleaks on the workflows and history.
 
 ## Layout
 
