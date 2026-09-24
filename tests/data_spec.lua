@@ -174,7 +174,11 @@ for zone, entry in pairs(data.completion) do
 	assert(positiveInteger(zone), "completion zone ID")
 	assert(zone ~= 2521 and zone ~= 1459 and zone ~= 1460 and zone ~= 1461, "excluded completion maps")
 	for _, category in ipairs(ns.Model.COMPLETION_CATEGORIES) do
-		assert(type(entry[category]) == "table", "completion categories always present, including empty lists")
+		-- Quests are read from Questie in game, never bundled.
+		assert(
+			(category == "quests") == (entry[category] == nil),
+			"bundled completion categories always present, including empty lists"
+		)
 	end
 	assert(
 		#entry.areas + #entry.taxis + #entry.dungeons + #entry.raids + #entry.legacy + #entry.reputations > 0,

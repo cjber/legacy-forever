@@ -2,7 +2,7 @@
 
 -- The TOC supplies one shared namespace to every chunk; none of these declarations run in game.
 ---@alias LegacySet table<number, boolean>
----@alias LegacyCategoryKey 'areas'|'taxis'|'dungeons'|'raids'|'legacy'|'reputations'
+---@alias LegacyCategoryKey 'areas'|'taxis'|'dungeons'|'raids'|'legacy'|'reputations'|'quests'
 ---@alias LegacySurface 'map'|'tracker'
 ---@alias LegacyRefs number[][]
 ---@alias LegacyCriteria table<number, LegacyProgress>
@@ -83,6 +83,22 @@
 ---@field faction number
 ---@field side? string
 
+-- One of a zone's quests: a quest, or mutually exclusive ones counted once. `ids` also holds the
+-- quests that close it, so it is done once any of them is turned in.
+---@class LegacyQuestItem
+---@field name string
+---@field ids number[]
+---@field uiMapID number
+
+-- QuestieDB's quest data for this character, with Questie's blacklist when it is loaded.
+---@class LegacyQuestSource
+---@field ids number[]
+---@field get fun(questID: number, key: string): any
+---@field hidden fun(questID: number): boolean
+---@field zone fun(areaID: number): number?
+---@field race fun(mask: number): boolean
+---@field class fun(mask: number): boolean
+
 ---@class LegacyZone
 ---@field areas LegacyArea[]
 ---@field taxis LegacyTaxi[]
@@ -99,6 +115,8 @@
 ---@field faction string
 ---@field refsDone fun(refs: LegacyRefs): boolean?
 ---@field reaction fun(factionID: number): number
+---@field quests? fun(): LegacyQuestItem[]|false|nil
+---@field completed? LegacySet
 
 ---@class LegacyCategory
 ---@field done number
@@ -114,6 +132,7 @@
 ---@field raids? LegacyCategory
 ---@field legacy? LegacyCategory
 ---@field reputations? LegacyCategory
+---@field quests? LegacyCategory
 ---@field done number
 ---@field total number
 ---@field pending number

@@ -326,7 +326,231 @@ local function CompletionCategory(items, state)
 end
 
 ---@type LegacyCategoryKey[]
-Model.COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons", "raids", "legacy", "reputations" }
+Model.COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons", "raids", "legacy", "reputations", "quests" }
+
+-- Quest fields that tie a quest to a profession, a reputation, a spell or a level cap: whether a
+-- character can ever take it isn't known, so it never counts.
+local QUEST_GATES = {
+	"requiredSkill",
+	"requiredMinRep",
+	"requiredMaxRep",
+	"requiredRanks",
+	"requiredSpell",
+	"requiredSpecialization",
+	"requiredMaxLevel",
+}
+-- Quests that end a quest's availability once done: a breadcrumb's destination, the quest that
+-- replaces it. The quest counts as done once one of these is, as it can't be taken any more.
+local QUEST_CLOSERS = { "nextQuestInChain", "breadcrumbForQuestId", "availableUntilCompleted" }
+local REPEATABLE, DAILY = 1, 4096
+
+-- QuestieDB reads an unset number as 0 and an unset list as nil.
+---@param value any
+---@return boolean
+local function IsSet(value)
+	if type(value) == "table" then
+		return next(value) ~= nil
+	end
+	return value ~= nil and value ~= 0
+end
+
+---@param value number?
+---@param flag number
+---@return boolean
+local function HasFlag(value, flag)
+	return math.floor((value or 0) / flag) % 2 == 1
+end
+
+-- Each zone's quests for this character, from QuestieDB: every quest the character's race
+-- and class could ever take there, whatever its level or what it has done, so a zone's total holds.
+-- Left out: repeatable and daily quests, quests filed under an instance or a sort (class, profession,
+-- holiday) rather than a zone, quests Questie hides (never in the game, or a holiday's), quests with
+-- no giver or object to start them, gated ones (QUEST_GATES), and quests after a choice this
+-- character could make the other way. Mutually exclusive quests in a zone count once, done when any is.
+---@param source LegacyQuestSource
+---@param zones table<number, any>
+---@return table<number, LegacyQuestItem[]>
+function Model.QuestIndex(source, zones)
+	---@type table<number, boolean>
+	local reachable = {}
+	local Reachable
+
+	-- Whether `questID` stays open whichever way the character goes: none of its exclusive
+	-- partners that the character could take instead is outside `allowed`.
+	---@param questID number
+	---@param allowed table<number, boolean>
+	---@return boolean
+	local function Unforked(questID, allowed)
+		for _, partner in ipairs(source.get(questID, "exclusiveTo") or {}) do
+			if not allowed[partner] and Reachable(partner) then
+				return false
+			end
+		end
+		return true
+	end
+
+	---@param questID number
+	---@return boolean
+	local function Follows(questID)
+		for _, key in ipairs({ "preQuestGroup", "parentQuest", "availableStartingWith" }) do
+			local value = source.get(questID, key)
+			for _, required in ipairs(type(value) == "table" and value or IsSet(value) and { value } or {}) do
+				if not (Reachable(required) and Unforked(required, {})) then
+					return false
+				end
+			end
+		end
+		local alternatives = source.get(questID, "preQuestSingle")
+		if not IsSet(alternatives) then
+			return true
+		end
+		local allowed = {}
+		for _, alternative in ipairs(alternatives) do
+			allowed[alternative] = true
+		end
+		for _, alternative in ipairs(alternatives) do
+			if Reachable(alternative) and Unforked(alternative, allowed) then
+				return true
+			end
+		end
+		return false
+	end
+
+	-- Whether the character can ever take the quest, as far as the data can establish.
+	---@param questID number
+	---@return boolean
+	function Reachable(questID)
+		local known = reachable[questID]
+		if known ~= nil then
+			return known
+		end
+		reachable[questID] = false -- a prerequisite cycle is never reachable
+		local ok = source.get(questID, "name") ~= nil
+			and not source.hidden(questID)
+			and source.race(source.get(questID, "requiredRaces") or 0)
+			and source.class(source.get(questID, "requiredClasses") or 0)
+		for _, key in ipairs(QUEST_GATES) do
+			ok = ok and not IsSet(source.get(questID, key))
+		end
+		ok = ok and Follows(questID)
+		reachable[questID] = ok
+		return ok
+	end
+
+	-- The zone a quest counts in, or nil when it doesn't count.
+	---@param questID number
+	---@return number?
+	local function CountedIn(questID)
+		local zoneOrSort = source.get(questID, "zoneOrSort") or 0
+		local uiMapID = zoneOrSort > 0 and source.zone(zoneOrSort)
+		if not uiMapID or not zones[uiMapID] then
+			return nil
+		end
+		local flags = source.get(questID, "specialFlags")
+		if HasFlag(flags, REPEATABLE) or HasFlag(source.get(questID, "questFlags"), DAILY) then
+			return nil
+		end
+		local startedBy = source.get(questID, "startedBy") or {}
+		if not (IsSet(startedBy[1]) or IsSet(startedBy[2])) or not Reachable(questID) then
+			return nil
+		end
+		return uiMapID
+	end
+
+	-- Counted quests by zone, then joined with their exclusive partners in the same zone.
+	---@type table<number, number>, table<number, number>
+	local zoneOf, root = {}, {}
+	---@param questID number
+	---@return number
+	local function Find(questID)
+		while root[questID] ~= questID do
+			questID = root[questID]
+		end
+		return questID
+	end
+	for _, questID in ipairs(source.ids) do
+		zoneOf[questID] = CountedIn(questID)
+		if zoneOf[questID] then
+			root[questID] = questID
+		end
+	end
+	for questID in pairs(root) do
+		for _, partner in ipairs(source.get(questID, "exclusiveTo") or {}) do
+			if root[partner] and zoneOf[partner] == zoneOf[questID] then
+				local a, b = Find(questID), Find(partner)
+				root[math.max(a, b)] = math.min(a, b)
+			end
+		end
+	end
+
+	---@type table<number, LegacyQuestItem>
+	local items = {}
+	for _, questID in ipairs(source.ids) do
+		if root[questID] then
+			local key = Find(questID)
+			local item = items[key]
+			if not item then
+				item = { name = source.get(key, "name"), ids = {}, uiMapID = zoneOf[key] }
+				items[key] = item
+			end
+			item.ids[#item.ids + 1] = questID
+			for _, partner in ipairs(source.get(questID, "exclusiveTo") or {}) do
+				item.ids[#item.ids + 1] = partner
+			end
+			for _, closer in ipairs(QUEST_CLOSERS) do
+				local closerID = source.get(questID, closer)
+				if IsSet(closerID) then
+					item.ids[#item.ids + 1] = closerID
+				end
+			end
+		end
+	end
+	---@type table<number, LegacyQuestItem[]>
+	local index = {}
+	for _, item in pairs(items) do
+		local list = index[item.uiMapID] or {}
+		list[#list + 1] = item
+		index[item.uiMapID] = list
+	end
+	for _, list in pairs(index) do
+		table.sort(list, function(a, b)
+			if a.name ~= b.name then
+				return a.name < b.name
+			end
+			return a.ids[1] < b.ids[1]
+		end)
+	end
+	return index
+end
+
+-- A zone quest is done once the character has turned in any of its IDs; unknown until the game says.
+---@param item LegacyQuestItem
+---@param completed LegacySet?
+---@return boolean?
+local function QuestDone(item, completed)
+	if not completed then
+		return nil
+	end
+	for _, questID in ipairs(item.ids) do
+		if completed[questID] then
+			return true
+		end
+	end
+	return false
+end
+
+-- The zone's quests: absent without a source, one pending item while the source is still loading.
+---@param snapshot LegacySnapshot
+---@return LegacyCategory?
+local function QuestCategory(snapshot)
+	local items = snapshot.quests and snapshot.quests()
+	if items == false then
+		return { done = 0, total = 0, left = {}, pending = 1, complete = false }
+	end
+	return CompletionCategory(items, function(item)
+		return QuestDone(item, snapshot.completed)
+	end)
+end
 
 -- A raid is done when every boss is, and a boss when any of its refs is; unknown while any boss is.
 ---@param raid LegacyRaid
@@ -364,13 +588,15 @@ local function ForFaction(items, faction, sideKey)
 	return own
 end
 
--- A zone's completion, GW2 style: every area, flight path, dungeon, Legacy objective and
--- local reputation counts once.
+-- A zone's completion, GW2 style: every area, flight path, dungeon, Legacy objective, local
+-- reputation and quest counts once.
 -- Items whose state is unknown (nil) are `pending`: shown, but outside done/total and the percent.
 -- `snapshot` = { explored = set of overlay keys, taxis = { [node] = known } once a
 -- flight master on the zone's continent has been opened (until then every node is pending),
 -- faction = "Alliance" | "Horde",
--- refsDone = function(refs) -> true/false/nil, reaction = function(factionID) -> number }.
+-- refsDone = function(refs) -> true/false/nil, reaction = function(factionID) -> number,
+-- quests = function() -> the zone's LegacyQuestItem[], false while loading, or nil,
+-- completed = set of turned-in quest IDs or nil }.
 -- Areas, flight paths and reputations are per character; dungeon wings, raids and Legacy
 -- objectives are account-wide Legacy steps, done when any of their refs is (a raid: every boss).
 -- `counted(key)`, when given, says which categories the player counts; the rest are left out entirely.
@@ -399,6 +625,8 @@ function Model.ZoneCompletion(zone, snapshot, counted)
 		reputations = CompletionCategory(ForFaction(zone.reputations, snapshot.faction, "side"), function(rep)
 			return snapshot.reaction(rep.faction) >= Model.REPUTATION_TARGET
 		end),
+		-- Built from QuestieDB only when counted: the first zone reads its whole database.
+		quests = (not counted or counted("quests")) and QuestCategory(snapshot) or nil,
 		done = 0,
 		total = 0,
 		pending = 0,
