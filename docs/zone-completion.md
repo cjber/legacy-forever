@@ -15,5 +15,11 @@ is read from the game. The README says
 - **Legacy objectives** are the zone's other placed Legacy steps, with a step's variants counted once.
 - **Reputations**, also counted only once ticked, are a short curated list of factions tied to a single zone, such as
   Booty Bay for Stranglethorn.
-- **Quests and rares** are left out: the client doesn't say which belong to a zone, and no openly licensed list
-  covers Forever.
+- **Quests**, off until ticked, need [Questie](https://github.com/Questie/Questie) (12.0 or later, the first
+  with Forever support) installed, or at least the QuestieDB addon it comes with; without it the tick box is greyed
+  out. Legacy Forever ships no quest data: it reads QuestieDB in game (with Questie's list of quests the game never
+  offers and its holidays, when Questie is loaded) and counts each quest your race and class can take in the zone,
+  once, with either side of an exclusive choice counting as the same quest. Repeatable, daily and dungeon quests are
+  left out, and so is any quest behind a profession, reputation or spell, or after a choice that could shut it,
+  since whether you can take it isn't certain. A quest counts as done once you've turned it in, or its follow-up.
+- **Rares** are left out: the client doesn't say which belong to a zone, and no openly licensed list covers Forever.
