@@ -42,6 +42,18 @@ jobs:
           mkdir -p "$RUNNER_TEMP/luals" && tar -xzf "$RUNNER_TEMP/luals.tgz" -C "$RUNNER_TEMP/luals"
           LUA_LANGUAGE_SERVER="$RUNNER_TEMP/luals/bin/lua-language-server" tools/typecheck.sh
 
+  sift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - env:
+          BASE: ${{ github.base_ref || github.event.repository.default_branch }}
+        run: python3 .sift/gate.py --base "origin/$BASE"
+      - run: python3 .sift/agents.py check
+
   workflows:
     runs-on: ubuntu-latest
     steps:
