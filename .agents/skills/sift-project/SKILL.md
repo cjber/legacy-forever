@@ -52,6 +52,13 @@ hidden paths; add `--hidden` when a search must cover `.github/`.
 sift's inventory marks `Model.lua` and `tools/legacy_render.py` as generated because the word
 appears in their first five lines; only `Data/Legacy.lua` is generated.
 
+Behaviour-preserving proof for `tools/`: regenerate and diff against the committed output.
+`python3 tools/gen_legacy.py --offline` needs every source in `tools/.cache` (gitignored; copy it
+from another checkout or run without `--offline` to fetch the pinned build), and `python3
+tools/screenshots.py` rewrites `docs/screenshots/*.png`. A clean `git status` afterwards proves the
+edit changed nothing. The standards slice needs `SIFT_STANDARDS_PATH=$HOME/skills` to resolve the
+`wow-forever-addon` pack; without it `sift agents check` notes the pack as missing and moves on.
+
 ## Live roots
 
 - `LegacyForever.toc` file list — load order `Data/Legacy.lua, Core, Model, Live, Tracker,
@@ -124,6 +131,12 @@ Audit slices from lowest to highest risk:
 
 ## Project rules and lenses
 
+- Anti-patterns seen here: `x or {}` around a mock reader that always returns a table (the
+  `screenshots.py` port of Lua's nil-returning API); session narration in `tools/README.md`
+  ("a simulated build bump ...", "changes from the previous slice").
+- Not defensive noise: a nil guard right after `ParseKey` or another `number?` return narrows the
+  type for LuaLS; removing it trades the branch for a `---@cast`. Tracker `uiOrder` `0` is
+  Legacy Forever's registered slot in WFA-5, not a missing negative.
 - Rules: `file-size-no-growth` (`.sift/scripts/`, from the sift catalog) fails a change that adds
   a file over 1000 lines or grows one; `tools/gen_legacy.py` (1039 lines) is the backlog it holds in
   place. Generated `Data/*.lua` is excluded.
