@@ -15,8 +15,8 @@ from pathlib import Path
 
 from legacy_render import COMPLETION_CATEGORIES, render
 
-BUILD = "1.60.1.69913"
-SOURCE_DATE = "2026-09-21"
+BUILD = "1.60.1.69977"
+SOURCE_DATE = "2026-09-24"
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "tools" / ".cache"
 OUTPUT = ROOT / "Data" / "Legacy.lua"
