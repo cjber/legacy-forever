@@ -159,6 +159,9 @@ end
 
 ---@type table<number, LegacySnapshot>
 local snapshots = {}
+-- The quests this character has turned in, read once and then kept up to date by QUEST_TURNED_IN.
+---@type LegacySet?
+local completedQuests
 
 local function Changed()
 	if not pending then
@@ -171,6 +174,7 @@ function Live.Invalidate()
 	visible = nil
 	criteriaCache = {}
 	snapshots = {}
+	completedQuests = nil
 	Changed()
 end
 
@@ -246,6 +250,21 @@ local function RecordFlightMaster()
 	end
 end
 
+-- Nil until the game answers; an empty list is a new character's answer.
+---@return LegacySet?
+local function CompletedQuests()
+	if not completedQuests and C_QuestLog and C_QuestLog.GetAllCompletedQuestIDs then
+		local ids = C_QuestLog.GetAllCompletedQuestIDs()
+		if ids then
+			completedQuests = {}
+			for _, questID in ipairs(ids) do
+				completedQuests[questID] = true
+			end
+		end
+	end
+	return completedQuests
+end
+
 -- Live progress for Model.ZoneCompletion.
 ---@param uiMapID number
 ---@return LegacySnapshot
@@ -254,8 +273,17 @@ function Live.ZoneSnapshot(uiMapID)
 	if snapshot then
 		return snapshot
 	end
-	snapshot =
-		{ explored = {}, taxis = {}, faction = UnitFactionGroup("player"), refsDone = RefsDone, reaction = Reaction }
+	snapshot = {
+		explored = {},
+		taxis = {},
+		faction = UnitFactionGroup("player"),
+		refsDone = RefsDone,
+		reaction = Reaction,
+		quests = function()
+			return ns.Quests.Zone(uiMapID)
+		end,
+		completed = CompletedQuests(),
+	}
 	-- A zone this character has never entered reports no textures at all (nil), which
 	-- means nothing explored yet rather than unknown.
 	for _, texture in ipairs(C_MapExplorationInfo.GetExploredMapTextures(uiMapID) or {}) do
@@ -309,8 +337,16 @@ end
 for _, event in ipairs(SNAPSHOT_CHANGES) do
 	events:RegisterEvent(event)
 end
-events:SetScript("OnEvent", function(_, event)
+events:RegisterEvent("QUEST_TURNED_IN")
+events:SetScript("OnEvent", function(_, event, questID)
 	if tContains(ZONE_CHANGES, event) then
+		Changed()
+	elseif event == "QUEST_TURNED_IN" then
+		-- The game's own list may not have the quest yet when this fires.
+		if completedQuests and questID then
+			completedQuests[questID] = true
+		end
+		snapshots = {}
 		Changed()
 	elseif tContains(SNAPSHOT_CHANGES, event) then
 		if FLIGHT_MASTER[event] then

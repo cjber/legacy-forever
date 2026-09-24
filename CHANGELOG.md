@@ -20,6 +20,7 @@ verbatim rather than rewritten as the addon moves.
 - **Zone completion counts only Legacy objectives out of the box**: areas explored, dungeons, raids and the zone's other Legacy objectives. Flight paths and local reputations at Friendly aren't part of any Legacy challenge, so they are now off until you tick them under "What counts"; if you already ticked or unticked either one, your choice stays. The toast for a zone reaching 100% now follows "What counts" as the percentage does, so the 100% you see is the one that earns it, and changing what counts never sets one off.
 - **Unticking "On the world map" under Zone completion now also hides the zone badges on continent maps**, straight away, and ticking it brings them back. Pins on a zone's own map, such as dungeon entrances, stay.
 - **Zone badges on continent maps are just the Legacy icon now**, with no number beside it, so the continent stays readable. Hover a badge for the count: its tooltip opens with how many Legacy objectives the zone has left, such as "3 Legacy objectives left", then the share of each challenge as before.
+- **Zone completion can count quests, with Questie installed.** Tick "Quests" under "What counts" and each zone counts the quests your character can take there, read from Questie's database, and lists the ones still to do when you hover. Repeatable, holiday, profession and dungeon quests are left out. It is off by default, and greyed out without Questie.
 
 ## [0.3.0] - 2026-09-23
 

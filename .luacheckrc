@@ -16,14 +16,14 @@ globals = {
 }
 
 read_globals = {
-	"AchievementFrame_SelectAchievement", "AlertFrame", "AlertFrame_OnClick", "C_Map", "C_MapExplorationInfo", "C_Reputation", "C_SuperTrack", "C_TaxiMap", "C_Timer", "C_Traits", "CreateAtlasMarkup",
+	"AchievementFrame_SelectAchievement", "AlertFrame", "AlertFrame_OnClick", "C_Map", "C_MapExplorationInfo", "C_QuestLog", "C_Reputation", "C_SuperTrack", "C_TaxiMap", "C_Timer", "C_Traits", "CreateAtlasMarkup",
 	"CreateFrame", "CreateFromMixins", "CreateTexturePool", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameFontNormal", "GameFontNormalSmall", "GameFontNormalTiny", "GameTooltip_AddBlankLineToTooltip", "GameTooltip_AddColoredLine", "GameTooltip_AddDisabledLine", "GetCursorPosition", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR", "HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",
 	"GameTooltip_AddNormalLine", "GameTooltip_SetTitle", "GetAchievementCategory", "GetAchievementCriteriaInfo", "GetAchievementInfo",
 	"GetAchievementNumCriteria", "GetBuildInfo", "GetTime", "PlaySound", "SOUNDKIT", "GetCategoryInfo", "GetCategoryList", "GetCategoryNumAchievements", "hooksecurefunc",
 	"LegacySystemFrame", "MenuUtil", "OTHER", "Mixin", "OBJECTIVE_DASH_STYLE_HIDE", "ObjectiveTrackerFrame",
-	"ObjectiveTrackerManager", "ShortestPathForever", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "strtrim",
-	"tContains", "ToggleLegacySystemUI", "ToggleWorldMap", "OpenWorldMap", "UnitFactionGroup", "UnitGUID", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
+	"ObjectiveTrackerManager", "ShortestPathForever", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "LibQuestieDB", "Questie", "QuestieLoader", "strtrim",
+	"tContains", "ToggleLegacySystemUI", "ToggleWorldMap", "OpenWorldMap", "UnitClass", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 
 files["Data/Legacy.lua"] = { max_line_length = false }
@@ -31,7 +31,10 @@ files["tests/"] = { std = "+luajit" }
 
 -- Headless API stubs are writable only in the Live regression harness.
 files["tests/live_spec.lua"] = {
-	globals = { "UnitGUID", "UnitFactionGroup", "Enum", "C_Map", "C_MapExplorationInfo", "C_TaxiMap", "C_Timer", "tContains", "CreateFrame" },
+	globals = { "UnitGUID", "UnitFactionGroup", "Enum", "C_Map", "C_MapExplorationInfo", "C_TaxiMap", "C_QuestLog", "C_Timer", "tContains", "CreateFrame" },
+}
+files["tests/quests_spec.lua"] = {
+	globals = { "LibQuestieDB", "Questie", "QuestieLoader", "UnitClass", "UnitFactionGroup", "UnitRace" },
 }
 files["tests/navigate_spec.lua"] = {
 	globals = { "C_Map", "C_SuperTrack", "UiMapPoint", "ShortestPathForever" },

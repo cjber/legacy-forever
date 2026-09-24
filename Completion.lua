@@ -2,8 +2,9 @@
 local addonName, ns = ...
 
 -- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths, dungeons, raids,
--- Legacy objectives and local reputations are done, as a section in the objective tracker (the zone you're in) and in
--- the world map's corner (the zone you're viewing). Each is optional and collapsible.
+-- Legacy objectives, local reputations and quests are done, as a section in the objective tracker
+-- (the zone you're in) and in the world map's corner (the zone you're viewing). Each is optional and
+-- collapsible.
 ---@class LegacyCompletion
 local Completion = {}
 ns.Completion = Completion
@@ -17,6 +18,7 @@ local ICONS = {
 	legacy = { atlas = "UI-Legacy-Points-icon-c60", aspect = 50 / 73 },
 	-- No atlas reads as reputation, so the classic handshake icon, trimmed of its border.
 	reputations = { file = "Interface\\Icons\\Achievement_Reputation_01" },
+	quests = { atlas = "QuestNormal" },
 }
 local LABELS = {
 	areas = "Areas explored",
@@ -25,6 +27,7 @@ local LABELS = {
 	raids = "Raids",
 	legacy = "Legacy objectives",
 	reputations = "Reputations (Friendly)",
+	quests = "Quests",
 }
 -- Names listed per category in a tooltip before "and N more".
 local MAX_LEFT = 6
@@ -54,8 +57,8 @@ end
 
 -- Out of the box only Legacy objectives count: areas (each an "Explore <zone>" step toward
 -- Explorer), Spelunker dungeons, Conqueror raids and the zone's other Legacy steps. No Legacy
--- challenge asks for flight paths or these reputations, so they wait under "What counts" to be
--- ticked. The saved setting is nil until the player ticks or unticks it, so a choice made
+-- challenge asks for flight paths, these reputations or quests, so they wait under "What counts" to
+-- be ticked. The saved setting is nil until the player ticks or unticks it, so a choice made
 -- before these defaults keeps its saved true or false.
 local COUNTED_BY_DEFAULT = {
 	areas = true,
@@ -64,6 +67,7 @@ local COUNTED_BY_DEFAULT = {
 	raids = true,
 	legacy = true,
 	reputations = false,
+	quests = false,
 }
 
 ---@param category LegacyCategoryKey
@@ -130,6 +134,7 @@ end
 -- What the player does to resolve a category's pending items.
 local PENDING_HINTS = {
 	taxis = "Open a flight master on this continent to check these.",
+	quests = "Waiting for Questie and your quest log.",
 }
 
 ---@param result LegacyZoneResult
@@ -548,6 +553,27 @@ function Completion.AddSummary(tooltip, uiMapID)
 	end
 end
 
+-- Quests are read from QuestieDB, which comes with Questie, so they can only be counted with it installed.
+---@return boolean
+local function QuestsUsable()
+	local status = ns.Quests.Status()
+	return status == "ready" or status == "loading"
+end
+
+local QUESTS_STATUS = {
+	ready = "Every quest this character can take in the zone, from Questie. Repeatable, holiday and "
+		.. "profession quests are left out.",
+	loading = "Waiting for Questie to finish loading.",
+	missing = "Needs Questie, which lists each zone's quests.",
+	unsupported = "This version of Questie isn't supported.",
+}
+
+---@param tooltip GameTooltip
+local function QuestsTooltip(tooltip)
+	GameTooltip_SetTitle(tooltip, LABELS.quests)
+	GameTooltip_AddNormalLine(tooltip, QUESTS_STATUS[ns.Quests.Status()])
+end
+
 ---@param root SharedMenuDescriptionProxy
 function Completion.AddMenu(root)
 	root:CreateTitle("Zone completion")
@@ -562,7 +588,16 @@ function Completion.AddMenu(root)
 	end)
 	local counts = root:CreateButton("What counts")
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
-		counts:CreateCheckbox(("%s %s"):format(Completion.Icon(key, 14), LABELS[key]), IsCounted, ToggleCounted, key)
+		local box = counts:CreateCheckbox(
+			("%s %s"):format(Completion.Icon(key, 14), LABELS[key]),
+			IsCounted,
+			ToggleCounted,
+			key
+		)
+		if key == "quests" then
+			box:SetEnabled(QuestsUsable)
+			box:SetTooltip(QuestsTooltip)
+		end
 	end
 end
 
@@ -581,6 +616,7 @@ function Completion.Audit()
 		local category = result[key]
 		parts[#parts + 1] = category and ("%s %d/%d"):format(key, category.done, category.total) or (key .. " -")
 	end
+	ns.Print(("quests from QuestieDB: %s"):format(ns.Quests.Failure() or ns.Quests.Status()))
 	ns.Print(
 		("zone completion for %s (map %d): %s"):format(
 			C_Map.GetMapInfo(uiMapID).name,
