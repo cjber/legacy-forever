@@ -139,9 +139,8 @@ to retain the curated Map.ID; changed assets, owners, or instance links fail.
 Evidence records the build on which a fact was reviewed; it need not equal the
 current `BUILD`. The refresh workflow changes BUILD/SOURCE_DATE without rewriting
 curation. Names, referenced IDs, instance types, ancestry, conflicts, and
-reachability are still checked against the newly fetched tables. A simulated
-build bump to 1.60.1.69914 with identical rows passes; changed referenced facts
-still fail. No workflow change is necessary.
+reachability are still checked against the newly fetched tables, so a build bump
+with identical rows passes and changed referenced facts fail.
 
 Build **1.60.1.69913**, snapshot **2026-09-21**: 130 rewards, 46 supporting
 achievements (43 exploration achievements plus three metas), 47 populated zones.
