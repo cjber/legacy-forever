@@ -168,9 +168,8 @@ local function ContinentZones(continentID)
 	return zones
 end
 
--- On by default: the shading is the quickest way to see what a zone still hides.
 local function ShowAreas()
-	return not (LegacyForeverDB and LegacyForeverDB.showAreas == false)
+	return ns.Setting("showAreas")
 end
 
 local function ToggleAreas()
