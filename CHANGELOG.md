@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Ready for translation.** Every menu, tooltip and chat message the addon writes, apart from `/lf audit`, can now be translated, one file per language in the addon's `Locales` folder; translations are welcome on GitHub. Zone, achievement and objective names already came from the game in your language. Until a translation arrives, the rest reads in English as before.
+
 ## [0.5.0] - 2026-09-25
 
 - **Other addons can read Legacy Forever.** `LegacyForever.API` gives a zone's completion as you count it, its unfinished Legacy objectives, and a way to send you to one with Shortest Path Forever or the game's waypoint; [docs/api.md](docs/api.md) has the details.

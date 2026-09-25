@@ -1,5 +1,6 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
+local L = ns.L
 
 -- Forever's ruleset refuses achievement tracking (C_ContentTracking reports
 -- Untrackable), so tracked challenges get their own section in Blizzard's
@@ -68,7 +69,7 @@ local function StopTracking(challenge)
 end
 
 ---@class LegacyChallengeTracker : LegacyTrackerModule
-local ModuleMixin = { headerText = "Legacy" }
+local ModuleMixin = { headerText = L["Legacy"] }
 
 ---@param block LegacyTrackerBlock
 ---@param mouseButton string
@@ -80,10 +81,10 @@ function ModuleMixin:OnBlockHeaderClick(block, mouseButton)
 	MenuUtil.CreateContextMenu(self:GetContextMenuParent(), function(_, root)
 		root:SetTag("MENU_LEGACY_HERE_TRACKER", block)
 		root:CreateTitle(ns.Live.Name(block.id))
-		root:CreateButton("Open in the Legacy panel", function()
+		root:CreateButton(L["Open in the Legacy panel"], function()
 			ns.Live.ShowInLegacyPanel(block.id)
 		end)
-		root:CreateButton("Stop tracking", function()
+		root:CreateButton(L["Stop tracking"], function()
 			StopTracking(block.id)
 		end)
 	end)
@@ -184,7 +185,7 @@ end
 local function WarnIfUnattached()
 	for _, trackerModule in ipairs(modules) do
 		if not IsAttached(trackerModule) then
-			ns.Print("couldn't add a section to the objective tracker; please report /lf audit.")
+			ns.Print(L["couldn't add a section to the objective tracker; please report /lf audit."])
 			return
 		end
 	end
@@ -192,7 +193,7 @@ end
 
 local function Register()
 	if not Available() then
-		ns.Print("the objective tracker isn't available, so tracked challenges can't be shown.")
+		ns.Print(L["the objective tracker isn't available, so tracked challenges can't be shown."])
 		return
 	end
 	module = Tracker.AddModule("LegacyForeverObjectiveTracker", ModuleMixin, 0)

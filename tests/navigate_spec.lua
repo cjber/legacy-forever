@@ -41,6 +41,7 @@ local function Install()
 	}
 end
 
+assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 assert(loadfile("Navigate.lua"))("LegacyForever", ns)
 local checks = 0
 local function check(condition, label)

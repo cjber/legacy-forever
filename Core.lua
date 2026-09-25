@@ -2,6 +2,7 @@ local _, addon = ...
 
 ---@class LegacyForeverNamespace
 ---@field TITLE string
+---@field L table<string, string>
 ---@field DEFAULTS LegacyDefaults
 ---@field Data LegacyData
 ---@field Model LegacyModel
@@ -14,6 +15,7 @@ local _, addon = ...
 ---@field NavigateHint fun(): string
 ---@field Guide fun(uiMapID: number, x: number, y: number, title: string): boolean, ("combat"|"unavailable")?
 local ns = addon
+local L = ns.L
 
 ns.TITLE = "Legacy Forever"
 
@@ -168,9 +170,9 @@ SlashCmdList.LEGACYFOREVER = function(msg)
 	elseif command:find("^criteria") then
 		ns.Print("usage: /lf criteria 684")
 	else
-		ns.Print("open the world map and use the Legacy button in its top-right corner.")
-		ns.Print("/lf audit - check the bundled data against the game")
-		ns.Print("/lf criteria 684 - list what the game reports for one achievement")
+		ns.Print(L["open the world map and use the Legacy button in its top-right corner."])
+		ns.Print(L["/lf audit - check the bundled data against the game"])
+		ns.Print(L["/lf criteria 684 - list what the game reports for one achievement"])
 	end
 end
 

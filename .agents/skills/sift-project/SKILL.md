@@ -61,7 +61,7 @@ edit changed nothing. The standards slice needs `SIFT_STANDARDS_PATH=$HOME/skill
 
 ## Live roots
 
-- `LegacyForever.toc` file list — load order `Data/Legacy.lua, Core, Model, Live, Quests, Navigate,
+- `LegacyForever.toc` file list — load order `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Data/Legacy.lua, Core, Model, Live, Quests, Navigate,
   Tracker, Completion.xml, Completion, Map.xml, Map`; never reorder as formatting.
 - `## SavedVariables: LegacyForeverDB` — persisted keys `tracked`, `zoneCompletion`,
   `flightPaths`, `showAreas` and any others read via `ns.SavedTable(key)`; old keys in players'
