@@ -180,7 +180,8 @@ function Quests.Zone(uiMapID)
 	return index and (index[uiMapID] or {}) or nil
 end
 
--- Questie's blacklist settles once it has started; the index is built after that.
+-- Questie's blacklist settles once it has started; the index is built after that. Questie is in
+-- the TOC's OptionalDeps so it loads first and its API exists here.
 local api = type(Questie) == "table" and Questie.API
 if type(api) == "table" and type(api.RegisterOnReady) == "function" then
 	pcall(api.RegisterOnReady, function()
