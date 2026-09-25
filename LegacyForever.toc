@@ -16,6 +16,7 @@
 
 Data\Legacy.lua
 Core.lua
+WhatsNew.lua
 Model.lua
 Live.lua
 Quests.lua

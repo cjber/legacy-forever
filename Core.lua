@@ -2,6 +2,9 @@ local _, addon = ...
 
 ---@class LegacyForeverNamespace
 ---@field TITLE string
+---@field WHATS_NEW string
+---@field CompanionHint fun(): string?
+---@field WhatsNew fun()
 ---@field DEFAULTS LegacyDefaults
 ---@field Data LegacyData
 ---@field Model LegacyModel
@@ -16,6 +19,9 @@ local _, addon = ...
 local ns = addon
 
 ns.TITLE = "Legacy Forever"
+-- One sentence for the chat line after an update (WhatsNew.lua): the headline of the release this ships in.
+ns.WHATS_NEW = "A pin's tooltip now suggests Shortest Path Forever when you don't have it, "
+	.. "and the Legacy menu can switch that off."
 
 -- Every setting's default. A saved setting stays nil until the player changes it, and nil reads as the
 -- default here, so an old save file and a new option always agree.
@@ -23,6 +29,10 @@ ns.TITLE = "Legacy Forever"
 ns.DEFAULTS = {
 	-- The shading is the quickest way to see what a zone still hides.
 	showAreas = true,
+	-- One chat line after an update, never on a first install.
+	whatsNew = true,
+	-- A grey line where another of the Forever addons would do more for you.
+	companions = true,
 	zoneCompletion = {
 		-- The map is on so the feature is visible; the tracker takes screen space, so it waits to be asked.
 		map = true,
@@ -56,7 +66,7 @@ function ns.SavedTable(key)
 end
 
 -- A top-level switch, its default while unset.
----@param key 'showAreas'
+---@param key 'showAreas'|'whatsNew'|'companions'
 ---@return boolean
 function ns.Setting(key)
 	local value = LegacyForeverDB and LegacyForeverDB[key]

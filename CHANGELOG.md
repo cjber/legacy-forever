@@ -11,6 +11,9 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **A pin's tooltip suggests Shortest Path Forever when you don't have it.** Under "Click to set a waypoint here." a grey line says installing it (or enabling it, if it is switched off in the addon list) would plot the whole route for you. Once it is loaded the line goes. Untick "Suggest companion addons" in the Legacy menu to hide it.
+- **One chat line after an update** says which version you now have and the main change. It stays quiet on a first install; untick "Tell me what's new after an update" in the Legacy menu to turn it off.
+
 ## [0.5.0] - 2026-09-25
 
 - **Other addons can read Legacy Forever.** `LegacyForever.API` gives a zone's completion as you count it, its unfinished Legacy objectives, and a way to send you to one with Shortest Path Forever or the game's waypoint; [docs/api.md](docs/api.md) has the details.

@@ -462,6 +462,9 @@ def main_menu(live, data):
         MenuButton("What counts", True),
         MenuDivider(),
         MenuButton("Open the Legacy panel"),
+        MenuDivider(),
+        MenuCheckbox("Tell me what's new after an update", True),
+        MenuCheckbox("Suggest companion addons", True),
     ]
     return entries
 
@@ -582,7 +585,9 @@ def render_menu(ui, data, live):
     # A crop of the map's top-right corner, as a screenshot of that part of the screen would show it.
     crop_left, crop_top = bx - 330, 0
     right = max(x + menu.width for menu, x, _ in layers)
-    frame = ui.canvas(canvas.width - crop_left, canvas.height - 150)
+    # Tall enough that the map, not the backdrop, sits behind the whole main menu.
+    menu_bottom = layers[0][2] + layers[0][0].height
+    frame = ui.canvas(canvas.width - crop_left, min(canvas.height, max(canvas.height - 150, menu_bottom + 40)))
     frame.paste(canvas, -crop_left, -crop_top)
     shifted = [(frame, crop_left, crop_top)] + layers
     assert right > crop_left

@@ -161,6 +161,8 @@
 
 ---@class LegacyDefaults
 ---@field showAreas boolean
+---@field whatsNew boolean
+---@field companions boolean
 ---@field zoneCompletion LegacySettings
 
 ---@class LegacySavedVariables
@@ -168,6 +170,9 @@
 ---@field zoneCompletion? LegacySettings
 ---@field flightPaths? table<string, LegacyFlightRecord>
 ---@field showAreas? boolean
+---@field whatsNew? boolean
+---@field companions? boolean
+---@field lastVersion? string
 
 ---@type LegacySavedVariables?
 LegacyForeverDB = nil
