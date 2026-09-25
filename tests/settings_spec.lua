@@ -15,6 +15,7 @@ local defaults = ns.DEFAULTS.zoneCompletion
 -- A fresh install: no saved variables at all.
 LegacyForeverDB = nil
 check(ns.Setting("showAreas") == true, "areas are shaded out of the box")
+check(ns.Setting("whatsNew") == true and ns.Setting("companions") == true, "update line and hints on out of the box")
 check(ns.ZoneSetting("map") == true and ns.ZoneSetting("tracker") == false, "on the map, not in the tracker")
 check(not ns.ZoneSetting("mapCollapsed") and not ns.ZoneSetting("trackerCollapsed"), "expanded out of the box")
 for _, category in ipairs({ "areas", "dungeons", "raids", "legacy" }) do

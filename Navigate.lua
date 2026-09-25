@@ -15,6 +15,22 @@ local function ShortestPath()
 	end
 end
 
+-- The addon folder the TOC's OptionalDeps names.
+local SHORTEST_PATH = "ShortestPathForever"
+
+-- A grey suggestion under a pin's click hint: Shortest Path Forever plots the whole route, flights and boats
+-- included, where the game's waypoint is a straight line. Nothing once it is loaded, or with the suggestion off.
+---@return string?
+function ns.CompanionHint()
+	if not ns.Setting("companions") or C_AddOns.IsAddOnLoaded(SHORTEST_PATH) then
+		return nil
+	end
+	if C_AddOns.DoesAddOnExist(SHORTEST_PATH) then
+		return L["Enable Shortest Path Forever to have the route plotted for you."]
+	end
+	return L["Install Shortest Path Forever to have the route plotted for you."]
+end
+
 -- Names what a click tries first; Navigate still falls back when Shortest Path declines.
 ---@return string
 function ns.NavigateHint()

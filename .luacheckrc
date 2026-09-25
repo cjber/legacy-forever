@@ -17,7 +17,7 @@ globals = {
 }
 
 read_globals = {
-	"AchievementFrame_SelectAchievement", "AlertFrame", "AlertFrame_OnClick", "C_Map", "C_MapExplorationInfo", "C_QuestLog", "C_Reputation", "C_SuperTrack", "C_TaxiMap", "C_Timer", "C_Traits", "CreateAtlasMarkup",
+	"AchievementFrame_SelectAchievement", "AlertFrame", "C_AddOns", "AlertFrame_OnClick", "C_Map", "C_MapExplorationInfo", "C_QuestLog", "C_Reputation", "C_SuperTrack", "C_TaxiMap", "C_Timer", "C_Traits", "CreateAtlasMarkup",
 	"CreateFrame", "CreateFromMixins", "CreateTexturePool", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameFontNormal", "GameFontNormalSmall", "GameFontNormalTiny", "GameTooltip_AddBlankLineToTooltip", "GameTooltip_AddColoredLine", "GameTooltip_AddDisabledLine", "GetCursorPosition", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR", "HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",
 	"GameTooltip_AddNormalLine", "GameTooltip_SetTitle", "GetAchievementCategory", "GetAchievementCriteriaInfo", "GetAchievementInfo",
@@ -38,8 +38,9 @@ files["tests/quests_spec.lua"] = {
 	globals = { "LibQuestieDB", "Questie", "QuestieLoader", "UnitClass", "UnitFactionGroup", "UnitRace" },
 }
 files["tests/navigate_spec.lua"] = {
-	globals = { "C_Map", "C_SuperTrack", "UiMapPoint", "ShortestPathForever" },
+	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "UiMapPoint", "ShortestPathForever" },
 }
+files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame" } }
 files["tests/api_spec.lua"] = {
 	globals = {
 		"AlertFrame", "C_Map", "C_SuperTrack", "C_Timer", "CreateAtlasMarkup", "DUNGEONS", "EventUtil", "GetTime", "geterrorhandler",

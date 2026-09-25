@@ -5,6 +5,21 @@ function ns.Print(msg)
 	printed[#printed + 1] = msg
 end
 
+-- Shortest Path Forever's install state as the addon list reports it, and the "Suggest companion addons" switch.
+local installed, loaded, suggest = false, false, true
+C_AddOns = {
+	DoesAddOnExist = function(name)
+		return name == "ShortestPathForever" and installed
+	end,
+	IsAddOnLoaded = function(name)
+		return name == "ShortestPathForever" and loaded
+	end,
+}
+function ns.Setting(key)
+	assert(key == "companions", "reads the companions switch")
+	return suggest
+end
+
 local canSet = true
 C_Map = {
 	CanSetUserWaypointOnMap = function()
@@ -86,4 +101,12 @@ check(#waypoints == 5, "Shortest Path loaded without its API falls back to the n
 ShortestPathForever, canSet = nil, false
 ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
 check(#waypoints == 5 and printed[1] == "Blackfathom Deeps is at 25.0, 50.0 in Ashenvale.", "the place goes to chat")
+-- The companion hint: install, enable, or nothing once loaded or switched off.
+check(ns.CompanionHint() == "Install Shortest Path Forever to have the route plotted for you.", "missing: install")
+installed = true
+check(ns.CompanionHint() == "Enable Shortest Path Forever to have the route plotted for you.", "disabled: enable")
+loaded = true
+check(ns.CompanionHint() == nil, "loaded: nothing")
+loaded, installed, suggest = false, false, false
+check(ns.CompanionHint() == nil, "switched off: nothing")
 print(("navigate_spec: %d checks passed"):format(checks))

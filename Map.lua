@@ -183,6 +183,18 @@ local function ToggleAreas()
 	ns.RefreshMap()
 end
 
+---@param key 'whatsNew'|'companions'
+---@return boolean
+local function IsSet(key)
+	return ns.Setting(key)
+end
+
+---@param key 'whatsNew'|'companions'
+local function ToggleSetting(key)
+	LegacyForeverDB = LegacyForeverDB or {}
+	LegacyForeverDB[key] = not ns.Setting(key)
+end
+
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]
 
 -- Each entry is a checkbox for our own tracker (Forever refuses Blizzard's): a zone's
@@ -300,6 +312,16 @@ local function BuildMenu(root, uiMapID)
 	ns.Completion.AddMenu(root)
 	root:CreateDivider()
 	root:CreateButton(L["Open the Legacy panel"], ToggleLegacySystemUI)
+	root:CreateDivider()
+	root:CreateCheckbox(L["Tell me what's new after an update"], IsSet, ToggleSetting, "whatsNew")
+	local companions = root:CreateCheckbox(L["Suggest companion addons"], IsSet, ToggleSetting, "companions")
+	companions:SetTooltip(function(tooltip)
+		GameTooltip_SetTitle(tooltip, L["Suggest companion addons"])
+		GameTooltip_AddNormalLine(
+			tooltip,
+			L["A grey line in a pin's tooltip when Shortest Path Forever would plot the route."]
+		)
+	end)
 end
 
 ---@class LegacyForeverMapButtonMixin : DropdownButton
@@ -455,6 +477,10 @@ local function DefinePinMixin()
 			AddPinTooltip(GameTooltip, self.group, self.objective)
 			if self:Destination() then
 				GameTooltip_AddInstructionLine(GameTooltip, ns.NavigateHint())
+				local companion = ns.CompanionHint()
+				if companion then
+					GameTooltip_AddDisabledLine(GameTooltip, companion)
+				end
 			end
 		end
 		GameTooltip:Show()
