@@ -11,7 +11,7 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
-- **Ready for translation.** Every menu, tooltip and chat message the addon writes, apart from `/lf audit`, can now be translated on the CurseForge project's Localization page, and each release picks up what has been translated. Zone, achievement and objective names already came from the game in your language. Until a translation arrives, the rest reads in English as before.
+- **Ready for translation.** Every menu, tooltip and chat message the addon writes, apart from `/lf audit`, can now be translated, one file per language in the addon's `Locales` folder; translations are welcome on GitHub. Zone, achievement and objective names already came from the game in your language. Until a translation arrives, the rest reads in English as before.
 
 ## [0.5.0] - 2026-09-25
 

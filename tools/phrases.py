@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Print every phrase the shipped Lua translates, for CurseForge's Import localization page (stdlib only).
+"""Print a translation template: every phrase the shipped Lua translates, as a Locales/<locale>.lua file (stdlib only).
 
 A phrase is the English text in `L["..."]`; the addon uses it as the key and falls back to it. The output is
-committed as Locales/phrases.txt so the maintainer can paste it, and tests/locale_spec.lua fails when the two
-disagree.
+committed as Locales/phrases.txt for translators to copy, and tests/locale_spec.lua fails when the two disagree.
+Translation files themselves (Locales/) are not read, so a phrase the code no longer uses drops out.
 
     python3 tools/phrases.py > Locales/phrases.txt
 """
@@ -14,13 +14,23 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 TOC = ROOT / "LegacyForever.toc"
 PHRASE = re.compile(r'\bL\["((?:\\.|[^"\\])*)"\]')
+HEADER = """\
+-- A translation template for Legacy Forever. Save a copy as Locales/deDE.lua (or your locale), change "deDE" below,
+-- translate the right-hand side of each line and delete the lines you leave in English. Keep %s, %d and |4...;
+-- as they are. Then add Locales\\deDE.lua to LegacyForever.toc, right after Locales\\enUS.lua.
+local _, ns = ...
+if GetLocale() ~= "deDE" then
+\treturn
+end
+local L = ns.L
+"""
 
 
 def shipped():
-    """The Lua files the TOC loads, in load order."""
+    """The Lua files the TOC loads, in load order, outside Locales/."""
     for line in TOC.read_text().splitlines():
         line = line.strip()
-        if line.endswith(".lua") and not line.startswith("#"):
+        if line.endswith(".lua") and not line.startswith(("#", "Locales")):
             yield ROOT / line.replace("\\", "/")
 
 
@@ -32,5 +42,8 @@ def phrases():
 
 
 if __name__ == "__main__":
+    print(HEADER)
     for phrase in phrases():
-        print(f'L["{phrase}"] = true')
+        line = f'L["{phrase}"] = "{phrase}"'
+        # StyLua's wrap at 120 columns, so a copy passes `stylua --check` before it is translated.
+        print(line if len(line) <= 120 else f'L["{phrase}"] =\n\t"{phrase}"')

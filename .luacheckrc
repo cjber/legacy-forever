@@ -29,8 +29,6 @@ read_globals = {
 
 files["Data/Legacy.lua"] = { max_line_length = false }
 files["tests/"] = { std = "+luajit" }
--- Each locale block is empty until the packager fills it with L["..."] lines.
-files["Locales/Translations.lua"] = { ignore = { "211/L", "542" } }
 
 -- Headless API stubs are writable only in the Live regression harness.
 files["tests/live_spec.lua"] = {

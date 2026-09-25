@@ -15,7 +15,6 @@
 ## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick
 
 Locales\enUS.lua
-Locales\Translations.lua
 Data\Legacy.lua
 Core.lua
 Model.lua

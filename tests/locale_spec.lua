@@ -1,7 +1,7 @@
 -- Run from the repository root: luajit tests/locale_spec.lua
--- Every phrase a player reads goes through L, so CurseForge's Localization page can translate it: a text sink in
--- the shipped Lua (outside Locales/) never gets a bare English literal, and Locales/phrases.txt, the list pasted
--- into CurseForge, is what tools/phrases.py prints today.
+-- Every phrase a player reads goes through L, so a Locales/<locale>.lua file can translate it: a text sink in the
+-- shipped Lua (outside Locales/) never gets a bare English literal, Locales/phrases.txt, the template translators
+-- copy, is what tools/phrases.py prints today, and every translation file is in the TOC.
 local checks = 0
 local function check(condition, label)
 	checks = checks + 1
@@ -159,11 +159,15 @@ local Mixin = { headerText = "Section" }
 check(#caught == 3, "three bare phrases caught, not " .. #caught)
 check(caught[1] == "Hello %s" and caught[2] == "Click me" and caught[3] == "Section", "the right three")
 
-local shipped = {}
+local shipped, listed = {}, {}
 for line in io.lines("LegacyForever.toc") do
 	local file = line:match("^([^#].-%.lua)%s*$")
-	if file and not file:find("^Locales") then
-		shipped[#shipped + 1] = file:gsub("\\", "/")
+	if file then
+		file = file:gsub("\\", "/")
+		listed[file] = true
+		if not file:find("^Locales/") then
+			shipped[#shipped + 1] = file
+		end
 	end
 end
 check(#shipped > 5, "the TOC lists the shipped Lua")
@@ -183,9 +187,37 @@ pipe:close()
 check(printed ~= "", "tools/phrases.py prints the phrases")
 check(committed == printed, "Locales/phrases.txt is stale: python3 tools/phrases.py > Locales/phrases.txt")
 
+-- A translation the client never loads is no translation.
+local files = assert(io.popen("git ls-files Locales"))
+for file in files:lines() do
+	check(not file:find("%.lua$") or listed[file], file .. " is not in LegacyForever.toc")
+end
+files:close()
+
+-- The BigWigs packager's localization keyword fetches from CurseForge, whose localization export is gone: the 404
+-- page would fail the release. Built in two parts so this file doesn't match itself.
+local keyword = assert(io.popen("git grep -l -F '@" .. "localization' -- ."))
+local users = keyword:read("*a")
+keyword:close()
+check(users == "", "the packager's localization keyword would fail the release: " .. users)
+
 -- The English fallback: a phrase no locale translates reads as itself.
 local ns = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 check(ns.L["Stop tracking"] == "Stop tracking", "an untranslated phrase is its English key")
+
+-- The template, copied as it stands, is a working translation file: it fills L only on its own locale.
+local locale = "enUS"
+local template = assert(loadstring(committed, "Locales/phrases.txt"))
+setfenv(template, {
+	GetLocale = function()
+		return locale
+	end,
+})
+template("LegacyForever", ns)
+check(rawget(ns.L, "Stop tracking") == nil, "another locale's file leaves L alone")
+locale = "deDE"
+template("LegacyForever", ns)
+check(rawget(ns.L, "Stop tracking") == "Stop tracking", "the template fills L on its own locale")
 
 print(("locale_spec: %d checks passed"):format(checks))

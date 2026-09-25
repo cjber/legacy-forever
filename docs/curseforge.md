@@ -34,7 +34,7 @@ Open the world map: the Legacy button sits below the map's own tracking buttons.
 - `/lf` shows short help.
 - `/lf audit` compares the bundled data with what the game reports. Found a wrong or missing objective? Include its output in an issue on [GitHub](https://github.com/cjber/legacy-forever/issues).
 
-It's in English for now. Translations are welcome on the [CurseForge Localization page](https://www.curseforge.com/wow/addons/legacy-forever/localization), and a release picks them up.
+It's in English for now. Translations are welcome as a pull request, or pasted into an issue, on GitHub: [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has a template.
 
 Locations are generated from the Forever client's own data and joined by ID (flight paths by the zone in their name); nothing is scraped from a database site.
 

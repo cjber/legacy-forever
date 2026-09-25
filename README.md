@@ -36,7 +36,7 @@ Open the world map. The Legacy button sits below the map's own tracking buttons.
 | `/lf audit` | Compare the bundled data with what the game reports, and list any objective the game doesn't know |
 | `/lf criteria 684` | List every criterion the game reports for one achievement (useful alongside an audit's unknown IDs) |
 
-It's in English for now. Translations are welcome on the [CurseForge Localization page](https://www.curseforge.com/wow/addons/legacy-forever/localization), and a release picks them up.
+It's in English for now. Translations are welcome as a pull request, or pasted into an issue, on GitHub: [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has a template.
 
 ## Where the locations come from
 
