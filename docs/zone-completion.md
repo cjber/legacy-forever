@@ -4,6 +4,8 @@ Each category's objectives come from `Data/Legacy.lua`, which `tools/gen_legacy.
 is read from the game. The README says
 [where the locations come from](../README.md#where-the-locations-come-from).
 
+![Felwood on the world map before the character has been there: every area shaded and the completion corner at 0%](screenshots/unvisited.png)
+
 - **Areas** are the zone's map overlays, the same ones the game reveals as you explore.
 - **Flight paths**, counted only once ticked under "What counts", are the client's flight nodes for your faction,
   placed by the zone in each node's name. The game only says which ones a character knows at a flight master, so
