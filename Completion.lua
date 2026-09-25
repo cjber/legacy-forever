@@ -1,5 +1,6 @@
 ---@type string, LegacyForeverNamespace
 local addonName, ns = ...
+local L = ns.L
 
 -- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths, dungeons, raids,
 -- Legacy objectives, local reputations and quests are done, as a section in the objective tracker
@@ -21,13 +22,13 @@ local ICONS = {
 	quests = { atlas = "QuestNormal" },
 }
 local LABELS = {
-	areas = "Areas explored",
-	taxis = "Flight paths",
-	dungeons = "Dungeons",
-	raids = "Raids",
-	legacy = "Legacy objectives",
-	reputations = "Reputations (Friendly)",
-	quests = "Quests",
+	areas = L["Areas explored"],
+	taxis = L["Flight paths"],
+	dungeons = DUNGEONS,
+	raids = RAIDS,
+	legacy = L["Legacy objectives"],
+	reputations = L["Reputations (Friendly)"],
+	quests = QUESTS_LABEL,
 }
 -- Names listed per category in a tooltip before "and N more".
 local MAX_LEFT = 6
@@ -139,8 +140,8 @@ end
 
 -- What the player does to resolve a category's pending items.
 local PENDING_HINTS = {
-	taxis = "Open a flight master on this continent to check these.",
-	quests = "Waiting for Questie and your quest log.",
+	taxis = L["Open a flight master on this continent to check these."],
+	quests = L["Waiting for Questie and your quest log."],
 }
 
 ---@param result LegacyZoneResult
@@ -203,13 +204,13 @@ local function AddTooltip(tooltip, name, result)
 			)
 			for index, left in ipairs(category.left) do
 				if index > MAX_LEFT then
-					GameTooltip_AddDisabledLine(tooltip, ("    and %d more"):format(#category.left - MAX_LEFT))
+					GameTooltip_AddDisabledLine(tooltip, "    " .. L["and %d more"]:format(#category.left - MAX_LEFT))
 					break
 				end
 				GameTooltip_AddColoredLine(tooltip, "    " .. left, WHITE_FONT_COLOR)
 			end
 			if category.pending > 0 then
-				local line = ("    %d not known yet."):format(category.pending)
+				local line = "    " .. L["%d not known yet."]:format(category.pending)
 				GameTooltip_AddDisabledLine(tooltip, PENDING_HINTS[key] and line .. " " .. PENDING_HINTS[key] or line)
 			end
 		end
@@ -217,7 +218,7 @@ local function AddTooltip(tooltip, name, result)
 	if result.dungeons or result.raids or result.legacy then
 		GameTooltip_AddDisabledLine(
 			tooltip,
-			"Dungeons, raids and Legacy objectives count your progress on any character."
+			L["Dungeons, raids and Legacy objectives count your progress on any character."]
 		)
 	end
 end
@@ -283,7 +284,7 @@ function TrackerMixin:OnBlockHeaderEnter(block)
 	if result then
 		GameTooltip:SetOwner(block, "ANCHOR_LEFT")
 		AddTooltip(GameTooltip, C_Map.GetMapInfo(block.id).name, result)
-		GameTooltip_AddInstructionLine(GameTooltip, "Click to open the map. Right-click for options.")
+		GameTooltip_AddInstructionLine(GameTooltip, L["Click to open the map. Right-click for options."])
 		GameTooltip:Show()
 	end
 end
@@ -303,10 +304,10 @@ function TrackerMixin:OnBlockHeaderClick(block, mouseButton)
 	MenuUtil.CreateContextMenu(self:GetContextMenuParent(), function(_, root)
 		root:SetTag("MENU_LEGACY_HERE_ZONE_TRACKER", block)
 		root:CreateTitle(C_Map.GetMapInfo(block.id).name)
-		root:CreateButton("Open the map", function()
+		root:CreateButton(L["Open the map"], function()
 			OpenWorldMap(block.id)
 		end)
-		root:CreateButton("Hide from the tracker", function()
+		root:CreateButton(L["Hide from the tracker"], function()
 			Toggle("tracker")
 		end)
 	end)
@@ -392,7 +393,7 @@ function LegacyForeverZoneOverlayMixin:OnEnter()
 	AddTooltip(GameTooltip, self.name, self.result)
 	GameTooltip_AddInstructionLine(
 		GameTooltip,
-		ns.ZoneSetting("mapCollapsed") and "Click to expand." or "Click to collapse."
+		ns.ZoneSetting("mapCollapsed") and L["Click to expand."] or L["Click to collapse."]
 	)
 	GameTooltip:Show()
 end
@@ -473,7 +474,7 @@ local function ContinentText(continentID)
 	if not continent or not info then
 		return nil
 	end
-	return ("%s: %d of %d zones complete (%d%%)"):format(
+	return L["%s: %d of %d zones complete (%d%%)"]:format(
 		info.name,
 		continent.complete,
 		continent.zones,
@@ -495,7 +496,7 @@ end
 ---@param uiMapID number
 local function SetUpToast(frame, uiMapID)
 	frame.uiMapID = uiMapID
-	frame.Unlocked:SetText("Zone complete")
+	frame.Unlocked:SetText(L["Zone complete"])
 	frame.Name:SetText(C_Map.GetMapInfo(uiMapID).name)
 	frame.Icon.Texture:SetAtlas(ICONS.areas.atlas)
 	frame:SetScript("OnClick", OnToastClick)
@@ -503,7 +504,7 @@ local function SetUpToast(frame, uiMapID)
 	local continent = ns.Live.ContinentOf(uiMapID)
 	local line = continent and ContinentText(continent)
 	if line then
-		ns.Print(("%s complete. %s"):format(C_Map.GetMapInfo(uiMapID).name, line))
+		ns.Print(L["%s complete. %s"]:format(C_Map.GetMapInfo(uiMapID).name, line))
 	end
 end
 
@@ -552,7 +553,7 @@ function Completion.AddSummary(tooltip, uiMapID)
 	end
 	GameTooltip_AddBlankLineToTooltip(tooltip)
 	tooltip:AddDoubleLine(
-		"Zone completion",
+		L["Zone completion"],
 		PercentText(result),
 		NORMAL_FONT_COLOR.r,
 		NORMAL_FONT_COLOR.g,
@@ -577,11 +578,12 @@ local function QuestsUsable()
 end
 
 local QUESTS_STATUS = {
-	ready = "Every quest this character can take in the zone, from Questie. Repeatable, holiday and "
-		.. "profession quests are left out.",
-	loading = "Waiting for Questie to finish loading.",
-	missing = "Needs Questie, which lists each zone's quests.",
-	unsupported = "This version of Questie isn't supported.",
+	ready = L["Every quest this character can take in the zone, from Questie."]
+		.. " "
+		.. L["Repeatable, holiday and profession quests are left out."],
+	loading = L["Waiting for Questie to finish loading."],
+	missing = L["Needs Questie, which lists each zone's quests."],
+	unsupported = L["This version of Questie isn't supported."],
 }
 
 ---@param tooltip GameTooltip
@@ -592,17 +594,17 @@ end
 
 ---@param root SharedMenuDescriptionProxy
 function Completion.AddMenu(root)
-	root:CreateTitle("Zone completion")
-	root:CreateCheckbox("In the objective tracker", IsShown, Toggle, "tracker")
-	local map = root:CreateCheckbox("On the world map", IsShown, Toggle, "map")
+	root:CreateTitle(L["Zone completion"])
+	root:CreateCheckbox(L["In the objective tracker"], IsShown, Toggle, "tracker")
+	local map = root:CreateCheckbox(L["On the world map"], IsShown, Toggle, "map")
 	map:SetTooltip(function(tooltip)
-		GameTooltip_SetTitle(tooltip, "On the world map")
+		GameTooltip_SetTitle(tooltip, L["On the world map"])
 		GameTooltip_AddNormalLine(
 			tooltip,
-			"The zone you're viewing in the map's corner, and a badge on each zone of a continent map."
+			L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."]
 		)
 	end)
-	local counts = root:CreateButton("What counts")
+	local counts = root:CreateButton(L["What counts"])
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 		local box = counts:CreateCheckbox(
 			("%s %s"):format(Completion.Icon(key, 14), LABELS[key]),

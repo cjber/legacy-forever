@@ -1,5 +1,6 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
+local L = ns.L
 
 -- Passed to Shortest Path Forever so it can tell our journeys apart from the player's own.
 local OWNER = "LegacyForever"
@@ -14,10 +15,27 @@ local function ShortestPath()
 	end
 end
 
+-- The addon folder the TOC's OptionalDeps names.
+local SHORTEST_PATH = "ShortestPathForever"
+
+-- A grey suggestion under a pin's click hint: Shortest Path Forever plots the whole route, flights and boats
+-- included, where the game's waypoint is a straight line. Nothing once it is loaded, or with the suggestion off.
+---@return string?
+function ns.CompanionHint()
+	if not ns.Setting("companions") or C_AddOns.IsAddOnLoaded(SHORTEST_PATH) then
+		return nil
+	end
+	if C_AddOns.DoesAddOnExist(SHORTEST_PATH) then
+		return L["Enable Shortest Path Forever to have the route plotted for you."]
+	end
+	return L["Install Shortest Path Forever to have the route plotted for you."]
+end
+
 -- Names what a click tries first; Navigate still falls back when Shortest Path declines.
 ---@return string
 function ns.NavigateHint()
-	return ShortestPath() and "Click to travel here with Shortest Path Forever." or "Click to set a waypoint here."
+	return ShortestPath() and L["Click to travel here with Shortest Path Forever."]
+		or L["Click to set a waypoint here."]
 end
 
 -- Shortest Path's journey when it takes one (it declines in combat, with journeys switched off or with no player
@@ -52,5 +70,9 @@ function ns.Navigate(uiMapID, x, y, title)
 	end
 	local info = C_Map.GetMapInfo(uiMapID)
 	local place = ("%.1f, %.1f"):format(x * 100, y * 100)
-	ns.Print(("%s is at %s%s."):format(title, place, info and (" in " .. info.name) or ""))
+	if info then
+		ns.Print(L["%s is at %s in %s."]:format(title, place, info.name))
+	else
+		ns.Print(L["%s is at %s."]:format(title, place))
+	end
 end

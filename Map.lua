@@ -1,5 +1,6 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
+local L = ns.L
 
 local PIN_TEMPLATE = "LegacyForeverPinTemplate"
 local AREA_TEMPLATE = "LegacyForeverAreaPinTemplate"
@@ -11,11 +12,11 @@ local POINTS_ICON = "UI-Legacy-Points-icon-c60"
 local RAIDS = { [249] = true, [309] = true, [409] = true, [469] = true, [509] = true, [531] = true, [533] = true }
 
 local KIND_LABEL = {
-	explore = "Undiscovered area",
-	instance = "Dungeon or raid",
-	kill = "Defeat",
-	quest = "Quest",
-	reputation = "Reputation",
+	explore = L["Undiscovered area"],
+	instance = L["Dungeon or raid"],
+	kill = L["Defeat"],
+	quest = L["Quest"],
+	reputation = REPUTATION,
 }
 
 ---@param uiMapID number?
@@ -32,7 +33,7 @@ end
 local function PointsText(challenge)
 	local points = ns.Live.Points(challenge)
 	if points then
-		return ("%s %d Legacy |4point:points;"):format(CreateAtlasMarkup(POINTS_ICON, 10, 14), points)
+		return L["%s %d Legacy |4point:points;"]:format(CreateAtlasMarkup(POINTS_ICON, 10, 14), points)
 	end
 end
 
@@ -64,11 +65,15 @@ local function AddRewardLine(tooltip, group)
 	local name = ns.Live.Name(group.challenge)
 	-- Explorer pays once for exploring all of Azeroth (Explore Azeroth), so one area is a
 	-- small share of a single point; say so rather than let it read as a point per area.
-	local scope = IsExploreGroup(group) and "for exploring every zone" or "for the whole challenge"
-	GameTooltip_AddNormalLine(
-		tooltip,
-		points and ("Part of %s: %s %s"):format(name, points, scope) or ("Part of %s"):format(name)
-	)
+	local line
+	if not points then
+		line = L["Part of %s"]:format(name)
+	elseif IsExploreGroup(group) then
+		line = L["Part of %s: %s for exploring every zone"]:format(name, points)
+	else
+		line = L["Part of %s: %s for the whole challenge"]:format(name, points)
+	end
+	GameTooltip_AddNormalLine(tooltip, line)
 end
 
 -- "9 of 12 areas left" for an exploration achievement, from live progress.
@@ -82,7 +87,7 @@ local function AreasLeftText(group)
 			left = left + 1
 		end
 	end
-	return ("%s: %d of %d areas left"):format(ns.Live.Name(group.achievement), left, total)
+	return L["%s: %d of %d areas left"]:format(ns.Live.Name(group.achievement), left, total)
 end
 
 ---@param tooltip GameTooltip
@@ -126,13 +131,13 @@ local function AddZoneTooltip(tooltip, zone)
 	GameTooltip_SetTitle(tooltip, zone.name)
 	GameTooltip_AddHighlightLine(
 		tooltip,
-		("%d Legacy %s left"):format(zone.count, zone.count == 1 and "objective" or "objectives")
+		(zone.count == 1 and L["%d Legacy objective left"] or L["%d Legacy objectives left"]):format(zone.count)
 	)
 	for _, group in ipairs(zone.groups) do
-		GameTooltip_AddNormalLine(tooltip, ("%s: %d left"):format(ns.Live.Name(group.challenge), #group.objectives))
+		GameTooltip_AddNormalLine(tooltip, L["%s: %d left"]:format(ns.Live.Name(group.challenge), #group.objectives))
 	end
 	ns.Completion.AddSummary(tooltip, zone.uiMapID)
-	GameTooltip_AddInstructionLine(tooltip, "Click the zone to see where.")
+	GameTooltip_AddInstructionLine(tooltip, L["Click the zone to see where."])
 end
 
 -- On a continent, one badge per zone with unfinished objectives, instead of every pin; its tooltip gives the count.
@@ -178,12 +183,24 @@ local function ToggleAreas()
 	ns.RefreshMap()
 end
 
+---@param key 'whatsNew'|'companions'
+---@return boolean
+local function IsSet(key)
+	return ns.Setting(key)
+end
+
+---@param key 'whatsNew'|'companions'
+local function ToggleSetting(key)
+	LegacyForeverDB = LegacyForeverDB or {}
+	LegacyForeverDB[key] = not ns.Setting(key)
+end
+
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]
 
 -- Each entry is a checkbox for our own tracker (Forever refuses Blizzard's): a zone's
 -- entry tracks only this zone's share of its challenge (Model.ZoneKey), "No fixed location"
 -- the whole challenge. The tracker's challenge names open the Legacy panel.
-local TRACK_HINT = "Click to track, with live progress."
+local TRACK_HINT = L["Click to track, with live progress."]
 
 ---@param name string
 ---@param count number
@@ -218,7 +235,7 @@ local function AddUnlocatedItem(menu, item)
 	local button = menu:CreateCheckbox(text, ns.Tracker.IsTracked, ns.Tracker.Toggle, item.challenge)
 	button:SetTooltip(function(tooltip)
 		GameTooltip_SetTitle(tooltip, ns.Live.Name(item.challenge))
-		GameTooltip_AddNormalLine(tooltip, "Levels, skills, ranks and anything without a fixed place.")
+		GameTooltip_AddNormalLine(tooltip, L["Levels, skills, ranks and anything without a fixed place."])
 		AddPointsLine(tooltip, item.challenge)
 		GameTooltip_AddInstructionLine(tooltip, TRACK_HINT)
 	end)
@@ -260,7 +277,7 @@ local function AddUnlocated(root)
 			top.items[#top.items + 1] = item
 		end
 	end
-	local submenu = root:CreateButton(("No fixed location |cffffffff(%d)|r"):format(#unlocated))
+	local submenu = root:CreateButton(ChallengeText(L["No fixed location"], #unlocated))
 	for _, top in ipairs(tops) do
 		local topMenu = submenu:CreateButton(top.name)
 		for _, sub in ipairs(top.subs) do
@@ -283,18 +300,28 @@ local function BuildMenu(root, uiMapID)
 	root:CreateTitle(mapInfo and mapInfo.name or ns.TITLE)
 	local groups = ZoneGroups(uiMapID)
 	if #groups == 0 then
-		root:CreateTitle("|cff808080Nothing left to do here|r")
+		root:CreateTitle("|cff808080" .. L["Nothing left to do here"] .. "|r")
 	end
 	for _, group in ipairs(groups) do
 		AddGroup(root, group)
 	end
 	root:CreateDivider()
-	root:CreateCheckbox("Show undiscovered areas", ShowAreas, ToggleAreas)
+	root:CreateCheckbox(L["Show undiscovered areas"], ShowAreas, ToggleAreas)
 	AddUnlocated(root)
 	root:CreateDivider()
 	ns.Completion.AddMenu(root)
 	root:CreateDivider()
-	root:CreateButton("Open the Legacy panel", ToggleLegacySystemUI)
+	root:CreateButton(L["Open the Legacy panel"], ToggleLegacySystemUI)
+	root:CreateDivider()
+	root:CreateCheckbox(L["Tell me what's new after an update"], IsSet, ToggleSetting, "whatsNew")
+	local companions = root:CreateCheckbox(L["Suggest companion addons"], IsSet, ToggleSetting, "companions")
+	companions:SetTooltip(function(tooltip)
+		GameTooltip_SetTitle(tooltip, L["Suggest companion addons"])
+		GameTooltip_AddNormalLine(
+			tooltip,
+			L["A grey line in a pin's tooltip when Shortest Path Forever would plot the route."]
+		)
+	end)
 end
 
 ---@class LegacyForeverMapButtonMixin : DropdownButton
@@ -350,9 +377,9 @@ function LegacyForeverMapButtonMixin:OnEnter()
 	GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 	GameTooltip_SetTitle(GameTooltip, ns.TITLE)
 	if self.count and self.count > 0 then
-		GameTooltip_AddNormalLine(GameTooltip, ("%d unfinished Legacy objectives on this map."):format(self.count))
+		GameTooltip_AddNormalLine(GameTooltip, L["%d unfinished Legacy objectives on this map."]:format(self.count))
 	else
-		GameTooltip_AddNormalLine(GameTooltip, "No unfinished Legacy objectives with a place on this map.")
+		GameTooltip_AddNormalLine(GameTooltip, L["No unfinished Legacy objectives with a place on this map."])
 	end
 	GameTooltip:Show()
 end
@@ -450,6 +477,10 @@ local function DefinePinMixin()
 			AddPinTooltip(GameTooltip, self.group, self.objective)
 			if self:Destination() then
 				GameTooltip_AddInstructionLine(GameTooltip, ns.NavigateHint())
+				local companion = ns.CompanionHint()
+				if companion then
+					GameTooltip_AddDisabledLine(GameTooltip, companion)
+				end
 			end
 		end
 		GameTooltip:Show()

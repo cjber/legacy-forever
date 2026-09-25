@@ -2,6 +2,10 @@ local _, addon = ...
 
 ---@class LegacyForeverNamespace
 ---@field TITLE string
+---@field WHATS_NEW string
+---@field CompanionHint fun(): string?
+---@field WhatsNew fun()
+---@field L table<string, string>
 ---@field DEFAULTS LegacyDefaults
 ---@field Data LegacyData
 ---@field Model LegacyModel
@@ -14,8 +18,11 @@ local _, addon = ...
 ---@field NavigateHint fun(): string
 ---@field Guide fun(uiMapID: number, x: number, y: number, title: string): boolean, ("combat"|"unavailable")?
 local ns = addon
+local L = ns.L
 
 ns.TITLE = "Legacy Forever"
+-- One sentence for the chat line after an update (WhatsNew.lua): the headline of the release this ships in.
+ns.WHATS_NEW = L["Ready for translation, and map pins suggest Shortest Path Forever to plot the route."]
 
 -- Every setting's default. A saved setting stays nil until the player changes it, and nil reads as the
 -- default here, so an old save file and a new option always agree.
@@ -23,6 +30,10 @@ ns.TITLE = "Legacy Forever"
 ns.DEFAULTS = {
 	-- The shading is the quickest way to see what a zone still hides.
 	showAreas = true,
+	-- One chat line after an update, never on a first install.
+	whatsNew = true,
+	-- A grey line where another of the Forever addons would do more for you.
+	companions = true,
 	zoneCompletion = {
 		-- The map is on so the feature is visible; the tracker takes screen space, so it waits to be asked.
 		map = true,
@@ -56,7 +67,7 @@ function ns.SavedTable(key)
 end
 
 -- A top-level switch, its default while unset.
----@param key 'showAreas'
+---@param key 'showAreas'|'whatsNew'|'companions'
 ---@return boolean
 function ns.Setting(key)
 	local value = LegacyForeverDB and LegacyForeverDB[key]
@@ -168,9 +179,9 @@ SlashCmdList.LEGACYFOREVER = function(msg)
 	elseif command:find("^criteria") then
 		ns.Print("usage: /lf criteria 684")
 	else
-		ns.Print("open the world map and use the Legacy button in its top-right corner.")
-		ns.Print("/lf audit - check the bundled data against the game")
-		ns.Print("/lf criteria 684 - list what the game reports for one achievement")
+		ns.Print(L["open the world map and use the Legacy button in its top-right corner."])
+		ns.Print(L["/lf audit - check the bundled data against the game"])
+		ns.Print(L["/lf criteria 684 - list what the game reports for one achievement"])
 	end
 end
 

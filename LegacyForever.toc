@@ -14,8 +14,10 @@
 ## LoadSavedVariablesFirst: 1
 ## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick
 
+Locales\enUS.lua
 Data\Legacy.lua
 Core.lua
+WhatsNew.lua
 Model.lua
 Live.lua
 Quests.lua

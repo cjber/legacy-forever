@@ -11,6 +11,8 @@ ignore:
   - types
   - tests
   - docs
+  - Locales/phrases.txt
+  - Locales/README.md
   - media/icon.svg
   - media/icon-400.png
   - stylua.toml
