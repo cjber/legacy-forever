@@ -1,0 +1,89 @@
+-- A translation template for Legacy Forever. Save a copy as Locales/deDE.lua (or your locale), change "deDE" below,
+-- translate the right-hand side of each line and delete the lines you leave in English. Keep %s, %d and |4...;
+-- as they are. Then add Locales\deDE.lua to LegacyForever.toc, right after Locales\enUS.lua.
+local _, ns = ...
+if GetLocale() ~= "deDE" then
+	return
+end
+local L = ns.L
+
+L["%d Legacy objective left"] = "%d Legacy objective left"
+L["%d Legacy objectives left"] = "%d Legacy objectives left"
+L["%d not known yet."] = "%d not known yet."
+L["%d unfinished Legacy objectives on this map."] = "%d unfinished Legacy objectives on this map."
+L["%s %d Legacy |4point:points;"] = "%s %d Legacy |4point:points;"
+L["%s complete. %s"] = "%s complete. %s"
+L["%s is at %s in %s."] = "%s is at %s in %s."
+L["%s is at %s."] = "%s is at %s."
+L["%s: %d left"] = "%s: %d left"
+L["%s: %d of %d areas left"] = "%s: %d of %d areas left"
+L["%s: %d of %d zones complete (%d%%)"] = "%s: %d of %d zones complete (%d%%)"
+L["/lf audit - check the bundled data against the game"] = "/lf audit - check the bundled data against the game"
+L["/lf criteria 684 - list what the game reports for one achievement"] =
+	"/lf criteria 684 - list what the game reports for one achievement"
+L["A grey line in a pin's tooltip when Shortest Path Forever would plot the route."] =
+	"A grey line in a pin's tooltip when Shortest Path Forever would plot the route."
+L["Areas explored"] = "Areas explored"
+L["Click the zone to see where."] = "Click the zone to see where."
+L["Click to collapse."] = "Click to collapse."
+L["Click to expand."] = "Click to expand."
+L["Click to open the map. Right-click for options."] = "Click to open the map. Right-click for options."
+L["Click to set a waypoint here."] = "Click to set a waypoint here."
+L["Click to track, with live progress."] = "Click to track, with live progress."
+L["Click to travel here with Shortest Path Forever."] = "Click to travel here with Shortest Path Forever."
+L["Defeat"] = "Defeat"
+L["Dungeon or raid"] = "Dungeon or raid"
+L["Dungeons, raids and Legacy objectives count your progress on any character."] =
+	"Dungeons, raids and Legacy objectives count your progress on any character."
+L["Enable Shortest Path Forever to have the route plotted for you."] =
+	"Enable Shortest Path Forever to have the route plotted for you."
+L["Every quest this character can take in the zone, from Questie."] =
+	"Every quest this character can take in the zone, from Questie."
+L["Flight paths"] = "Flight paths"
+L["Hide from the tracker"] = "Hide from the tracker"
+L["In the objective tracker"] = "In the objective tracker"
+L["Install Shortest Path Forever to have the route plotted for you."] =
+	"Install Shortest Path Forever to have the route plotted for you."
+L["Legacy"] = "Legacy"
+L["Legacy objectives"] = "Legacy objectives"
+L["Levels, skills, ranks and anything without a fixed place."] =
+	"Levels, skills, ranks and anything without a fixed place."
+L["Needs Questie, which lists each zone's quests."] = "Needs Questie, which lists each zone's quests."
+L["No fixed location"] = "No fixed location"
+L["No unfinished Legacy objectives with a place on this map."] =
+	"No unfinished Legacy objectives with a place on this map."
+L["Nothing left to do here"] = "Nothing left to do here"
+L["On the world map"] = "On the world map"
+L["Open a flight master on this continent to check these."] = "Open a flight master on this continent to check these."
+L["Open in the Legacy panel"] = "Open in the Legacy panel"
+L["Open the Legacy panel"] = "Open the Legacy panel"
+L["Open the map"] = "Open the map"
+L["Part of %s"] = "Part of %s"
+L["Part of %s: %s for exploring every zone"] = "Part of %s: %s for exploring every zone"
+L["Part of %s: %s for the whole challenge"] = "Part of %s: %s for the whole challenge"
+L["Quest"] = "Quest"
+L["Ready for translation, and map pins suggest Shortest Path Forever to plot the route."] =
+	"Ready for translation, and map pins suggest Shortest Path Forever to plot the route."
+L["Repeatable, holiday and profession quests are left out."] = "Repeatable, holiday and profession quests are left out."
+L["Reputations (Friendly)"] = "Reputations (Friendly)"
+L["Show undiscovered areas"] = "Show undiscovered areas"
+L["Stop tracking"] = "Stop tracking"
+L["Suggest companion addons"] = "Suggest companion addons"
+L["Tell me what's new after an update"] = "Tell me what's new after an update"
+L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
+	"The zone you're viewing in the map's corner, and a badge on each zone of a continent map."
+L["This version of Questie isn't supported."] = "This version of Questie isn't supported."
+L["Undiscovered area"] = "Undiscovered area"
+L["Waiting for Questie and your quest log."] = "Waiting for Questie and your quest log."
+L["Waiting for Questie to finish loading."] = "Waiting for Questie to finish loading."
+L["What counts"] = "What counts"
+L["Zone complete"] = "Zone complete"
+L["Zone completion"] = "Zone completion"
+L["and %d more"] = "and %d more"
+L["couldn't add a section to the objective tracker; please report /lf audit."] =
+	"couldn't add a section to the objective tracker; please report /lf audit."
+L["open the world map and use the Legacy button in its top-right corner."] =
+	"open the world map and use the Legacy button in its top-right corner."
+L["the objective tracker isn't available, so tracked challenges can't be shown."] =
+	"the objective tracker isn't available, so tracked challenges can't be shown."
+L["updated to %s. %s"] = "updated to %s. %s"

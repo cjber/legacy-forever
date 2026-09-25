@@ -10,9 +10,17 @@ function ToggleLegacySystemUI() end
 ---@return number?
 function C_Traits.GetTraitCurrencyForAchievement(currencyID, achievementID) end
 
--- This localized global is supplied by the client but absent from the pinned annotations.
+-- These localized globals are supplied by the client but absent from the pinned annotations.
 ---@type string
 OTHER = nil
+---@type string
+DUNGEONS = nil
+---@type string
+RAIDS = nil
+---@type string
+QUESTS_LABEL = nil
+---@type string
+REPUTATION = nil
 
 -- FrameXML's UiMapPoint factory (ObjectAPI/UiMapPoint.lua) is absent from the pinned Core annotations.
 ---@class LegacyUiMapPointFactory

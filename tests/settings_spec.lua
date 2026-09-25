@@ -8,6 +8,7 @@ end
 
 SlashCmdList = {}
 local ns = {}
+assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 assert(loadfile("Core.lua"))("LegacyForever", ns)
 local defaults = ns.DEFAULTS.zoneCompletion
 

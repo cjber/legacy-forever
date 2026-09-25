@@ -1,5 +1,6 @@
 ---@type string, LegacyForeverNamespace
 local addonName, ns = ...
+local L = ns.L
 
 -- One chat line after an update: the new version and ns.WHATS_NEW. A first install stays quiet (there is no
 -- version to compare with), and so does a checkout, whose version the packager never filled in.
@@ -14,7 +15,7 @@ function ns.WhatsNew()
 	local last = saved.lastVersion
 	saved.lastVersion = version
 	if last and last ~= version and ns.Setting("whatsNew") then
-		ns.Print(("updated to %s. %s"):format(version, ns.WHATS_NEW))
+		ns.Print(L["updated to %s. %s"]:format(version, ns.WHATS_NEW))
 	end
 end
 

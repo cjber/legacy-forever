@@ -1,5 +1,6 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
+local L = ns.L
 
 -- Passed to Shortest Path Forever so it can tell our journeys apart from the player's own.
 local OWNER = "LegacyForever"
@@ -25,15 +26,16 @@ function ns.CompanionHint()
 		return nil
 	end
 	if C_AddOns.DoesAddOnExist(SHORTEST_PATH) then
-		return "Enable Shortest Path Forever to have the route plotted for you."
+		return L["Enable Shortest Path Forever to have the route plotted for you."]
 	end
-	return "Install Shortest Path Forever to have the route plotted for you."
+	return L["Install Shortest Path Forever to have the route plotted for you."]
 end
 
 -- Names what a click tries first; Navigate still falls back when Shortest Path declines.
 ---@return string
 function ns.NavigateHint()
-	return ShortestPath() and "Click to travel here with Shortest Path Forever." or "Click to set a waypoint here."
+	return ShortestPath() and L["Click to travel here with Shortest Path Forever."]
+		or L["Click to set a waypoint here."]
 end
 
 -- Shortest Path's journey when it takes one (it declines in combat, with journeys switched off or with no player
@@ -68,5 +70,9 @@ function ns.Navigate(uiMapID, x, y, title)
 	end
 	local info = C_Map.GetMapInfo(uiMapID)
 	local place = ("%.1f, %.1f"):format(x * 100, y * 100)
-	ns.Print(("%s is at %s%s."):format(title, place, info and (" in " .. info.name) or ""))
+	if info then
+		ns.Print(L["%s is at %s in %s."]:format(title, place, info.name))
+	else
+		ns.Print(L["%s is at %s."]:format(title, place))
+	end
 end

@@ -26,6 +26,7 @@ CreateFrame = function()
 end
 SlashCmdList = {}
 local ns = {}
+assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 assert(loadfile("Core.lua"))("LegacyForever", ns)
 function ns.Print(msg)
 	printed[#printed + 1] = msg
