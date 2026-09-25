@@ -47,6 +47,10 @@ Everything is generated from the Forever client's own data (via [wago.tools](htt
 
 **Found a wrong or missing objective?** Run `/lf audit` and [open an issue](https://github.com/cjber/legacy-forever/issues/new) with the output.
 
+## Works alongside
+
+All optional: [Shortest Path Forever](https://github.com/cjber/shortest-path-forever) plans the journey when you click a map pin, and [QuestieDB](https://github.com/Questie/QuestieDB), alone or with [Questie](https://github.com/Questie/Questie), supplies the quests zone completion can count. Other addons can read zone completion through `LegacyForever.API` ([docs/api.md](docs/api.md)); [Adventure Guide Forever](https://github.com/cjber/adventure-guide-forever) does.
+
 ## Development
 
 ```sh
