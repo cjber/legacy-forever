@@ -7,6 +7,7 @@ globals = {
 	"LegacyForeverAreaPinMixin",
 	"LegacyForeverMapButtonMixin",
 	"LegacyForeverZoneOverlayMixin",
+	"LegacyForever",
 	"LegacyForeverDB",
 	"LegacyForeverPinMixin",
 	"LegacyForever_OnAddonCompartmentClick",
@@ -20,7 +21,7 @@ read_globals = {
 	"CreateFrame", "CreateFromMixins", "CreateTexturePool", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameFontNormal", "GameFontNormalSmall", "GameFontNormalTiny", "GameTooltip_AddBlankLineToTooltip", "GameTooltip_AddColoredLine", "GameTooltip_AddDisabledLine", "GetCursorPosition", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR", "HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",
 	"GameTooltip_AddNormalLine", "GameTooltip_SetTitle", "GetAchievementCategory", "GetAchievementCriteriaInfo", "GetAchievementInfo",
-	"GetAchievementNumCriteria", "GetBuildInfo", "GetTime", "PlaySound", "SOUNDKIT", "GetCategoryInfo", "GetCategoryList", "GetCategoryNumAchievements", "hooksecurefunc",
+	"GetAchievementNumCriteria", "GetBuildInfo", "geterrorhandler", "InCombatLockdown", "GetTime", "PlaySound", "SOUNDKIT", "GetCategoryInfo", "GetCategoryList", "GetCategoryNumAchievements", "hooksecurefunc",
 	"LegacySystemFrame", "MenuUtil", "OTHER", "Mixin", "OBJECTIVE_DASH_STYLE_HIDE", "ObjectiveTrackerFrame",
 	"ObjectiveTrackerManager", "ShortestPathForever", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "LibQuestieDB", "Questie", "QuestieLoader", "strtrim",
 	"tContains", "ToggleLegacySystemUI", "ToggleWorldMap", "OpenWorldMap", "UnitClass", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
@@ -38,4 +39,10 @@ files["tests/quests_spec.lua"] = {
 }
 files["tests/navigate_spec.lua"] = {
 	globals = { "C_Map", "C_SuperTrack", "UiMapPoint", "ShortestPathForever" },
+}
+files["tests/api_spec.lua"] = {
+	globals = {
+		"AlertFrame", "C_Map", "C_SuperTrack", "C_Timer", "CreateAtlasMarkup", "EventUtil", "GetTime", "geterrorhandler",
+		"InCombatLockdown", "LibQuestieDB", "ShortestPathForever", "UiMapPoint", "UnitClass", "UnitFactionGroup", "UnitRace",
+	},
 }

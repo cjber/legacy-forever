@@ -11,6 +11,7 @@ local _, addon = ...
 ---@field RefreshMap fun()
 ---@field Navigate fun(uiMapID: number, x: number, y: number, title: string)
 ---@field NavigateHint fun(): string
+---@field Guide fun(uiMapID: number, x: number, y: number, title: string): boolean, ("combat"|"unavailable")?
 local ns = addon
 
 ns.TITLE = "Legacy Forever"

@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Other addons can read Legacy Forever.** `LegacyForever.API` gives a zone's completion as you count it, its unfinished Legacy objectives, and a way to send you to one with Shortest Path Forever or the game's waypoint; [docs/api.md](docs/api.md) has the details.
+
 ## [0.4.1] - 2026-09-25
 
 Updated for Forever build 1.60.1.70009. Forever renamed the Dun Morogh area Anvilmar to Coldridge Valley, and the map and tracker now use the new name when it is left to explore. Nothing else moved.
