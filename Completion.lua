@@ -392,6 +392,13 @@ function LegacyForeverZoneOverlayMixin:OnLeave()
 	GameTooltip:Hide()
 end
 
+-- Closing the map hides the overlay without an OnLeave.
+function LegacyForeverZoneOverlayMixin:OnHide()
+	if GameTooltip:GetOwner() == self then
+		GameTooltip:Hide()
+	end
+end
+
 -- The map refreshes providers on show and on every map change, but its overlay frames
 -- only on a map change, so a provider keeps the corner current.
 ---@param overlay LegacyForeverZoneOverlayMixin

@@ -362,6 +362,13 @@ function LegacyForeverMapButtonMixin:OnLeave()
 	GameTooltip:Hide()
 end
 
+-- Closing the map hides the button without an OnLeave.
+function LegacyForeverMapButtonMixin:OnHide()
+	if GameTooltip:GetOwner() == self then
+		GameTooltip:Hide()
+	end
+end
+
 --[[ Pins: one per unfinished objective the data can place on this map.
      Built once Blizzard_WorldMap (and so MapCanvas) is loaded; the XML template
      resolves its mixin by name when the first pin is created. ]]
@@ -387,6 +394,8 @@ local function DefinePinMixin()
 		self.objective = objective
 		self.zone = zone
 		self:SetScalingLimits(1, 1.0, 1.2)
+		-- Closing the map hides the pin without an OnMouseLeave.
+		self:SetScript("OnHide", self.OnMouseLeave)
 		-- Pins are pooled, so this is set on every acquire. A zone badge lets the click open the zone below it.
 		self:SetMouseClickEnabled(self:Destination() ~= nil)
 		self:Layout(objective and objective.entry.instance)
@@ -457,7 +466,9 @@ local function DefinePinMixin()
 
 	function LegacyForeverPinMixin:OnMouseLeave()
 		self.Highlight:Hide()
-		GameTooltip:Hide()
+		if GameTooltip:GetOwner() == self then
+			GameTooltip:Hide()
+		end
 	end
 end
 
@@ -489,6 +500,10 @@ local function DefineAreaPinMixin()
 			elseif self.hovered then
 				self:Highlight(nil)
 			end
+		end)
+		-- The polling stops while the map is closed, so the hovered area's shade and tooltip go now.
+		self:SetScript("OnHide", function()
+			self:Highlight(nil)
 		end)
 	end
 
