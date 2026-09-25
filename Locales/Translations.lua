@@ -3,7 +3,7 @@ local _, ns = ...
 
 -- The packager fills each block with the translations from the CurseForge project's Localization page when it
 -- builds a release. In a checkout the markers stay comments and every phrase reads in English.
--- Each block, and so L, is unused until the packager fills it with L["..."] lines.
+-- Each block, and so L, is unused until the packager fills it with one line per translated phrase.
 ---@diagnostic disable: empty-block, unused-local
 local L, locale = ns.L, GetLocale()
 if locale == "deDE" then
