@@ -1,5 +1,9 @@
 The Legacy panel lists every challenge, but not which ones you can work on where you are. Legacy Forever puts that on the world map for the zone you're looking at, and keeps a small tracker of the challenges you pick. It uses the map's own buttons, menus, pins and the objective tracker, so it looks like it came with the game.
 
+![Ashenvale on the world map as two areas are found, the completion corner folding away, then the Legacy menu](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif)
+
+Discover an area and its shading lifts as the corner's percentage goes up. Click the corner to fold it away.
+
 ![Ashenvale on the world map with undiscovered areas shaded, the zone completion corner and the Legacy menu open](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/map.png)
 
 The zone you're looking at, with its Legacy objectives in the map's own menu.
@@ -37,5 +41,7 @@ Open the world map: the Legacy button sits below the map's own tracking buttons.
 Locations are generated from the Forever client's own data and joined by ID (flight paths by the zone in their name); nothing is scraped from a database site.
 
 It only shows what the game already tracks; it doesn't add challenges or change how they count.
+
+Works with [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever), which plans the trip when you click a pin, and [Adventure Guide Forever](https://www.curseforge.com/wow/addons/adventure-guide-forever), which shows your zone completion.
 
 Source code: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.

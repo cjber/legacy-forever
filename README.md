@@ -10,6 +10,10 @@ Your unfinished WoW: Forever Legacy challenges, on the world map, for the zone y
 
 Legacy points are account-wide and come from challenges spread over the whole world: areas to discover, dungeons to clear, bosses, quests and reputations. The Legacy panel lists them, but it doesn't tell you which ones you can work on where you are. This addon adds that to the world map, and keeps a small tracker of the challenges you pick. It uses the map's own buttons, menus and pins, and the objective tracker, so it looks like it came with the game.
 
+<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif" width="640" alt="Ashenvale on the world map as two areas are found, the completion corner folding away, then the Legacy menu"></p>
+
+Discover an area and its shading lifts as the corner's percentage goes up. Click the corner to fold it away.
+
 <p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/map.png" width="640" alt="Ashenvale on the world map with undiscovered areas shaded, the zone completion corner and the Legacy menu open"></p>
 
 ## Features
@@ -49,7 +53,7 @@ Everything is generated from the Forever client's own data (via [wago.tools](htt
 
 ## Works alongside
 
-All optional: [Shortest Path Forever](https://github.com/cjber/shortest-path-forever) plans the journey when you click a map pin, and [QuestieDB](https://github.com/Questie/QuestieDB), alone or with [Questie](https://github.com/Questie/Questie), supplies the quests zone completion can count. Other addons can read zone completion through `LegacyForever.API` ([docs/api.md](docs/api.md)); [Adventure Guide Forever](https://github.com/cjber/adventure-guide-forever) does.
+All optional: [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever) plans the journey when you click a map pin, and [QuestieDB](https://github.com/Questie/QuestieDB), alone or with [Questie](https://github.com/Questie/Questie), supplies the quests zone completion can count. Other addons can read zone completion through `LegacyForever.API` ([docs/api.md](docs/api.md)); [Adventure Guide Forever](https://www.curseforge.com/wow/addons/adventure-guide-forever) does.
 
 ## Development
 

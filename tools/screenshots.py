@@ -9,6 +9,7 @@ and the Legacy tracker, computed from Data/Legacy.lua and the client's achieveme
     python3 tools/screenshots.py            # WOWMOCK=/path/to/wow-mock-screenshots to override
 """
 
+import io
 import math
 import os
 import re
@@ -35,6 +36,7 @@ from wowmock import (
     TrackerModule,
     Ui,
     atlas_markup,
+    backdrop,
     colored,
     context_menu,
     draw_overlay,
@@ -144,7 +146,7 @@ class Progress:
 class Live:
     """Live.lua's reads, answered from the client's achievement tables for the character above."""
 
-    def __init__(self, ui, data):
+    def __init__(self, ui, data, explored=EXPLORED):
         self.ui, self.data = ui, data
         self.achievements = ui.table("Achievement")
         self.trees = ui.table("CriteriaTree")
@@ -154,8 +156,8 @@ class Live:
         for row in self.trees.values():
             self.children.setdefault(row["Parent"], []).append(row)
         zone = data["completion"][ASHENVALE]
-        self.explored = {area["key"] for area in zone["areas"] if area["name"] in EXPLORED}
-        assert len(self.explored) == len(EXPLORED), "an explored area name is not in the data"
+        self.explored = {area["key"] for area in zone["areas"] if area["name"] in explored}
+        assert len(self.explored) == len(explored), "an explored area name is not in the data"
         self.done_criteria = {
             entry["criteria"]
             for entry in data["zones"][ASHENVALE]
@@ -469,7 +471,7 @@ def main_menu(live, data):
 # ------------------------------------------------------------------------------------------ the scenes
 
 
-def world_map(ui, data, live, ui_map=ASHENVALE):
+def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False):
     """The world map on a Kalimdor zone with the addon's shading, pins, corner and button drawn in."""
     zone = data["completion"][ui_map]
     name = ui.table("UiMap")[str(ui_map)]["Name_lang"]
@@ -493,28 +495,33 @@ def world_map(ui, data, live, ui_map=ASHENVALE):
                 # Neither zone has a raid entrance, so Map.lua's RAIDS never picks the "Raid" portal here.
                 portal = "Dungeon" if "instance" in entry else None
                 zone_pin(ui, canvas, mx + entry["x"] * mw, my + entry["y"] * mh, portal)
-    completion_corner(ui, canvas, rects, live, zone, name)
+    completion_corner(ui, canvas, rects, live, zone, name, collapsed)
     button = map_button(ui, canvas, rects, count_objectives(groups))
     return canvas, button
 
 
-def completion_corner(ui, canvas, rects, live, zone, name):
-    """LegacyForeverZoneOverlayTemplate at the canvas container's TOPLEFT (44, -18)."""
+def completion_corner(ui, canvas, rects, live, zone, name, collapsed=False):
+    """LegacyForeverZoneOverlayTemplate at the canvas container's TOPLEFT (44, -18); a click collapses it to the
+    title and bar."""
     result = zone_completion(live, zone)
     cx, cy, _, _ = rects["container"]
     x, y = cx + 44, cy + 18
     title_font, counts_font = FONTS["GameFontNormalLarge"], FONTS["GameFontHighlight"]
     title = f"{name}  {result['percent']}%"
     counts = counts_text(ui, result, 16)
-    width = max(canvas.text_width(title, title_font), canvas.text_width(counts, counts_font), 140)
-    height = title_font.height + 4 + 2 + 6 + counts_font.height
+    width = max(canvas.text_width(title, title_font), 140)
+    height = title_font.height + 4 + 2
+    if not collapsed:
+        width = max(width, canvas.text_width(counts, counts_font))
+        height += 6 + counts_font.height
     shade = Image.open(ROOT / "media" / "Shade.tga").convert("RGBA")
     canvas.draw(shade, x - 48, y - 22, width + 48 + 64, height + 44, (1, 1, 1, 0.6))
     canvas.text(x, y, title, title_font)
     bar_y = y + title_font.height + 4
     canvas.fill(x, bar_y, width, 2, (0, 0, 0, 0.45))
     canvas.fill(x, bar_y, width * result["percent"] / 100, 2, ui.global_color("NORMAL_FONT_COLOR"))
-    canvas.text(x, y + title_font.height + 12, counts, counts_font)
+    if not collapsed:
+        canvas.text(x, y + title_font.height + 12, counts, counts_font)
 
 
 def map_button(ui, canvas, rects, count):
@@ -680,6 +687,70 @@ def render_tracker(ui, data, live):
     return scene(ui, [(canvas, 0, 0)])
 
 
+# The demo's character explores two more areas east of Astranaar, then collapses the corner and opens the menu.
+DEMO_DISCOVERED = ["Mystral Lake", "Raynewood Retreat"]
+# (explored beyond EXPLORED, corner collapsed, menu open, seconds held): ten seconds in all.
+DEMO_STEPS = [
+    (0, False, False, 1.5),
+    (1, False, False, 1.5),
+    (2, False, False, 2.0),
+    (2, True, False, 1.5),
+    (2, False, False, 1.0),
+    (2, False, True, 2.5),
+]
+DEMO_FPS = 10
+DEMO_FADE = 3  # frames of cross-fade as an area's shading lifts; a click changes the map at once
+
+
+def render_demo(data):
+    """docs/screenshots/demo.gif: Ashenvale's shading lifting and its corner filling as areas are found, the corner
+    collapsed with a click, then the Legacy menu. Rendered at 1x, the GIF's final size."""
+    ui = Ui(scale=1)
+    steps = []
+    for found, collapsed, menu, seconds in DEMO_STEPS:
+        live = Live(ui, data, EXPLORED | set(DEMO_DISCOVERED[:found]))
+        canvas, button = world_map(ui, data, live, collapsed=collapsed)
+        layers = [(canvas, 0, 0)]
+        if menu:
+            bx, by, bw, bh = button
+            layers.append(menu_at(ui, main_menu(live, data), right=bx + bw, top=by + bh)[:3])
+        steps.append((layers, seconds))
+    # scene() frames each still to what it draws; the demo frames every step alike, to what any of them draws.
+    boxes = [
+        (x + left, y + top, x + right, y + bottom)
+        for layers, _ in steps
+        for canvas, x, y in layers
+        for left, top, right, bottom in [canvas.image.getbbox()]
+    ]
+    left, top = min(b[0] for b in boxes) - 24, min(b[1] for b in boxes) - 24
+    width, height = max(b[2] for b in boxes) + 24 - left, max(b[3] for b in boxes) + 24 - top
+    stills = []
+    for layers, seconds in steps:
+        still = backdrop(ui, width, height)
+        for canvas, x, y in layers:
+            still.paste(canvas, x - left, y - top)
+        stills.append((still.image.convert("RGB"), seconds))
+    frames = []
+    for index, (image, seconds) in enumerate(stills):
+        held = round(seconds * DEMO_FPS)
+        for step in range(held):
+            fade = index > 0 and step < DEMO_FADE and DEMO_STEPS[index][0] != DEMO_STEPS[index - 1][0]
+            frames.append(Image.blend(stills[index - 1][0], image, (step + 1) / (DEMO_FADE + 1)) if fade else image)
+    # One shared palette from the first and last steps (map and menu) keeps text colours steady and repeated
+    # encodes byte-identical.
+    palette_source = Image.new("RGB", (width, height * 2))
+    palette_source.paste(stills[0][0], (0, 0))
+    palette_source.paste(stills[-1][0], (0, height))
+    palette = palette_source.quantize(colors=255, method=Image.Quantize.MEDIANCUT)
+    indexed = [frame.quantize(palette=palette, dither=Image.Dither.NONE) for frame in frames]
+    buffer = io.BytesIO()
+    indexed[0].save(
+        buffer, format="GIF", save_all=True, append_images=indexed[1:], duration=1000 // DEMO_FPS, loop=0, optimize=True
+    )
+    assert len(buffer.getvalue()) <= 2_000_000, "demo.gif is over the stores' 2 MB limit"
+    return buffer.getvalue(), len(frames)
+
+
 def main():
     ui = Ui(scale=2)
     data = load_data()
@@ -694,6 +765,9 @@ def main():
     ):
         render(ui, data, live).save(OUT / f"{name}.png")
         print(f"wrote {OUT / f'{name}.png'}")
+    demo, count = render_demo(data)
+    (OUT / "demo.gif").write_bytes(demo)
+    print(f"wrote {OUT / 'demo.gif'} ({count} frames, {len(demo) // 1024} KB)")
 
 
 if __name__ == "__main__":
