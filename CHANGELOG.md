@@ -11,6 +11,10 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-09-25
+
+Updated for Forever build 1.60.1.70009. Forever renamed the Dun Morogh area Anvilmar to Coldridge Valley, and the map and tracker now use the new name when it is left to explore. Nothing else moved.
+
 ## [0.4.0] - 2026-09-25
 
 Legacy Here is now Legacy Forever. Clicking a pin takes you there, the tracker can follow one zone of a challenge, and zone completion can count quests with Questie.
