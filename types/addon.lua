@@ -168,6 +168,13 @@
 ---@type LegacySavedVariables?
 LegacyForeverDB = nil
 
+-- The addon's one public global, set by API.lua.
+---@class LegacyForeverGlobal
+---@field API LFAPI
+
+---@type LegacyForeverGlobal
+LegacyForever = nil
+
 ---@class LegacyContinentZone
 ---@field uiMapID number
 ---@field name string

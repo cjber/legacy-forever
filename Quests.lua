@@ -162,20 +162,50 @@ local function Source(lib)
 	}
 end
 
+local function Build()
+	local ok, result = pcall(function()
+		return ns.Model.QuestIndex(Source(assert(Library())), ns.Data.completion)
+	end)
+	index = ok and result or false
+	failure = not ok and tostring(result) or nil
+end
+
+-- Whether QuestieDB is ready but its index not yet built: the first read scans the whole database.
+---@return boolean
+function Quests.Cold()
+	return index == nil and Quests.Status() == "ready"
+end
+
+local scheduled = false
+
 -- The zone's quests for this character; false while Questie is still loading, nil without QuestieDB.
+-- `deferred` never builds the index during the call: a cold index reads as loading, is built on the
+-- next frame, and the change is announced like Questie finishing its start.
 ---@param uiMapID number
+---@param deferred? boolean
 ---@return LegacyQuestItem[]|false|nil
-function Quests.Zone(uiMapID)
+function Quests.Zone(uiMapID, deferred)
 	local status = Quests.Status()
 	if status == "loading" then
 		return false
 	end
-	if index == nil and status == "ready" then
-		local ok, result = pcall(function()
-			return ns.Model.QuestIndex(Source(assert(Library())), ns.Data.completion)
-		end)
-		index = ok and result or false
-		failure = not ok and tostring(result) or nil
+	if Quests.Cold() then
+		if not deferred then
+			Build()
+		else
+			if not scheduled then
+				scheduled = true
+				C_Timer.After(0, function()
+					scheduled = false
+					if Quests.Cold() then
+						Build()
+					end
+					-- Also when another reader built it first: whoever read "loading" is waiting for this.
+					ns.Live.Invalidate()
+				end)
+			end
+			return false
+		end
 	end
 	return index and (index[uiMapID] or {}) or nil
 end

@@ -21,19 +21,33 @@ function ns.NavigateHint()
 end
 
 -- Shortest Path's journey when it takes one (it declines in combat, with journeys switched off or with no player
--- position), else the game's own waypoint, else the place in chat, so a click always leaves the player a pointer.
+-- position), else the game's own waypoint. False, with why, when neither takes the place.
+---@param uiMapID number
+---@param x number
+---@param y number
+---@param title string
+---@return boolean
+---@return "combat"|"unavailable"|nil
+function ns.Guide(uiMapID, x, y, title)
+	local navigate = ShortestPath()
+	if navigate and navigate(OWNER, uiMapID, x, y, title) then
+		return true
+	end
+	if C_Map.CanSetUserWaypointOnMap(uiMapID) then
+		C_Map.SetUserWaypoint(UiMapPoint.CreateFromCoordinates(uiMapID, x, y))
+		C_SuperTrack.SetSuperTrackedUserWaypoint(true)
+		return true
+	end
+	return false, navigate and InCombatLockdown() and "combat" or "unavailable"
+end
+
+-- A journey or waypoint, else the place in chat, so a click always leaves the player a pointer.
 ---@param uiMapID number
 ---@param x number
 ---@param y number
 ---@param title string
 function ns.Navigate(uiMapID, x, y, title)
-	local navigate = ShortestPath()
-	if navigate and navigate(OWNER, uiMapID, x, y, title) then
-		return
-	end
-	if C_Map.CanSetUserWaypointOnMap(uiMapID) then
-		C_Map.SetUserWaypoint(UiMapPoint.CreateFromCoordinates(uiMapID, x, y))
-		C_SuperTrack.SetSuperTrackedUserWaypoint(true)
+	if ns.Guide(uiMapID, x, y, title) then
 		return
 	end
 	local info = C_Map.GetMapInfo(uiMapID)

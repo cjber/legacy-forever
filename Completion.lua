@@ -109,15 +109,46 @@ local function Toggle(surface)
 	end
 end
 
+Completion.IsCounted = IsCounted
+
+-- For readers outside the map and tracker (API.lua): called whenever the counts or what counts may have changed.
+---@param callback fun()
+function Completion.OnRefresh(callback)
+	listeners[#listeners + 1] = callback
+end
+
+-- A zone's completion, even when nothing counts; nil for a map without completion data.
+-- `deferred` reads the zone's quests without building QuestieDB's index (see Quests.Zone).
 ---@param uiMapID number?
+---@param deferred? boolean
 ---@return LegacyZoneResult?
-function Completion.Of(uiMapID)
+function Completion.Result(uiMapID, deferred)
 	local zone = uiMapID and ns.Data.completion[uiMapID]
 	if not uiMapID or not zone then
 		return nil
 	end
-	local result = ns.Model.ZoneCompletion(zone, ns.Live.ZoneSnapshot(uiMapID), IsCounted)
-	return result.total > 0 and result or nil
+	local snapshot = ns.Live.ZoneSnapshot(uiMapID)
+	if deferred then
+		snapshot = {
+			explored = snapshot.explored,
+			taxis = snapshot.taxis,
+			faction = snapshot.faction,
+			refsDone = snapshot.refsDone,
+			reaction = snapshot.reaction,
+			completed = snapshot.completed,
+			quests = function()
+				return ns.Quests.Zone(uiMapID, true)
+			end,
+		}
+	end
+	return ns.Model.ZoneCompletion(zone, snapshot, IsCounted)
+end
+
+---@param uiMapID number?
+---@return LegacyZoneResult?
+function Completion.Of(uiMapID)
+	local result = Completion.Result(uiMapID)
+	return result and result.total > 0 and result or nil
 end
 
 ---@param key LegacyCategoryKey
