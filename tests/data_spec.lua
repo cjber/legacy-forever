@@ -424,5 +424,8 @@ assert(taxiZones[25] == 1413 and taxiZones[21] == 1418, "Crossroads and Kargath 
 assert(taxiZones[49] == 1450 and taxiZones[69] == 1450, "curated Moonglade taxis without suffixes")
 assert(taxiZones[5] == 1433 and taxiZones[11] == 1420, "curated abbreviated zone suffixes")
 assert(not taxiZones[59] and not taxiZones[60], "battleground taxis excluded")
-assert(completionAreas["1426:Anvilmar"] and completionAreas["2652:Forlorn Gardens"], "empty hit rectangles still count")
+assert(
+	completionAreas["1426:Coldridge Valley"] and completionAreas["2652:Forlorn Gardens"],
+	"empty hit rectangles still count"
+)
 print("ok")
