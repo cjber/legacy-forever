@@ -159,6 +159,10 @@
 
 ---@alias LegacySettings table<string, boolean>
 
+---@class LegacyDefaults
+---@field showAreas boolean
+---@field zoneCompletion LegacySettings
+
 ---@class LegacySavedVariables
 ---@field tracked? LegacyTrackingKey[]
 ---@field zoneCompletion? LegacySettings

@@ -47,6 +47,8 @@ local settings = {}
 local timers, errors, printed, waypoints, journeys = {}, {}, {}, {}, {}
 
 local ns = { Data = data }
+SlashCmdList = {}
+assert(loadfile("Core.lua"))("LegacyForever", ns)
 local live = {}
 ns.Live = {
 	Visible = function()

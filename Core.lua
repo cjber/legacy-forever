@@ -2,6 +2,7 @@ local _, addon = ...
 
 ---@class LegacyForeverNamespace
 ---@field TITLE string
+---@field DEFAULTS LegacyDefaults
 ---@field Data LegacyData
 ---@field Model LegacyModel
 ---@field Live LegacyLive
@@ -16,6 +17,31 @@ local ns = addon
 
 ns.TITLE = "Legacy Forever"
 
+-- Every setting's default. A saved setting stays nil until the player changes it, and nil reads as the
+-- default here, so an old save file and a new option always agree.
+---@type LegacyDefaults
+ns.DEFAULTS = {
+	-- The shading is the quickest way to see what a zone still hides.
+	showAreas = true,
+	zoneCompletion = {
+		-- The map is on so the feature is visible; the tracker takes screen space, so it waits to be asked.
+		map = true,
+		tracker = false,
+		mapCollapsed = false,
+		trackerCollapsed = false,
+		-- Only Legacy objectives count: areas (each an "Explore <zone>" step toward Explorer), Spelunker
+		-- dungeons, Conqueror raids and the zone's other Legacy steps. No Legacy challenge asks for flight
+		-- paths, these reputations or quests, so they wait under "What counts" to be ticked.
+		count_areas = true,
+		count_taxis = false,
+		count_dungeons = true,
+		count_raids = true,
+		count_legacy = true,
+		count_reputations = false,
+		count_quests = false,
+	},
+}
+
 -- A table in the saved variables. The toc loads them before any file runs (LoadSavedVariablesFirst), so this
 -- is safe at file scope; callers still look it up each time rather than holding on to it.
 ---@overload fun(key: 'tracked'): LegacyTrackingKey[]
@@ -27,6 +53,28 @@ function ns.SavedTable(key)
 	LegacyForeverDB = LegacyForeverDB or {}
 	LegacyForeverDB[key] = LegacyForeverDB[key] or {}
 	return LegacyForeverDB[key]
+end
+
+-- A top-level switch, its default while unset.
+---@param key 'showAreas'
+---@return boolean
+function ns.Setting(key)
+	local value = LegacyForeverDB and LegacyForeverDB[key]
+	if value == nil then
+		return ns.DEFAULTS[key]
+	end
+	return value
+end
+
+-- A zone completion switch, its default while unset.
+---@param key string
+---@return boolean
+function ns.ZoneSetting(key)
+	local value = ns.SavedTable("zoneCompletion")[key]
+	if value == nil then
+		return ns.DEFAULTS.zoneCompletion[key] == true
+	end
+	return value
 end
 
 ---@param msg string

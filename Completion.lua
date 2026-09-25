@@ -42,42 +42,17 @@ end
 ---@type (fun())[]
 local listeners = {}
 
--- The map is on out of the box so the feature is visible; the tracker takes screen space, so it waits to be asked.
-local DEFAULT_SHOWN = { tracker = false, map = true }
-
+-- Defaults are in ns.DEFAULTS.zoneCompletion.
 ---@param surface LegacySurface
 ---@return boolean
 local function IsShown(surface)
-	local shown = Settings()[surface]
-	if shown == nil then
-		return DEFAULT_SHOWN[surface]
-	end
-	return shown
+	return ns.ZoneSetting(surface)
 end
-
--- Out of the box only Legacy objectives count: areas (each an "Explore <zone>" step toward
--- Explorer), Spelunker dungeons, Conqueror raids and the zone's other Legacy steps. No Legacy
--- challenge asks for flight paths, these reputations or quests, so they wait under "What counts" to
--- be ticked. The saved setting is nil until the player ticks or unticks it, so a choice made
--- before these defaults keeps its saved true or false.
-local COUNTED_BY_DEFAULT = {
-	areas = true,
-	taxis = false,
-	dungeons = true,
-	raids = true,
-	legacy = true,
-	reputations = false,
-	quests = false,
-}
 
 ---@param category LegacyCategoryKey
 ---@return boolean
 local function IsCounted(category)
-	local counted = Settings()["count_" .. category]
-	if counted == nil then
-		return COUNTED_BY_DEFAULT[category]
-	end
-	return counted
+	return ns.ZoneSetting("count_" .. category)
 end
 
 local function Refresh()
@@ -348,7 +323,7 @@ if trackerModule then
 	header.Progress:SetPoint("BOTTOMRIGHT", header.Percent, "BOTTOMRIGHT", 0, 1)
 	-- Deferred so the collapse state is restored even on a client that ignores LoadSavedVariablesFirst.
 	EventUtil.ContinueOnAddOnLoaded(addonName, function()
-		trackerModule:SetCollapsed(Settings().trackerCollapsed == true)
+		trackerModule:SetCollapsed(ns.ZoneSetting("trackerCollapsed"))
 		hooksecurefunc(trackerModule, "SetCollapsed", function(_, collapsed)
 			Settings().trackerCollapsed = collapsed
 		end)
@@ -388,7 +363,7 @@ function LegacyForeverZoneOverlayMixin:Refresh()
 		self:Hide()
 		return
 	end
-	local collapsed = Settings().mapCollapsed == true
+	local collapsed = ns.ZoneSetting("mapCollapsed")
 	self.name = C_Map.GetMapInfo(uiMapID).name
 	self.Title:SetText(("%s  %s"):format(self.name, PercentText(self.result)))
 	SetProgress(self.Progress, self.result)
@@ -407,7 +382,7 @@ function LegacyForeverZoneOverlayMixin:Refresh()
 end
 
 function LegacyForeverZoneOverlayMixin:OnClick()
-	Settings().mapCollapsed = not Settings().mapCollapsed
+	Settings().mapCollapsed = not ns.ZoneSetting("mapCollapsed")
 	self:Refresh()
 	self:OnEnter()
 end
@@ -415,7 +390,10 @@ end
 function LegacyForeverZoneOverlayMixin:OnEnter()
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
 	AddTooltip(GameTooltip, self.name, self.result)
-	GameTooltip_AddInstructionLine(GameTooltip, Settings().mapCollapsed and "Click to expand." or "Click to collapse.")
+	GameTooltip_AddInstructionLine(
+		GameTooltip,
+		ns.ZoneSetting("mapCollapsed") and "Click to expand." or "Click to collapse."
+	)
 	GameTooltip:Show()
 end
 

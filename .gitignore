@@ -5,3 +5,4 @@ __pycache__/
 .release-notes.md
 .sift/runs/
 .types/
+.claude/

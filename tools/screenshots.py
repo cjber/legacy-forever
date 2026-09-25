@@ -104,6 +104,7 @@ def load_data():
 # --------------------------------------------------------------------------- the character, as Live sees it
 
 ASHENVALE = 1440
+FELWOOD = 1448
 KALIMDOR = 1414
 # One plausible Alliance character: half of Ashenvale explored, the Astranaar flight path known, Onyxia
 # down on the account, Blackfathom Deeps not yet cleared.
@@ -344,7 +345,7 @@ def tracked_blocks(data, live):
     return result
 
 
-# Completion.lua's COUNTED_BY_DEFAULT: a new player counts only the Legacy categories.
+# Core.lua's DEFAULTS.zoneCompletion count_* keys: a new player counts only the Legacy categories.
 COUNTED = {"areas", "dungeons", "raids", "legacy"}
 
 
@@ -468,12 +469,13 @@ def main_menu(live, data):
 # ------------------------------------------------------------------------------------------ the scenes
 
 
-def world_map(ui, data, live):
-    """The world map on Ashenvale with the addon's shading, pin, corner and button drawn in."""
-    zone = data["completion"][ASHENVALE]
-    art = map_art(ui, ASHENVALE)
+def world_map(ui, data, live, ui_map=ASHENVALE):
+    """The world map on a Kalimdor zone with the addon's shading, pins, corner and button drawn in."""
+    zone = data["completion"][ui_map]
+    name = ui.table("UiMap")[str(ui_map)]["Name_lang"]
+    art = map_art(ui, ui_map)
     # Blizzard's exploration pin: the explored overlays at full colour.
-    for overlay in map_overlays(ui, ASHENVALE):
+    for overlay in map_overlays(ui, ui_map):
         if overlay.key in live.explored:
             draw_overlay(ui, art, overlay.offset_x, overlay.offset_y, overlay.width, overlay.height, overlay.tiles)
     # LegacyForeverAreaPinMixin: every undiscovered area's tiles, black at AREA_ALPHA.
@@ -481,28 +483,28 @@ def world_map(ui, data, live):
         if area["key"] not in live.explored:
             x, y, w, h = (int(n) for n in area["key"].split(":"))
             draw_overlay(ui, art, x, y, w, h, area["tiles"], (0, 0, 0, 0.25), zone["tileWidth"])
-    canvas, rects = world_map_frame(ui, art, ("World", "Kalimdor", "Ashenvale"), arrows=("Kalimdor", "Ashenvale"))
+    canvas, rects = world_map_frame(ui, art, ("World", "Kalimdor", name), arrows=("Kalimdor", name))
     mx, my, mw, mh = rects["map"]
-    groups = zone_objectives(data, live, ASHENVALE)
+    groups = zone_objectives(data, live, ui_map)
     for group in groups:
         for objective in group["objectives"]:
             entry = objective["entry"]
             if entry["kind"] != "explore" and "x" in entry:
-                # Ashenvale has no raid entrance, so Map.lua's RAIDS never picks the "Raid" portal here.
+                # Neither zone has a raid entrance, so Map.lua's RAIDS never picks the "Raid" portal here.
                 portal = "Dungeon" if "instance" in entry else None
                 zone_pin(ui, canvas, mx + entry["x"] * mw, my + entry["y"] * mh, portal)
-    completion_corner(ui, canvas, rects, live, zone)
+    completion_corner(ui, canvas, rects, live, zone, name)
     button = map_button(ui, canvas, rects, count_objectives(groups))
     return canvas, button
 
 
-def completion_corner(ui, canvas, rects, live, zone):
+def completion_corner(ui, canvas, rects, live, zone, name):
     """LegacyForeverZoneOverlayTemplate at the canvas container's TOPLEFT (44, -18)."""
     result = zone_completion(live, zone)
     cx, cy, _, _ = rects["container"]
     x, y = cx + 44, cy + 18
     title_font, counts_font = FONTS["GameFontNormalLarge"], FONTS["GameFontHighlight"]
-    title = f"Ashenvale  {result['percent']}%"
+    title = f"{name}  {result['percent']}%"
     counts = counts_text(ui, result, 16)
     width = max(canvas.text_width(title, title_font), canvas.text_width(counts, counts_font), 140)
     height = title_font.height + 4 + 2 + 6 + counts_font.height
@@ -632,6 +634,12 @@ def zone_pin(ui, canvas, x, y, portal=None):
     canvas.draw(ui.atlas(POINTS_ICON), x + 18 - 12, y + 18 - 17, 12, 17)
 
 
+def render_unvisited(ui, data, live):
+    """Felwood, where this character has never been: every area shaded and the corner at 0%, its bar empty."""
+    canvas, _ = world_map(ui, data, live, FELWOOD)
+    return scene(ui, [(canvas, 0, 0)])
+
+
 def render_continent(ui, data, live):
     """Kalimdor with a Legacy badge on each zone that still has dungeon objectives. The map button's count
     is 0 here (a continent places nothing itself), so it is drawn desaturated with no number."""
@@ -681,6 +689,7 @@ def main():
         ("map", render_map),
         ("menu", render_menu),
         ("continent", render_continent),
+        ("unvisited", render_unvisited),
         ("tracker", render_tracker),
     ):
         render(ui, data, live).save(OUT / f"{name}.png")
