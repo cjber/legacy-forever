@@ -199,8 +199,9 @@ function Quests.Zone(uiMapID, deferred)
 					scheduled = false
 					if Quests.Cold() then
 						Build()
-						ns.Live.Invalidate()
 					end
+					-- Also when another reader built it first: whoever read "loading" is waiting for this.
+					ns.Live.Invalidate()
 				end)
 			end
 			return false

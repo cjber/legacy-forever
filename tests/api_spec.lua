@@ -266,6 +266,14 @@ summary = assert(API.ZoneSummary(100))
 quests = Category(summary, "quests")
 check(summary.questsStatus == "ready", "quests are ready once built")
 check(quests.scope == "character" and quests.done == 1 and quests.total == 2, "quests count this character's")
+-- A synchronous reader (the map, a reward check) building the index first still leaves the waiter notified.
+local scansBefore = scans
+assert(loadfile("Quests.lua"))("LegacyForever", ns)
+check(assert(API.ZoneSummary(100)).questsStatus == "loading" and #timers == 1, "a fresh index is cold again")
+ns.Quests.Zone(100)
+check(scans == scansBefore + 1 and assert(API.ZoneSummary(100)).questsStatus == "ready", "another reader built it")
+RunTimers()
+check(fired == 2 and scans == scansBefore + 1, "the waiter still hears, and nothing is scanned twice")
 settings.count_quests = nil
 
 -- Subscribe: a settings change notifies; an erroring subscriber doesn't stop the rest; unsubscribe stops it.
@@ -284,13 +292,13 @@ local unsubscribeFailing = API.Subscribe(function()
 	error("subscriber bug")
 end)
 toggles.areas("areas")
-check(settings.count_areas == false and fired == 2 and #errors == 1, "a settings change notifies every subscriber")
+check(settings.count_areas == false and fired == 3 and #errors == 1, "a settings change notifies every subscriber")
 unsubscribe()
 unsubscribe()
 unsubscribeFailing()
 ns.Live.Invalidate()
 toggles.areas("areas")
-check(fired == 2 and #errors == 1, "unsubscribing, even twice, stops the callbacks")
+check(fired == 3 and #errors == 1, "unsubscribing, even twice, stops the callbacks")
 check(not pcall(API.Subscribe, "nope"), "a non-function subscriber is refused")
 
 -- Targets: unfinished, known to the game and visible only; done, unknown and finished challenges are left out.
