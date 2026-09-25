@@ -48,6 +48,9 @@ local timers, errors, printed, waypoints, journeys = {}, {}, {}, {}, {}
 
 local ns = { Data = data }
 SlashCmdList = {}
+-- The GlobalStrings Completion.lua labels its categories with.
+DUNGEONS, RAIDS, QUESTS_LABEL = "Dungeons", "Raids", "Quests"
+assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 assert(loadfile("Core.lua"))("LegacyForever", ns)
 local live = {}
 ns.Live = {
