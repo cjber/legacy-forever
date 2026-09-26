@@ -33,7 +33,7 @@ end
 local function PointsText(challenge)
 	local points = ns.Live.Points(challenge)
 	if points then
-		return L["%s %d Legacy |4point:points;"]:format(CreateAtlasMarkup(POINTS_ICON, 10, 14), points)
+		return L["%s %d Legacy |4point:points;"]:format(ns.AtlasMarkup(POINTS_ICON, 14), points)
 	end
 end
 
@@ -214,7 +214,7 @@ end
 ---@param root SharedMenuDescriptionProxy
 ---@param group LegacyGroup
 local function AddGroup(root, group)
-	local icon = IsExploreGroup(group) and ns.Completion.Icon("areas", 14) or CreateAtlasMarkup(POINTS_ICON, 10, 14)
+	local icon = IsExploreGroup(group) and ns.Completion.Icon("areas", 14) or ns.AtlasMarkup(POINTS_ICON, 14)
 	local name = ("%s %s"):format(icon, ns.Live.Name(group.achievement))
 	local button = root:CreateCheckbox(
 		ChallengeText(name, #group.objectives),
@@ -444,13 +444,13 @@ local function DefinePinMixin()
 			local atlas = RAIDS[instance] and "Raid" or "Dungeon"
 			self:SetSize(32, 32)
 			self.Portal:SetAtlas(atlas)
-			self.Icon:SetSize(12, 17)
+			ns.FitAtlas(self.Icon, POINTS_ICON, 12, 17)
 			self.Icon:SetPoint("BOTTOMRIGHT", 2, -2)
 			self.Highlight:SetAtlas(atlas)
 			self.Highlight:SetAllPoints(self.Portal)
 		else
 			self:SetSize(20, 20)
-			self.Icon:SetSize(14, 20)
+			ns.FitAtlas(self.Icon, POINTS_ICON, 14, 20)
 			self.Icon:SetPoint("CENTER")
 			self.Highlight:SetAtlas(POINTS_ICON)
 			self.Highlight:SetAllPoints(self.Icon)

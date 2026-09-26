@@ -93,6 +93,47 @@ function ns.Print(msg)
 	DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99" .. ns.TITLE .. "|r " .. msg)
 end
 
+-- Art is never stretched: `atlas` at its native shape, as large as fits in maxWidth by maxHeight. The caller anchors
+-- the texture by one point, so it stays centred in its box.
+---@param texture Texture
+---@param atlas string
+---@param maxWidth number
+---@param maxHeight number
+function ns.FitAtlas(texture, atlas, maxWidth, maxHeight)
+	texture:SetAtlas(atlas)
+	local info = C_Texture.GetAtlasInfo(atlas)
+	if info then
+		local scale = math.min(maxWidth / info.width, maxHeight / info.height)
+		texture:SetSize(info.width * scale, info.height * scale)
+	end
+end
+
+-- The same inline in text, which draws whole pixels: the longest side at most `size` whose rounded short side keeps
+-- the atlas's shape within 2%, trying up to two pixels smaller before settling for the closest.
+---@param atlas string
+---@param size integer
+---@return string
+function ns.AtlasMarkup(atlas, size)
+	local info = C_Texture.GetAtlasInfo(atlas)
+	local aspect = info and info.width / info.height or 1
+	local shape = math.min(aspect, 1 / aspect)
+	local long, short, best = size, size, math.huge
+	for side = size, math.max(1, size - 2), -1 do
+		local other = math.max(1, math.floor(side * shape + 0.5))
+		local off = math.abs(other / side / shape - 1)
+		if off < best then
+			long, short, best = side, other, off
+		end
+		if off <= 0.02 then
+			break
+		end
+	end
+	if aspect < 1 then
+		return CreateAtlasMarkup(atlas, short, long)
+	end
+	return CreateAtlasMarkup(atlas, long, short)
+end
+
 -- Compares the bundled data with what the game reports, so a data problem shows
 -- up as a count and a list of IDs rather than as a silently missing pin.
 ---@param data LegacyData

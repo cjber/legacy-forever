@@ -10,13 +10,13 @@ local L = ns.L
 local Completion = {}
 ns.Completion = Completion
 
----@type table<LegacyCategoryKey, { atlas?: string, file?: string, aspect?: number }>
+---@type table<LegacyCategoryKey, { atlas?: string, file?: string }>
 local ICONS = {
 	areas = { atlas = "islands-queue-prop-compass" },
 	taxis = { atlas = "flightmaster" },
 	dungeons = { atlas = "dungeon" },
 	raids = { atlas = "raid" },
-	legacy = { atlas = "UI-Legacy-Points-icon-c60", aspect = 50 / 73 },
+	legacy = { atlas = "UI-Legacy-Points-icon-c60" },
 	-- No atlas reads as reputation, so the classic handshake icon, trimmed of its border.
 	reputations = { file = "Interface\\Icons\\Achievement_Reputation_01" },
 	quests = { atlas = "QuestNormal" },
@@ -135,7 +135,7 @@ function Completion.Icon(key, size)
 	if icon.file then
 		return ("|T%s:%d:%d:0:0:64:64:5:59:5:59|t"):format(icon.file, size, size)
 	end
-	return CreateAtlasMarkup(icon.atlas, math.floor(size * (icon.aspect or 1) + 0.5), size)
+	return ns.AtlasMarkup(icon.atlas --[[@as string]], size)
 end
 
 -- What the player does to resolve a category's pending items.
