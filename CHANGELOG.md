@@ -19,15 +19,15 @@ verbatim rather than rewritten as the addon moves.
 
 ## [0.5.0] - 2026-09-25
 
+- **Legacy tooltips go when the world map closes.** Closing the map while hovering an undiscovered area, a Legacy pin, the Legacy button or the zone completion corner used to leave its tooltip on screen, and an area could stay shaded as if still hovered. Each now clears when the map hides.
 - **Other addons can read Legacy Forever.** `LegacyForever.API` gives a zone's completion as you count it, its unfinished Legacy objectives, and a way to send you to one with Shortest Path Forever or the game's waypoint; [docs/api.md](docs/api.md) has the details.
 
 ## [0.4.1] - 2026-09-25
 
-Updated for Forever build 1.60.1.70009. Forever renamed the Dun Morogh area Anvilmar to Coldridge Valley, and the map and tracker now use the new name when it is left to explore. Nothing else moved.
+- **Coldridge Valley has its new name.** Forever renamed the Dun Morogh area Anvilmar to Coldridge Valley, and the map and tracker now use the new name when it is left to explore.
+- **Updated for Forever build 1.60.1.70009.** Nothing else moved.
 
 ## [0.4.0] - 2026-09-25
-
-Legacy Here is now Legacy Forever. Clicking a pin takes you there, the tracker can follow one zone of a challenge, and zone completion can count quests with Questie.
 
 - **Left-click a Legacy pin to travel there.** With Shortest Path Forever installed and its journeys switched on, the click starts a journey to the pin, flights and boats included. Without it, or in combat, the click sets the game's own map waypoint instead. The pin's tooltip now ends with the click hint. Zone badges on continent maps still open the zone.
 - **Legacy Here is now Legacy Forever**, matching the other WoW: Forever addons. The addon folder is `LegacyForever`, the slash command is `/lf`, and settings start fresh under the new name.
@@ -42,18 +42,14 @@ Legacy Here is now Legacy Forever. Clicking a pin takes you there, the tracker c
 
 ## [0.3.0] - 2026-09-23
 
-A menu on the zone completion tracker, a new icon that matches the other WoW: Forever addons, and two fixes.
-
 - **Right-click a zone in the completion tracker for a menu**: open the map or hide the section, as on the Legacy section. A left click still opens the map.
-- **Fixed** the collapsed zone box on the world map keeping the width of the counts it hides.
-- **Fixed** a "couldn't add a section to the objective tracker" warning after a slow login, when the section attached a moment later.
+- **The collapsed zone box on the world map is only as wide as what it shows.** It used to keep the width of the counts it hides.
+- **No more "couldn't add a section to the objective tracker" warning after a slow login.** The section attached a moment later anyway; the check now waits until the game has built the tracker.
 - **A new icon in the addon list**, drawn to match the other WoW: Forever addons, so it is easy to spot beside them.
 
 ## [0.2.0] - 2026-09-21
 
-Zone completion, Guild Wars 2 style, with a reward when a zone reaches 100%.
-
-- **Zone completion**: each zone shows how much of it you've done, as areas explored, flight paths learned, dungeons cleared for Legacy, the zone's other Legacy objectives and its local reputations at Friendly, with the rest listed on hover. It sits in the world map's corner for the zone you're viewing, and on continent maps it is in each zone badge's tooltip. Tick it in the map menu to also add the zone you're in to the objective tracker. Each collapses to just the zone and its percentage, and the map menu turns either off. "What counts" in the map menu drops any category from the count and the percentage. Flight paths count once you've opened a flight master on that continent, since that is the only place the game says which ones you know; until then they show as "?" with a note to visit one.
+- **Each zone shows how much of it you've done**, Guild Wars 2 style, as areas explored, flight paths learned, dungeons cleared for Legacy, the zone's other Legacy objectives and its local reputations at Friendly, with the rest listed on hover. It sits in the world map's corner for the zone you're viewing, and on continent maps it is in each zone badge's tooltip. Tick it in the map menu to also add the zone you're in to the objective tracker. Each collapses to just the zone and its percentage, and the map menu turns either off. "What counts" in the map menu drops any category from the count and the percentage. Flight paths count once you've opened a flight master on that continent, since that is the only place the game says which ones you know; until then they show as "?" with a note to visit one.
 - **Raids count toward zone completion**, once every boss is down, on any character. Onyxia's Lair counts in Dustwallow Marsh.
 - **A zone reaching 100% gets a toast and a sound**, in the game's own achievement style, with your continent's progress in chat. Click the toast to open that zone's map. Zones already complete when you log in stay quiet, and every category counts toward the toast whatever "What counts" shows.
 - **Continent progress** sits under each zone badge's summary on continent maps, as in "Kalimdor: 3 of 20 zones complete (15%)".
@@ -67,9 +63,8 @@ Zone completion, Guild Wars 2 style, with a reward when a zone reaches 100%.
 
 First release.
 
-- A Legacy button on the world map counts the unfinished Legacy objectives on the map you're viewing.
-- Pins mark 493 undiscovered areas and dungeon entrances; area pins show how much of the zone is left and are off until turned on in the map menu.
-- Challenges with no fixed location are listed separately.
-- Tick a challenge in the map menu to track it in a Legacy section of the objective tracker, with each unfinished step and its live progress.
-- `/lh audit` checks the bundled data against the game.
-- Data from Forever build 1.60.1.69913.
+- **A Legacy button on the world map counts what is left.** It shows the unfinished Legacy objectives on the map you're viewing.
+- **Pins mark 493 undiscovered areas and dungeon entrances.** Area pins show how much of the zone is left and are off until turned on in the map menu.
+- **Challenges with no fixed location are listed separately**, since there is nowhere on the map to pin them.
+- **Tick a challenge in the map menu to track it.** It goes in a Legacy section of the objective tracker, with each unfinished step and its live progress.
+- **`/lh audit` checks the bundled data against the game.** The data is from Forever build 1.60.1.69913.
