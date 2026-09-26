@@ -135,9 +135,20 @@ end
 GetTime = function()
 	return 0
 end
-CreateAtlasMarkup = function()
-	return ""
+-- The escape stores height first (Blizzard's CreateAtlasMarkup); sizes from UiTextureAtlasMember, 1.60.1.70009.
+CreateAtlasMarkup = function(atlas, width, height)
+	return ("|A:%s:%d:%d|a"):format(atlas, height, width)
 end
+local atlases = {
+	["UI-Legacy-Points-icon-c60"] = { width = 50, height = 73 },
+	["islands-queue-prop-compass"] = { width = 300, height = 297 },
+	flightmaster = { width = 32, height = 32 },
+}
+C_Texture = {
+	GetAtlasInfo = function(atlas)
+		return atlases[atlas]
+	end,
+}
 EventUtil = { ContinueOnAddOnLoaded = function() end }
 AlertFrame = {
 	AddQueuedAlertFrameSubSystem = function()
@@ -353,5 +364,32 @@ ShortestPathForever, canSet, inCombat = nil, true, false
 criteria[10][1].completed = true
 ok, reason = API.Navigate(100, targets[1].key)
 check(not ok and reason == "stale" and #waypoints == 1, "a finished objective's key is stale")
+
+-- Art is never stretched: inline icons keep the atlas's shape within 2% in whole pixels, and a pin's texture is fitted.
+local function Shape(markup)
+	local height, width = markup:match(":(%d+):(%d+)|a$")
+	return tonumber(width), tonumber(height)
+end
+for _, size in ipairs({ 12, 14 }) do
+	local width, height = Shape(ns.Completion.Icon("legacy", size))
+	check(height <= size and height >= size - 2, "the Legacy shield stays about " .. size .. " tall")
+	check(math.abs(width / height / (50 / 73) - 1) <= 0.025, "the Legacy shield keeps its 50 by 73 shape")
+end
+check(ns.AtlasMarkup("UI-Legacy-Points-icon-c60", 14) == "|A:UI-Legacy-Points-icon-c60:13:9|a", "9 by 13, not 10 by 14")
+check(ns.Completion.Icon("areas", 14) == "|A:islands-queue-prop-compass:14:14|a", "a near-square compass")
+check(ns.Completion.Icon("taxis", 12) == "|A:flightmaster:12:12|a", "a square atlas fills the square")
+local texture = {
+	SetAtlas = function(self, atlas)
+		self.atlas = atlas
+	end,
+	SetSize = function(self, width, height)
+		self.width, self.height = width, height
+	end,
+}
+ns.FitAtlas(texture, "UI-Legacy-Points-icon-c60", 14, 20)
+check(
+	texture.height == 20 and math.abs(texture.width / texture.height - 50 / 73) < 1e-9,
+	"a pin's shield fitted, not 14x20"
+)
 
 print(("api_spec: %d checks passed"):format(checks))

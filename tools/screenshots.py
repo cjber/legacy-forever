@@ -395,7 +395,7 @@ def zone_completion(live, zone):
 # ------------------------------------------------------------------------------ Completion.lua, as text
 
 ICONS = {
-    "areas": ("islands-queue-prop-compass", 1),
+    "areas": ("islands-queue-prop-compass", 300 / 297),
     "taxis": ("flightmaster", 1),
     "dungeons": ("dungeon", 1),
     "raids": ("raid", 1),
@@ -406,11 +406,25 @@ POINTS_ICON = "UI-Legacy-Points-icon-c60"
 WHITE = (1, 1, 1)
 
 
+def fitted_markup(name, aspect, size):
+    """ns.AtlasMarkup: whole pixels keeping the atlas's shape within 2%, up to two pixels under `size`."""
+    shape = min(aspect, 1 / aspect)
+    long, short, best = size, size, math.inf
+    for side in range(size, max(1, size - 2) - 1, -1):
+        other = max(1, math.floor(side * shape + 0.5))
+        off = abs(other / side / shape - 1)
+        if off < best:
+            long, short, best = side, other, off
+        if off <= 0.02:
+            break
+    return atlas_markup(name, short, long) if aspect < 1 else atlas_markup(name, long, short)
+
+
 def icon(key, size):
     name, aspect = ICONS[key]
     if aspect is None:
         return f"|T{name}:{size}:{size}:0:0:64:64:5:59:5:59|t"
-    return atlas_markup(name, math.floor(size * aspect + 0.5), size)
+    return fitted_markup(name, aspect, size)
 
 
 def counts_text(ui, result, size):
@@ -449,7 +463,7 @@ def main_menu(live, data):
     entries = [MenuTitle("Ashenvale")]
     for group in groups:
         explore = group["objectives"][0]["entry"]["kind"] == "explore"
-        mark = icon("areas", 14) if explore else atlas_markup(POINTS_ICON, 10, 14)
+        mark = icon("areas", 14) if explore else icon("legacy", 14)
         text = challenge_text(f"{mark} {live.name(group['achievement'])}", len(group["objectives"]))
         entries.append(MenuCheckbox(text, zone_key(group) in TRACKED))
     open_total = len(unlocated(data, live))
@@ -637,13 +651,16 @@ def continent_zones(ui, data, live, continent):
 
 
 def zone_pin(ui, canvas, x, y, portal=None):
-    """LegacyForeverPinMixin:Layout centred on (x, y): the bare 14x20 icon, or at an entrance the 32x32 portal
-    atlas with a 12x17 icon at its BOTTOMRIGHT offset (2, -2). A count is only ever in the tooltip."""
+    """LegacyForeverPinMixin:Layout centred on (x, y): the bare icon fitted in 14x20, or at an entrance the 32x32
+    portal atlas with the icon fitted in 12x17 at its BOTTOMRIGHT offset (2, -2). A count is only ever in the tooltip.
+    ns.FitAtlas keeps the 50x73 shield's shape, so the full height sets the width."""
     if portal is None:
-        canvas.draw(ui.atlas(POINTS_ICON), x - 7, y - 10, 14, 20)
+        w = 20 * 50 / 73
+        canvas.draw(ui.atlas(POINTS_ICON), x - w / 2, y - 10, w, 20)
         return
     canvas.draw(ui.atlas(portal), x - 16, y - 16, 32, 32)
-    canvas.draw(ui.atlas(POINTS_ICON), x + 18 - 12, y + 18 - 17, 12, 17)
+    w = 17 * 50 / 73
+    canvas.draw(ui.atlas(POINTS_ICON), x + 18 - w, y + 18 - 17, w, 17)
 
 
 def render_unvisited(ui, data, live):
