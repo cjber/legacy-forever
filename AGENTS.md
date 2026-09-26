@@ -12,10 +12,12 @@ luacheck .
 tools/typecheck.sh           # LuaLS 3.19.1 + multi-value lint (Python self-tests included)
 for s in tests/*_spec.lua; do luajit "$s" || exit 1; done
 python3 tools/gen_legacy.py   # regenerate Data/Legacy.lua after a data change
+python3 tools/changelog.py --check
 python3 .sift/gate.py --base origin/main && python3 .sift/agents.py check
 ```
 
-The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and history.
+The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and history. Every version needs a
+`CHANGELOG.md` entry (prose, bold-lead bullets) before its `v*` tag: the release publishes it as the notes.
 
 ## Layout
 
