@@ -22,6 +22,8 @@ L["/lf - open the world map and its Legacy menu"] = "/lf - open the world map an
 L["/lf audit - check the bundled data against the game"] = "/lf audit - check the bundled data against the game"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - list what the game reports for one achievement"
+L["/lf opens the world map with the Legacy menu showing, and the addon has a new trophy icon."] =
+	"/lf opens the world map with the Legacy menu showing, and the addon has a new trophy icon."
 L["A grey line in a pin's tooltip when Shortest Path Forever would plot the route."] =
 	"A grey line in a pin's tooltip when Shortest Path Forever would plot the route."
 L["Areas explored"] = "Areas explored"
@@ -63,8 +65,6 @@ L["Part of %s"] = "Part of %s"
 L["Part of %s: %s for exploring every zone"] = "Part of %s: %s for exploring every zone"
 L["Part of %s: %s for the whole challenge"] = "Part of %s: %s for the whole challenge"
 L["Quest"] = "Quest"
-L["Ready for translation, and map pins suggest Shortest Path Forever to plot the route."] =
-	"Ready for translation, and map pins suggest Shortest Path Forever to plot the route."
 L["Repeatable, holiday and profession quests are left out."] = "Repeatable, holiday and profession quests are left out."
 L["Reputations (Friendly)"] = "Reputations (Friendly)"
 L["Show undiscovered areas"] = "Show undiscovered areas"
