@@ -455,7 +455,8 @@ ns.Live.OnChange(Refresh)
 ---@param uiMapID number
 ---@return boolean
 local function IsZoneComplete(uiMapID)
-	local result = ns.Model.ZoneCompletion(ns.Data.completion[uiMapID], ns.Live.ZoneSnapshot(uiMapID), IsCounted)
+	local result = Completion.Result(uiMapID)
+	---@cast result -nil
 	return ns.Model.CompletionCounts(result) and result.complete
 end
 
@@ -464,9 +465,9 @@ end
 ---@return string?
 local function ContinentText(continentID)
 	local results = {}
-	for uiMapID, zone in pairs(ns.Data.completion) do
+	for uiMapID in pairs(ns.Data.completion) do
 		if ns.Live.ContinentOf(uiMapID) == continentID then
-			results[#results + 1] = ns.Model.ZoneCompletion(zone, ns.Live.ZoneSnapshot(uiMapID), IsCounted)
+			results[#results + 1] = Completion.Result(uiMapID)
 		end
 	end
 	local continent = ns.Model.ContinentCompletion(results)

@@ -184,12 +184,6 @@ local function ToggleAreas()
 end
 
 ---@param key 'whatsNew'|'companions'
----@return boolean
-local function IsSet(key)
-	return ns.Setting(key)
-end
-
----@param key 'whatsNew'|'companions'
 local function ToggleSetting(key)
 	LegacyForeverDB = LegacyForeverDB or {}
 	LegacyForeverDB[key] = not ns.Setting(key)
@@ -313,8 +307,8 @@ local function BuildMenu(root, uiMapID)
 	root:CreateDivider()
 	root:CreateButton(L["Open the Legacy panel"], ToggleLegacySystemUI)
 	root:CreateDivider()
-	root:CreateCheckbox(L["Tell me what's new after an update"], IsSet, ToggleSetting, "whatsNew")
-	local companions = root:CreateCheckbox(L["Suggest companion addons"], IsSet, ToggleSetting, "companions")
+	root:CreateCheckbox(L["Tell me what's new after an update"], ns.Setting, ToggleSetting, "whatsNew")
+	local companions = root:CreateCheckbox(L["Suggest companion addons"], ns.Setting, ToggleSetting, "companions")
 	companions:SetTooltip(function(tooltip)
 		GameTooltip_SetTitle(tooltip, L["Suggest companion addons"])
 		GameTooltip_AddNormalLine(
