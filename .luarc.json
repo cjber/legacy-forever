@@ -52,5 +52,8 @@
     "code-after-break": "Information",
     "unreachable-code": "Information",
     "redefined-local": "Information"
-  }
+  },
+  "workspace.useGitIgnore": false,
+  "workspace.preloadFileSize": 2000,
+  "workspace.maxPreload": 10000
 }

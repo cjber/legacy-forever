@@ -11,6 +11,10 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-09-27
+
+- **Tracker and map overlays avoid shared UI hooks.** Tracker registration waits for the game to finish loading, and area textures manage their own masks.
+
 ## [0.6.1] - 2026-09-27
 
 - **`/lf` opens the world map with the Legacy menu showing**, where every option lives, and so does the addon compartment entry. `/lf help` lists the other commands.

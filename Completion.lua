@@ -325,9 +325,10 @@ if trackerModule then
 	-- Deferred so the collapse state is restored even on a client that ignores LoadSavedVariablesFirst.
 	EventUtil.ContinueOnAddOnLoaded(addonName, function()
 		trackerModule:SetCollapsed(ns.ZoneSetting("trackerCollapsed"))
-		hooksecurefunc(trackerModule, "SetCollapsed", function(_, collapsed)
+		local function SaveCollapse(_, collapsed)
 			Settings().trackerCollapsed = collapsed
-		end)
+		end
+		hooksecurefunc(trackerModule, "SetCollapsed", SaveCollapse) -- taint-ok: addon-owned tracker
 	end)
 	listeners[#listeners + 1] = function()
 		trackerModule:MarkDirty()

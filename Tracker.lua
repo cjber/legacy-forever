@@ -111,25 +111,19 @@ function ModuleMixin:LayoutContents()
 	end
 end
 
--- Attaching is a no-op until Blizzard's manager has added ObjectiveTrackerFrame as a
--- container. Its Init is scheduled as a closure over the original function, so hooking
--- Init never fires; AddContainer is looked up on the table and can be hooked.
--- uiOrder puts our sections at the top, wherever the tracker is placed.
 ---@type LegacyTrackerModule[]
 local modules = {}
 
 ---@param trackerModule LegacyTrackerModule
 local function Attach(trackerModule)
-	ObjectiveTrackerManager:SetModuleContainer(trackerModule, ObjectiveTrackerFrame)
+	if ObjectiveTrackerManager:GetContainerForModule(trackerModule) ~= ObjectiveTrackerFrame then
+		ObjectiveTrackerManager:SetModuleContainer(trackerModule, ObjectiveTrackerFrame)
+	end
 end
 
----@param _ table
----@param container Frame
-local function OnContainerAdded(_, container)
-	if container == ObjectiveTrackerFrame then
-		for _, trackerModule in ipairs(modules) do
-			Attach(trackerModule)
-		end
+local function AttachAll()
+	for _, trackerModule in ipairs(modules) do
+		Attach(trackerModule)
 	end
 end
 
@@ -173,7 +167,9 @@ function Tracker.AddModule(name, mixin, uiOrder)
 	trackerModule:SetHeader(mixin.headerText or "")
 	trackerModule.uiOrder = uiOrder
 	if #modules == 0 then
-		hooksecurefunc(ObjectiveTrackerManager, "AddContainer", OnContainerAdded)
+		EventUtil.ContinueAfterAllEvents(function()
+			C_Timer.After(0, AttachAll)
+		end, "PLAYER_ENTERING_WORLD", "VARIABLES_LOADED")
 	end
 	modules[#modules + 1] = trackerModule
 	Attach(trackerModule)

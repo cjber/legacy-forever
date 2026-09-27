@@ -58,3 +58,12 @@ The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and
 
 - `wow-forever-addon` — https://github.com/cjber/skills/tree/38f085e8a1025413d4a7031ab957cd5f2280a120/wow-forever-addon (UI look,
   icon, README and store page, CI and release requirements shared by every WoW: Forever addon)
+
+## Secure UI regression checks
+
+`tools/typecheck.sh` checks the TOC/XML load graph, LuaLS coverage and `tools/lint_taint.py`.
+Do not hook Blizzard object methods: use events, `HookScript` or a supported callback registry.
+Register tracker sections after `PLAYER_ENTERING_WORLD` and `VARIABLES_LOADED`, deferred one frame
+so Blizzard finishes its own initialization. This supersedes WFA-5's AddContainer hook guidance.
+A `taint-ok` exception must identify an addon-owned object or a verified safe contract; it cannot
+excuse hooking a native frame. Test event ordering and reuse, not just method existence.

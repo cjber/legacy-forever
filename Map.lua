@@ -555,6 +555,8 @@ local function DefineAreaPinMixin()
 		self:ReleaseAreas()
 	end
 
+	local masks = setmetatable({}, { __mode = "k" })
+
 	---@param tileID number
 	---@param x number
 	---@param y number
@@ -565,7 +567,15 @@ local function DefineAreaPinMixin()
 	---@return Texture
 	function LegacyForeverAreaPinMixin:DrawTile(tileID, x, y, width, height, u, v)
 		local texture = self.textures:Acquire()
-		self:GetMap():AddMaskableTexture(texture)
+		if masks[texture] then
+			texture:RemoveMaskTexture(masks[texture])
+			masks[texture] = nil
+		end
+		local mask = self:GetMap():GetMaskTexture()
+		if mask and self:GetMap():GetUseMaskTexture() then
+			texture:AddMaskTexture(mask)
+			masks[texture] = mask
+		end
 		texture:SetTexture(tileID, nil, nil, "TRILINEAR")
 		texture:SetSize(width, height)
 		texture:SetTexCoord(0, u, 0, v)
