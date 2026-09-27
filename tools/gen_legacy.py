@@ -3,41 +3,29 @@
 
 import argparse
 import csv
-import io
-import json
-import math
-import re
 import sys
-import tempfile
-import urllib.request
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from db2 import (
+    CRITERIA_KILL_ANY_CREATURE,
+    CRITERIA_KILL_CREATURE,
+    CRITERIA_KINDS,
+    INSTANCE_TYPES,
+    MAP_RAID,
+    atomic_write,
+    db2,
+    required,
+)
 from legacy_render import COMPLETION_CATEGORIES, render
+from locations import BATTLEGROUNDS, curated_locations
 
 BUILD = "1.60.1.70009"
 SOURCE_DATE = "2026-09-25"
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "tools" / ".cache"
 OUTPUT = ROOT / "Data" / "Legacy.lua"
-LOCATIONS = ROOT / "tools" / "locations.json"
-KINDS = {"explore", "instance", "kill", "quest", "reputation"}
-CURATED_ID = re.compile(r"[1-9][0-9]*")
-EVIDENCE = re.compile(r"^Build [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:")
-BATTLEGROUNDS = {1459, 1460, 1461}
 SPELUNKER = (62031, 62032, 62033, 64016, 64017, 64018)
-CRITERIA_KINDS = {
-    0: "kill",
-    5: "level",
-    7: "skill",
-    8: "meta",
-    27: "quest",
-    43: "explore",
-    78: "kill",
-    165: "instance",
-    243: "reputation",
-    261: "rank",
-}
 SCHEMAS = {
     "TraitCurrencySource": ("TraitCurrencyID", "AchievementID"),
     "Achievement": ("Criteria_tree", "Shares_criteria", "Instance_ID", "Title_lang", "Description_lang"),
@@ -90,82 +78,6 @@ SCHEMAS = {
 }
 
 
-def atomic_write(path, data):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = None
-    try:
-        with tempfile.NamedTemporaryFile(dir=path.parent, prefix=path.name + ".", delete=False) as f:
-            temporary = Path(f.name)
-            f.write(data)
-        temporary.chmod(0o644)
-        temporary.replace(path)
-    finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
-
-
-def download(url, filename, refresh=False, offline=False):
-    path = CACHE / filename
-    fetch = refresh or not path.exists()
-    if not fetch:
-        data = path.read_bytes()
-    elif offline:
-        raise ValueError(f"Missing cached source: {path}")
-    else:
-        request = urllib.request.Request(url, headers={"User-Agent": "LegacyForever/1.0"})
-        with urllib.request.urlopen(request, timeout=60) as response:
-            data = response.read()
-    content = data.decode("utf-8-sig")
-    if not content.strip() or content.lstrip().startswith("<"):
-        raise ValueError(f"Expected CSV, received empty data or HTML {f'from {url}' if fetch else f'in {path}'}")
-    if fetch:
-        atomic_write(path, data)
-    return content
-
-
-def db2(name, columns, **options):
-    content = download(
-        f"https://wago.tools/db2/{name}/csv?build={BUILD}",
-        f"{name}-{BUILD}.csv",
-        **options,
-    )
-    reader = csv.DictReader(io.StringIO(content), strict=True)
-    fields = reader.fieldnames or []
-    missing = {"ID", *columns} - set(fields)
-    if missing or len(fields) != len(set(fields)):
-        raise ValueError(f"{name}: missing/duplicate columns (missing: {sorted(missing)})")
-    rows = {}
-    for number, row in enumerate(reader, 2):
-        if None in row or None in row.values():
-            raise ValueError(f"{name}:{number}: malformed CSV row")
-        # Only these projection fields are floating point; IDs stay exact integers.
-        parsed = {}
-        for key in ("ID", *columns):
-            if key.endswith("_lang"):
-                parsed[key] = row[key]
-                continue
-            try:
-                value = float(row[key]) if key.startswith(("Region_", "UiMin_", "UiMax_", "Corpse_")) else int(row[key])
-                if not math.isfinite(value):
-                    raise ValueError
-                parsed[key] = value
-            except ValueError as error:
-                raise ValueError(f"{name}:{number}: invalid {key}={row[key]!r}") from error
-        key = parsed["ID"]
-        if key < 0 or key in rows:
-            raise ValueError(f"{name}:{number}: negative/duplicate ID {key}")
-        rows[key] = parsed
-    if not rows:
-        raise ValueError(f"{name}: empty DB2 export for {BUILD}")
-    return rows
-
-
-def required(rows, key, label):
-    if key not in rows:
-        raise ValueError(f"{label}: missing referenced ID {key}")
-    return rows[key]
-
-
 class Achievements:
     def __init__(self, tables):
         self.achievements = tables["Achievement"]
@@ -213,7 +125,7 @@ class Achievements:
             row = self.criteria[cid]
             if row["Type"] not in CRITERIA_KINDS:
                 raise ValueError(f"Criteria {cid}: unsupported type {row['Type']}")
-            if row["Type"] == 8:
+            if CRITERIA_KINDS[row["Type"]] == "meta":
                 self.expand(row["Asset"], reward, feeds, active | {achievement})
 
     def objective_details(self, achievement, cid):
@@ -403,7 +315,7 @@ class Geography:
 
     def entrances(self, instance):
         row = self.tables["Map"].get(instance)
-        if row is None or row["InstanceType"] not in (1, 2) or row["CorpseMapID"] < 0:
+        if row is None or row["InstanceType"] not in INSTANCE_TYPES or row["CorpseMapID"] < 0:
             return {}
         px, py = row["Corpse_0"], row["Corpse_1"]
         if px == py == 0:
@@ -442,173 +354,6 @@ class Geography:
         return zone, entry
 
 
-def unique_object(pairs):
-    result = {}
-    for key, value in pairs:
-        if key in result:
-            raise ValueError(f"locations.json: duplicate key {key}")
-        result[key] = value
-    return result
-
-
-def validate_criterion_row(tables, geography, key, row):
-    if not CURATED_ID.fullmatch(key):
-        raise ValueError(f"locations.json: invalid criteria ID {key}")
-    cid = int(key)
-    criterion = required(tables["Criteria"], cid, "locations.json criteria")
-    fields = {"uiMap", "kind", "achievement", "type", "asset", "evidence"}
-    if not isinstance(row, dict) or not fields <= row.keys() or row.keys() - (fields | {"instance", "instanceType"}):
-        raise ValueError(f"locations.json {cid}: unexpected/missing fields")
-    if any(type(row[k]) is not int for k in ("achievement", "type", "asset")) or (row["type"], row["asset"]) != (
-        criterion["Type"],
-        criterion["Asset"],
-    ):
-        raise ValueError(f"locations.json {cid}: stale criterion type/asset")
-    owner = required(tables["Achievement"], row["achievement"], f"locations.json {cid} achievement")
-    if type(row["uiMap"]) is not int or not geography.is_zone(row["uiMap"]):
-        raise ValueError(f"locations.json {cid}: invalid zone uiMap")
-    if not isinstance(row["kind"], str) or row["kind"] not in KINDS:
-        raise ValueError(f"locations.json {cid}: invalid kind")
-    expected = CRITERIA_KINDS.get(criterion["Type"])
-    if row["kind"] != expected and not (row["kind"] == "instance" and expected == "kill"):
-        raise ValueError(f"locations.json {cid}: kind disagrees with criteria type")
-    if not isinstance(row["evidence"], str) or not EVIDENCE.match(row["evidence"]):
-        raise ValueError(f"locations.json {cid}: evidence must record its verification build")
-    if any((row["kind"] == "instance") != (field in row) for field in ("instance", "instanceType")):
-        raise ValueError(f"locations.json {cid}: only instance entries require an instance ID and type")
-    if "instance" in row:
-        if type(row["instance"]) is not int:
-            raise ValueError(f"locations.json {cid}: invalid instance ID")
-        instance = required(tables["Map"], row["instance"], "locations.json instance")
-        if (
-            type(row["instanceType"]) is not int
-            or row["instanceType"] not in (1, 2)
-            or instance["InstanceType"] != row["instanceType"]
-        ):
-            raise ValueError(f"locations.json {cid}: stale dungeon/raid instance type")
-        if instance["InstanceType"] == 2 and owner["Instance_ID"] != row["instance"]:
-            raise ValueError(f"locations.json {cid}: raid instance no longer verified by owning achievement")
-    return cid
-
-
-def validate_completion_row(tables, geography, section, key, row):
-    label = f"locations.json {section} {key}"
-    if not CURATED_ID.fullmatch(key):
-        raise ValueError(f"{label}: invalid ID")
-    fields = {"uiMap", "name", "evidence"}
-    optional = {"area", "instance"} if section in ("dungeonWings", "questInstances") else set()
-    if section == "questInstances":
-        fields |= {"instance", "encounter"}
-    elif section == "compoundInstances":
-        fields |= {"instance", "instanceName", "area", "boss", "alternatives", "refs"}
-    elif section == "reputations":
-        fields.add("area")
-        optional.add("side")
-    if not isinstance(row, dict) or not fields <= row.keys() or row.keys() - (fields | optional):
-        raise ValueError(f"{label}: unexpected/missing fields")
-    if type(row["uiMap"]) is not int or not geography.is_zone(row["uiMap"]) or row["uiMap"] in BATTLEGROUNDS:
-        raise ValueError(f"{label}: invalid completion zone")
-    if any(not isinstance(row[k], str) or not row[k].strip() for k in ("name", "evidence")):
-        raise ValueError(f"{label}: name and evidence required")
-    # Evidence records its review build; current rows below decide validity.
-    if not EVIDENCE.match(row["evidence"]):
-        raise ValueError(f"{label}: evidence must record its verification build")
-    if "area" in row:
-        if type(row["area"]) is not int or geography.area_zones(row["area"]) != {row["uiMap"]}:
-            raise ValueError(f"{label}: area no longer identifies curated zone")
-    if "instance" in row:
-        if type(row["instance"]) is not int:
-            raise ValueError(f"{label}: invalid instance ID")
-        instance = required(tables["Map"], row["instance"], label)
-        entrances = geography.entrances(row["instance"])
-        instance_types = (1,) if section in ("dungeonWings", "compoundInstances") else (1, 2)
-        if instance["InstanceType"] not in instance_types or (entrances and row["uiMap"] not in entrances):
-            raise ValueError(f"{label}: invalid instance or conflicting client entrance")
-    if section == "compoundInstances":
-        if instance["MapName_lang"] != row["instanceName"] or not instance["MapName_lang"].strip():
-            raise ValueError(f"{label}: stale/empty instance name")
-        if row["uiMap"] not in entrances:
-            raise ValueError(f"{label}: missing verified alternative entrance")
-        validate_compound_tree(tables, int(key), row)
-    elif section == "questInstances":
-        required(tables["QuestV2"], int(key), label)
-        if type(row["encounter"]) is not int:
-            raise ValueError(f"{label}: invalid encounter ID")
-        encounter = required(tables["DungeonEncounter"], row["encounter"], label)
-        if encounter["MapID"] != row["instance"] or encounter["Name_lang"] != row["name"]:
-            raise ValueError(f"{label}: stale encounter name/instance")
-    elif section == "reputations":
-        validate_reputation(tables, key, row, label)
-
-
-def validate_reputation(tables, key, row, label):
-    faction = required(tables["Faction"], int(key), label)
-    if faction["Name_lang"] != row["name"] or not faction["Description_lang"].strip() or faction["ReputationIndex"] < 0:
-        raise ValueError(f"{label}: stale faction name/description or non-reputation faction")
-    if "side" in row and row["side"] not in ("Alliance", "Horde"):
-        raise ValueError(f"{label}: invalid faction side")
-    # Check the original playable race bits against the client caps.
-    # Curation separately reviews the normal zone-play route to Friendly.
-    eligible = 0
-    for index in range(4):
-        if faction[f"ReputationClassMask_{index}"] == 0 and faction[f"ReputationMax_{index}"] >= 3000:
-            eligible |= faction[f"ReputationRaceMasks{index}_0"] & 0xFFFFFFFF
-    sides = {side for side, mask in (("Alliance", 0x4D), ("Horde", 0xB2)) if eligible & mask == mask}
-    expected = {row["side"]} if "side" in row else {"Alliance", "Horde"}
-    if sides != expected:
-        raise ValueError(f"{label}: Friendly eligibility disagrees with curated side")
-
-
-def curated_locations(tables, geography):
-    data = json.loads(LOCATIONS.read_text(encoding="utf-8"), object_pairs_hook=unique_object)
-    sections = {"criteria", "taxiNodes", "dungeonWings", "questInstances", "compoundInstances", "reputations"}
-    if not isinstance(data, dict) or set(data) != sections or any(not isinstance(data[k], dict) for k in sections):
-        raise ValueError(f"locations.json must contain exactly these objects: {', '.join(sorted(sections))}")
-    result = {}
-    for key, row in data["criteria"].items():
-        result[validate_criterion_row(tables, geography, key, row)] = row
-    completion = {}
-    for section in ("taxiNodes", "dungeonWings", "questInstances", "compoundInstances", "reputations"):
-        completion[section] = {}
-        for key, row in data[section].items():
-            validate_completion_row(tables, geography, section, key, row)
-            completion[section][int(key)] = row
-    return result, completion
-
-
-def validate_compound_tree(tables, root, fact):
-    label = f"ModifierTree {root} compound instance"
-    alternatives = fact["alternatives"]
-    if (
-        not isinstance(alternatives, dict)
-        or len(alternatives) < 2
-        or any(
-            not CURATED_ID.fullmatch(key) or type(boss) is not int or boss <= 0 for key, boss in alternatives.items()
-        )
-        or len(set(alternatives.values())) != len(alternatives)
-        or type(fact["boss"]) is not int
-        or fact["boss"] not in alternatives.values()
-    ):
-        raise ValueError(f"{label}: invalid alternative creature leaves")
-    expected = {
-        root: dict(ID=root, Parent=0, Operator=8, Amount=1, Type=0, Asset=0, SecondaryAsset=0, TertiaryAsset=0),
-        **{
-            int(key): dict(
-                ID=int(key), Parent=root, Operator=2, Amount=1, Type=4, Asset=boss, SecondaryAsset=0, TertiaryAsset=0
-            )
-            for key, boss in alternatives.items()
-        },
-    }
-    if root in {int(key) for key in alternatives}:
-        raise ValueError(f"{label}: root cannot be an alternative")
-    for key, row in expected.items():
-        if required(tables["ModifierTree"], key, label) != row:
-            raise ValueError(f"{label}: changed OR root or creature leaf {key}")
-    children = {key for key, row in tables["ModifierTree"].items() if row["Parent"] in expected}
-    if children != set(expected) - {root}:
-        raise ValueError(f"{label}: changed alternative children")
-
-
 def compound_objectives(tables, graph, curated):
     objectives = {}
     for root, fact in curated.items():
@@ -622,7 +367,8 @@ def compound_objectives(tables, graph, curated):
             if (
                 achievement not in SPELUNKER
                 or cid not in graph.leaves(achievement)
-                or (criterion["Type"], criterion["Asset"], criterion["Modifier_tree_ID"]) != (78, 0, root)
+                or (criterion["Type"], criterion["Asset"], criterion["Modifier_tree_ID"])
+                != (CRITERIA_KILL_ANY_CREATURE, 0, root)
                 or graph.objective_details(achievement, cid) != (fact["name"], 1)
             ):
                 raise ValueError(f"ModifierTree {root}: stale compound reference {ref}")
@@ -742,7 +488,7 @@ def completion_wings(tables, graph, curated, compounds, completion, counts):
                 # Validated OR objectives get Legacy pins, never single-boss wings.
                 used_compounds.add(ref)
                 continue
-            if criterion["Type"] != 0 or criterion["Asset"] <= 0 or step["Amount"] != 1:
+            if criterion["Type"] != CRITERIA_KILL_CREATURE or criterion["Asset"] <= 0 or step["Amount"] != 1:
                 raise ValueError(f"Spelunker {cid}: expected a single-boss kill step")
             boss = criterion["Asset"]
             name = step["Description_lang"]
@@ -786,7 +532,7 @@ def completion_instances(tables, geography, graph, zones, completion, counts):
             if objective["kind"] != "instance":
                 continue
             instance = objective["instance"]
-            if tables["Map"][instance]["InstanceType"] == 2:
+            if tables["Map"][instance]["InstanceType"] == MAP_RAID:
                 if zone not in geography.entrances(instance):
                     raise ValueError(f"Raid Map {instance}: missing verified entrance in UiMap {zone}")
                 raids[instance].append((objective["achievement"], objective["criteria"]))
@@ -867,16 +613,16 @@ def criterion_instances(tables, completion_curated, compounds, ref, kind, used_c
         instance = tables["Achievement"][achievement]["Instance_ID"]
         if instance > 0:
             instance_ids.add(instance)
-        if criterion["Type"] == 165:
+        if kind == "instance":
             encounter = tables["DungeonEncounter"].get(criterion["Asset"])
             if encounter:
                 instance_ids.add(encounter["MapID"])
-        if criterion["Type"] == 0:
+        if criterion["Type"] == CRITERIA_KILL_CREATURE:
             # Reuse reviewed boss-ID facts, never match encounter names.
             wing = completion_curated["dungeonWings"].get(criterion["Asset"])
             if wing and "instance" in wing:
                 instance_ids.add(wing["instance"])
-    if criterion["Type"] == 27:
+    if kind == "quest":
         quest = completion_curated["questInstances"].get(criterion["Asset"])
         if quest:
             used_quests.add(criterion["Asset"])
@@ -1008,7 +754,10 @@ def main():
     mode.add_argument("--refresh", action="store_true", help="redownload the pinned sources")
     mode.add_argument("--offline", action="store_true", help="use cached sources only")
     args = parser.parse_args()
-    tables = {name: db2(name, columns, refresh=args.refresh, offline=args.offline) for name, columns in SCHEMAS.items()}
+    tables = {
+        name: db2(name, columns, BUILD, CACHE, refresh=args.refresh, offline=args.offline)
+        for name, columns in SCHEMAS.items()
+    }
     rewards, feeds, zones, completion, counts, unresolved, unplaced = generate(tables)
     output = render(BUILD, SOURCE_DATE, rewards, feeds, zones, completion)
     atomic_write(OUTPUT, output.encode("utf-8"))
