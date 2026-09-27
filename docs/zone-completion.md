@@ -25,3 +25,18 @@ is read from the game. The README says
   left out, and so is any quest behind a profession, reputation or spell, or after a choice that could shut it,
   since whether you can take it isn't certain. A quest counts as done once you've turned it in, or its follow-up.
 - **Rares** are left out: the client doesn't say which belong to a zone, and no openly licensed list covers Forever.
+
+## Where it shows
+
+- **The world map's corner**, for the zone you're viewing: the zone name, a percentage and a row of counts. Click it
+  to fold it down to the name and bar.
+- **Continent maps**: each zone badge's tooltip has the zone's completion, and the continent's line says how many of
+  its zones are complete. Unticking "On the world map" in the map menu hides both the corner and the badges.
+- **The objective tracker**, for the zone you're in, once you tick "In the objective tracker" in the map menu.
+- **Hovering** any of them lists what's left. "What counts" in the same menu adds or leaves out a category, and the
+  percentage follows.
+- **A toast and a sound** when a zone reaches 100% of what you count. Zones already complete when you log in stay
+  quiet.
+
+Areas, flight paths and reputations are per character; dungeons, raids and the other Legacy objectives are your Legacy
+progress on the account.

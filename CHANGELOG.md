@@ -11,6 +11,9 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **`/lf` opens the world map with the Legacy menu showing**, where every option lives, and so does the addon compartment entry. `/lf help` lists the other commands.
+- **A new icon in the addon list and the compartment**: a gold trophy on the same frame as the other WoW: Forever addons, in place of the folded map.
+
 ## [0.6.0] - 2026-09-25
 
 - **Ready for translation.** Every menu, tooltip and chat message the addon writes, apart from `/lf audit`, can now be translated, one file per language in the addon's `Locales` folder; translations are welcome on GitHub. Zone, achievement and objective names already came from the game in your language. Until a translation arrives, the rest reads in English as before.

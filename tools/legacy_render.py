@@ -85,6 +85,8 @@ def render(build, source_date, rewards, feeds, zones, completion):
             ]
             if "instance" in entry:
                 fields.append(f"instance = {entry['instance']}")
+            if entry.get("raid"):
+                fields.append("raid = true")
             if "key" in entry:
                 fields.append(f"key = {lua_string(entry['key'])}")
             if "x" in entry:

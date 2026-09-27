@@ -1,4 +1,4 @@
-The Legacy panel lists every challenge, but not which ones you can work on where you are. Legacy Forever puts that on the world map for the zone you're looking at, and keeps a small tracker of the challenges you pick. It uses the map's own buttons, menus, pins and the objective tracker, so it looks like it came with the game.
+The Legacy panel lists every challenge, but not which ones you can work on where you are. Legacy Forever puts that on the world map for the zone you're looking at, and keeps a small tracker of the challenges you pick. It uses the map's own buttons, menus, pins and the objective tracker, so it looks like it came with the game. It only adds to them: nothing the game or your other addons draw is replaced or hidden.
 
 ![Ashenvale on the world map as two areas are found, the completion corner folding away, then the Legacy menu](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif)
 
@@ -6,7 +6,7 @@ Discover an area and its shading lifts as the corner's percentage goes up. Click
 
 ![Ashenvale on the world map with undiscovered areas shaded, the zone completion corner and the Legacy menu open](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/map.png)
 
-The zone you're looking at, with its Legacy objectives in the map's own menu.
+Half of Ashenvale explored: the shield's number is what's left on this map, and its menu lists it by challenge.
 
 ![Kalimdor on the world map with a Legacy badge on each zone that still has dungeon objectives](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/continent.png)
 
@@ -23,10 +23,10 @@ Tick a challenge in the menu to track it.
 ## Features
 
 - **Map button** in the world map's button column: a Legacy shield with a number inside, the unfinished objectives on the map you're viewing. Its menu lists them by challenge, with a tick box to track each one.
-- **Tracker**: a Legacy section at the top of the objective tracker shows what you track with live progress. A zone ticked in the map menu tracks just that zone, such as "0/12 Explore Felwood" under Explorer. Click one to open it in the Legacy panel.
-- **Map pins** on dungeon and raid entrances, with the challenge each counts toward and its Legacy points. Left-click a pin to travel there: with [Shortest Path Forever](https://github.com/cjber/shortest-path-forever) it plans the whole journey, otherwise it sets the game's own waypoint.
-- **Undiscovered areas** are shaded in their real shape on the zone map. Hover one to see which challenge counts it and how many of the zone's areas are left.
-- **Zone completion**, Guild Wars 2 style: areas explored, dungeons, raids and the zone's other Legacy objectives, as a percentage in the map's corner and, if you choose, in the tracker. Flight paths and local reputations can be added under "What counts", and so can the zone's quests if you have Questie installed (or just its QuestieDB addon). A zone reaching 100% gets a toast and a sound.
+- **Tracker**: a Legacy section at the top of the objective tracker lists what you track, with live progress. A zone ticked in the map menu tracks just that zone, such as "0/12 Explore Felwood". Click a challenge to open it in the Legacy panel.
+- **Map pins** on dungeon and raid entrances, with the challenge each counts toward and its Legacy points. Click one for the game's own waypoint there.
+- **Undiscovered areas** are shaded in their real shape on the zone map. Hover one to see which challenge counts it and how many of the zone's areas are left. The map menu turns the shading off.
+- **Zone completion**, Guild Wars 2 style: how much of a zone's areas, dungeons, raids and Legacy objectives you've done, as a percentage in the map's corner and, if you tick it, the tracker. Flight paths, local reputations and, with Questie, quests can be added under "What counts". A finished zone gets a toast and a sound.
 - **No fixed location** lists challenges whose remaining work isn't tied to a place, such as levels, skills and ranks.
 
 Progress comes from the game each time, so it always matches the Legacy panel.
@@ -35,7 +35,7 @@ Progress comes from the game each time, so it always matches the Legacy panel.
 
 Open the world map: the Legacy button sits below the map's own tracking buttons. Tick a challenge in its menu to track it.
 
-- `/lf` shows short help.
+- `/lf` opens the world map with the Legacy menu showing; `/lf help` lists the commands.
 - `/lf audit` compares the bundled data with what the game reports. Found a wrong or missing objective? Include its output in an issue on [GitHub](https://github.com/cjber/legacy-forever/issues).
 
 It's in English for now. Translations are welcome as a pull request, or pasted into an issue, on GitHub: [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has a template.

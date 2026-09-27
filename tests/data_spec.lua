@@ -62,6 +62,7 @@ for zone, entries in pairs(data.zones) do
 		else
 			assert(entry.instance == nil, "only instance entries carry Map IDs")
 		end
+		assert(entry.raid == nil or (entry.raid == true and entry.kind == "instance"), "only raid entrances say raid")
 		local key = entry.achievement .. ":" .. entry.criteria
 		assert(not seen[key], "duplicate objective within zone")
 		located[key] = entry
@@ -108,6 +109,10 @@ assert(data.rewards[62382] and data.rewards[64015], "both Explorer variants")
 assert(data.feeds[627][1] == 62382 and data.feeds[627][2] == 64015, "Dun Morogh feeds both Explorers")
 local spire = assert(samples["1428:62033:3268"], "Upper Blackrock Spire uses curated Burning Steppes entrance")
 assert(spire.kind == "instance" and spire.instance == 229 and spire.x and spire.y, "Spire entrance pin")
+assert(
+	samples["1445:684:3271"].raid and not spire.raid,
+	"Onyxia's Lair wears the raid portal, the Spire the dungeon one"
+)
 for _, key in ipairs({ "1428:62054:111555", "1428:64014:117727" }) do
 	local valthalak = assert(samples[key], "Valthalak quest variants use the curated Upper Blackrock Spire entrance")
 	assert(

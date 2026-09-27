@@ -45,4 +45,30 @@ check(ns.ZoneSetting("count_raids") == true, "a key the old file lacks is its de
 LegacyForeverDB = { showAreas = true }
 check(ns.Setting("showAreas") == true, "a saved on stays on")
 
+-- A bare /lf opens the map's Legacy menu, where the options live, as the compartment entry does.
+function strtrim(text)
+	return (text:gsub("^%s+", ""):gsub("%s+$", ""))
+end
+local calls, printed = {}, {}
+WorldMapFrame = {
+	IsShown = function()
+		return calls.map ~= nil
+	end,
+}
+function ToggleWorldMap()
+	calls.map = (calls.map or 0) + 1
+end
+function ns.OpenMapMenu()
+	calls.menu = (calls.menu or 0) + 1
+end
+function ns.Print(text)
+	printed[#printed + 1] = text
+end
+SlashCmdList.LEGACYFOREVER("")
+check(calls.map == 1 and calls.menu == 1 and #printed == 0, "a bare /lf opens the map and its menu")
+LegacyForever_OnAddonCompartmentClick()
+check(calls.map == 1 and calls.menu == 2, "the compartment entry opens the menu on the open map")
+SlashCmdList.LEGACYFOREVER("help")
+check(#printed == 3 and calls.menu == 2, "/lf help prints the commands")
+
 print(("settings_spec: %d checks passed"):format(checks))

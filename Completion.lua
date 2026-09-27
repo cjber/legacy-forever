@@ -16,7 +16,7 @@ local ICONS = {
 	taxis = { atlas = "flightmaster" },
 	dungeons = { atlas = "dungeon" },
 	raids = { atlas = "raid" },
-	legacy = { atlas = "UI-Legacy-Points-icon-c60" },
+	legacy = { atlas = ns.POINTS_ICON },
 	-- No atlas reads as reputation, so the classic handshake icon, trimmed of its border.
 	reputations = { file = "Interface\\Icons\\Achievement_Reputation_01" },
 	quests = { atlas = "QuestNormal" },

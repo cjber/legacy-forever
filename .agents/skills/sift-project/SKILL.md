@@ -42,7 +42,7 @@ On-demand tools for audits. Output is candidates, never verdicts.
 | Concern | Command | Known false positives |
 |---|---|---|
 | Dead code (Lua) | `luacheck .` (unused locals/args; currently clean) | mixin methods called by the host (see live roots) |
-| Dead code (Python) | `uvx vulture tools --min-confidence 60` | argparse handlers; lambda parameters a callback signature requires (`screenshots.py` `lambda rep: False`) |
+| Dead code (Python) | `uvx vulture tools --min-confidence 60` | argparse handlers |
 | Duplication | `npx --yes jscpd@4 --silent --reporters json --output .sift/runs/jscpd --ignore "**/.sift/**,Data/**" .` | XML template blocks in `Map.xml`/`Completion.xml` (UI boilerplate) |
 | Globals drift | check runtime globals against `.luacheckrc`, pinned WoW annotations and `types/forever.lua` | no LuaLS globals whitelist |
 
@@ -82,8 +82,10 @@ edit changed nothing. `gen_legacy.py --offline` fails when the cache holds an ol
   in another with no import. Search all `.lua` files, including `tests/`.
 - `tools/gen_legacy.py` output format: `Data/Legacy.lua` keys are the contract read through `ns.Data` by
   every TOC Lua file after it (`rg -n 'ns\.Data' .`) and by `tests/data_spec.lua`.
-- `tools/legacy_render.py` — imported by `gen_legacy.py` and `screenshots.py`;
-  `tools/screenshots.py` — run by hand after UI changes (needs Pillow and `wowmock`);
+- `tools/legacy_render.py` — imported by `gen_legacy.py` and `screenshots.py`; `tools/db2.py` and
+  `tools/locations.py` — imported by `gen_legacy.py`;
+  `tools/screenshots.py` — run by hand after UI changes (needs Pillow and `wowmock`), and runs
+  `tools/screenshots_model.lua` under LuaJIT so the scenes come from the real `Model.lua`;
   `tools/check_diagnostics.py`, `tools/lint_multivalue.py` — run by `tools/typecheck.sh`.
 - `tools/latest_build.py` — run by `.github/workflows/refresh-data.yml`; `tools/changelog.py` —
   run by `release.yml` and (`--check`) `ci.yml`; `refresh-data.yml` also rewrites the `BUILD = "..."` and
@@ -146,6 +148,8 @@ finding.
 - `LegacyForeverDB = LegacyForeverDB or {}` before one saved write (parallel-implementations): a
   two-line idiom, kept while SavedVariables timing is open; reads already share `ns.Setting`, e.g.
   `WhatsNew.lua`, `Map.lua` `ToggleAreas`
+- mint `33ff99` chat prefix (standards, WFA-4): the WoW: Forever family's shared chat colour, kept by the
+  owner on 2026-09-27 while the pack rule is updated to allow it, e.g. `Core.lua` `ns.Print`
 
 ## Anti-patterns
 
@@ -153,15 +157,14 @@ Shapes this codebase has produced more than once and a reviewer confirmed. An au
 confirmed defect of one of these shapes with `settled:<name>`.
 
 - **mock-or-empty**: `x or {}` around a mock reader that always returns a table (defensive-noise),
-  e.g. the `tools/screenshots.py` port of Lua's nil-returning API
+  e.g. the former Python port of `Model.lua` in `tools/screenshots.py`
 - **session-narration**: docs narrating the session that wrote them, "a simulated build bump ...",
   "changes from the previous slice" (session-residue), e.g. `tools/README.md`
 
 ## Project rules and lenses
 
 - Rules: `file-size-no-growth` (`.sift/scripts/`, from the sift catalog) fails a change that adds
-  a file over 1000 lines or grows one; `tools/gen_legacy.py` (1037 lines) is the backlog it holds in
-  place. Generated `Data/*.lua` is excluded.
+  a file over 1000 lines or grows one. Generated `Data/*.lua` is excluded.
 - The BigWigs packager drops every dot-prefixed path itself, so `.pkgmeta` lists only
   non-dot ignores; a dot entry there is dead config.
 - Lenses: none yet.
