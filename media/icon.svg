@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <title>Legacy Forever</title>
   <defs>
+    <!-- Family palette: keep these four gradients unchanged in every addon. -->
     <radialGradient id="bg" cx="50%" cy="38%" r="75%">
       <stop offset="0" stop-color="#3a2a1c"/>
       <stop offset="1" stop-color="#120c08"/>
@@ -10,43 +11,29 @@
       <stop offset="0.45" stop-color="#d9a441"/>
       <stop offset="1" stop-color="#7a4f14"/>
     </linearGradient>
-    <linearGradient id="parch" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#e9d6a8"/>
-      <stop offset="1" stop-color="#b8975c"/>
-    </linearGradient>
-    <linearGradient id="fold" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#cdb27a"/>
-      <stop offset="1" stop-color="#94743d"/>
-    </linearGradient>
-    <radialGradient id="gem" cx="40%" cy="35%" r="70%">
-      <stop offset="0" stop-color="#fff6cf"/>
+    <linearGradient id="emblem" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff4c2"/>
       <stop offset="0.5" stop-color="#f2c14e"/>
-      <stop offset="1" stop-color="#9a5e12"/>
-    </radialGradient>
+      <stop offset="1" stop-color="#b3741c"/>
+    </linearGradient>
     <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#fff" stop-opacity="0.4"/>
+      <stop offset="0" stop-color="#fff" stop-opacity="0.35"/>
       <stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </linearGradient>
   </defs>
 
+  <!-- Frame and background: identical in every addon. -->
   <rect x="6" y="6" width="244" height="244" rx="28" fill="url(#gold)"/>
   <rect x="16" y="16" width="224" height="224" rx="20" fill="url(#bg)"/>
 
-  <!-- folded map, three panels -->
-  <g transform="translate(0 8)">
-    <path d="M40 150 L92 132 L92 214 L40 232 Z" fill="url(#parch)" stroke="#5a3a12" stroke-width="4" stroke-linejoin="round"/>
-    <path d="M92 132 L164 150 L164 232 L92 214 Z" fill="url(#fold)" stroke="#5a3a12" stroke-width="4" stroke-linejoin="round"/>
-    <path d="M164 150 L216 132 L216 214 L164 232 Z" fill="url(#parch)" stroke="#5a3a12" stroke-width="4" stroke-linejoin="round"/>
-    <path d="M52 200 C70 186 84 204 104 190 S140 186 152 204 S190 196 206 176" fill="none" stroke="#7a4f14"
-      stroke-width="4" stroke-dasharray="8 7" stroke-linecap="round"/>
-  </g>
-
-  <!-- pin with Legacy gem -->
-  <path d="M128 208 C112 178 78 150 78 108 A50 50 0 0 1 178 108 C178 150 144 178 128 208 Z" fill="#000" opacity="0.45"
-    transform="translate(4 5)"/>
-  <path d="M128 208 C112 178 78 150 78 108 A50 50 0 0 1 178 108 C178 150 144 178 128 208 Z" fill="url(#gold)"
-    stroke="#4a2c08" stroke-width="5" stroke-linejoin="round"/>
-  <path d="M128 70 L154 106 L128 142 L102 106 Z" fill="url(#gem)" stroke="#5a360c" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M128 78 L146 104 L110 104 Z" fill="url(#shine)"/>
-  <path d="M96 76 A40 40 0 0 1 160 76" fill="none" stroke="#fff" stroke-opacity="0.35" stroke-width="5" stroke-linecap="round"/>
+  <!-- Emblem: a trophy cup, a star struck on its bowl. -->
+  <path d="M78 52 H48 C38 52 32 60 32 72 C32 104 58 124 94 130 L92 114 C64 108 48 92 48 74 C48 70 50 68 54 68 H78 Z M 178 52 H 208 C 218 52 224 60 224 72 C 224 104 198 124 162 130 L 164 114 C 192 108 208 92 208 74 C 208 70 206 68 202 68 H 178 Z M66 202 H190 V218 H66 Z M80 206 C80 186 102 174 128 174 C154 174 176 186 176 206 Z M114 144 H142 L138 176 H118 Z M70 38 H186 V74 C186 118 162 142 128 146 C94 142 70 118 70 74 Z" fill="#000" opacity="0.45" transform="translate(4 5)"/>
+  <path d="M78 52 H48 C38 52 32 60 32 72 C32 104 58 124 94 130 L92 114 C64 108 48 92 48 74 C48 70 50 68 54 68 H78 Z" fill="url(#emblem)" stroke="#5a360c" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M 178 52 H 208 C 218 52 224 60 224 72 C 224 104 198 124 162 130 L 164 114 C 192 108 208 92 208 74 C 208 70 206 68 202 68 H 178 Z" fill="url(#emblem)" stroke="#5a360c" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M66 202 H190 V218 H66 Z" fill="url(#emblem)" stroke="#5a360c" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M80 206 C80 186 102 174 128 174 C154 174 176 186 176 206 Z" fill="url(#emblem)" stroke="#5a360c" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M114 144 H142 L138 176 H118 Z" fill="url(#emblem)" stroke="#5a360c" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M70 38 H186 V74 C186 118 162 142 128 146 C94 142 70 118 70 74 Z" fill="url(#emblem)" stroke="#5a360c" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M84 48 H172 V72 C172 80 170 88 166 96 H90 C86 88 84 80 84 72 Z" fill="url(#shine)"/>
+  <path d="M128.0 66.0 L134.5 83.1 L152.7 84.0 L138.5 95.4 L143.3 113.0 L128.0 103.0 L112.7 113.0 L117.5 95.4 L103.3 84.0 L121.5 83.1 Z" fill="#5a360c"/>
 </svg>

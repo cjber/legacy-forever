@@ -12,6 +12,7 @@ verbatim rather than rewritten as the addon moves.
 ## [Unreleased]
 
 - **`/lf` opens the world map with the Legacy menu showing**, where every option lives, and so does the addon compartment entry. `/lf help` lists the other commands.
+- **A new icon in the addon list and the compartment**: a gold trophy on the same frame as the other WoW: Forever addons, in place of the folded map.
 
 ## [0.6.0] - 2026-09-25
 
