@@ -11,10 +11,13 @@ plausible character.
 """
 
 import io
+import json
 import math
 import os
 import re
+import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -23,7 +26,7 @@ if not (WOWMOCK / "wowmock.py").exists():
     sys.exit(f"wowmock.py not found in {WOWMOCK}; clone cjber/skills or set WOWMOCK")
 sys.path.insert(0, str(WOWMOCK))
 
-from legacy_render import COMPLETION_CATEGORIES, lua_unquote
+from legacy_render import COMPLETION_CATEGORIES, lua_string, lua_unquote
 from PIL import Image
 from wowmock import (
     FONTS,
@@ -165,6 +168,7 @@ class Live:
             if entry["kind"] == "explore" and entry["key"] in self.explored
         }
         self.cache = {}
+        self._model = None
 
     def visible(self):
         return {
@@ -226,171 +230,96 @@ class Live:
     def category_name(self, category_id):
         return self.categories[str(category_id)]["Name_lang"]
 
-    def refs_done(self, refs):
-        state = None
-        for achievement, criteria_id in refs:
-            progress = self.criteria(achievement).get(criteria_id)
-            if progress:
-                if progress.completed:
-                    return True
-                state = False
-        return state
+    @property
+    def model(self):
+        if self._model is None:
+            self._model = Model(self.data, self)
+        return self._model
 
 
-# ------------------------------------------------------------------------------------- Model.lua, ported
-
-
-def owning_challenge(data, achievement, visible):
-    if achievement in visible:
-        return achievement
-    return next((reward for reward in data["feeds"].get(achievement, []) if reward in visible), None)
-
-
-def zone_objectives(data, live, ui_map_id):
-    groups, by_achievement = [], {}
-    visible = live.visible()
-    for entry in data["zones"].get(ui_map_id, []):
-        challenge = owning_challenge(data, entry["achievement"], visible)
-        progress = challenge and live.criteria(entry["achievement"]).get(entry["criteria"])
-        if progress and not progress.completed:
-            group = by_achievement.get(entry["achievement"])
-            if not group:
-                group = {
-                    "achievement": entry["achievement"],
-                    "challenge": challenge,
-                    "ui_map": ui_map_id,
-                    "objectives": [],
-                }
-                by_achievement[entry["achievement"]] = group
-                groups.append(group)
-            group["objectives"].append({"entry": entry, "text": progress.text})
-    return groups
-
-
-def count_objectives(groups):
-    return sum(len(group["objectives"]) for group in groups)
-
-
-def unlocated(data, live):
-    located = {entry["criteria"] for entries in data["zones"].values() for entry in entries}
-
-    def open_count(achievement):
-        count = 0
-        for criteria_id, progress in live.criteria(achievement).items():
-            if not progress.completed and criteria_id not in located:
-                if progress.type == EARN_ACHIEVEMENT and progress.asset in data["feeds"]:
-                    count += open_count(progress.asset)
-                else:
-                    count += 1
-        return count
-
-    result = [{"challenge": c, "open": open_count(c)} for c in sorted(live.visible())]
-    return [item for item in result if item["open"] > 0]
-
-
-def step_line(criteria_id, progress, live):
-    sub = progress.type == EARN_ACHIEVEMENT and live.criteria(progress.asset)
-    if sub:
-        detail, seen = f"{sum(step.completed for step in sub.values())}/{len(sub)}", f"a{progress.asset}"
-    else:
-        counted = progress.required and progress.required > 1
-        detail, seen = (f"{progress.quantity}/{progress.required}" if counted else None), f"c{criteria_id}"
-    return (f"{detail} {progress.text}" if detail else progress.text), seen
-
-
-def tracker_lines(live, challenge):
-    steps = sorted(
-        ((cid, p) for cid, p in live.criteria(challenge).items() if not p.completed), key=lambda s: s[1].index
-    )
-    return [step_line(cid, progress, live) for cid, progress in steps]
-
-
-def zone_key(group):
-    if group["achievement"] != group["challenge"]:
-        return str(group["achievement"])
-    return f"{group['challenge']}:{group['ui_map']}"
-
-
-def zone_lines(data, live, key):
-    achievement, _, ui_map = key.partition(":")
-    steps = live.criteria(int(achievement))
-    if not ui_map:
-        done = sum(step.completed for step in steps.values())
-        return [] if done == len(steps) else [(f"{done}/{len(steps)} {live.name(int(achievement))}", f"a{achievement}")]
-    return [
-        step_line(entry["criteria"], steps[entry["criteria"]], live)
-        for entry in data["zones"][int(ui_map)]
-        if entry["achievement"] == int(achievement) and not steps[entry["criteria"]].completed
-    ]
-
-
-def tracked_blocks(data, live):
-    """Model.TrackedBlocks: (challenge, lines) per visible challenge, zone shares first."""
-    visible, blocks = live.visible(), {}
-    for key in TRACKED:
-        whole = isinstance(key, int)
-        challenge = (
-            (key if key in visible else None) if whole else owning_challenge(data, int(key.split(":")[0]), visible)
-        )
-        if challenge:
-            block = blocks.setdefault(challenge, {"whole": False, "lines": []})
-            if whole:
-                block["whole"] = True
-            else:
-                block["lines"] += zone_lines(data, live, key)
-    result = []
-    for challenge, block in blocks.items():
-        seen = {s for _, s in block["lines"]}
-        if block["whole"]:
-            block["lines"] += [line for line in tracker_lines(live, challenge) if line[1] not in seen]
-        if block["whole"] or block["lines"]:
-            result.append((challenge, [text for text, _ in block["lines"]]))
-    return result
-
+# --------------------------------------------------------------------------------- Model.lua, run for real
 
 # Core.lua's DEFAULTS.zoneCompletion count_* keys: a new player counts only the Legacy categories.
 COUNTED = {"areas", "dungeons", "raids", "legacy"}
 
 
-def completion_category(items, state):
-    if not items:
-        return None
-    category = {"done": 0, "total": 0, "pending": 0}
-    for item in items:
-        done = state(item)
-        if done is None:
-            category["pending"] += 1
-        else:
-            category["total"] += 1
-            category["done"] += 1 if done else 0
-    category["complete"] = category["done"] == category["total"] and category["pending"] == 0
-    return category if category["total"] > 0 or category["pending"] > 0 else None
+def lua_literal(value):
+    """A Python value as a Lua table constructor: dicts keyed by int or str, lists as arrays."""
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, (int, float)):
+        return repr(value)
+    if isinstance(value, str):
+        return lua_string(value)
+    if isinstance(value, dict):
+        items = (f"[{lua_literal(k)}] = {lua_literal(v)}" for k, v in value.items() if v is not None)
+        return "{ " + ", ".join(items) + " }"
+    return "{ " + ", ".join(lua_literal(v) for v in value) + " }"
 
 
-def zone_completion(live, zone):
-    def own(items, key):
-        return [i for i in items if i.get(key) in (None, "Neutral", FACTION)]
+class Model:
+    """What Model.lua makes of this character: tools/screenshots_model.lua loads the addon's Data/Legacy.lua and
+    Model.lua under LuaJIT and answers every question the scenes ask, so the pictures follow the addon's own logic."""
 
-    def raids(raid):
-        return all(live.refs_done(boss["refs"]) for boss in raid["bosses"])
+    def __init__(self, data, live):
+        achievements = set(data["rewards"]) | set(data["feeds"])
+        achievements |= {entry["achievement"] for entries in data["zones"].values() for entry in entries}
+        zones = [ASHENVALE, FELWOOD]
+        achievements |= {
+            ref[0]
+            for ui_map in zones
+            for category in ("dungeons", "legacy")
+            for item in data["completion"][ui_map][category]
+            for ref in item["refs"]
+        }
+        achievements |= {
+            ref[0]
+            for ui_map in zones
+            for raid in data["completion"][ui_map]["raids"]
+            for boss in raid["bosses"]
+            for ref in boss["refs"]
+        }
+        criteria, pending = {}, sorted(achievements)
+        while pending:
+            achievement = pending.pop()
+            if achievement in criteria or str(achievement) not in live.achievements:
+                continue
+            criteria[achievement] = {cid: vars(progress) for cid, progress in live.criteria(achievement).items()}
+            pending += [p.asset for p in live.criteria(achievement).values() if p.type == EARN_ACHIEVEMENT]
+        taxis = {taxi["node"]: taxi["node"] in KNOWN_TAXIS for z in zones for taxi in data["completion"][z]["taxis"]}
+        character = {
+            "visible": {achievement: True for achievement in live.visible()},
+            "criteria": criteria,
+            "names": {achievement: live.name(achievement) for achievement in criteria},
+            "tracked": TRACKED,
+            "zones": sorted(data["zones"]),
+            "completion": zones,
+            "explored": {key: True for key in live.explored},
+            "taxis": taxis,
+            "faction": FACTION,
+            "counted": {key: True for key in COUNTED},
+        }
+        with tempfile.NamedTemporaryFile("w", suffix=".lua", encoding="utf-8") as source:
+            source.write("return " + lua_literal(character) + "\n")
+            source.flush()
+            output = subprocess.run(
+                ["luajit", str(ROOT / "tools" / "screenshots_model.lua"), source.name],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout
+        answers = json.loads(output)
+        self.objectives = {item["uiMapID"]: item for item in answers["objectives"]}
+        self.completion = {item["uiMapID"]: item["result"] for item in answers["completion"]}
+        self.unlocated = answers["unlocated"]
+        self.tracked = answers["tracked"]
 
-    result = {
-        "areas": completion_category(zone["areas"], lambda area: area["key"] in live.explored),
-        "taxis": completion_category(own(zone["taxis"], "faction"), lambda taxi: taxi["node"] in KNOWN_TAXIS),
-        "dungeons": completion_category(zone["dungeons"], lambda wing: live.refs_done(wing["refs"])),
-        "raids": completion_category(zone["raids"], raids),
-        "legacy": completion_category(zone["legacy"], lambda objective: live.refs_done(objective["refs"])),
-        "reputations": completion_category(own(zone["reputations"], "side"), lambda rep: False),
-    }
-    for key in COMPLETION_CATEGORIES:
-        if key not in COUNTED:
-            result[key] = None
-    counted = [result[key] for key in COMPLETION_CATEGORIES if result[key]]
-    done, total = sum(c["done"] for c in counted), sum(c["total"] for c in counted)
-    complete = done == total and not any(c["pending"] for c in counted)
-    percent = math.floor(100 * done / total)
-    result.update(done=done, total=total, complete=complete, percent=percent if complete else min(percent, 99))
-    return result
+    def zone_objectives(self, ui_map):
+        return self.objectives[ui_map]["groups"]
+
+    def count(self, ui_map):
+        return self.objectives[ui_map]["count"]
 
 
 # ------------------------------------------------------------------------------ Completion.lua, as text
@@ -435,7 +364,7 @@ def counts_text(ui, result, size):
     green, white = ui.global_color("GREEN_FONT_COLOR"), WHITE
     parts = []
     for key in COMPLETION_CATEGORIES:
-        category = result[key]
+        category = result.get(key)
         if category:
             text = f"{category['done']}/{category['total']}"
             parts.append(f"{icon(ui, key, size)} {colored(text, green if category['complete'] else white)}")
@@ -452,7 +381,7 @@ def challenge_text(name, count):
 def unlocated_tree(live, data):
     """AddUnlocated's grouping: {top name: {"subs": {sub name: items}, "items": items}} in first-appearance order."""
     tops = {}
-    for item in unlocated(data, live):
+    for item in live.model.unlocated:
         name, parent = live.category(item["challenge"])
         if parent > 0:
             top = tops.setdefault(live.category_name(parent), {"subs": {}, "items": []})
@@ -463,14 +392,14 @@ def unlocated_tree(live, data):
 
 
 def main_menu(ui, live, data):
-    groups = zone_objectives(data, live, ASHENVALE)
+    groups = live.model.zone_objectives(ASHENVALE)
     entries = [MenuTitle("Ashenvale")]
     for group in groups:
         explore = group["objectives"][0]["entry"]["kind"] == "explore"
         mark = icon(ui, "areas", 14) if explore else icon(ui, "legacy", 14)
         text = challenge_text(f"{mark} {live.name(group['achievement'])}", len(group["objectives"]))
-        entries.append(MenuCheckbox(text, zone_key(group) in TRACKED))
-    open_total = len(unlocated(data, live))
+        entries.append(MenuCheckbox(text, group["zoneKey"] in TRACKED))
+    open_total = len(live.model.unlocated)
     entries += [
         MenuDivider(),
         MenuCheckbox("Show undiscovered areas", True),
@@ -508,23 +437,21 @@ def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False):
             draw_overlay(ui, art, x, y, w, h, area["tiles"], (0, 0, 0, 0.25), zone["tileWidth"])
     canvas, rects = world_map_frame(ui, art, ("World", "Kalimdor", name), arrows=("Kalimdor", name))
     mx, my, mw, mh = rects["map"]
-    groups = zone_objectives(data, live, ui_map)
+    groups = live.model.zone_objectives(ui_map)
     for group in groups:
         for objective in group["objectives"]:
             entry = objective["entry"]
             if entry["kind"] != "explore" and "x" in entry:
-                # Neither zone has a raid entrance, so Map.lua's RAIDS never picks the "Raid" portal here.
-                portal = "Dungeon" if "instance" in entry else None
+                portal = ("Raid" if entry.get("raid") else "Dungeon") if "instance" in entry else None
                 zone_pin(ui, canvas, mx + entry["x"] * mw, my + entry["y"] * mh, portal)
-    completion_corner(ui, canvas, rects, live, zone, name, collapsed)
-    button = map_button(ui, canvas, rects, count_objectives(groups))
+    completion_corner(ui, canvas, rects, live.model.completion[ui_map], name, collapsed)
+    button = map_button(ui, canvas, rects, live.model.count(ui_map))
     return canvas, button
 
 
-def completion_corner(ui, canvas, rects, live, zone, name, collapsed=False):
+def completion_corner(ui, canvas, rects, result, name, collapsed=False):
     """LegacyForeverZoneOverlayTemplate at the canvas container's TOPLEFT (44, -18); a click collapses it to the
     title and bar."""
-    result = zone_completion(live, zone)
     cx, cy, _, _ = rects["container"]
     x, y = cx + 44, cy + 18
     title_font, counts_font = FONTS["GameFontNormalLarge"], FONTS["GameFontHighlight"]
@@ -648,8 +575,8 @@ def continent_zones(ui, data, live, continent):
     for ui_map in data["zones"]:
         if parents[str(ui_map)]["ParentUiMapID"] != str(continent):
             continue
-        groups = [g for g in zone_objectives(data, live, ui_map) if g["objectives"][0]["entry"]["kind"] != "explore"]
-        if count_objectives(groups):
+        groups = live.model.zone_objectives(ui_map)
+        if any(g["objectives"][0]["entry"]["kind"] != "explore" for g in groups):
             zones.append(zone_center(ui, ui_map, continent))
     return zones
 
@@ -689,12 +616,13 @@ def render_continent(ui, data, live):
 
 
 def render_tracker(ui, data, live):
-    zone = data["completion"][ASHENVALE]
-    result = zone_completion(live, zone)
+    result = live.model.completion[ASHENVALE]
     legacy = []
-    for challenge, lines in tracked_blocks(data, live):
+    for block in live.model.tracked:
+        # Tracker.lua's line: the progress, then the step.
+        lines = [f"{line['detail']} {line['text']}" if "detail" in line else line["text"] for line in block["lines"]]
         shown = lines[:5] + ([("...", False)] if len(lines) > 5 else [])
-        legacy.append(TrackerBlock(live.name(challenge), shown))
+        legacy.append(TrackerBlock(live.name(block["challenge"]), shown))
     modules = [
         TrackerModule("Ashenvale", [TrackerBlock(counts_text(ui, result, 14))]),
         TrackerModule("Legacy", legacy),
