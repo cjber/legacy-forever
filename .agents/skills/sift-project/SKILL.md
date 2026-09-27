@@ -129,14 +129,29 @@ Audit slices from lowest to highest risk:
 5. `Completion.lua`, `Completion.xml`, `Map.lua`, `Map.xml` — UI hooks into Blizzard frames,
    untestable headless; taint risk
 
+## Settled
+
+Shapes that look like defects here but are not. Reviewers and verifiers read this before raising a
+finding.
+
+- nil guard after a `number?` return (defensive-noise): a nil guard right after `ParseKey` or
+  another `number?` return narrows the type for LuaLS; removing it trades the branch for a
+  `---@cast`, e.g. `Model.lua`
+- Tracker `uiOrder` `0` (defensive-noise): Legacy Forever's registered slot in WFA-5, not a missing
+  negative, e.g. `Tracker.lua`
+
+## Anti-patterns
+
+Shapes this codebase has produced more than once and a reviewer confirmed. An audit guards a
+confirmed defect of one of these shapes with `settled:<name>`.
+
+- **mock-or-empty**: `x or {}` around a mock reader that always returns a table (defensive-noise),
+  e.g. the `tools/screenshots.py` port of Lua's nil-returning API
+- **session-narration**: docs narrating the session that wrote them, "a simulated build bump ...",
+  "changes from the previous slice" (session-residue), e.g. `tools/README.md`
+
 ## Project rules and lenses
 
-- Anti-patterns seen here: `x or {}` around a mock reader that always returns a table (the
-  `screenshots.py` port of Lua's nil-returning API); session narration in `tools/README.md`
-  ("a simulated build bump ...", "changes from the previous slice").
-- Not defensive noise: a nil guard right after `ParseKey` or another `number?` return narrows the
-  type for LuaLS; removing it trades the branch for a `---@cast`. Tracker `uiOrder` `0` is
-  Legacy Forever's registered slot in WFA-5, not a missing negative.
 - Rules: `file-size-no-growth` (`.sift/scripts/`, from the sift catalog) fails a change that adds
   a file over 1000 lines or grows one; `tools/gen_legacy.py` (1037 lines) is the backlog it holds in
   place. Generated `Data/*.lua` is excluded.
