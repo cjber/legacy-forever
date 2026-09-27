@@ -23,7 +23,7 @@ if not (WOWMOCK / "wowmock.py").exists():
     sys.exit(f"wowmock.py not found in {WOWMOCK}; clone cjber/skills or set WOWMOCK")
 sys.path.insert(0, str(WOWMOCK))
 
-from legacy_render import COMPLETION_CATEGORIES
+from legacy_render import COMPLETION_CATEGORIES, lua_unquote
 from PIL import Image
 from wowmock import (
     FONTS,
@@ -70,7 +70,7 @@ def parse_lua_table(text):
         if token == "{":
             return table()
         if token.startswith('"'):
-            return token[1:-1].replace('\\"', '"').replace("\\\\", "\\")
+            return lua_unquote(token)
         if token in ("true", "false"):
             return token == "true"
         return float(token) if "." in token else int(token)
@@ -82,7 +82,7 @@ def parse_lua_table(text):
             if tokens[position] == "[":
                 key = tokens[position + 1]
                 position += 4  # [ key ] =
-                keyed[int(key) if key.lstrip("-").isdigit() else key.strip('"')] = value()
+                keyed[int(key) if key.lstrip("-").isdigit() else lua_unquote(key)] = value()
             elif tokens[position + 1] == "=":
                 key = tokens[position]
                 position += 2

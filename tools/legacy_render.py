@@ -1,5 +1,7 @@
 """Render generated Legacy data as the addon's Data/Legacy.lua (stdlib only)."""
 
+import re
+
 COMPLETION_CATEGORIES = ("areas", "taxis", "dungeons", "raids", "legacy", "reputations")
 
 
@@ -11,6 +13,27 @@ def lua_string(value):
         )
         + '"'
     )
+
+
+LUA_ESCAPE = re.compile(r"\\(\d{1,3}|.)", re.DOTALL)
+LUA_ESCAPES = {"a": "\a", "b": "\b", "f": "\f", "n": "\n", "r": "\r", "t": "\t", "v": "\v"}
+
+
+def lua_unquote(literal):
+    """The value of a quoted Lua 5.1 string literal, as lua_string writes one: \\ddd is a byte, so the result is
+    decoded as UTF-8."""
+    body, value, position = literal[1:-1], bytearray(), 0
+    for escape in LUA_ESCAPE.finditer(body):
+        value += body[position : escape.start()].encode()
+        code = escape[1]
+        if code.isdigit():
+            if int(code) > 255:
+                raise ValueError(f"escape sequence too large: \\{code}")
+            value.append(int(code))
+        else:
+            value += LUA_ESCAPES.get(code, code).encode()
+        position = escape.end()
+    return (value + body[position:].encode()).decode()
 
 
 def named_refs(entry):

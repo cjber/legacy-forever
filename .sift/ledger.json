@@ -741,10 +741,11 @@
       "what": "BUG: the multi-value lint restates the repo's Lua exclusion list and has drifted: it lacks `.claude`, which .luacheckrc (exclude_files \".claude/**\"), .luarc.json (workspace.ignoreDir) and .styluaignore all exclude; canonical home is .luacheckrc's exclude_files.",
       "why": "The comment says it matches the runtime gate's exclusions, but it does not. Running `python3 .claude/worktrees/sift-audit/tools/lint_multivalue.py` from the main checkout /home/cjber/drive/proj/legacy-forever (what typecheck.sh does after `cd` to the root) checks 225 files, 200 of them under .claude/worktrees/, so another worktree's in-progress Lua can fail or pad the main checkout's typecheck. Other differences (.git, .sift, .cache vs tools/.cache) are harmless; types/ being linted here is intentional per the comment.",
       "confidence": "high",
-      "status": "bug",
-      "reason": "lua_files() in tools/lint_multivalue.py omits .claude from its exclusions, unlike .luacheckrc/.luarc.json/.styluaignore; from the main checkout typecheck.sh lints 200 worktree files of 225. Fix: add .claude to the excluded set (changes lint scope, so not an audit edit).",
+      "status": "fixed",
+      "reason": "lua_files() now skips .claude, as .luacheckrc, .luarc.json and .styluaignore do; from the main checkout the lint checks 25 files, not 225. Regression test: tests/multivalue_test.py test_lua_files_skip_worktrees.",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: a new tool's hand-kept exclusion list drifting from .luacheckrc needs a reviewer; this case is pinned by test_lua_files_skip_worktrees"
     },
     {
       "id": "bddd9012db",
@@ -767,10 +768,11 @@
       "what": "parse_lua_table's string decoding is the inverse of legacy_render.lua_string (the canonical encoder of Data/Legacy.lua) but only undoes \\\" and \\\\, not the \\ddd escapes lua_string emits for control characters.",
       "why": "lua_string writes chars below 32 as \\NNN; this decoder would return them literally. No \\ddd escape is in Data/Legacy.lua today (grep count 0), so it is latent drift between an encoder/decoder pair, not a current wrong output.",
       "confidence": "low",
-      "status": "bug",
-      "reason": "latent: parse_lua_table in tools/screenshots.py undoes only escaped quote and backslash, while legacy_render.lua_string writes control characters as three-digit escapes; no such escape is in Data/Legacy.lua today, so screenshots are correct now. Fix: decode the numeric escapes too.",
+      "status": "fixed",
+      "reason": "The decoder moved beside its encoder as legacy_render.lua_unquote (Lua 5.1 escapes, \\ddd as a byte, UTF-8 result); parse_lua_table uses it for values and string keys. Screenshots byte-identical. Regression tests: tests/legacy_render_test.py test_round_trip, test_lua_escapes.",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: an encoder/decoder pair drifting needs a reviewer; lua_string/lua_unquote are pinned by the round-trip test"
     },
     {
       "id": "43f624e744",
