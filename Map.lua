@@ -206,7 +206,7 @@ end
 ---@param root SharedMenuDescriptionProxy
 ---@param group LegacyGroup
 local function AddGroup(root, group)
-	local icon = IsExploreGroup(group) and ns.Completion.Icon("areas", 14) or ns.AtlasMarkup(POINTS_ICON, 14)
+	local icon = ns.Completion.Icon(IsExploreGroup(group) and "areas" or "legacy", 14)
 	local name = ("%s %s"):format(icon, ns.Live.Name(group.achievement))
 	local button = root:CreateCheckbox(
 		ChallengeText(name, #group.objectives),

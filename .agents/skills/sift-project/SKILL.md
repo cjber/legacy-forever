@@ -148,6 +148,8 @@ finding.
 - `LegacyForeverDB = LegacyForeverDB or {}` before one saved write (parallel-implementations): a
   two-line idiom, kept while SavedVariables timing is open; reads already share `ns.Setting`, e.g.
   `WhatsNew.lua`, `Map.lua` `ToggleAreas`
+- mint `33ff99` chat prefix (standards, WFA-4): the WoW: Forever family's shared chat colour, kept by the
+  owner on 2026-09-27 while the pack rule is updated to allow it, e.g. `Core.lua` `ns.Print`
 
 ## Anti-patterns
 

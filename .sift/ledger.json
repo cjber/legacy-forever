@@ -120,8 +120,8 @@
       "what": "Completion.lua (668 lines) mixes shared text/icon formatting (13-247), the objective-tracker module (249-335), the world-map corner overlay (337-449), zone-complete toasts and continent tally (451-535), the settings menu (537-620) and the /lf audit dump (622-668).",
       "why": "Toasts and Audit touch neither the tracker nor overlay frames; Audit is debug output driven from Core's slash command. Clean seams: keep formatting + Result/Of here, move the toast subsystem and Audit out (e.g. CompletionToast.lua; Audit beside Core's other audits). Lower priority than Map.lua; each section is coherent on its own.",
       "confidence": "low",
-      "status": "decide",
-      "reason": "Move Completion.Audit beside Core's audits and the 100 percent toast into its own TOC-listed file? Verifiers split on it; shared locals (IsCounted, ICONS) would have to move onto ns.",
+      "status": "dismissed",
+      "reason": "owner-delegated 2026-09-27: wontfix: all under the 1000-line rule",
       "first_seen": "2026-09-27",
       "updated": "2026-09-27"
     },
@@ -173,10 +173,11 @@
       "what": "WFA-3: bare /lf prints help telling the player to open the map, instead of opening where the options live",
       "why": "WFA-3: 'A slash command (short form plus the full name) and an addon compartment entry both open it' (the options). The options are the map menu; the compartment entry opens the world map (LegacyForever_OnAddonCompartmentClick -> ToggleWorldMap) but /lf and /legacyforever only print three lines. Fix: have bare /lf do what the compartment does (ToggleWorldMap, or open the map and the Legacy button's menu), keeping the help lines for unknown subcommands.",
       "confidence": "medium",
-      "status": "decide",
-      "reason": "WFA-3: make a bare /lf (and /legacyforever) open the world map and its menu, as the compartment entry does, instead of printing help? A behaviour change for the owner.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: tests/settings_spec.lua checks bare /lf and the compartment open the menu"
     },
     {
       "id": "4231160f5f",
@@ -199,8 +200,8 @@
       "what": "WFA-4: chat prefix in a custom mint colour (33ff99) the game does not use",
       "why": "WFA-4 bans custom colours. The mint prefix is a common addon habit, not a stock colour. Fix: a FrameXML colour object (e.g. NORMAL_FONT_COLOR:WrapTextInColorCode(ns.TITLE)), or check what the sibling addons settled on and match them.",
       "confidence": "low",
-      "status": "decide",
-      "reason": "WFA-4: replace the mint 33ff99 chat prefix with a stock colour? The same prefix is in skillup-forever, work-orders-forever and adventure-guide-forever, so it is a family decision or pack feedback.",
+      "status": "dismissed",
+      "reason": "owner decision 2026-09-27: family chat colour, pack rule updated",
       "first_seen": "2026-09-27",
       "updated": "2026-09-27"
     },
@@ -226,8 +227,8 @@
       "what": "Live.ZoneSnapshot's snapshot shape (Live.lua:276-286) is copied field by field in Completion.lua:107-117 just to swap this quests reader for Quests.Zone(uiMapID, true); canonical home is Live.ZoneSnapshot (take a deferred flag), or the copy uses the confirmed FrameXML Mixin({}, snapshot) and overrides quests. Anchored here because the copy is outside this slice.",
       "why": "The two lists are identical today apart from quests (Quests.Zone(uiMapID) vs Quests.Zone(uiMapID, true)). A field added to Live.ZoneSnapshot and read by Model.ZoneCompletion would be silently nil on the deferred path (Completion.Result(uiMapID, true)), which Model would then index. No stated reason for the hand copy.",
       "confidence": "medium",
-      "status": "decide",
-      "reason": "Give Live.ZoneSnapshot a deferred quests option (or build the deferred snapshot without restating every field) so Completion.Result stops copying the snapshot field by field? The snapshot is cached per zone, so the shape of the fix is a design call.",
+      "status": "dismissed",
+      "reason": "owner-delegated 2026-09-27: deferred: do when Live/Completion next change",
       "first_seen": "2026-09-27",
       "updated": "2026-09-27"
     },
@@ -279,10 +280,11 @@
       "what": "The Legacy shield atlas is named in Map.lua:10 (POINTS_ICON), Completion.lua:19 (ICONS.legacy) and three times in Map.xml; AddGroup uses Completion.Icon for the compass but re-derives the shield from Map's own constant instead of ns.Completion.Icon(\"legacy\", 14).",
       "why": "Both produce ns.AtlasMarkup(\"UI-Legacy-Points-icon-c60\", 14) today; the comment above AddGroup says the entry wears 'the icon it has on the map ... (as under \"What counts\")', i.e. the intent is one icon set. Two Lua constants for one atlas mean a swap updates one. XML copies are template attributes and unavoidable.",
       "confidence": "low",
-      "status": "decide",
-      "reason": "Name the Legacy shield atlas once as a shared ns constant read by Map.lua (POINTS_ICON) and Completion.lua (ICONS.legacy)? No shared constant exists yet, so adding one is the owner's call.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: ns.POINTS_ICON is the only Lua copy of the atlas name"
     },
     {
       "id": "5ffed1cc1e",
@@ -305,10 +307,11 @@
       "what": "Map.lua:12 restates the raid/dungeon split as a hand-kept instance-ID set; the canonical classification is the Map DB2 InstanceType the generator already reads (tools/gen_legacy.py:482-489, 790) but does not emit into Data/Legacy.lua entries.",
       "why": "gen_legacy.py validates instanceType (1 dungeon, 2 raid) against Map.InstanceType and builds completion raids from InstanceType == 2; Map.lua:444 picks the portal atlas from its own literal set instead. Checked the pinned Map-1.60.1.70009.csv: current instance entries (249 raid; 2959/2998/2999/36/389 etc. dungeons) agree today, so no live drift, but a new raid entrance (e.g. a Forever-only raid) would be drawn as a dungeon portal with no generator failure. Fix: emit instanceType (or a raid flag) on instance entries and read it here.",
       "confidence": "medium",
-      "status": "decide",
-      "reason": "Emit instance type in Data/Legacy.lua from gen_legacy.py (it already validates Map.InstanceType) and drop Map.lua's hand-kept RAIDS set? That changes the generated data format.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: tests/data_spec.lua checks raid = true on Onyxia only"
     },
     {
       "id": "806bb6eb3d",
@@ -331,10 +334,11 @@
       "what": "ContinentZones (Map.lua:152) tests continent membership by direct parentMapID, while ContinentText (Completion.lua:468) and Live uses Live.ContinentOf (Live.lua:214), which walks up to the continent; canonical: Live.ContinentOf.",
       "why": "The two tests differ for any data zone whose parent is not the continent itself (a sub-map under a zone): it gets no badge on the continent but is counted in the '%s: %d of %d zones complete' line shown in the same badge tooltip. Whether any ns.Data.zones key has a non-continent parent needs the client (C_Map), so drift is unconfirmed; the badge rule may be deliberate but has no comment saying so.",
       "confidence": "low",
-      "status": "decide",
-      "reason": "Use Live.ContinentOf in Map.lua ContinentZones, the rule Completion.lua's ContinentText uses? Verifiers split: the two agree on all shipped zones today, and switching to an ancestor walk is a behaviour choice.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: ContinentZones and ContinentText share Live.ContinentOf"
     },
     {
       "id": "b0739592b3",
@@ -344,8 +348,8 @@
       "what": "WFA-13: an OnUpdate runs every frame the world map is open, even with the cursor still",
       "why": "WFA-13: 'no idle OnUpdate'. The area pin polls the cursor each frame (HoverAt -> Model.AreaAt) whenever the map shows a zone with shaded areas; it stops only when the map closes. The comment gives the reason (a mouse-enabled frame would swallow map clicks), so the fix may be cheap early-out (skip when GetCursorPosition is unchanged) rather than removal; work is bounded, hence low.",
       "confidence": "low",
-      "status": "decide",
-      "reason": "WFA-13: give Map.lua's area-hover OnUpdate an early-out when the cursor and canvas have not moved, so an idle open map does no per-frame AreaAt scans? A runtime change that needs a /reload check.",
+      "status": "dismissed",
+      "reason": "owner-delegated 2026-09-27: done: the OnUpdate skips the area scan while the canvas-pixel cursor is unchanged; the anchored SetScript line stays by design",
       "first_seen": "2026-09-27",
       "updated": "2026-09-27"
     },
@@ -371,8 +375,8 @@
       "what": "Map.lua (750 lines) holds five separable parts: tooltip text (14-174), the map-button dropdown menu incl. settings and the 'No fixed location' category tree (176-325), the map button frame (327-396), objective pins (398-503), undiscovered-area shading and hover (505-674), plus the provider/wiring (676-750).",
       "why": "The menu (~150 lines) shares nothing with pin/area drawing except ZoneGroups/AddGroupTooltip and is edited for unrelated reasons (settings, grouping); the area-shading pin is self-contained (its own template, pools, hover polling). Proposed split: MapMenu.lua (BuildMenu, AddUnlocated, settings toggles) and MapAreas.lua (AreaPin mixin, UndiscoveredAreas), each listed in the TOC before Map.lua. Audit does not split.",
       "confidence": "low",
-      "status": "decide",
-      "reason": "Split Map.lua (750 lines) into a menu file and an area-shading file? Verifiers split on it: the menu shares tooltip and grouping locals with the pins, so a split publishes them on ns.",
+      "status": "dismissed",
+      "reason": "owner-delegated 2026-09-27: wontfix: all under the 1000-line rule",
       "first_seen": "2026-09-27",
       "updated": "2026-09-27"
     },
@@ -410,8 +414,8 @@
       "what": "Model.lua (771 lines) holds five separable pure responsibilities: Legacy objectives per zone and unlocated counts (16-126), tracker keys and lines (128-297), zone/continent completion (299-329, 526-682), the QuestieDB quest index (331-524, one 150-line function with nested closures), and overlay/tile geometry (684-771).",
       "why": "Consumers are disjoint: QuestIndex only by Quests.lua; OverlayRect/AreaAt/OverlayTiles only by Map.lua; TrackedBlocks/TrackerLines/TrackedChallenge by Tracker.lua; ZoneCompletion/ContinentCompletion by Completion.lua; and no function in one group calls another group's. A split into pure TOC-listed files (e.g. ModelQuests.lua, ModelMap.lua) would keep the no-WoW-API convention and headless loading; the specs would loadfile each. Low: 771 lines is under the 1000-line rule and the 'pure logic in Model' grouping is a stated convention.",
       "confidence": "low",
-      "status": "decide",
-      "reason": "Split Model.lua (771 lines) into TOC-loaded pure files such as a QuestieDB quest index and overlay geometry module? Verifiers split on it; the file is under the project's 1000-line limit and a split is a design change.",
+      "status": "dismissed",
+      "reason": "owner-delegated 2026-09-27: wontfix: all under the 1000-line rule",
       "first_seen": "2026-09-27",
       "updated": "2026-09-27"
     },
@@ -437,10 +441,11 @@
       "what": "WFA-10: a Features bullet not led by a bold name",
       "why": "WFA-10: 'a feature is one bullet led by a bold name'. Every other Features bullet is bold-led; this one is a note, not a feature. The store page already makes it a plain paragraph after the list (docs/curseforge.md:32). Fix: move it out of the list as a sentence, as the store page does.",
       "confidence": "medium",
-      "status": "decide",
-      "reason": "WFA-10: turn README's unbolded note under Features into a paragraph after the list, as docs/curseforge.md already does? Published copy.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: check_copy.py before a store paste"
     },
     {
       "id": "886ccadcaa",
@@ -450,10 +455,11 @@
       "what": "WFA-23: README pitch gives the 'came with the game' promise but not the second one, that it steps aside for addons you already run",
       "why": "WFA-23 (and voice.md 'The pitch'): say it looks like it came with the game, backed by something concrete, 'then that it steps aside for addons you already run'. The pitch paragraph stops at the first promise; Works alongside (line 58) lists optional companions, not stepping aside. Fix: add one plain sentence after the pitch (e.g. it leaves the map, tracker and Legacy panel as they are and works with Questie and Shortest Path Forever).",
       "confidence": "medium",
-      "status": "decide",
-      "reason": "WFA-23: add the second promise, that it steps aside for addons you already run (it hands navigation to Shortest Path Forever), to the README pitch? Published copy in cjber's voice.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: WFA-23 review of the README and store pitch"
     },
     {
       "id": "d2226f681d",
@@ -476,10 +482,11 @@
       "what": "WFA-10: the Zone completion feature bullet is ~218 words against the ~60-word cap",
       "why": "WFA-10: 'a feature is one bullet led by a bold name, at most ~60 words; depth moves to docs/'. Counted with link text only: 218 words. docs/zone-completion.md already exists for the depth. Fix: cut to one short bullet (the store page's line 29 is ~65 words) and link docs/zone-completion.md for the menu details.",
       "confidence": "high",
-      "status": "decide",
-      "reason": "WFA-10: shorten README's Zone completion bullet (about 218 words, cap about 60) and leave the detail to docs/zone-completion.md, which it already links? Published copy, the owner's voice.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: check_copy.py and a per-bullet word count before a store paste"
     },
     {
       "id": "e41c8f5427",
@@ -489,10 +496,11 @@
       "what": "WFA-10: the Tracker feature bullet is ~110 words against the ~60-word cap",
       "why": "WFA-10 caps a feature bullet at ~60 words, depth to docs/. 110 words here. Fix: trim to the store page's version (docs/curseforge.md:26, ~45 words).",
       "confidence": "high",
-      "status": "decide",
-      "reason": "WFA-10: shorten README's Tracker bullet (about 110 words) toward the store page's shorter version in docs/curseforge.md? Published copy.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: check_copy.py and a per-bullet word count before a store paste"
     },
     {
       "id": "f79280efe1",
@@ -502,8 +510,8 @@
       "what": "WFA-25: the README's map.png has no line under it saying what to look at; the next line is the ## Features heading",
       "why": "WFA-25 requires each image (or row) to get a plain-words line under it that is not a copy of its alt text. The demo.gif above it has one (line 15) and the store page gives the same map.png one (docs/curseforge.md:9 'The zone you're looking at, with its Legacy objectives in the map's own menu.'). check_copy.py passes only because the heading counts as words. Fix: add a caption line under it, e.g. the store's line.",
       "confidence": "high",
-      "status": "decide",
-      "reason": "WFA-25: add a plain line under README's map.png saying what to look at, as docs/curseforge.md already does? Published copy.",
+      "status": "dismissed",
+      "reason": "owner-delegated 2026-09-27: done: README.md map.png now has a caption line under it; the anchored image tag stays",
       "first_seen": "2026-09-27",
       "updated": "2026-09-27"
     },
@@ -541,10 +549,11 @@
       "what": "WFA-23: store pitch omits the 'steps aside for addons you already run' promise",
       "why": "WFA-23 requires the store description to say both promises early. The only related line is at the very end (line 47, 'Works with Shortest Path Forever ... and Adventure Guide Forever'), which is about companions, not stepping aside. Fix: one plain sentence after the pitch. Store copy is a decide item (pasted by hand).",
       "confidence": "medium",
-      "status": "decide",
-      "reason": "WFA-23: add the same steps-aside promise early in the docs/curseforge.md store pitch? Store copy is pasted by hand after the owner's WFA-23/24 check.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: WFA-23 review of the README and store pitch"
     },
     {
       "id": "5204cc0892",
@@ -554,10 +563,11 @@
       "what": "WFA-7: the icon is a scene (folded three-panel map with a dotted route, plus a pin holding a gem) rather than a single centred emblem, and it departs from the template's family palette",
       "why": "WFA-7: 'a single centred emblem in the gold palette with the template's drop shadow and outline ... No scenes'. icon-template.svg keeps three layers (shadow, url(#emblem) body with #5a360c outline 5, shine) and says 'Family palette: keep these four gradients unchanged'. Here the map panels carry no shadow, use new parch/fold gradients, reach y=240 (outside the template's 30-218 emblem box, onto the frame edge), the #emblem gradient is replaced by #gem, and #shine's stop-opacity is 0.4 instead of 0.35. Fix: redraw as one emblem (e.g. the pin with gem alone) from the template, then re-render with render_icon.py (WFA-8). Asset change: decide item.",
       "confidence": "medium",
-      "status": "decide",
-      "reason": "WFA-7: redraw media/icon.svg (a folded-map scene with its own gradients, outside the template box, no emblem) on the family template? An asset change for the owner.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: icon.svg built from icon-template.svg, rendered by render_icon.py"
     },
     {
       "id": "08401eeb4e",
@@ -609,10 +619,11 @@
       "what": "About 170 lines (122-355) mix build-specific audit notes (row counts, the raid audit, rejected reputation candidates, the Drowned City lead, per-build totals) into the generator how-to and data-format reference.",
       "why": "Readers who come for the run commands or the locations.json field contract have to get past per-build investigation prose, and that prose is the part that goes stale (see the build-stamp finding). Move the coverage totals, raid audit, rejected candidates and unplaced-wing notes to a linked docs/data-audit.md, or drop them in favour of the generator's stderr counts. Keep the curation field contract and the validation rules here.",
       "confidence": "medium",
-      "status": "decide",
-      "reason": "Move the build-specific coverage counts and audit notes (tools/README.md 145-188, 302-349) out of the generator how-to into a linked dated doc, or drop them for the generator's printed summary? Where they live is the owner's call.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: tools/README.md points at the generator's printed summary"
     },
     {
       "id": "6fd7b52439",
@@ -663,10 +674,11 @@
       "what": "Coverage is stamped with build 1.60.1.69913 / 2026-09-21, but the generator is pinned to a different build (and so is line 302, \"Build **1.60.1.69913**: **43 completion zones...\").",
       "why": "tools/gen_legacy.py has BUILD = \"1.60.1.70009\" and SOURCE_DATE = \"2026-09-25\", and Data/Legacy.lua line 1 says build 1.60.1.70009. The counts still hold (130 reward rows and 549 explore entries in Data/Legacy.lua; commits 937f4dd and 180fde8 say nothing was added or removed), so only the stamp is stale. refresh-data.yml rewrites BUILD but not the README, so a hand-kept build stamp goes stale on every refresh. Drop the stamp or say 'as of the pinned BUILD'.",
       "confidence": "high",
-      "status": "decide",
-      "reason": "The coverage stamps in tools/README.md (145, 302) name build 1.60.1.69913 while the generator pins 1.60.1.70009 and the daily refresh bumps it without touching the README. Restamp them by hand each refresh, or drop the hand-written counts in favour of the summary gen_legacy.py prints?",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: tools/README.md points at the generator's printed summary"
     },
     {
       "id": "0b4698835d",
@@ -689,8 +701,8 @@
       "what": "1037-line generator mixes separable responsibilities: DB2 source fetch/cache/CSV parse (atomic_write/download/db2/required, 93-166), achievement graph (169-236), geography and entrance projection (239-442), locations.json curation validation (unique_object..validate_reputation, validate_compound_tree, 445-609), compound/grouped objectives (612-650), zone completion (653-840), objective location pipeline (843-1002), CLI (1005-1037).",
       "why": "The source layer (93-166) knows nothing of Legacy semantics and the curation validators (445-609) change only when locations.json's schema changes; neither is touched by completion or location logic changes. Proposed split, following the existing legacy_render.py precedent: a wago DB2 source module (~75 lines: atomic_write, download, db2, required) and a curation module (~170 lines: unique_object, validate_*_row, validate_reputation, validate_compound_tree, curated_locations), leaving gen_legacy.py ~790 lines and under the file-size-no-growth limit. No dead code was found that would shrink it instead. Split belongs in its own reviewed change, verified by regenerating Data/Legacy.lua --offline with a clean git status.",
       "confidence": "medium",
-      "status": "decide",
-      "reason": "Split tools/gen_legacy.py (1037 lines) by moving the wago DB2 fetch/cache/CSV layer (93-166) and the locations.json validators (445-609) into their own modules beside legacy_render.py? A module split is outside the audit's closed set; proof would be a byte-identical Data/Legacy.lua regeneration.",
+      "status": "dismissed",
+      "reason": "owner-delegated 2026-09-27: done: DB2 layer moved to tools/db2.py, validators to tools/locations.py, gen_legacy.py now 786 lines; the anchored shebang stays",
       "first_seen": "2026-09-27",
       "updated": "2026-09-27"
     },
@@ -702,10 +714,11 @@
       "what": "Criteria.Type codes are named once in CRITERIA_KINDS (line 29) but read sites bypass that table with bare literals: 8 (line 216), 165 (870), 0 (745, 874), 27 (879), 78 (625).",
       "why": "The lens flags literals that bypass an existing constants table. Line 216 is exactly CRITERIA_KINDS[...] == \"meta\"; 165 and 27 map one-to-one to \"instance\"/\"quest\". 0 vs 78 both map to \"kill\", so those sites genuinely need the numeric code and would need named constants rather than the kind string. Low impact in a single script, hence low confidence.",
       "confidence": "low",
-      "status": "decide",
-      "reason": "Name the Criteria.Type codes at the read sites (216 as kind == meta, 870/879 as the kind string, and new named constants for the raw 0/78 kill codes at 625/745/874)? New constants and rewritten conditions are outside the closed set; proof would be a byte-identical regeneration.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: tools/db2.py names the Criteria.Type and Map.InstanceType codes"
     },
     {
       "id": "fa642fbff1",
@@ -715,10 +728,11 @@
       "what": "Map.InstanceType closed set (1 = dungeon, 2 = raid) compared as bare magic numbers at six sites: lines 406, 485, 489, 524 (as (1,) / (1, 2) tuples), 525, 789.",
       "why": "No named constants; a reader must know DB2 semantics to tell dungeon from raid at each site, and a change (e.g. admitting another instance type) has to find every literal 1/2 tuple by hand. README documents the meaning (\"1 for dungeons, 2 for raids\") but the code never names it. Two DUNGEON/RAID constants would make every site searchable.",
       "confidence": "medium",
-      "status": "decide",
-      "reason": "Add named constants for Map.InstanceType (1 dungeon, 2 raid) and use them at gen_legacy.py 406, 489, 524-525 and 789? No existing constant exists to reuse, so introducing one is the owner's call.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: tools/db2.py names the Criteria.Type and Map.InstanceType codes"
     },
     {
       "id": "7198547e9c",
@@ -810,10 +824,11 @@
       "what": "screenshots.py:239-392 is a Python port of Model.lua (OwningChallenge, ZoneObjectives, CountObjectives, Unlocated, StepLine/TrackerLines, ZoneKey, ZoneLines, TrackedBlocks, CompletionCategory, RaidDone, ForFaction, ZoneCompletion), plus COUNTED restating Core.lua DEFAULTS.zoneCompletion count_*; canonical home is Model.lua, which luajit already loads headless for tests/*_spec.lua.",
       "why": "The port has already drifted: raids() uses all(live.refs_done(...)) so an unknown boss (nil) counts as not done, where Model.lua RaidDone returns nil (pending); zone_completion divides by total unguarded where Model.ZoneCompletion sets percent nil when total is 0; completion_category has no `left` list. A rule change in Model.lua (e.g. a new category or the percent cap) needs a matching hand edit here or the store screenshots show numbers the addon would not. Driving Model.lua through luajit (as the specs do) and reading its result as JSON would remove the copy. Medium: the wow-mock-screenshots skill asks the mock to reproduce the addon's code, and the drift only affects mock images.",
       "confidence": "medium",
-      "status": "decide",
-      "reason": "Replace the Python port of Model.lua in tools/screenshots.py (239-392) by running Model.lua headless through luajit, the way tests/model_spec.lua loads it? The port has drifted (RaidDone unknown boss, ZoneCompletion zero total, CompletionCategory empty), so unifying changes the screenshots and is a design change, not an audit edit.",
+      "status": "fixed",
+      "reason": "",
       "first_seen": "2026-09-27",
-      "updated": "2026-09-27"
+      "updated": "2026-09-27",
+      "guard": "lens-only: screenshots.py runs Model.lua through tools/screenshots_model.lua"
     }
   ]
 }
