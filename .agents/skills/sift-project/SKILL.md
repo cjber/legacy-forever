@@ -168,3 +168,5 @@ confirmed defect of one of these shapes with `settled:<name>`.
 - The BigWigs packager drops every dot-prefixed path itself, so `.pkgmeta` lists only
   non-dot ignores; a dot entry there is dead config.
 - Lenses: none yet.
+
+The type gate also runs `python3 -m tools.lint_taint` and `python3 tools/typecheck_coverage.py`: native-method hooks, shared UI-state writes and omitted runtime type coverage fail CI. Tracker initialization follows both native load events, deferred one frame; AddContainer hooks are retired.

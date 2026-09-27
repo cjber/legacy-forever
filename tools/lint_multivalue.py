@@ -25,7 +25,7 @@ NAME = re.compile(r"[a-zA-Z_][a-zA-Z_0-9]*")
 ALLOW = re.compile(r"--\s*multi-value:\s*\S")
 
 
-def tokenize(source: str) -> tuple[list[Token], set[int]]:
+def tokenize(source: str, comments: dict[int, str] | None = None) -> tuple[list[Token], set[int]]:
     tokens = []
     allowed = set()
     pos, line = 0, 1
@@ -49,6 +49,8 @@ def tokenize(source: str) -> tuple[list[Token], set[int]]:
         elif comment:
             end = source.find("\n", pos)
             pos = end if end >= 0 else len(source)
+            if comments is not None:
+                comments[line] = source[start + 2 : pos].strip()
             # Only an actual trailing line comment can authorize expansion, never string contents.
             if tokens and tokens[-1].end_line == line and ALLOW.match(source[start:pos]):
                 allowed.add(line)
