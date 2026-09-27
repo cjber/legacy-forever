@@ -26,7 +26,7 @@ Run in order from the repository root. All must pass before and after any audit 
 | Tests | `for s in tests/*_spec.lua; do luajit "$s" \|\| exit 1; done` | exit 0 (`model_spec: N checks passed`) |
 | Workflows | `actionlint && zizmor --offline .github` | exit 0, no findings |
 | Secrets | `gitleaks git --redact --no-banner .` | `no leaks found` |
-| Project rules | `python3 .sift/gate.py --base origin/main && python3 .sift/agents.py check` | exit 0 |
+| Changelog, project rules | `python3 tools/changelog.py --check && python3 .sift/gate.py --base origin/main && python3 .sift/agents.py check` | exit 0 |
 
 CI (`.github/workflows/ci.yml`) runs all of these with the versions above pinned. Where actionlint
 or zizmor is not installed, run `uvx --from actionlint-py==1.7.12.24 actionlint` and
@@ -42,7 +42,7 @@ On-demand tools for audits. Output is candidates, never verdicts.
 | Concern | Command | Known false positives |
 |---|---|---|
 | Dead code (Lua) | `luacheck .` (unused locals/args; currently clean) | mixin methods called by the host (see live roots) |
-| Dead code (Python) | `uvx vulture tools --min-confidence 60` | none seen; argparse handlers |
+| Dead code (Python) | `uvx vulture tools --min-confidence 60` | argparse handlers; lambda parameters a callback signature requires (`screenshots.py` `lambda rep: False`) |
 | Duplication | `npx --yes jscpd@4 --silent --reporters json --output .sift/runs/jscpd --ignore "**/.sift/**,Data/**" .` | XML template blocks in `Map.xml`/`Completion.xml` (UI boilerplate) |
 | Globals drift | check runtime globals against `.luacheckrc`, pinned WoW annotations and `types/forever.lua` | no LuaLS globals whitelist |
 
@@ -56,13 +56,15 @@ Behaviour-preserving proof for `tools/`: regenerate and diff against the committ
 `python3 tools/gen_legacy.py --offline` needs every source in `tools/.cache` (gitignored; copy it
 from another checkout or run without `--offline` to fetch the pinned build), and `python3
 tools/screenshots.py` rewrites `docs/screenshots/*.png`. A clean `git status` afterwards proves the
-edit changed nothing. The standards slice needs `SIFT_STANDARDS_PATH=$HOME/skills` to resolve the
-`wow-forever-addon` pack; without it `sift agents check` notes the pack as missing and moves on.
+edit changed nothing. `gen_legacy.py --offline` fails when the cache holds an older build than
+`BUILD`; run it once online to fetch the pinned build. The standards slice reads the pinned
+`wow-forever-addon` pack from the sift cache (`agents.py standards` prints its path);
+`SIFT_STANDARDS_PATH=$HOME/skills` overrides it with a local checkout that may not match the pin.
 
 ## Live roots
 
 - `LegacyForever.toc` file list — load order `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Data/Legacy.lua, Core, WhatsNew, Model, Live, Quests, Navigate,
-  Tracker, Completion.xml, Completion, Map.xml, Map`; never reorder as formatting.
+  Tracker, Completion.xml, Completion, Map.xml, Map, API`; never reorder as formatting.
 - `## SavedVariables: LegacyForeverDB` — persisted keys `tracked`, `zoneCompletion`,
   `flightPaths`, `showAreas`, `whatsNew`, `companions`, `lastVersion` and any others read via `ns.SavedTable(key)`; old keys in players'
   saved data are compatibility obligations.
@@ -78,13 +80,13 @@ edit changed nothing. The standards slice needs `SIFT_STANDARDS_PATH=$HOME/skill
 - Event names registered in `Live.lua` and callbacks via `EventRegistry`/`EventUtil`.
 - `ns.*` fields: each file receives the shared addon table `ns`; a field set in one file is read
   in another with no import. Search all `.lua` files, including `tests/`.
-- `tools/gen_legacy.py` output format: `Data/Legacy.lua` keys are the contract read by
-  `Model.lua`, `Live.lua`, `Map.lua`, `Completion.lua` and `tests/data_spec.lua`.
+- `tools/gen_legacy.py` output format: `Data/Legacy.lua` keys are the contract read through `ns.Data` by
+  every TOC Lua file after it (`rg -n 'ns\.Data' .`) and by `tests/data_spec.lua`.
 - `tools/legacy_render.py` — imported by `gen_legacy.py` and `screenshots.py`;
   `tools/screenshots.py` — run by hand after UI changes (needs Pillow and `wowmock`);
   `tools/check_diagnostics.py`, `tools/lint_multivalue.py` — run by `tools/typecheck.sh`.
-- `tools/latest_build.py`, `tools/changelog.py` — run by `.github/workflows/refresh-data.yml`
-  and `release.yml`; `refresh-data.yml` also rewrites the `BUILD = "..."` and
+- `tools/latest_build.py` — run by `.github/workflows/refresh-data.yml`; `tools/changelog.py` —
+  run by `release.yml` and (`--check`) `ci.yml`; `refresh-data.yml` also rewrites the `BUILD = "..."` and
   `SOURCE_DATE = "..."` lines of `gen_legacy.py` with `sed` — keep them single-line.
 
 ## Open questions for reviewers
@@ -110,11 +112,13 @@ edit changed nothing. The standards slice needs `SIFT_STANDARDS_PATH=$HOME/skill
 
 ## Conventions
 
-- Every Lua file starts `local _, ns = ...`; modules are `local X = {}; ns.X = X`.
+- Every TOC Lua file receives `local <name>, ns = ...` (Core.lua aliases `addon` to `ns`); modules are
+  `local X = {}; ns.X = X`.
 - Tabs, 120 columns, double quotes (StyLua). Python: 4 spaces, 120 columns (Ruff).
 - Comments explain game-client behaviour and why ("Forever's ruleset refuses ..."), not what.
 - Pure logic lives in `Model.lua` with no WoW API calls so the tests can load it;
-  `Live.lua` owns every read of live game state.
+  `Live.lua` owns the snapshot reads (exploration, flight paths, achievements, completed quests),
+  while `Quests.lua`, `Map.lua` and `Core.lua` still call the client directly for their own needs.
 - Python generator fails loud: malformed input raises `ValueError` with a `name:line` label.
 - Commit messages: Conventional Commits; CHANGELOG entries are prose per version.
 
@@ -139,6 +143,9 @@ finding.
   `---@cast`, e.g. `Model.lua`
 - Tracker `uiOrder` `0` (defensive-noise): Legacy Forever's registered slot in WFA-5, not a missing
   negative, e.g. `Tracker.lua`
+- `LegacyForeverDB = LegacyForeverDB or {}` before one saved write (parallel-implementations): a
+  two-line idiom, kept while SavedVariables timing is open; reads already share `ns.Setting`, e.g.
+  `WhatsNew.lua`, `Map.lua` `ToggleAreas`
 
 ## Anti-patterns
 
