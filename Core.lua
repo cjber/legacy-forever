@@ -26,7 +26,7 @@ ns.TITLE = "Legacy Forever"
 -- The Legacy shield: map pins, the map button, menu entries and the zone-completion count all wear it.
 ns.POINTS_ICON = "UI-Legacy-Points-icon-c60"
 -- One sentence for the chat line after an update (WhatsNew.lua): the headline of the release this ships in.
-ns.WHATS_NEW = L["Ready for translation, and map pins suggest Shortest Path Forever to plot the route."]
+ns.WHATS_NEW = L["/lf opens the world map with the Legacy menu showing, and the addon has a new trophy icon."]
 
 -- Every setting's default. A saved setting stays nil until the player changes it, and nil reads as the
 -- default here, so an old save file and a new option always agree.
