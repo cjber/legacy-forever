@@ -178,7 +178,8 @@ end
 
 local scheduled = false
 
--- The zone's quests for this character; false while Questie is still loading, nil without QuestieDB.
+-- The zone's quests for this character; false while Questie is still loading, nil without a usable QuestieDB
+-- (missing, an unsupported version, or a failed build).
 -- `deferred` never builds the index during the call: a cold index reads as loading, is built on the
 -- next frame, and the change is announced like Questie finishing its start.
 ---@param uiMapID number

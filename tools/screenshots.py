@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Regenerate docs/screenshots/*.png as mocks drawn from the WoW: Forever client's own art and data.
+"""Regenerate docs/screenshots/*.png and demo.gif as mocks drawn from the WoW: Forever client's own art and data.
 
 No game client is involved: map tiles, atlases, fonts and achievement data come from wago.tools via
 wowmock (the wow-mock-screenshots skill in cjber/skills). What the addon draws is reproduced here from
-its Lua: the zone objectives, the menu, the continent badges, the zone completion corner and tracker section,
-and the Legacy tracker, computed from Data/Legacy.lua and the client's achievement tables for one plausible character.
+its Lua: the zone objectives, the menu, the continent badges, an unvisited zone, the zone completion corner and
+tracker section, and the Legacy tracker, computed from Data/Legacy.lua and the client's achievement tables for one
+plausible character.
 
     python3 tools/screenshots.py            # WOWMOCK=/path/to/wow-mock-screenshots to override
 """
@@ -395,19 +396,22 @@ def zone_completion(live, zone):
 # ------------------------------------------------------------------------------ Completion.lua, as text
 
 ICONS = {
-    "areas": ("islands-queue-prop-compass", 300 / 297),
-    "taxis": ("flightmaster", 1),
-    "dungeons": ("dungeon", 1),
-    "raids": ("raid", 1),
-    "legacy": ("UI-Legacy-Points-icon-c60", 50 / 73),
-    "reputations": ("Interface\\Icons\\Achievement_Reputation_01", None),
+    "areas": "islands-queue-prop-compass",
+    "taxis": "flightmaster",
+    "dungeons": "dungeon",
+    "raids": "raid",
+    "legacy": "UI-Legacy-Points-icon-c60",
+    "reputations": "Interface\\Icons\\Achievement_Reputation_01",
 }
+TEXTURES = {"reputations"}
 POINTS_ICON = "UI-Legacy-Points-icon-c60"
 WHITE = (1, 1, 1)
 
 
-def fitted_markup(name, aspect, size):
+def fitted_markup(ui, name, size):
     """ns.AtlasMarkup: whole pixels keeping the atlas's shape within 2%, up to two pixels under `size`."""
+    atlas = ui.atlas(name)
+    aspect = atlas.width / atlas.height
     shape = min(aspect, 1 / aspect)
     long, short, best = size, size, math.inf
     for side in range(size, max(1, size - 2) - 1, -1):
@@ -420,11 +424,11 @@ def fitted_markup(name, aspect, size):
     return atlas_markup(name, short, long) if aspect < 1 else atlas_markup(name, long, short)
 
 
-def icon(key, size):
-    name, aspect = ICONS[key]
-    if aspect is None:
+def icon(ui, key, size):
+    name = ICONS[key]
+    if key in TEXTURES:
         return f"|T{name}:{size}:{size}:0:0:64:64:5:59:5:59|t"
-    return fitted_markup(name, aspect, size)
+    return fitted_markup(ui, name, size)
 
 
 def counts_text(ui, result, size):
@@ -434,7 +438,7 @@ def counts_text(ui, result, size):
         category = result[key]
         if category:
             text = f"{category['done']}/{category['total']}"
-            parts.append(f"{icon(key, size)} {colored(text, green if category['complete'] else white)}")
+            parts.append(f"{icon(ui, key, size)} {colored(text, green if category['complete'] else white)}")
     return "   ".join(parts)
 
 
@@ -458,12 +462,12 @@ def unlocated_tree(live, data):
     return tops
 
 
-def main_menu(live, data):
+def main_menu(ui, live, data):
     groups = zone_objectives(data, live, ASHENVALE)
     entries = [MenuTitle("Ashenvale")]
     for group in groups:
         explore = group["objectives"][0]["entry"]["kind"] == "explore"
-        mark = icon("areas", 14) if explore else icon("legacy", 14)
+        mark = icon(ui, "areas", 14) if explore else icon(ui, "legacy", 14)
         text = challenge_text(f"{mark} {live.name(group['achievement'])}", len(group["objectives"]))
         entries.append(MenuCheckbox(text, zone_key(group) in TRACKED))
     open_total = len(unlocated(data, live))
@@ -565,7 +569,7 @@ def menu_at(ui, entries, right=None, top=None, left=None):
 def render_map(ui, data, live):
     canvas, button = world_map(ui, data, live)
     bx, by, bw, bh = button
-    entries = main_menu(live, data)
+    entries = main_menu(ui, live, data)
     menu, x, y, _ = menu_at(ui, entries, right=bx + bw, top=by + bh)
     return scene(ui, [(canvas, 0, 0), (menu, x, y)])
 
@@ -574,7 +578,7 @@ def render_menu(ui, data, live):
     """The menu's "No fixed location" cascade open down to one skill's challenges, over the map's corner."""
     canvas, button = world_map(ui, data, live)
     bx, by, bw, bh = button
-    entries = main_menu(live, data)
+    entries = main_menu(ui, live, data)
     layers = []
     menu, x, y, rows = menu_at(ui, entries, right=bx + bw, top=by + bh)
     layers.append((menu, x, y))
@@ -654,13 +658,14 @@ def zone_pin(ui, canvas, x, y, portal=None):
     """LegacyForeverPinMixin:Layout centred on (x, y): the bare icon fitted in 14x20, or at an entrance the 32x32
     portal atlas with the icon fitted in 12x17 at its BOTTOMRIGHT offset (2, -2). A count is only ever in the tooltip.
     ns.FitAtlas keeps the 50x73 shield's shape, so the full height sets the width."""
+    shield = ui.atlas(POINTS_ICON)
     if portal is None:
-        w = 20 * 50 / 73
-        canvas.draw(ui.atlas(POINTS_ICON), x - w / 2, y - 10, w, 20)
+        w = 20 * shield.width / shield.height
+        canvas.draw(shield, x - w / 2, y - 10, w, 20)
         return
     canvas.draw(ui.atlas(portal), x - 16, y - 16, 32, 32)
-    w = 17 * 50 / 73
-    canvas.draw(ui.atlas(POINTS_ICON), x + 18 - w, y + 18 - 17, w, 17)
+    w = 17 * shield.width / shield.height
+    canvas.draw(shield, x + 18 - w, y + 18 - 17, w, 17)
 
 
 def render_unvisited(ui, data, live):
@@ -735,7 +740,7 @@ def render_demo(data):
         layers = [(canvas, 0, 0)]
         if menu:
             bx, by, bw, bh = button
-            layers.append(menu_at(ui, main_menu(live, data), right=bx + bw, top=by + bh)[:3])
+            layers.append(menu_at(ui, main_menu(ui, live, data), right=bx + bw, top=by + bh)[:3])
         steps.append((layers, seconds))
     # scene() frames each still to what it draws; the demo frames every step alike, to what any of them draws.
     boxes = [

@@ -86,8 +86,8 @@ marker (City of Dalaran, Ruins of Lordaeron, Excavation Site: Wetlands).
 The journal route cannot be used here: `JournalEncounterCreature`,
 `JournalEncounter`, and `JournalInstance` return HTTP 404 for this build.
 `Creature`/`CreatureDifficulty` expose no creature-to-map link, and every
-`LFGDungeons` row has MapID and FinalEncounterID zero. These tables were inspected
-via the same cached helper; they are not generator dependencies.
+`LFGDungeons` row has MapID and FinalEncounterID zero. They are not generator
+dependencies.
 
 **Valthalak uses reviewed quest curation.** Achievement 62054 → CriteriaTree
 221563/221564 → Criteria 111555 (Type 27) → quest 84195; variant 64014 → trees
@@ -114,7 +114,7 @@ Map 389's CorpseMapID 1 and corpse point **(1816.755859375, -4423.3715820312)**
 project through UiMapAssignment **46764** to Orgrimmar **1454**, at
 **0.530, 0.489** (unrounded 0.5295651853, 0.4886820751). Both variant entries
 have `kind = "instance"`, `instance = 389`, and the same pin; runtime treats
-them as one shared objective. They leave “No fixed location” but do not create
+them as one shared objective. They leave "No fixed location" but do not create
 Orgrimmar completion or a dungeon wing. Hall of Thanes remains an unresolved
 alternative: Map **3065**, interior Area **16919**, encounters **3493–3496**,
 has CorpseMapID **-1** and no verified exterior entrance. Do not pin that option.
@@ -160,20 +160,19 @@ Unresolved direct reward `(achievement, criteria)` pairs across both variants:
 kill **50**, instance/encounter **2**, quest **6**, reputation **16**, level **54**,
 skill **36**, rank **10**; **174** total. The two Explorer meta criteria are expanded,
 not counted as unresolved. Global progress and unplaced objectives stay absent
-from `zones` for the addon's “No fixed location” view.
+from `zones` for the addon's "No fixed location" view.
 
-Changes from the previous slice, counting both variants:
+Unlocated objectives by challenge category, counting both variants:
 
-| Challenge category | Newly located | Remaining unlocated and reason |
-| --- | ---: | --- |
-| Dungeons (Spelunker) | 56 | 10: Drowned City (2) has no verified entrance/Map; Blackmaw Hold, Alcaz Prison, Krol'dok Stronghold, Shaper's Terrace (8) have reviewed exterior zones but no instance Map IDs. |
-| Raids | 0 | 42: Wilds (26) and Deeps (16) lack encounter/instance evidence even for reviewed curation; see the audit below. Onyxia's two entries were already located. |
-| Adventure | 2 | None; both Valthalak variants use the reviewed Spire entrance. |
-| Field of Honor | 0 | 6: quests 96915/96918/96921 have outdoor Map 1 POIs, not dungeon/raid bindings. |
-| Level / skill / rank / reputation | 0 | 116: global progress, not instance objectives. |
+| Challenge category | Remaining unlocated and reason |
+| --- | --- |
+| Dungeons (Spelunker) | 10: Drowned City (2) has no verified entrance/Map; Blackmaw Hold, Alcaz Prison, Krol'dok Stronghold, Shaper's Terrace (8) have reviewed exterior zones but no instance Map IDs. |
+| Raids | 42: Wilds (26) and Deeps (16) lack encounter/instance evidence even for reviewed curation; see the audit below. Onyxia's two entries are located. |
+| Adventure | None; both Valthalak variants use the reviewed Spire entrance. |
+| Field of Honor | 6: quests 96915/96918/96921 have outdoor Map 1 POIs, not dungeon/raid bindings. |
+| Level / skill / rank / reputation | 116: global progress, not instance objectives. |
 
-Raid audit: refreshed DungeonEncounter (341 rows) and Map (73 rows) exports are
-identical to the cached sources. None of the 20 Type-0 Raid boss descriptions
+Raid audit: None of the 20 Type-0 Raid boss descriptions
 has an encounter row in this build; Type-165 Time-Lost Battalion references
 missing encounter 3339. The owning achievements have Instance_ID -1, and no
 other instance-bound achievement supplies these boss assets. There is no Map
@@ -183,7 +182,7 @@ identify these objectives. Descriptive similarities are insufficient to curate
 an instance or invent a corpse entrance.
 Hyjal Summit and Barrow Deeps therefore remain outside `completion.raids`:
 neither has a verified Map/encounter/entrance link in this build.
-**WMOAreaTable 143937** associates “The Barrow Deeps” with Winterspring Area
+**WMOAreaTable 143937** associates "The Barrow Deeps" with Winterspring Area
 **618**, but establishes neither an instance nor an entrance; related Area
 **17180** is absent. This is an **unverified lead**, not placement evidence.
 
@@ -238,7 +237,7 @@ runtime supplies progress and applies eligibility filters.
   keep the wing's CriteriaTree description, and collect every sorted
   `{achievement, criteria}` reference across variants and tiers. Separate wings
   remain separate even when they share an instance. The validated Type-78
-  compound step 19213/117733, “Ragefire Chasm or Hall of Thanes”, gets a Legacy
+  compound step 19213/117733, "Ragefire Chasm or Hall of Thanes", gets a Legacy
   entrance pin but is not a single-boss wing; raids never enter this graph.
   `locations.json.dungeonWings`, keyed by boss ID,
   supplies `uiMap`, the exact wing `name`, and `evidence`. Optional `area` and
@@ -356,8 +355,8 @@ a formatter or excluding the generated file from CI.
 
 ## Screenshots
 
-`python3 tools/screenshots.py` redraws `docs/screenshots/{map,menu,tracker,continent}.png`
-from the game's own art and `Data/Legacy.lua`; it never touches the client. It
+`python3 tools/screenshots.py` redraws `docs/screenshots/{map,menu,tracker,continent,unvisited}.png`
+and `demo.gif` from the game's own art and `Data/Legacy.lua`; it never touches the client. It
 needs a checkout of the `cjber/skills` repository for the `wowmock` library,
 found in `~/.claude/skills/wow-mock-screenshots/` by default; set the
 `WOWMOCK` environment variable to the directory holding `wowmock.py` to use

@@ -159,7 +159,8 @@ end
 
 ---@type table<number, LegacySnapshot>
 local snapshots = {}
--- The quests this character has turned in, read once and then kept up to date by QUEST_TURNED_IN.
+-- The quests this character has turned in, re-read after each invalidation and kept up to date by QUEST_TURNED_IN
+-- in between.
 ---@type LegacySet?
 local completedQuests
 
