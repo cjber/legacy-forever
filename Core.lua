@@ -2,6 +2,7 @@ local _, addon = ...
 
 ---@class LegacyForeverNamespace
 ---@field TITLE string
+---@field POINTS_ICON string
 ---@field WHATS_NEW string
 ---@field CompanionHint fun(): string?
 ---@field WhatsNew fun()
@@ -14,6 +15,7 @@ local _, addon = ...
 ---@field Tracker LegacyTracker
 ---@field Completion LegacyCompletion
 ---@field RefreshMap fun()
+---@field OpenMapMenu fun()
 ---@field Navigate fun(uiMapID: number, x: number, y: number, title: string)
 ---@field NavigateHint fun(): string
 ---@field Guide fun(uiMapID: number, x: number, y: number, title: string): boolean, ("combat"|"unavailable")?
@@ -21,6 +23,8 @@ local ns = addon
 local L = ns.L
 
 ns.TITLE = "Legacy Forever"
+-- The Legacy shield: map pins, the map button, menu entries and the zone-completion count all wear it.
+ns.POINTS_ICON = "UI-Legacy-Points-icon-c60"
 -- One sentence for the chat line after an update (WhatsNew.lua): the headline of the release this ships in.
 ns.WHATS_NEW = L["Ready for translation, and map pins suggest Shortest Path Forever to plot the route."]
 
@@ -207,6 +211,14 @@ local function Criteria(achievementID)
 	end
 end
 
+-- The options live in the map's Legacy menu, so the slash command and the compartment entry both open it.
+local function OpenMenu()
+	if not (WorldMapFrame and WorldMapFrame:IsShown()) then
+		ToggleWorldMap()
+	end
+	ns.OpenMapMenu()
+end
+
 SLASH_LEGACYFOREVER1 = "/lf"
 SLASH_LEGACYFOREVER2 = "/legacyforever"
 SlashCmdList.LEGACYFOREVER = function(msg)
@@ -219,13 +231,13 @@ SlashCmdList.LEGACYFOREVER = function(msg)
 		Criteria(achievementID)
 	elseif command:find("^criteria") then
 		ns.Print("usage: /lf criteria 684")
+	elseif command == "" then
+		OpenMenu()
 	else
-		ns.Print(L["open the world map and use the Legacy button in its top-right corner."])
+		ns.Print(L["/lf - open the world map and its Legacy menu"])
 		ns.Print(L["/lf audit - check the bundled data against the game"])
 		ns.Print(L["/lf criteria 684 - list what the game reports for one achievement"])
 	end
 end
 
-function LegacyForever_OnAddonCompartmentClick()
-	ToggleWorldMap()
-end
+LegacyForever_OnAddonCompartmentClick = OpenMenu

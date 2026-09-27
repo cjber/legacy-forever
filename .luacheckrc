@@ -41,6 +41,7 @@ files["tests/navigate_spec.lua"] = {
 	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "UiMapPoint", "ShortestPathForever" },
 }
 files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame" } }
+files["tests/settings_spec.lua"] = { globals = { "strtrim", "ToggleWorldMap", "WorldMapFrame" } }
 files["tests/api_spec.lua"] = {
 	globals = {
 		"AlertFrame", "C_Map", "C_SuperTrack", "C_Texture", "C_Timer", "CreateAtlasMarkup", "DUNGEONS", "EventUtil", "GetTime", "geterrorhandler",

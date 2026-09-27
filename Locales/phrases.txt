@@ -18,6 +18,7 @@ L["%s is at %s."] = "%s is at %s."
 L["%s: %d left"] = "%s: %d left"
 L["%s: %d of %d areas left"] = "%s: %d of %d areas left"
 L["%s: %d of %d zones complete (%d%%)"] = "%s: %d of %d zones complete (%d%%)"
+L["/lf - open the world map and its Legacy menu"] = "/lf - open the world map and its Legacy menu"
 L["/lf audit - check the bundled data against the game"] = "/lf audit - check the bundled data against the game"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - list what the game reports for one achievement"
@@ -82,8 +83,6 @@ L["Zone completion"] = "Zone completion"
 L["and %d more"] = "and %d more"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"couldn't add a section to the objective tracker; please report /lf audit."
-L["open the world map and use the Legacy button in its top-right corner."] =
-	"open the world map and use the Legacy button in its top-right corner."
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"the objective tracker isn't available, so tracked challenges can't be shown."
 L["updated to %s. %s"] = "updated to %s. %s"

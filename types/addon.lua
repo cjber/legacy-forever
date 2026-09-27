@@ -24,6 +24,7 @@
 ---@field x? number
 ---@field y? number
 ---@field instance? number
+---@field raid? boolean
 
 ---@class LegacyProgress
 ---@field text string

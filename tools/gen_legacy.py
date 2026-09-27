@@ -349,6 +349,10 @@ class Geography:
         elif entrances and zone not in entrances:
             raise ValueError(f"Map {instance}: curated zone {zone} excludes the client entrance")
         entry = {"kind": "instance", "instance": instance}
+        # The map draws a raid's entrance with the raid portal, a dungeon's with the dungeon one.
+        row = self.tables["Map"].get(instance)
+        if row and row["InstanceType"] == MAP_RAID:
+            entry["raid"] = True
         if zone in entrances:
             entry["x"], entry["y"] = entrances[zone]
         return zone, entry

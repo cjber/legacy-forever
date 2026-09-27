@@ -7,9 +7,7 @@ local AREA_TEMPLATE = "LegacyForeverAreaPinTemplate"
 -- Unseen ground reads darker, the fog-of-war convention (a warm tint vanished on the
 -- parchment); darker still under the mouse.
 local AREA_ALPHA, AREA_HOVER_ALPHA = 0.25, 0.4
-local POINTS_ICON = "UI-Legacy-Points-icon-c60"
--- The original game's raids by instance map ID; every other instance entrance is a dungeon.
-local RAIDS = { [249] = true, [309] = true, [409] = true, [469] = true, [509] = true, [531] = true, [533] = true }
+local POINTS_ICON = ns.POINTS_ICON
 
 local KIND_LABEL = {
 	explore = L["Undiscovered area"],
@@ -149,7 +147,7 @@ local function ContinentZones(continentID)
 	local zones = {}
 	for uiMapID in pairs(ns.Data.zones) do
 		local info = C_Map.GetMapInfo(uiMapID)
-		if info and info.parentMapID == continentID then
+		if info and ns.Live.ContinentOf(uiMapID) == continentID then
 			local groups = {}
 			for _, group in ipairs(ZoneGroups(uiMapID)) do
 				if not IsExploreGroup(group) then
@@ -418,7 +416,7 @@ local function DefinePinMixin()
 		self:SetScript("OnHide", self.OnMouseLeave)
 		-- Pins are pooled, so this is set on every acquire. A zone badge lets the click open the zone below it.
 		self:SetMouseClickEnabled(self:Destination() ~= nil)
-		self:Layout(objective and objective.entry.instance)
+		self:Layout(objective and objective.entry)
 		if zone then
 			self:SetPosition(zone.x, zone.y)
 		elseif objective then
@@ -429,13 +427,14 @@ local function DefinePinMixin()
 
 	-- At an entrance: the retail portal the map already uses there, with a small shield on its corner, so the
 	-- entrance still reads as one and the Legacy step as a badge on it. Anywhere else: the shield alone.
-	---@param instance number?
-	function LegacyForeverPinMixin:Layout(instance)
+	---@param entry LegacyEntry?
+	function LegacyForeverPinMixin:Layout(entry)
+		local instance = entry and entry.instance
 		self.Icon:ClearAllPoints()
 		self.Highlight:ClearAllPoints()
 		self.Portal:SetShown(instance ~= nil)
-		if instance then
-			local atlas = RAIDS[instance] and "Raid" or "Dungeon"
+		if entry and instance then
+			local atlas = entry.raid and "Raid" or "Dungeon"
 			self:SetSize(32, 32)
 			self.Portal:SetAtlas(atlas)
 			ns.FitAtlas(self.Icon, POINTS_ICON, 12, 17)
@@ -503,6 +502,8 @@ local function DefineAreaPinMixin()
 	---@field textures? LegacyTexturePool
 	---@field zone? LegacyZone
 	---@field hovered? LegacyArea
+	---@field cursorX? number
+	---@field cursorY? number
 	---@field drawn table<string, Texture[]>
 	---@field legacy table<string, LegacyAreaObjective>
 	LegacyForeverAreaPinMixin = CreateFromMixins(MapCanvasPinMixin)
@@ -518,11 +519,20 @@ local function DefineAreaPinMixin()
 		self:UseFrameLevelType("PIN_FRAME_LEVEL_MAP_EXPLORATION")
 		self:EnableMouse(false)
 		self.textures = CreateTexturePool(self, "OVERLAY")
+		-- The area scan runs only when the cursor moves over the canvas; the position is in canvas
+		-- pixels, so a zoom or pan under a still cursor counts as a move.
 		self:SetScript("OnUpdate", function()
 			if self:GetMap():IsCanvasMouseFocus() then
-				self:HoverAt(self:CursorPosition())
-			elseif self.hovered then
-				self:Highlight(nil)
+				local x, y = self:CursorPosition()
+				if x ~= self.cursorX or y ~= self.cursorY then
+					self.cursorX, self.cursorY = x, y
+					self:HoverAt(x, y)
+				end
+			else
+				self.cursorX, self.cursorY = nil, nil
+				if self.hovered then
+					self:Highlight(nil)
+				end
 			end
 		end)
 		-- The polling stops while the map is closed, so the hovered area's shade and tooltip go now.
@@ -537,6 +547,7 @@ local function DefineAreaPinMixin()
 			self.textures:ReleaseAll()
 		end
 		self.zone, self.drawn = nil, {}
+		self.cursorX, self.cursorY = nil, nil
 	end
 
 	function LegacyForeverAreaPinMixin:OnReleased()
@@ -729,6 +740,12 @@ local function Attach()
 	-- Refresh anchors it; see TopRightOffset.
 	---@type LegacyForeverMapButtonMixin
 	local button = map:AddOverlayFrame("LegacyForeverMapButtonTemplate", "DROPDOWNBUTTON")
+
+	function ns.OpenMapMenu()
+		if not button:IsMenuOpen() then
+			button:OpenMenu()
+		end
+	end
 
 	function ns.RefreshMap()
 		if map:IsShown() then
