@@ -1,8 +1,10 @@
 """Regressions for Lua expansion contexts, lexical boundaries and explicit intent."""
 
+import tempfile
 import unittest
+from pathlib import Path
 
-from tools.lint_multivalue import LuaSyntaxError, Parser
+from tools.lint_multivalue import LuaSyntaxError, Parser, lua_files
 
 
 class MultiValueTests(unittest.TestCase):
@@ -93,6 +95,14 @@ return 1 .. select(2, g())
         for source in ['local s = "unterminated', "--[=[missing end", "f(select(2, g())", "local t = {", "return @"]:
             with self.subTest(source=source), self.assertRaises(LuaSyntaxError):
                 Parser(source).check()
+
+    def test_lua_files_skip_worktrees(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in ["Core.lua", ".claude/worktrees/branch/Core.lua"]:
+                (root / name).parent.mkdir(parents=True, exist_ok=True)
+                (root / name).write_text("")
+            self.assertEqual(lua_files([root]), [root / "Core.lua"])
 
 
 if __name__ == "__main__":

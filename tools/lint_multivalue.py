@@ -310,7 +310,7 @@ class Parser:
 
 def lua_files(paths: list[Path]) -> list[Path]:
     # Match the runtime gate's exclusions, but include tests and local declarations for this lint.
-    excluded = {".git", ".types", ".sift", ".release", ".cache"}
+    excluded = {".git", ".claude", ".types", ".sift", ".release", ".cache"}
     return sorted(
         {
             file
