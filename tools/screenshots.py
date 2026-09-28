@@ -627,7 +627,7 @@ def render_tracker(ui, data, live):
         TrackerModule("Ashenvale", [TrackerBlock(counts_text(ui, result, 14))]),
         TrackerModule("Legacy", legacy),
     ]
-    canvas, rects = objective_tracker(ui, modules)
+    canvas, rects = objective_tracker(ui, modules, container=False)
     # The zone section's header: the percent left of the minimize button and a 2 px bar under both.
     hx, hy, hw, hh = rects["modules"][0]
     font = FONTS["ObjectiveTrackerHeaderFont"]
