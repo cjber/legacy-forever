@@ -24,7 +24,7 @@ read_globals = { "CreateFramePoolCollection", "C_XMLUtil",
 	"GetAchievementNumCriteria", "GetBuildInfo", "GetLocale", "geterrorhandler", "InCombatLockdown", "GetTime", "PlaySound", "SOUNDKIT", "GetCategoryInfo", "GetCategoryList", "GetCategoryNumAchievements", "hooksecurefunc",
 	"DUNGEONS", "LegacySystemFrame", "MenuUtil", "OTHER", "QUESTS_LABEL", "RAIDS", "REPUTATION", "Mixin", "OBJECTIVE_DASH_STYLE_HIDE", "ObjectiveTrackerFrame",
 	"ObjectiveTrackerManager", "ShortestPathForever", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "LibQuestieDB", "Questie", "QuestieLoader", "strtrim",
-	"tContains", "ToggleLegacySystemUI", "ToggleWorldMap", "OpenWorldMap", "UnitClass", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame", "ForeverTrackerHost",
+	"tContains", "ToggleLegacySystemUI", "ToggleWorldMap", "OpenWorldMap", "UnitClass", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 
 files["Data/Legacy.lua"] = { max_line_length = false }
