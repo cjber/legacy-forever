@@ -1,9 +1,9 @@
 std = "lua51"
 max_line_length = 120
-exclude_files = { ".release/**", ".types/**", "types/**", ".claude/**" }
+exclude_files = { "tools/.cache/**", ".release/**", ".types/**", "types/**", ".claude/**" }
 ignore = { "212/_.*", "212/self" } -- unused args prefixed with _, and self on mixin handlers
 
-globals = {
+globals = { "ForeverTrackerHost",
 	"LegacyForeverAreaPinMixin",
 	"LegacyForeverMapButtonMixin",
 	"LegacyForeverZoneOverlayMixin",
@@ -16,7 +16,7 @@ globals = {
 	"SlashCmdList",
 }
 
-read_globals = {
+read_globals = { "CreateFramePoolCollection", "C_XMLUtil",
 	"AchievementFrame_SelectAchievement", "AlertFrame", "C_AddOns", "AlertFrame_OnClick", "C_Map", "C_MapExplorationInfo", "C_QuestLog", "C_Reputation", "C_SuperTrack", "C_TaxiMap", "C_Timer", "C_Texture", "C_Traits", "CreateAtlasMarkup",
 	"CreateFrame", "CreateFromMixins", "CreateTexturePool", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameFontNormal", "GameFontNormalSmall", "GameFontNormalTiny", "GameTooltip_AddBlankLineToTooltip", "GameTooltip_AddColoredLine", "GameTooltip_AddDisabledLine", "GetCursorPosition", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR", "HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",

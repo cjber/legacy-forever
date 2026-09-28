@@ -11,6 +11,11 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.3] - 2026-09-28
+
+- **Separate addon tracking from Blizzard’s layout.** Addon sections now use their own frame pools and sit beside the quest tracker, avoiding the shared tracker registration implicated in Edit Mode aura errors.
+- **Check the client integration in CI.** Regression checks run against pinned Forever tracker source and reject native tracker registration.
+
 ## [0.6.2] - 2026-09-27
 
 - **Tracker and map overlays avoid shared UI hooks.** Tracker registration waits for the game to finish loading, and area textures manage their own masks.
