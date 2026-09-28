@@ -116,7 +116,13 @@ local modules = {}
 
 ---@param trackerModule LegacyTrackerModule
 local function Attach(trackerModule)
-	ns.TrackerHost.Attach(trackerModule)
+	if ForeverTrackerHost then
+		ForeverTrackerHost.Attach(trackerModule)
+		return
+	end
+	if ObjectiveTrackerManager:GetContainerForModule(trackerModule) ~= ObjectiveTrackerFrame then
+		ObjectiveTrackerManager:SetModuleContainer(trackerModule, ObjectiveTrackerFrame)
+	end
 end
 
 local function AttachAll()
@@ -128,7 +134,10 @@ end
 ---@param trackerModule LegacyTrackerModule
 ---@return boolean
 local function IsAttached(trackerModule)
-	return ns.TrackerHost.IsAttached(trackerModule)
+	if ForeverTrackerHost then
+		return ForeverTrackerHost.IsAttached(trackerModule)
+	end
+	return ObjectiveTrackerManager:GetContainerForModule(trackerModule) ~= nil
 end
 
 ---@return boolean
@@ -142,10 +151,10 @@ function Tracker.Count()
 end
 
 local function Available()
-	return ns.TrackerHost ~= nil
+	return ObjectiveTrackerManager and ObjectiveTrackerFrame
 end
 
--- A section in the private companion tracker, laid out by `mixin`. Returns nil
+-- A section of our own in the objective tracker, laid out by `mixin`. Returns nil
 -- when the tracker isn't available (Register reports that once).
 ---@param name string
 ---@param mixin LegacyTrackerModule
@@ -174,7 +183,8 @@ function Tracker.AddModule(name, mixin, uiOrder)
 	return trackerModule
 end
 
--- Warn after initialization so optional sections have had time to attach.
+-- The manager adds its container only once both events have fired, so checking any sooner can
+-- warn about a section that is about to attach.
 local function WarnIfUnattached()
 	for _, trackerModule in ipairs(modules) do
 		if not IsAttached(trackerModule) then

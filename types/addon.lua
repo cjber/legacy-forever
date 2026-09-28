@@ -185,6 +185,12 @@ LegacyForeverDB = nil
 ---@type LegacyForeverGlobal
 LegacyForever = nil
 
+---@class ForeverTrackerHostAPI
+---@field Attach fun(module: Frame)
+---@field IsAttached fun(module: Frame?): boolean
+---@type ForeverTrackerHostAPI?
+ForeverTrackerHost = nil
+
 ---@class LegacyContinentZone
 ---@field uiMapID number
 ---@field name string
