@@ -120,9 +120,7 @@ local function Attach(trackerModule)
 		ForeverTrackerHost.Attach(trackerModule)
 		return
 	end
-	if ObjectiveTrackerManager:GetContainerForModule(trackerModule) ~= ObjectiveTrackerFrame then
-		ObjectiveTrackerManager:SetModuleContainer(trackerModule, ObjectiveTrackerFrame)
-	end
+	-- The shared private host is optional; standalone companions stay inert until it loads.
 end
 
 local function AttachAll()
@@ -137,7 +135,7 @@ local function IsAttached(trackerModule)
 	if ForeverTrackerHost then
 		return ForeverTrackerHost.IsAttached(trackerModule)
 	end
-	return ObjectiveTrackerManager:GetContainerForModule(trackerModule) ~= nil
+	return false
 end
 
 ---@return boolean
