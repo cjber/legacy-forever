@@ -9,9 +9,11 @@ Added/Fixed lists: what matters about a release is why the map or tracker now sh
 Each version's entry is also its release notes on GitHub, CurseForge and Wago. Older entries are kept
 verbatim rather than rewritten as the addon moves.
 
-## [Unreleased]
+## [0.6.4] - 2026-09-28
 
 - **Map pins wait for combat to end.** Refreshing Legacy pins during combat no longer touches the protected map pin manager; stale pins hide and rebuild safely after combat.
+
+## [Unreleased]
 
 ## [0.6.3] - 2026-09-28
 
