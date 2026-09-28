@@ -1,7 +1,7 @@
 # The Legacy tracker
 
-Forever doesn't allow Blizzard's own tracking of Legacy challenges, so Legacy Forever adds its own section at the
-top of the objective tracker. It lists only what you tick in the map's Legacy menu, with live progress from the game.
+Forever doesn't allow Blizzard's own tracking of Legacy challenges, so Legacy Forever adds its own section beside the
+objective tracker. It lists only what you tick in the map's Legacy menu, with live progress from the game.
 
 ![The objective tracker with Ashenvale's completion and the tracked Legacy challenges](screenshots/tracker.png)
 

@@ -12,6 +12,7 @@ local _, addon = ...
 ---@field Model LegacyModel
 ---@field Live LegacyLive
 ---@field Quests LegacyQuests
+---@field TrackerHost ForeverTrackerHostAPI
 ---@field Tracker LegacyTracker
 ---@field Completion LegacyCompletion
 ---@field RefreshMap fun()

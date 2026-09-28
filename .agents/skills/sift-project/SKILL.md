@@ -169,4 +169,4 @@ confirmed defect of one of these shapes with `settled:<name>`.
   non-dot ignores; a dot entry there is dead config.
 - Lenses: none yet.
 
-The type gate also runs `python3 -m tools.lint_taint` and `python3 tools/typecheck_coverage.py`: native-method hooks, shared UI-state writes and omitted runtime type coverage fail CI. Tracker initialization follows both native load events, deferred one frame; AddContainer hooks are retired.
+The type gate also runs `python3 -m tools.lint_taint` and `python3 tools/typecheck_coverage.py`: native-method hooks, shared UI-state writes and omitted runtime type coverage fail CI. TrackerHost owns addon sections and pools outside Blizzard's registry; first rendering follows both native load events, deferred one frame. CI runs the private host against pinned Forever module/block/animation source.
