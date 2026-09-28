@@ -693,7 +693,21 @@ local function CreatePinProvider()
 	DefinePinMixin()
 	DefineAreaPinMixin()
 	DefineAreaPinHover()
-	local provider = CreateFromMixins(MapCanvasDataProviderMixin)
+	---@class LegacyMapProvider: MapCanvasDataProviderMixin
+	---@field ResumeAfterCombat fun(self: LegacyMapProvider)
+	local provider = CreateFromMixins(MapCanvasDataProviderMixin) --[[@as LegacyMapProvider]]
+	local refreshPending = false
+
+	-- MapCanvas calls providers while combat lockdown is active too.  Acquiring a pin
+	-- makes the native pin manager inspect secure mouse state, which taints the map in
+	-- combat.  Hide our old pins (a safe frame operation), then rebuild after combat.
+	local function HidePins(map)
+		for _, template in ipairs({ PIN_TEMPLATE, AREA_TEMPLATE }) do
+			for pin in map:EnumeratePinsByTemplate(template) do
+				pin:SetShown(false)
+			end
+		end
+	end
 
 	function provider:RemoveAllData()
 		self:GetMap():RemoveAllPinsByTemplate(PIN_TEMPLATE)
@@ -701,8 +715,15 @@ local function CreatePinProvider()
 	end
 
 	function provider:RefreshAllData()
+		local map = self:GetMap()
+		if InCombatLockdown() then
+			refreshPending = true
+			HidePins(map)
+			return
+		end
+		refreshPending = false
 		self:RemoveAllData()
-		local mapID = self:GetMap():GetMapID()
+		local mapID = map:GetMapID()
 		local info = mapID and C_Map.GetMapInfo(mapID)
 		if info and info.mapType == Enum.UIMapType.Continent then
 			if ns.Completion.ShownOnMap() then
@@ -737,6 +758,12 @@ local function CreatePinProvider()
 		end
 	end
 
+	function provider:ResumeAfterCombat()
+		if refreshPending and self:GetMap():IsShown() then
+			self:RefreshAllData()
+		end
+	end
+
 	return provider
 end
 
@@ -746,6 +773,12 @@ local function Attach()
 	local map = WorldMapFrame
 	local provider = CreatePinProvider()
 	map:AddDataProvider(provider)
+	local events = CreateFrame("Frame")
+	events:RegisterEvent("PLAYER_REGEN_ENABLED")
+	events:SetScript("OnEvent", function()
+		---@diagnostic disable-next-line: undefined-field
+		provider:ResumeAfterCombat()
+	end)
 
 	-- Refresh anchors it; see TopRightOffset.
 	---@type LegacyForeverMapButtonMixin

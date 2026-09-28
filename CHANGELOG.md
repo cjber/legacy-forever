@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Map pins wait for combat to end.** Refreshing Legacy pins during combat no longer touches the protected map pin manager; stale pins hide and rebuild safely after combat.
+
 ## [0.6.3] - 2026-09-28
 
 - **Separate addon tracking from Blizzard’s layout.** Addon sections now use their own frame pools and sit beside the quest tracker, avoiding the shared tracker registration implicated in Edit Mode aura errors.
