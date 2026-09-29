@@ -239,7 +239,14 @@ local function Layout()
 	ObjectiveTrackerFrame:ClearAllPoints()
 	ObjectiveTrackerFrame:SetPoint(stackPoint, host, stackRelativePoint, 0, 0)
 	local currentNativeHeight = ObjectiveTrackerFrame:GetHeight() or requestedNativeHeight
-	if appliedNativeHeight and math.abs(currentNativeHeight - appliedNativeHeight) > 0.5 then
+	if
+		(appliedNativeHeight and math.abs(currentNativeHeight - appliedNativeHeight) > 0.5)
+		or (
+			not appliedNativeHeight
+			and requestedNativeHeight
+			and math.abs(currentNativeHeight - requestedNativeHeight) > 0.5
+		)
+	then
 		requestedNativeHeight = currentNativeHeight
 	end
 	local bottom = host.GetBottom and host:GetBottom() or ((host:GetTop() or 0) - host:GetHeight())
