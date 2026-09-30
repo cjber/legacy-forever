@@ -1,0 +1,82 @@
+[
+  {
+    "argv": [
+      "stylua",
+      "--check",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "ruff",
+      "format",
+      "--check",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "36 files already formatted\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "ruff",
+      "check",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "All checks passed!\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luacheck",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "Checking API.lua                                  OK\nChecking Completion.lua                           OK\nChecking Core.lua                                 OK\nChecking Data/Legacy.lua                          OK\nChecking Live.lua                                 OK\nChecking Locales/enUS.lua                         OK\nChecking Map.lua                                  OK\nChecking Model.lua                                OK\nChecking Navigate.lua                             OK\nChecking Quests.lua                               OK\nChecking Settings.lua                             OK\nChecking Tracker.lua                              OK\nChecking TrackerHost.lua                          OK\nChecking WhatsNew.lua                             OK\nChecking tests/api_spec.lua                       OK\nChecking tests/data_spec.lua                      OK\nChecking tests/live_spec.lua                      OK\nChecking tests/locale_spec.lua                    OK\nChecking tests/map_combat_spec.lua                OK\nChecking tests/model_spec.lua                     OK\nChecking tests/navigate_spec.lua                  OK\nChecking tests/quests_spec.lua                    OK\nChecking tests/settings_spec.lua                  OK\nChecking tests/tracker_host_spec.lua              OK\nChecking tests/tracker_lifecycle_spec.lua         OK\nChecking tests/whatsnew_spec.lua                  OK\nChecking tools/screenshots_model.lua              OK\n\nTotal: 0 warnings / 0 errors in 27 files\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python3",
+      "tools/changelog.py",
+      "--check"
+    ],
+    "exit": 0,
+    "stdout": "CHANGELOG.md documents 0.1.0, 0.2.0, 0.3.0, 0.4.0, 0.4.1, 0.5.0, 0.6.0, 0.6.1, 0.6.2, 0.6.3, 0.6.4, 0.6.5\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "actionlint"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "zizmor",
+      "--offline",
+      ".github"
+    ],
+    "exit": 0,
+    "stdout": "No findings to report. Good job! (17 suppressed)\n",
+    "stderr": " INFO zizmor: \ud83c\udf08 zizmor v1.30.1\n INFO audit: zizmor: \ud83c\udf08 completed .github/dependabot.yml\n INFO audit: zizmor: \ud83c\udf08 completed .github/workflows/ci.yml\n INFO audit: zizmor: \ud83c\udf08 completed .github/workflows/refresh-data.yml\n INFO audit: zizmor: \ud83c\udf08 completed .github/workflows/release.yml\n"
+  },
+  {
+    "argv": [
+      "gitleaks",
+      "git",
+      "--redact",
+      "--no-banner",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "1:28PM INF 97 commits scanned.\n1:28PM INF scanned ~1489110 bytes (1.49 MB) in 213ms\n1:28PM INF no leaks found\n"
+  }
+]

@@ -22,8 +22,6 @@ L["/lf - open the world map and its Legacy menu"] = "/lf - open the world map an
 L["/lf audit - check the bundled data against the game"] = "/lf audit - check the bundled data against the game"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - list what the game reports for one achievement"
-L["/lf opens the world map with the Legacy menu showing, and the addon has a new trophy icon."] =
-	"/lf opens the world map with the Legacy menu showing, and the addon has a new trophy icon."
 L["A grey line in a pin's tooltip when Shortest Path Forever would plot the route."] =
 	"A grey line in a pin's tooltip when Shortest Path Forever would plot the route."
 L["Areas explored"] = "Areas explored"
@@ -64,6 +62,8 @@ L["Open a flight master on this continent to check these."] = "Open a flight mas
 L["Open in the Legacy panel"] = "Open in the Legacy panel"
 L["Open the Legacy panel"] = "Open the Legacy panel"
 L["Open the map"] = "Open the map"
+L["Options now use short pages, and Legacy tracker sections stay clear of quests during combat."] =
+	"Options now use short pages, and Legacy tracker sections stay clear of quests during combat."
 L["Part of %s"] = "Part of %s"
 L["Part of %s: %s for exploring every zone"] = "Part of %s: %s for exploring every zone"
 L["Part of %s: %s for the whole challenge"] = "Part of %s: %s for the whole challenge"

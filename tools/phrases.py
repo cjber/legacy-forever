@@ -11,8 +11,12 @@ Translation files themselves (Locales/) are not read, so a phrase the code no lo
 import re
 from pathlib import Path
 
+try:
+    from tools.typecheck_coverage import runtime_files
+except ModuleNotFoundError:  # Direct invocation from the tools directory.
+    from typecheck_coverage import runtime_files
+
 ROOT = Path(__file__).resolve().parent.parent
-TOC = ROOT / "LegacyForever.toc"
 PHRASE = re.compile(r'\bL\["((?:\\.|[^"\\])*)"\]')
 HEADER = """\
 -- A translation template for Legacy Forever. Save a copy as Locales/deDE.lua (or your locale), change "deDE" below,
@@ -26,17 +30,14 @@ local L = ns.L
 """
 
 
-def shipped():
-    """The Lua files the TOC loads, in load order, outside Locales/."""
-    for line in TOC.read_text().splitlines():
-        line = line.strip()
-        if line.endswith(".lua") and not line.startswith(("#", "Locales")):
-            yield ROOT / line.replace("\\", "/")
+def shipped(root=ROOT):
+    """The Lua files in the TOC/XML runtime graph, outside Locales/."""
+    return (path for path in runtime_files(root) if "Locales" not in path.relative_to(root).parts)
 
 
-def phrases():
+def phrases(root=ROOT):
     found = set()
-    for path in shipped():
+    for path in shipped(root):
         found.update(PHRASE.findall(path.read_text()))
     return sorted(found)
 

@@ -378,7 +378,7 @@ def challenge_text(name, count):
     return f"{name} |cffffffff({count})|r"
 
 
-def unlocated_tree(live, data):
+def unlocated_tree(live):
     """AddUnlocated's grouping: {top name: {"subs": {sub name: items}, "items": items}} in first-appearance order."""
     tops = {}
     for item in live.model.unlocated:
@@ -391,7 +391,7 @@ def unlocated_tree(live, data):
     return tops
 
 
-def main_menu(ui, live, data):
+def main_menu(ui, live):
     groups = live.model.zone_objectives(ASHENVALE)
     entries = [MenuTitle("Ashenvale")]
     for group in groups:
@@ -496,7 +496,7 @@ def menu_at(ui, entries, right=None, top=None, left=None):
 def render_map(ui, data, live):
     canvas, button = world_map(ui, data, live)
     bx, by, bw, bh = button
-    entries = main_menu(ui, live, data)
+    entries = main_menu(ui, live)
     menu, x, y, _ = menu_at(ui, entries, right=bx + bw, top=by + bh)
     return scene(ui, [(canvas, 0, 0), (menu, x, y)])
 
@@ -505,11 +505,11 @@ def render_menu(ui, data, live):
     """The menu's "No fixed location" cascade open down to one skill's challenges, over the map's corner."""
     canvas, button = world_map(ui, data, live)
     bx, by, bw, bh = button
-    entries = main_menu(ui, live, data)
+    entries = main_menu(ui, live)
     layers = []
     menu, x, y, rows = menu_at(ui, entries, right=bx + bw, top=by + bh)
     layers.append((menu, x, y))
-    tops = unlocated_tree(live, data)
+    tops = unlocated_tree(live)
     top_name = "Tradeskills"
     sub_name = next(iter(tops[top_name]["subs"]))
     parent_row = rows[
@@ -668,7 +668,7 @@ def render_demo(data):
         layers = [(canvas, 0, 0)]
         if menu:
             bx, by, bw, bh = button
-            layers.append(menu_at(ui, main_menu(ui, live, data), right=bx + bw, top=by + bh)[:3])
+            layers.append(menu_at(ui, main_menu(ui, live), right=bx + bw, top=by + bh)[:3])
         steps.append((layers, seconds))
     # scene() frames each still to what it draws; the demo frames every step alike, to what any of them draws.
     boxes = [

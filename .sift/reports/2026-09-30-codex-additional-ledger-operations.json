@@ -1,0 +1,42 @@
+[
+  {
+    "argv": [
+      "python3",
+      "/home/cjber/.agents/skills/sift/scripts/ledger.py",
+      "check",
+      ".sift/runs/final-20260930-codex-concurrent.json",
+      "--json"
+    ],
+    "exit": 0,
+    "stdout": "[\n  {\n    \"input\": \".sift/runs/final-20260930-codex-concurrent.json\",\n    \"outcome\": \"FINDINGS\",\n    \"findings\": [\n      {\n        \"file\": \"tests/tracker_host_spec.lua\",\n        \"quote\": \"\\tfunction f:GetBottom()\",\n        \"what\": \"fully dead: initial private test-frame GetBottom definition is overwritten before the frame can escape\",\n        \"why\": \"frame() reassigns f.GetBottom later on every path before inserting f into frames or returning it; there is no intervening read, yield, registration or callback. Dynamic dispatch, public consumers, CI/docs, persisted/data lookup and companion boundaries see only the final method, and nine in-flight refs cannot reach this superseded local function. Poisoning its body or deleting only that first definition both leave all 44 checksum-pinned native-plus-companion host checks passing.\",\n        \"confidence\": \"high\",\n        \"lens\": \"dead-code\",\n        \"id\": \"e258bc4e7d\",\n        \"line\": 32,\n        \"status\": \"REPORTED\",\n        \"notes\": []\n      }\n    ],\n    \"notes\": [],\n    \"review_notes\": \"Additional fresh-verifier finding introduced by concurrent root edits after original fullfile receipt; all original Claude evidence is preserved. Whole latest spec and TrackerHost, caller/contract and dead-code hard stops read. All files hot; no runtime edit.\"\n  }\n]\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/cjber/.agents/skills/sift/scripts/ledger.py",
+      "add",
+      ".sift/runs/final-20260930-codex-concurrent.json"
+    ],
+    "exit": 0,
+    "stdout": ".sift/runs/final-20260930-codex-concurrent.json: FINDINGS\n  Additional fresh-verifier finding introduced by concurrent root edits after original fullfile receipt; all original Claude evidence is preserved. Whole latest spec and TrackerHost, caller/contract and dead-code hard stops read. All files hot; no runtime edit.\ntests/tracker_host_spec.lua:32 [dead-code] e258bc4e7d high fully dead: initial private test-frame GetBottom definition is overwritten before the frame can escape\nadded e258bc4e7d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/cjber/.agents/skills/sift/scripts/ledger.py",
+      "set",
+      "e258bc4e7d",
+      "--status",
+      "confirmed",
+      "--reason",
+      "The first f:GetBottom body is replaced by f.GetBottom before the private frame is inserted into frames or returned, with no intervening read, yield or registration; every runtime/native/companion caller receives the later method. Nine in-flight-ref searches and isolated poison/removal mutations both preserve all 44 checksum-pinned native-plus-companion checks, so the first definition is unreachable; this additional verifier discovery arose in root concurrent edits after the original snapshot.",
+      "--guard",
+      "lens-only: needs to trace the private constructor assignment and escape order rather than treating method-name references as references to every superseded body"
+    ],
+    "exit": 0,
+    "stdout": "e258bc4e7d confirmed\n",
+    "stderr": ""
+  }
+]

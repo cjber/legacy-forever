@@ -1,0 +1,203 @@
+[
+  {
+    "label": "map spec survives broken real provider",
+    "argv": [
+      "luajit",
+      "tests/map_combat_spec.lua"
+    ],
+    "cwd": "/tmp/sift-codex-_b16jq2x",
+    "exit": 0,
+    "stdout": "map_combat: protected MapCanvas refresh contract passed\n",
+    "stderr": ""
+  },
+  {
+    "label": "API spec with SetCounted fallback removed",
+    "argv": [
+      "luajit",
+      "/tmp/sift-codex-_b16jq2x/settings-seam.lua"
+    ],
+    "cwd": "/home/cjber/.worktrees/legacy-combat-release-066",
+    "exit": 1,
+    "stdout": "",
+    "stderr": "luajit: /tmp/sift-codex-_b16jq2x/Completion-mutated.lua:574: attempt to call field 'SetOption' (a nil value)\nstack traceback:\n\t/tmp/sift-codex-_b16jq2x/Completion-mutated.lua:574: in function 'SetCounted'\n\t/tmp/sift-codex-_b16jq2x/Completion-mutated.lua:579: in function 'areas'\n\ttests/api_spec.lua:310: in main chunk\n\t[C]: in function 'dofile'\n\t/tmp/sift-codex-_b16jq2x/settings-seam.lua:3: in main chunk\n\t[C]: at 0x55b54ccc7ed0\n"
+  },
+  {
+    "label": "API partial load uses SetShown fallback",
+    "argv": [
+      "luajit",
+      "/tmp/sift-codex-_b16jq2x/settings-seam.lua"
+    ],
+    "cwd": "/home/cjber/.worktrees/legacy-combat-release-066",
+    "exit": 0,
+    "stdout": "api_spec: 62 checks passed\nSettings-absent SetShown writes the saved map switch\n",
+    "stderr": ""
+  },
+  {
+    "label": "lifecycle spec without unrelated namespace stubs",
+    "argv": [
+      "luajit",
+      "/tmp/sift-codex-_b16jq2x/lifecycle.lua"
+    ],
+    "cwd": "/home/cjber/.worktrees/legacy-combat-release-066",
+    "exit": 0,
+    "stdout": "tracker_lifecycle_spec: 2 load-order cases passed\n",
+    "stderr": ""
+  },
+  {
+    "label": "TOC/XML phrase and coverage comparison",
+    "runtime_files": [
+      "UI.lua"
+    ],
+    "phrases": []
+  },
+  {
+    "label": "UI orphan scan",
+    "exception": "Runtime Lua is not loaded by a TOC/XML: UI/orphan.lua"
+  },
+  {
+    "label": "parser versus existing Lua Encode",
+    "python_zone_key_type": "int",
+    "json_zone_key_type": "str",
+    "python_has_integer_1440": true,
+    "json_has_integer_1440": false,
+    "reverse_bridge_use": "lua_literal(character), screenshots.py Model.__init__"
+  },
+  {
+    "label": "actual pinned pool acquire/release trace",
+    "argv": [
+      "luajit",
+      "/tmp/sift-codex-_b16jq2x/pool-lifecycle.lua"
+    ],
+    "cwd": "/home/cjber/.worktrees/legacy-combat-release-066",
+    "exit": 0,
+    "stdout": "new acquire reset/OnReleased\nrelease reset/OnReleased\nreused acquire follows prior release reset; first acquire also reset\n",
+    "stderr": ""
+  },
+  {
+    "label": "exact RefsDone truth table",
+    "argv": [
+      "luajit",
+      "/tmp/sift-codex-_b16jq2x/refs-done.lua"
+    ],
+    "cwd": "/home/cjber/.worktrees/legacy-combat-release-066",
+    "exit": 0,
+    "stdout": "RefsDone: 9 tri-state pairs and empty refs agree\n",
+    "stderr": ""
+  },
+  {
+    "label": "pinned copy checker",
+    "argv": [
+      "python3",
+      "/home/cjber/.cache/sift/standards-v2/cjber/skills/38f085e8a1025413d4a7031ab957cd5f2280a120/wow-forever-addon/check_copy.py",
+      "docs/curseforge.md",
+      "README.md"
+    ],
+    "cwd": "/home/cjber/.worktrees/legacy-combat-release-066",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "label": "pinned renderer icon pixel comparison",
+    "path": "media/icon-400.png",
+    "size": [
+      400,
+      400
+    ],
+    "identical_pixels": true
+  },
+  {
+    "label": "pinned renderer icon pixel comparison",
+    "path": "media/Icon.tga",
+    "size": [
+      64,
+      64
+    ],
+    "identical_pixels": true
+  },
+  {
+    "label": "AST parameter loads",
+    "function": "unlocated_tree",
+    "data_loads": 0
+  },
+  {
+    "label": "AST parameter loads",
+    "function": "main_menu",
+    "data_loads": 0
+  },
+  {
+    "label": "offline generator source check",
+    "exception": "TypeError: generate() got an unexpected keyword argument 'offline'"
+  },
+  {
+    "label": "checksum-pinned native integration plus companion join",
+    "argv": [
+      "luajit",
+      "tests/tracker_host_spec.lua"
+    ],
+    "env_overrides": {
+      "TRACKER_UI_ROOT": "tools/.cache/tracker-ui",
+      "AGF_TRACKER_HOSTS": "TrackerHost.lua\n/home/cjber/.worktrees/adventure-guide-forever/local-fixes-20260928/TrackerHost.lua"
+    },
+    "exit": 1,
+    "stdout": "",
+    "stderr": "luajit: tests/tracker_host_spec.lua:185: cannot open tools/.cache/tracker-ui/Blizzard_ObjectiveTrackerModule.lua: No such file or directory\nstack traceback:\n\t[C]: in function 'assert'\n\ttests/tracker_host_spec.lua:185: in main chunk\n\t[C]: at 0x564765ca6ed0\n"
+  },
+  {
+    "label": "correct read-only offline generator check",
+    "exception": "ValueError: Missing cached source: /home/cjber/.worktrees/legacy-combat-release-066/tools/.cache/TraitCurrencySource-1.60.1.70009.csv"
+  },
+  {
+    "label": "checksum-pinned native integration plus companion join; resolved missing cache",
+    "argv": [
+      "luajit",
+      "tests/tracker_host_spec.lua"
+    ],
+    "env_overrides": {
+      "TRACKER_UI_ROOT": "temporary copy of locally pinned 70ef1b2 source",
+      "AGF_TRACKER_HOSTS": "TrackerHost.lua\n/home/cjber/.worktrees/adventure-guide-forever/local-fixes-20260928/TrackerHost.lua"
+    },
+    "sha256": {
+      "Blizzard_ObjectiveTrackerModule.lua": "605b9be7f2aef1628692ddabafaf3256bb08943500c0e61f1eb5ac2d0c332cdb",
+      "Blizzard_ObjectiveTrackerBlock.lua": "29312dc4ed67640ed3a1f928d5fef0a5c8614b03371cd08370bcd495262fa7c1",
+      "Blizzard_ObjectiveTrackerAnimTemplates.lua": "463c2ac934a7d76451be662a74703573656b415ec93dbe316105dd314af2f9dd"
+    },
+    "exit": 0,
+    "stdout": "tracker_host_spec: 38 checks passed\n",
+    "stderr": ""
+  },
+  {
+    "label": "StackPoints supported-anchor comparison",
+    "exit": 0,
+    "stdout": "StackPoints: 9 supported anchor points agree with inline combat mapping\n",
+    "stderr": ""
+  },
+  {
+    "label": "store word-count sensitivity",
+    "source_whitespace_words": 628,
+    "rendered_prose_whitespace_words": 540,
+    "method": "remove image markup including alt, retain link labels, remove HTML and heading/list/inline formatting markers",
+    "pack_counting_rule": "not specified"
+  },
+  {
+    "label": "release note extraction absent version",
+    "argv": [
+      "python3",
+      "tools/changelog.py",
+      "v99.99.99"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "CHANGELOG.md has no section for 99.99.99 (has: 0.6.6, 0.6.5, 0.6.4, 0.6.3, 0.6.2, 0.6.1, 0.6.0, 0.5.0, 0.4.1, 0.4.0, 0.3.0, 0.2.0, 0.1.0)\n"
+  },
+  {
+    "label": "pinned renderer exact icon byte comparison",
+    "path": "media/icon-400.png",
+    "identical_bytes": true
+  },
+  {
+    "label": "pinned renderer exact icon byte comparison",
+    "path": "media/Icon.tga",
+    "identical_bytes": true
+  }
+]

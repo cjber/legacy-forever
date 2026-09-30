@@ -76,7 +76,7 @@ edit changed nothing. `gen_legacy.py --offline` fails when the cache holds an ol
 - Methods the map canvas calls on data providers and pins by name (`RefreshAllData`,
   `RemoveAllData`, `OnAcquired`, `OnReleased`, `OnMouseEnter`, `OnMouseLeave`), tracker-module
   methods (`LayoutContents`, `OnBlockHeaderClick/Enter/Leave`), and
-  `hooksecurefunc` targets (`ObjectiveTrackerManager.AddContainer`, tracker `SetCollapsed`).
+  addon-owned callback targets (tracker `SetCollapsed`); native manager hooks are forbidden.
 - Event names registered in `Live.lua` and callbacks via `EventRegistry`/`EventUtil`.
 - `ns.*` fields: each file receives the shared addon table `ns`; a field set in one file is read
   in another with no import. Search all `.lua` files, including `tests/`.

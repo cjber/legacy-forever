@@ -6,6 +6,7 @@ local function check(value, message)
 end
 local function noop() end
 local timers, ready, frames, releases = {}, nil, {}, {}
+local initializationEvents
 local combat = false
 local parent
 local nativeAnchorPoint = "TOPRIGHT"
@@ -14,8 +15,8 @@ local function frame()
 	function f:SetPoint(...)
 		self.point = { ... }
 	end
-	function f.GetPoint(_self)
-		return nativeAnchorPoint, parent, nativeAnchorPoint, 0, -100
+	function f.GetPoint(self)
+		return unpack(self.point or { nativeAnchorPoint, parent, nativeAnchorPoint, 0, -100 })
 	end
 	function f:SetWidth(value)
 		self.width = value
@@ -41,6 +42,18 @@ local function frame()
 	function f.GetTop(self)
 		return self.top or 640
 	end
+	function f.GetLeft(self)
+		return self.left or 0
+	end
+	function f.GetRight(self)
+		return self.right or self:GetLeft() + self:GetWidth()
+	end
+	function f.GetBottom(self)
+		return self.bottom or self:GetTop() - self:GetHeight()
+	end
+	function f:IsShown()
+		return self.shown ~= false
+	end
 	function f:SetScript(event, fn)
 		self.scripts[event] = fn
 	end
@@ -50,7 +63,10 @@ local function frame()
 	function f:SetParent(owner)
 		self.parent = owner
 	end
-	f.ClearAllPoints, f.RegisterEvent = noop, noop
+	function f:ClearAllPoints()
+		self.point = nil
+	end
+	f.RegisterEvent = noop
 	f.Show = function(self)
 		self.shown = true
 	end
@@ -61,7 +77,10 @@ local function frame()
 	return f
 end
 local native = frame()
+local minimap = frame()
+minimap.left, minimap.right, minimap.top, minimap.bottom, minimap.shown = 900, 1100, 700, 500, false
 parent = frame()
+native.point = { nativeAnchorPoint, parent, nativeAnchorPoint, 0, -100 }
 native.height = 300
 parent:SetHeight(1080)
 native.effectiveScale, parent.effectiveScale = 1.25, 1
@@ -94,6 +113,7 @@ env = setmetatable({
 		return combat
 	end,
 	ObjectiveTrackerFrame = native,
+	Minimap = minimap,
 	UIParent = parent,
 	CreateFrame = frame,
 	C_Timer = {
@@ -102,7 +122,8 @@ env = setmetatable({
 		end,
 	},
 	EventUtil = {
-		ContinueAfterAllEvents = function(fn)
+		ContinueAfterAllEvents = function(fn, ...)
+			initializationEvents = { ... }
 			ready = fn
 		end,
 	},
@@ -197,7 +218,7 @@ for index = 2, #hostPaths do
 	check(joining.TrackerHost == ns.TrackerHost, "companion joins the first loaded host")
 	check(#frames == count, "companion must not create a second host")
 end
-local host = frames[3]
+local host = frames[4]
 local function module(order)
 	local m = frame()
 	m.uiOrder, m.ContentsFrame, m.lineTemplate = order, frame(), "Line"
@@ -215,6 +236,12 @@ local function module(order)
 end
 local second, first = module(2), module(1)
 check(#timers == 0, "must not render before player and saved data are ready")
+check(
+	initializationEvents[1] == "PLAYER_ENTERING_WORLD"
+		and initializationEvents[2] == "VARIABLES_LOADED"
+		and #initializationEvents == 2,
+	"first rendering waits for both native load events"
+)
 ready()
 check(#timers == 1, "first layout is deferred")
 local function drain()
@@ -251,10 +278,6 @@ check(
 	native.point[1] == "TOPRIGHT" and native.point[2] == host and native.point[3] == "BOTTOMRIGHT",
 	"native objectives follow private sections"
 )
-check(
-	native.point[1] == "TOPRIGHT" and native.point[2] == host and native.point[3] == "BOTTOMRIGHT",
-	"native objectives follow private sections"
-)
 check(ns.TrackerHost.IsAttached(first) and not ns.TrackerHost.IsAttached(nil), "ownership lookup")
 local updatesBeforeDuplicateAttach = first.updates
 ns.TrackerHost.Attach(first)
@@ -277,18 +300,74 @@ native.ClearAllPoints = function(self)
 	return nativeClear(self)
 end
 combat = true
+native.top = 500
+nativeSetPoint(native, "TOPRIGHT", parent, "TOPRIGHT", 0, -100)
 host.scripts.OnEvent(host, "PLAYER_REGEN_DISABLED")
 drain()
 check(first.updates == updatesBeforeDuplicateAttach + 1, "combat defers layout")
 -- In combat the protected native tracker cannot be restacked, so our column moves above its saved slot instead.
 check(
-	host.point[1] == "BOTTOMRIGHT" and host.point[2] == parent and host.point[3] == "TOPRIGHT",
-	"combat lifts our column above the native slot"
+	host.point[1] == "BOTTOMRIGHT" and host.point[2] == native and host.point[3] == "TOPRIGHT",
+	"combat lifts our column above the native frame"
 )
 combat = false
 host.scripts.OnEvent(host, "PLAYER_REGEN_ENABLED")
 drain()
 check(first.updates == updatesBeforeDuplicateAttach + 2, "leaving combat flushes deferred changes")
+combat = true
+native.top = 10000
+nativeSetPoint(native, "TOPRIGHT", parent, "TOPRIGHT", 0, -100)
+host.scripts.OnEvent(host, "PLAYER_REGEN_DISABLED")
+drain()
+check(
+	host.point[1] == "TOPRIGHT" and host.point[2] == native and host.point[3] == "TOPLEFT",
+	"combat uses the clear side when there is no room above"
+)
+-- Blizzard's combat restore can temporarily point the protected frame at our host.
+-- Collision avoidance must use the saved Edit Mode slot rather than create an anchor cycle.
+minimap.shown = true
+host.left, host.right, host.top, host.bottom = 700, 950, 640, 300
+minimap.left, minimap.right, minimap.top, minimap.bottom = 700, 1100, 900, 0
+nativeSetPoint(native, "TOPRIGHT", host, "BOTTOMRIGHT", 0, 0)
+host:MarkDirty()
+drain()
+check(host.point[2] ~= native, "minimap fallback avoids a native-to-host anchor cycle")
+check(
+	host.point[1] == "TOPRIGHT" and host.point[3] == "TOPRIGHT" and host.point[4] == -258,
+	"fallback preserves native slot with a clear-side offset"
+)
+nativeSetPoint(native, "TOPRIGHT", parent, "TOPRIGHT", 0, -100)
+-- A visible minimap collision is tested in scaled screen coordinates, including the native-relative fallback.
+minimap.shown = true
+minimap.left, minimap.right, minimap.top, minimap.bottom = 0, 400, 900, 0
+native.top = 500
+native.effectiveScale, minimap.effectiveScale, parent.effectiveScale = 1.5, 1.25, 1
+nativeSetPoint(native, "TOPRIGHT", parent, "TOPRIGHT", 0, -100)
+host:MarkDirty()
+drain()
+check(host.point[1] == "BOTTOMRIGHT", "scaled non-overlap keeps above-native placement")
+minimap.left, minimap.right = 400, 680
+host:MarkDirty()
+drain()
+check(
+	host.point[1] == "TOPRIGHT" and host.point[2] == native and host.point[3] == "TOPLEFT",
+	"scaled minimap overlap moves private column beside native objectives"
+)
+minimap.shown = false
+host:MarkDirty()
+drain()
+check(host.point[1] == "BOTTOMRIGHT", "hidden minimap does not alter native-relative fallback")
+minimap.shown = true
+minimap.left, minimap.right, minimap.top, minimap.bottom = 900, 1100, 700, 500
+host:MarkDirty()
+drain()
+check(host.point[1] == "BOTTOMRIGHT", "non-overlapping minimap leaves fallback unchanged")
+native.effectiveScale, parent.effectiveScale = 1.25, 1
+host:MarkDirty()
+drain()
+combat = false
+host.scripts.OnEvent(host, "PLAYER_REGEN_ENABLED")
+drain()
 local hostPointBeforeNativeResize = host.point[5]
 native:SetHeight(900)
 host:MarkDirty()
@@ -312,10 +391,12 @@ drain()
 check(native:GetHeight() <= 500, "native height remains within the visible remainder")
 check(host.scale == 1.25, "companion matches native effective scale")
 nativeAnchorPoint = "BOTTOMRIGHT"
+nativeSetPoint(native, nativeAnchorPoint, parent, nativeAnchorPoint, 0, -100)
 host:MarkDirty()
 drain()
 check(native.point[1] == "TOPRIGHT" and native.point[3] == "BOTTOMRIGHT", "bottom anchor still stacks objectives below")
 nativeAnchorPoint = "CENTER"
+nativeSetPoint(native, nativeAnchorPoint, parent, nativeAnchorPoint, 0, -100)
 host:MarkDirty()
 drain()
 check(native.point[1] == "TOP" and native.point[3] == "BOTTOM", "center anchor uses centered top stack")
