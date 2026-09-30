@@ -62,6 +62,9 @@ All optional: [Shortest Path Forever](https://www.curseforge.com/wow/addons/shor
 
 ## Development
 
+Developed with AI assistance; changes are reviewed and checked with automated tests, linting and type checks.
+
+
 ```sh
 # link the checkout into the game
 ln -s "$PWD" ".../World of Warcraft/_classic_beta_/Interface/AddOns/LegacyForever"

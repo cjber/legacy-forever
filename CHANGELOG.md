@@ -13,6 +13,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [0.6.6] - 2026-09-30
 
+- **Development disclosure.** This release was developed with AI assistance. Changes were reviewed and checked with automated tests, linting and type checks; live verification remains ongoing.
+
 - **Find every option on the game's Options page.** Options > AddOns > Legacy Forever groups the map shading, zone completion and its "What counts" list into short pages behind an index, so nothing needs scrolling; the Legacy menu's quick toggles stay where they are.
 
 - **Keep tracker sections apart in combat.** Companion sections move above the protected quest tracker while fighting, then return to one column afterward, regardless of which addon loads first.
