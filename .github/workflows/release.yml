@@ -17,7 +17,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      # The release notes are this version's CHANGELOG entry, not the whole file;
+      # The tagged commit must have a matching CHANGELOG entry; the next step extracts it.
       # a tag without one fails here rather than shipping empty notes.
       - name: Verify full CI on the tagged commit
         env:

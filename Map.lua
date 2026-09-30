@@ -176,15 +176,13 @@ local function ShowAreas()
 end
 
 local function ToggleAreas()
-	LegacyForeverDB = LegacyForeverDB or {}
-	LegacyForeverDB.showAreas = not ShowAreas()
-	ns.RefreshMap()
+	-- Through the Settings setting, so the page's row stays in step while it is open.
+	ns.SetOption("showAreas", not ShowAreas())
 end
 
 ---@param key 'whatsNew'|'companions'
 local function ToggleSetting(key)
-	LegacyForeverDB = LegacyForeverDB or {}
-	LegacyForeverDB[key] = not ns.Setting(key)
+	ns.SetOption(key, not ns.Setting(key))
 end
 
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]
@@ -508,7 +506,7 @@ local function DefineAreaPinMixin()
 	---@field legacy table<string, LegacyAreaObjective>
 	LegacyForeverAreaPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
-	-- Pools are made on first acquire, as MapExplorationPinMixin does; see LegacyForeverPinMixin:OnAcquired.
+	-- Initialize per-pin drawing state before the first render; the pool reset callback handles later reuse.
 	-- Hover is polled rather than caught by a mouse-enabled frame, which would swallow the
 	-- map's own clicks (right-click to zoom out, drag to pan). While the cursor is on bare map
 	-- (no pin or button above it), the area under it is picked (Model.AreaAt) among all the

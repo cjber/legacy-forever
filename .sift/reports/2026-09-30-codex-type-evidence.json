@@ -1,0 +1,61 @@
+[
+  {
+    "label": "baseline",
+    "exit": 0,
+    "diagnostics": [],
+    "stderr_tail": ""
+  },
+  {
+    "label": "Tracker optional-host guards removed",
+    "exit": 0,
+    "diagnostics": [],
+    "stderr_tail": ""
+  },
+  {
+    "label": "Frame method-existence checks removed, value fallbacks retained",
+    "exit": 0,
+    "diagnostics": [],
+    "stderr_tail": ""
+  },
+  {
+    "label": "internal schema widening while public version 1 contract stays unchanged",
+    "exit": 1,
+    "diagnostics": {
+      "file:///tmp/sift-public-schema-naxjekqx/API.lua": [
+        {
+          "code": "assign-type-mismatch",
+          "message": "Cannot assign `'explore'|'instance'|'kill'|'quest'|'reputation'...(+1)` to `\"explore\"|\"instance\"|\"kill\"|\"quest\"|\"reputation\"`.\n- `'verifier-new-kind'` cannot match `\"explore\"|\"instance\"|\"kill\"|\"quest\"|\"reputation\"`\n- `'verifier-new-kind'` cannot match any subtypes in `\"explore\"|\"instance\"|\"kill\"|\"quest\"|\"reputation\"`\n- Literal `\"verifier-new-kind\"` cannot match string `\"reputation\"`\n- Literal `\"verifier-new-kind\"` cannot match string `\"quest\"`\n- Literal `\"verifier-new-kind\"` cannot match string `\"kill\"`\n- Literal `\"verifier-new-kind\"` cannot match string `\"instance\"`\n- Literal `\"verifier-new-kind\"` cannot match string `\"explore\"`\n- Literal `\"reputation\"` cannot match string `\"quest\"`\n- Literal `\"reputation\"` cannot match string `\"kill\"`\n- Literal `\"reputation\"` cannot match string `\"instance\"`\n- Literal `\"reputation\"` cannot match string `\"explore\"`\n- Literal `\"quest\"` cannot match string `\"kill\"`\n...(+2)\n- Literal `\"kill\"` cannot match string `\"instance\"`\n- Literal `\"kill\"` cannot match string `\"explore\"`\n- Literal `\"instance\"` cannot match string `\"explore\"`",
+          "range": {
+            "end": {
+              "character": 7,
+              "line": 130
+            },
+            "start": {
+              "character": 3,
+              "line": 130
+            }
+          },
+          "severity": 2,
+          "source": "Lua Diagnostics."
+        },
+        {
+          "code": "assign-type-mismatch",
+          "message": "Cannot assign `'areas'|'dungeons'|'legacy'|'quests'|'raids'...(+3)` to `\"areas\"|\"dungeons\"|\"legacy\"|\"quests\"|\"raids\"...(+2)`.\n- `'verifier-new-category'` cannot match `\"areas\"|\"dungeons\"|\"legacy\"|\"quests\"|\"raids\"...(+2)`\n- `'verifier-new-category'` cannot match any subtypes in `\"areas\"|\"dungeons\"|\"legacy\"|\"quests\"|\"raids\"...(+2)`\n- Literal `\"verifier-new-category\"` cannot match string `\"quests\"`\n- Literal `\"verifier-new-category\"` cannot match string `\"reputations\"`\n- Literal `\"verifier-new-category\"` cannot match string `\"legacy\"`\n- Literal `\"verifier-new-category\"` cannot match string `\"raids\"`\n- Literal `\"verifier-new-category\"` cannot match string `\"dungeons\"`\n- Literal `\"verifier-new-category\"` cannot match string `\"taxis\"`\n- Literal `\"verifier-new-category\"` cannot match string `\"areas\"`\n- Literal `\"quests\"` cannot match string `\"reputations\"`\n- Literal `\"quests\"` cannot match string `\"legacy\"`\n- Literal `\"quests\"` cannot match string `\"raids\"`\n...(+15)\n- Literal `\"dungeons\"` cannot match string `\"taxis\"`\n- Literal `\"dungeons\"` cannot match string `\"areas\"`\n- Literal `\"taxis\"` cannot match string `\"areas\"`",
+          "range": {
+            "end": {
+              "character": 7,
+              "line": 58
+            },
+            "start": {
+              "character": 4,
+              "line": 58
+            }
+          },
+          "severity": 2,
+          "source": "Lua Diagnostics."
+        }
+      ]
+    },
+    "stderr_tail": ""
+  }
+]

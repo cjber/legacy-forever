@@ -1,0 +1,880 @@
+{
+  "refs": [
+    "cb/legacy-combat-release-066",
+    "cb/shared-tracker-host",
+    "cb/swarm-settings-legacy",
+    "main",
+    "origin/cb/swarm-settings-legacy",
+    "origin/cb/zone-completion",
+    "origin/data/forever-1.60.1.69977",
+    "origin/data/forever-1.60.1.70009",
+    "origin/data/forever-1.60.1.70124"
+  ],
+  "patterns": [
+    "SetOption",
+    "SetShown",
+    "SetCounted",
+    "ns.TrackerHost",
+    "ForeverTrackerHost",
+    "AGF_TRACKER_HOSTS",
+    "unlocated_tree",
+    "main_menu",
+    "Integrations",
+    "Asides",
+    "Moments",
+    "OnRouteChange",
+    "OnTravelTick",
+    "NearestDock"
+  ],
+  "results": {
+    "cb/legacy-combat-release-066": {
+      "SetOption": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:Completion.lua:92:\tif ns.SetOption then",
+          "cb/legacy-combat-release-066:Completion.lua:93:\t\tns.SetOption(surface, shown)",
+          "cb/legacy-combat-release-066:Completion.lua:574:\tif ns.SetOption then",
+          "cb/legacy-combat-release-066:Completion.lua:575:\t\tns.SetOption(\"count_\" .. category, counted)",
+          "cb/legacy-combat-release-066:Core.lua:18:---@field SetOption fun(key: string, value: boolean)",
+          "cb/legacy-combat-release-066:Map.lua:180:\tns.SetOption(\"showAreas\", not ShowAreas())",
+          "cb/legacy-combat-release-066:Map.lua:185:\tns.SetOption(key, not ns.Setting(key))",
+          "cb/legacy-combat-release-066:Settings.lua:19:function ns.SetOption(key, value)",
+          "cb/legacy-combat-release-066:tests/settings_spec.lua:259:ns.SetOption(\"map\", false)",
+          "cb/legacy-combat-release-066:tests/settings_spec.lua:261:ns.SetOption(\"missing\", true)"
+        ]
+      },
+      "SetShown": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:Completion.lua:91:function Completion.SetShown(surface, shown)",
+          "cb/legacy-combat-release-066:Completion.lua:102:\tCompletion.SetShown(surface, not IsShown(surface))",
+          "cb/legacy-combat-release-066:Completion.lua:396:\tself.Counts:SetShown(not collapsed)",
+          "cb/legacy-combat-release-066:Map.lua:433:\t\tself.Portal:SetShown(instance ~= nil)",
+          "cb/legacy-combat-release-066:Map.lua:705:\t\t\t\tpin:SetShown(false)"
+        ]
+      },
+      "SetCounted": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:Completion.lua:573:function Completion.SetCounted(category, counted)",
+          "cb/legacy-combat-release-066:Completion.lua:584:\tCompletion.SetCounted(category, not IsCounted(category))"
+        ]
+      },
+      "ns.TrackerHost": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:TrackerHost.lua:20:\tns.TrackerHost = ForeverTrackerHost",
+          "cb/legacy-combat-release-066:TrackerHost.lua:363:ns.TrackerHost = api",
+          "cb/legacy-combat-release-066:tests/tracker_host_spec.lua:197:\tcheck(joining.TrackerHost == ns.TrackerHost, \"companion joins the first loaded host\")",
+          "cb/legacy-combat-release-066:tests/tracker_host_spec.lua:213:\tns.TrackerHost.Attach(m)",
+          "cb/legacy-combat-release-066:tests/tracker_host_spec.lua:258:check(ns.TrackerHost.IsAttached(first) and not ns.TrackerHost.IsAttached(nil), \"ownership lookup\")",
+          "cb/legacy-combat-release-066:tests/tracker_host_spec.lua:260:ns.TrackerHost.Attach(first)",
+          "cb/legacy-combat-release-066:tests/tracker_host_spec.lua:340:check(other.TrackerHost == ns.TrackerHost, \"addons share a single private host\")",
+          "cb/legacy-combat-release-066:tests/tracker_lifecycle_spec.lua:86:\tenv.ForeverTrackerHost = ns.TrackerHost"
+        ]
+      },
+      "ForeverTrackerHost": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:Core.lua:15:---@field TrackerHost ForeverTrackerHostAPI",
+          "cb/legacy-combat-release-066:Tracker.lua:119:\tif ForeverTrackerHost then",
+          "cb/legacy-combat-release-066:Tracker.lua:120:\t\tForeverTrackerHost.Attach(trackerModule)",
+          "cb/legacy-combat-release-066:Tracker.lua:135:\tif ForeverTrackerHost then",
+          "cb/legacy-combat-release-066:Tracker.lua:136:\t\treturn ForeverTrackerHost.IsAttached(trackerModule)",
+          "cb/legacy-combat-release-066:TrackerHost.lua:1:---@type string, { TrackerHost?: ForeverTrackerHostAPI }",
+          "cb/legacy-combat-release-066:TrackerHost.lua:8:---@class ForeverTrackerHostAPI",
+          "cb/legacy-combat-release-066:TrackerHost.lua:19:if ForeverTrackerHost then",
+          "cb/legacy-combat-release-066:TrackerHost.lua:20:\tns.TrackerHost = ForeverTrackerHost",
+          "cb/legacy-combat-release-066:TrackerHost.lua:291:---@class ForeverTrackerHostAPI",
+          "cb/legacy-combat-release-066:TrackerHost.lua:362:ForeverTrackerHost = api -- taint-ok: addon-owned companion tracker registry",
+          "cb/legacy-combat-release-066:tests/tracker_lifecycle_spec.lua:86:\tenv.ForeverTrackerHost = ns.TrackerHost",
+          "cb/legacy-combat-release-066:types/addon.lua:188:---@class ForeverTrackerHostAPI",
+          "cb/legacy-combat-release-066:types/addon.lua:191:---@type ForeverTrackerHostAPI?",
+          "cb/legacy-combat-release-066:types/addon.lua:192:ForeverTrackerHost = nil"
+        ]
+      },
+      "AGF_TRACKER_HOSTS": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:tests/tracker_host_spec.lua:190:for path in (os.getenv(\"AGF_TRACKER_HOSTS\") or \"TrackerHost.lua\"):gmatch(\"[^\\n]+\") do"
+        ]
+      },
+      "unlocated_tree": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:tools/screenshots.py:381:def unlocated_tree(live, data):",
+          "cb/legacy-combat-release-066:tools/screenshots.py:512:    tops = unlocated_tree(live, data)"
+        ]
+      },
+      "main_menu": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:tools/screenshots.py:394:def main_menu(ui, live, data):",
+          "cb/legacy-combat-release-066:tools/screenshots.py:499:    entries = main_menu(ui, live, data)",
+          "cb/legacy-combat-release-066:tools/screenshots.py:508:    entries = main_menu(ui, live, data)",
+          "cb/legacy-combat-release-066:tools/screenshots.py:671:            layers.append(menu_at(ui, main_menu(ui, live, data), right=bx + bw, top=by + bh)[:3])"
+        ]
+      },
+      "Integrations": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:tests/tracker_lifecycle_spec.lua:75:\t\tIntegrations = { OnTravelChange = noop, OnGuidanceChange = noop },"
+        ]
+      },
+      "Asides": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:tests/tracker_lifecycle_spec.lua:76:\t\tAsides = { OnChange = noop },"
+        ]
+      },
+      "Moments": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:tests/tracker_lifecycle_spec.lua:77:\t\tMoments = { OnChange = noop },"
+        ]
+      },
+      "OnRouteChange": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:tests/tracker_lifecycle_spec.lua:78:\t\tOnRouteChange = noop,"
+        ]
+      },
+      "OnTravelTick": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:tests/tracker_lifecycle_spec.lua:83:\t\tOnTravelTick = noop,"
+        ]
+      },
+      "NearestDock": {
+        "exit": 0,
+        "matches": [
+          "cb/legacy-combat-release-066:tests/tracker_lifecycle_spec.lua:84:\t\tNearestDock = noop,"
+        ]
+      }
+    },
+    "cb/shared-tracker-host": {
+      "SetOption": {
+        "exit": 1,
+        "matches": []
+      },
+      "SetShown": {
+        "exit": 0,
+        "matches": [
+          "cb/shared-tracker-host:Completion.lua:373:\tself.Counts:SetShown(not collapsed)",
+          "cb/shared-tracker-host:Map.lua:435:\t\tself.Portal:SetShown(instance ~= nil)"
+        ]
+      },
+      "SetCounted": {
+        "exit": 1,
+        "matches": []
+      },
+      "ns.TrackerHost": {
+        "exit": 1,
+        "matches": []
+      },
+      "ForeverTrackerHost": {
+        "exit": 0,
+        "matches": [
+          "cb/shared-tracker-host:Tracker.lua:119:\tif ForeverTrackerHost then",
+          "cb/shared-tracker-host:Tracker.lua:120:\t\tForeverTrackerHost.Attach(trackerModule)",
+          "cb/shared-tracker-host:Tracker.lua:137:\tif ForeverTrackerHost then",
+          "cb/shared-tracker-host:Tracker.lua:138:\t\treturn ForeverTrackerHost.IsAttached(trackerModule)",
+          "cb/shared-tracker-host:types/addon.lua:188:---@class ForeverTrackerHostAPI",
+          "cb/shared-tracker-host:types/addon.lua:191:---@type ForeverTrackerHostAPI?",
+          "cb/shared-tracker-host:types/addon.lua:192:ForeverTrackerHost = nil"
+        ]
+      },
+      "AGF_TRACKER_HOSTS": {
+        "exit": 1,
+        "matches": []
+      },
+      "unlocated_tree": {
+        "exit": 0,
+        "matches": [
+          "cb/shared-tracker-host:tools/screenshots.py:381:def unlocated_tree(live, data):",
+          "cb/shared-tracker-host:tools/screenshots.py:512:    tops = unlocated_tree(live, data)"
+        ]
+      },
+      "main_menu": {
+        "exit": 0,
+        "matches": [
+          "cb/shared-tracker-host:tools/screenshots.py:394:def main_menu(ui, live, data):",
+          "cb/shared-tracker-host:tools/screenshots.py:499:    entries = main_menu(ui, live, data)",
+          "cb/shared-tracker-host:tools/screenshots.py:508:    entries = main_menu(ui, live, data)",
+          "cb/shared-tracker-host:tools/screenshots.py:671:            layers.append(menu_at(ui, main_menu(ui, live, data), right=bx + bw, top=by + bh)[:3])"
+        ]
+      },
+      "Integrations": {
+        "exit": 0,
+        "matches": [
+          "cb/shared-tracker-host:tests/tracker_lifecycle_spec.lua:72:\t\tIntegrations = { OnTravelChange = noop, OnGuidanceChange = noop },"
+        ]
+      },
+      "Asides": {
+        "exit": 0,
+        "matches": [
+          "cb/shared-tracker-host:tests/tracker_lifecycle_spec.lua:73:\t\tAsides = { OnChange = noop },"
+        ]
+      },
+      "Moments": {
+        "exit": 0,
+        "matches": [
+          "cb/shared-tracker-host:tests/tracker_lifecycle_spec.lua:74:\t\tMoments = { OnChange = noop },"
+        ]
+      },
+      "OnRouteChange": {
+        "exit": 0,
+        "matches": [
+          "cb/shared-tracker-host:tests/tracker_lifecycle_spec.lua:75:\t\tOnRouteChange = noop,"
+        ]
+      },
+      "OnTravelTick": {
+        "exit": 0,
+        "matches": [
+          "cb/shared-tracker-host:tests/tracker_lifecycle_spec.lua:80:\t\tOnTravelTick = noop,"
+        ]
+      },
+      "NearestDock": {
+        "exit": 0,
+        "matches": [
+          "cb/shared-tracker-host:tests/tracker_lifecycle_spec.lua:81:\t\tNearestDock = noop,"
+        ]
+      }
+    },
+    "cb/swarm-settings-legacy": {
+      "SetOption": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:Completion.lua:92:\tif ns.SetOption then",
+          "cb/swarm-settings-legacy:Completion.lua:93:\t\tns.SetOption(surface, shown)",
+          "cb/swarm-settings-legacy:Completion.lua:574:\tif ns.SetOption then",
+          "cb/swarm-settings-legacy:Completion.lua:575:\t\tns.SetOption(\"count_\" .. category, counted)",
+          "cb/swarm-settings-legacy:Core.lua:18:---@field SetOption fun(key: string, value: boolean)",
+          "cb/swarm-settings-legacy:Map.lua:180:\tns.SetOption(\"showAreas\", not ShowAreas())",
+          "cb/swarm-settings-legacy:Map.lua:185:\tns.SetOption(key, not ns.Setting(key))",
+          "cb/swarm-settings-legacy:Settings.lua:19:function ns.SetOption(key, value)",
+          "cb/swarm-settings-legacy:tests/settings_spec.lua:259:ns.SetOption(\"map\", false)",
+          "cb/swarm-settings-legacy:tests/settings_spec.lua:261:ns.SetOption(\"missing\", true)"
+        ]
+      },
+      "SetShown": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:Completion.lua:91:function Completion.SetShown(surface, shown)",
+          "cb/swarm-settings-legacy:Completion.lua:102:\tCompletion.SetShown(surface, not IsShown(surface))",
+          "cb/swarm-settings-legacy:Completion.lua:396:\tself.Counts:SetShown(not collapsed)",
+          "cb/swarm-settings-legacy:Map.lua:433:\t\tself.Portal:SetShown(instance ~= nil)",
+          "cb/swarm-settings-legacy:Map.lua:705:\t\t\t\tpin:SetShown(false)"
+        ]
+      },
+      "SetCounted": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:Completion.lua:573:function Completion.SetCounted(category, counted)",
+          "cb/swarm-settings-legacy:Completion.lua:584:\tCompletion.SetCounted(category, not IsCounted(category))"
+        ]
+      },
+      "ns.TrackerHost": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:TrackerHost.lua:19:\tns.TrackerHost = ForeverTrackerHost",
+          "cb/swarm-settings-legacy:TrackerHost.lua:316:ns.TrackerHost = api",
+          "cb/swarm-settings-legacy:tests/tracker_host_spec.lua:164:\tns.TrackerHost.Attach(m)",
+          "cb/swarm-settings-legacy:tests/tracker_host_spec.lua:185:check(ns.TrackerHost.IsAttached(first) and not ns.TrackerHost.IsAttached(nil), \"ownership lookup\")",
+          "cb/swarm-settings-legacy:tests/tracker_host_spec.lua:186:ns.TrackerHost.Attach(first)",
+          "cb/swarm-settings-legacy:tests/tracker_host_spec.lua:218:check(other.TrackerHost == ns.TrackerHost, \"addons share a single private host\")",
+          "cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:86:\tenv.ForeverTrackerHost = ns.TrackerHost"
+        ]
+      },
+      "ForeverTrackerHost": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:Core.lua:15:---@field TrackerHost ForeverTrackerHostAPI",
+          "cb/swarm-settings-legacy:Tracker.lua:119:\tif ForeverTrackerHost then",
+          "cb/swarm-settings-legacy:Tracker.lua:120:\t\tForeverTrackerHost.Attach(trackerModule)",
+          "cb/swarm-settings-legacy:Tracker.lua:135:\tif ForeverTrackerHost then",
+          "cb/swarm-settings-legacy:Tracker.lua:136:\t\treturn ForeverTrackerHost.IsAttached(trackerModule)",
+          "cb/swarm-settings-legacy:TrackerHost.lua:1:---@type string, { TrackerHost?: ForeverTrackerHostAPI }",
+          "cb/swarm-settings-legacy:TrackerHost.lua:8:---@class ForeverTrackerHostAPI",
+          "cb/swarm-settings-legacy:TrackerHost.lua:18:if ForeverTrackerHost then",
+          "cb/swarm-settings-legacy:TrackerHost.lua:19:\tns.TrackerHost = ForeverTrackerHost",
+          "cb/swarm-settings-legacy:TrackerHost.lua:274:---@class ForeverTrackerHostAPI",
+          "cb/swarm-settings-legacy:TrackerHost.lua:315:ForeverTrackerHost = api -- taint-ok: addon-owned companion tracker registry",
+          "cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:86:\tenv.ForeverTrackerHost = ns.TrackerHost",
+          "cb/swarm-settings-legacy:types/addon.lua:188:---@class ForeverTrackerHostAPI",
+          "cb/swarm-settings-legacy:types/addon.lua:191:---@type ForeverTrackerHostAPI?",
+          "cb/swarm-settings-legacy:types/addon.lua:192:ForeverTrackerHost = nil"
+        ]
+      },
+      "AGF_TRACKER_HOSTS": {
+        "exit": 1,
+        "matches": []
+      },
+      "unlocated_tree": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:tools/screenshots.py:381:def unlocated_tree(live, data):",
+          "cb/swarm-settings-legacy:tools/screenshots.py:512:    tops = unlocated_tree(live, data)"
+        ]
+      },
+      "main_menu": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:tools/screenshots.py:394:def main_menu(ui, live, data):",
+          "cb/swarm-settings-legacy:tools/screenshots.py:499:    entries = main_menu(ui, live, data)",
+          "cb/swarm-settings-legacy:tools/screenshots.py:508:    entries = main_menu(ui, live, data)",
+          "cb/swarm-settings-legacy:tools/screenshots.py:671:            layers.append(menu_at(ui, main_menu(ui, live, data), right=bx + bw, top=by + bh)[:3])"
+        ]
+      },
+      "Integrations": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:75:\t\tIntegrations = { OnTravelChange = noop, OnGuidanceChange = noop },"
+        ]
+      },
+      "Asides": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:76:\t\tAsides = { OnChange = noop },"
+        ]
+      },
+      "Moments": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:77:\t\tMoments = { OnChange = noop },"
+        ]
+      },
+      "OnRouteChange": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:78:\t\tOnRouteChange = noop,"
+        ]
+      },
+      "OnTravelTick": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:83:\t\tOnTravelTick = noop,"
+        ]
+      },
+      "NearestDock": {
+        "exit": 0,
+        "matches": [
+          "cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:84:\t\tNearestDock = noop,"
+        ]
+      }
+    },
+    "main": {
+      "SetOption": {
+        "exit": 1,
+        "matches": []
+      },
+      "SetShown": {
+        "exit": 0,
+        "matches": [
+          "main:Completion.lua:373:\tself.Counts:SetShown(not collapsed)",
+          "main:Map.lua:435:\t\tself.Portal:SetShown(instance ~= nil)"
+        ]
+      },
+      "SetCounted": {
+        "exit": 1,
+        "matches": []
+      },
+      "ns.TrackerHost": {
+        "exit": 1,
+        "matches": []
+      },
+      "ForeverTrackerHost": {
+        "exit": 0,
+        "matches": [
+          "main:Tracker.lua:119:\tif ForeverTrackerHost then",
+          "main:Tracker.lua:120:\t\tForeverTrackerHost.Attach(trackerModule)",
+          "main:Tracker.lua:137:\tif ForeverTrackerHost then",
+          "main:Tracker.lua:138:\t\treturn ForeverTrackerHost.IsAttached(trackerModule)",
+          "main:types/addon.lua:188:---@class ForeverTrackerHostAPI",
+          "main:types/addon.lua:191:---@type ForeverTrackerHostAPI?",
+          "main:types/addon.lua:192:ForeverTrackerHost = nil"
+        ]
+      },
+      "AGF_TRACKER_HOSTS": {
+        "exit": 1,
+        "matches": []
+      },
+      "unlocated_tree": {
+        "exit": 0,
+        "matches": [
+          "main:tools/screenshots.py:381:def unlocated_tree(live, data):",
+          "main:tools/screenshots.py:512:    tops = unlocated_tree(live, data)"
+        ]
+      },
+      "main_menu": {
+        "exit": 0,
+        "matches": [
+          "main:tools/screenshots.py:394:def main_menu(ui, live, data):",
+          "main:tools/screenshots.py:499:    entries = main_menu(ui, live, data)",
+          "main:tools/screenshots.py:508:    entries = main_menu(ui, live, data)",
+          "main:tools/screenshots.py:671:            layers.append(menu_at(ui, main_menu(ui, live, data), right=bx + bw, top=by + bh)[:3])"
+        ]
+      },
+      "Integrations": {
+        "exit": 0,
+        "matches": [
+          "main:tests/tracker_lifecycle_spec.lua:72:\t\tIntegrations = { OnTravelChange = noop, OnGuidanceChange = noop },"
+        ]
+      },
+      "Asides": {
+        "exit": 0,
+        "matches": [
+          "main:tests/tracker_lifecycle_spec.lua:73:\t\tAsides = { OnChange = noop },"
+        ]
+      },
+      "Moments": {
+        "exit": 0,
+        "matches": [
+          "main:tests/tracker_lifecycle_spec.lua:74:\t\tMoments = { OnChange = noop },"
+        ]
+      },
+      "OnRouteChange": {
+        "exit": 0,
+        "matches": [
+          "main:tests/tracker_lifecycle_spec.lua:75:\t\tOnRouteChange = noop,"
+        ]
+      },
+      "OnTravelTick": {
+        "exit": 0,
+        "matches": [
+          "main:tests/tracker_lifecycle_spec.lua:80:\t\tOnTravelTick = noop,"
+        ]
+      },
+      "NearestDock": {
+        "exit": 0,
+        "matches": [
+          "main:tests/tracker_lifecycle_spec.lua:81:\t\tNearestDock = noop,"
+        ]
+      }
+    },
+    "origin/cb/swarm-settings-legacy": {
+      "SetOption": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:Completion.lua:92:\tif ns.SetOption then",
+          "origin/cb/swarm-settings-legacy:Completion.lua:93:\t\tns.SetOption(surface, shown)",
+          "origin/cb/swarm-settings-legacy:Completion.lua:574:\tif ns.SetOption then",
+          "origin/cb/swarm-settings-legacy:Completion.lua:575:\t\tns.SetOption(\"count_\" .. category, counted)",
+          "origin/cb/swarm-settings-legacy:Core.lua:18:---@field SetOption fun(key: string, value: boolean)",
+          "origin/cb/swarm-settings-legacy:Map.lua:180:\tns.SetOption(\"showAreas\", not ShowAreas())",
+          "origin/cb/swarm-settings-legacy:Map.lua:185:\tns.SetOption(key, not ns.Setting(key))",
+          "origin/cb/swarm-settings-legacy:Settings.lua:19:function ns.SetOption(key, value)",
+          "origin/cb/swarm-settings-legacy:tests/settings_spec.lua:259:ns.SetOption(\"map\", false)",
+          "origin/cb/swarm-settings-legacy:tests/settings_spec.lua:261:ns.SetOption(\"missing\", true)"
+        ]
+      },
+      "SetShown": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:Completion.lua:91:function Completion.SetShown(surface, shown)",
+          "origin/cb/swarm-settings-legacy:Completion.lua:102:\tCompletion.SetShown(surface, not IsShown(surface))",
+          "origin/cb/swarm-settings-legacy:Completion.lua:396:\tself.Counts:SetShown(not collapsed)",
+          "origin/cb/swarm-settings-legacy:Map.lua:433:\t\tself.Portal:SetShown(instance ~= nil)",
+          "origin/cb/swarm-settings-legacy:Map.lua:705:\t\t\t\tpin:SetShown(false)"
+        ]
+      },
+      "SetCounted": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:Completion.lua:573:function Completion.SetCounted(category, counted)",
+          "origin/cb/swarm-settings-legacy:Completion.lua:584:\tCompletion.SetCounted(category, not IsCounted(category))"
+        ]
+      },
+      "ns.TrackerHost": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:TrackerHost.lua:19:\tns.TrackerHost = ForeverTrackerHost",
+          "origin/cb/swarm-settings-legacy:TrackerHost.lua:316:ns.TrackerHost = api",
+          "origin/cb/swarm-settings-legacy:tests/tracker_host_spec.lua:164:\tns.TrackerHost.Attach(m)",
+          "origin/cb/swarm-settings-legacy:tests/tracker_host_spec.lua:185:check(ns.TrackerHost.IsAttached(first) and not ns.TrackerHost.IsAttached(nil), \"ownership lookup\")",
+          "origin/cb/swarm-settings-legacy:tests/tracker_host_spec.lua:186:ns.TrackerHost.Attach(first)",
+          "origin/cb/swarm-settings-legacy:tests/tracker_host_spec.lua:218:check(other.TrackerHost == ns.TrackerHost, \"addons share a single private host\")",
+          "origin/cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:86:\tenv.ForeverTrackerHost = ns.TrackerHost"
+        ]
+      },
+      "ForeverTrackerHost": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:Core.lua:15:---@field TrackerHost ForeverTrackerHostAPI",
+          "origin/cb/swarm-settings-legacy:Tracker.lua:119:\tif ForeverTrackerHost then",
+          "origin/cb/swarm-settings-legacy:Tracker.lua:120:\t\tForeverTrackerHost.Attach(trackerModule)",
+          "origin/cb/swarm-settings-legacy:Tracker.lua:135:\tif ForeverTrackerHost then",
+          "origin/cb/swarm-settings-legacy:Tracker.lua:136:\t\treturn ForeverTrackerHost.IsAttached(trackerModule)",
+          "origin/cb/swarm-settings-legacy:TrackerHost.lua:1:---@type string, { TrackerHost?: ForeverTrackerHostAPI }",
+          "origin/cb/swarm-settings-legacy:TrackerHost.lua:8:---@class ForeverTrackerHostAPI",
+          "origin/cb/swarm-settings-legacy:TrackerHost.lua:18:if ForeverTrackerHost then",
+          "origin/cb/swarm-settings-legacy:TrackerHost.lua:19:\tns.TrackerHost = ForeverTrackerHost",
+          "origin/cb/swarm-settings-legacy:TrackerHost.lua:274:---@class ForeverTrackerHostAPI",
+          "origin/cb/swarm-settings-legacy:TrackerHost.lua:315:ForeverTrackerHost = api -- taint-ok: addon-owned companion tracker registry",
+          "origin/cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:86:\tenv.ForeverTrackerHost = ns.TrackerHost",
+          "origin/cb/swarm-settings-legacy:types/addon.lua:188:---@class ForeverTrackerHostAPI",
+          "origin/cb/swarm-settings-legacy:types/addon.lua:191:---@type ForeverTrackerHostAPI?",
+          "origin/cb/swarm-settings-legacy:types/addon.lua:192:ForeverTrackerHost = nil"
+        ]
+      },
+      "AGF_TRACKER_HOSTS": {
+        "exit": 1,
+        "matches": []
+      },
+      "unlocated_tree": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:tools/screenshots.py:381:def unlocated_tree(live, data):",
+          "origin/cb/swarm-settings-legacy:tools/screenshots.py:512:    tops = unlocated_tree(live, data)"
+        ]
+      },
+      "main_menu": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:tools/screenshots.py:394:def main_menu(ui, live, data):",
+          "origin/cb/swarm-settings-legacy:tools/screenshots.py:499:    entries = main_menu(ui, live, data)",
+          "origin/cb/swarm-settings-legacy:tools/screenshots.py:508:    entries = main_menu(ui, live, data)",
+          "origin/cb/swarm-settings-legacy:tools/screenshots.py:671:            layers.append(menu_at(ui, main_menu(ui, live, data), right=bx + bw, top=by + bh)[:3])"
+        ]
+      },
+      "Integrations": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:75:\t\tIntegrations = { OnTravelChange = noop, OnGuidanceChange = noop },"
+        ]
+      },
+      "Asides": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:76:\t\tAsides = { OnChange = noop },"
+        ]
+      },
+      "Moments": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:77:\t\tMoments = { OnChange = noop },"
+        ]
+      },
+      "OnRouteChange": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:78:\t\tOnRouteChange = noop,"
+        ]
+      },
+      "OnTravelTick": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:83:\t\tOnTravelTick = noop,"
+        ]
+      },
+      "NearestDock": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/swarm-settings-legacy:tests/tracker_lifecycle_spec.lua:84:\t\tNearestDock = noop,"
+        ]
+      }
+    },
+    "origin/cb/zone-completion": {
+      "SetOption": {
+        "exit": 1,
+        "matches": []
+      },
+      "SetShown": {
+        "exit": 0,
+        "matches": [
+          "origin/cb/zone-completion:Completion.lua:246:\tself.Counts:SetShown(not collapsed)"
+        ]
+      },
+      "SetCounted": {
+        "exit": 1,
+        "matches": []
+      },
+      "ns.TrackerHost": {
+        "exit": 1,
+        "matches": []
+      },
+      "ForeverTrackerHost": {
+        "exit": 1,
+        "matches": []
+      },
+      "AGF_TRACKER_HOSTS": {
+        "exit": 1,
+        "matches": []
+      },
+      "unlocated_tree": {
+        "exit": 1,
+        "matches": []
+      },
+      "main_menu": {
+        "exit": 1,
+        "matches": []
+      },
+      "Integrations": {
+        "exit": 1,
+        "matches": []
+      },
+      "Asides": {
+        "exit": 1,
+        "matches": []
+      },
+      "Moments": {
+        "exit": 1,
+        "matches": []
+      },
+      "OnRouteChange": {
+        "exit": 1,
+        "matches": []
+      },
+      "OnTravelTick": {
+        "exit": 1,
+        "matches": []
+      },
+      "NearestDock": {
+        "exit": 1,
+        "matches": []
+      }
+    },
+    "origin/data/forever-1.60.1.69977": {
+      "SetOption": {
+        "exit": 1,
+        "matches": []
+      },
+      "SetShown": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.69977:Completion.lua:360:\tself.Counts:SetShown(not collapsed)",
+          "origin/data/forever-1.60.1.69977:Map.lua:405:\t\tself.Portal:SetShown(instance ~= nil)"
+        ]
+      },
+      "SetCounted": {
+        "exit": 1,
+        "matches": []
+      },
+      "ns.TrackerHost": {
+        "exit": 1,
+        "matches": []
+      },
+      "ForeverTrackerHost": {
+        "exit": 1,
+        "matches": []
+      },
+      "AGF_TRACKER_HOSTS": {
+        "exit": 1,
+        "matches": []
+      },
+      "unlocated_tree": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.69977:tools/screenshots.py:431:def unlocated_tree(live, data):",
+          "origin/data/forever-1.60.1.69977:tools/screenshots.py:555:    tops = unlocated_tree(live, data)"
+        ]
+      },
+      "main_menu": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.69977:tools/screenshots.py:444:def main_menu(live, data):",
+          "origin/data/forever-1.60.1.69977:tools/screenshots.py:542:    entries = main_menu(live, data)",
+          "origin/data/forever-1.60.1.69977:tools/screenshots.py:551:    entries = main_menu(live, data)"
+        ]
+      },
+      "Integrations": {
+        "exit": 1,
+        "matches": []
+      },
+      "Asides": {
+        "exit": 1,
+        "matches": []
+      },
+      "Moments": {
+        "exit": 1,
+        "matches": []
+      },
+      "OnRouteChange": {
+        "exit": 1,
+        "matches": []
+      },
+      "OnTravelTick": {
+        "exit": 1,
+        "matches": []
+      },
+      "NearestDock": {
+        "exit": 1,
+        "matches": []
+      }
+    },
+    "origin/data/forever-1.60.1.70009": {
+      "SetOption": {
+        "exit": 1,
+        "matches": []
+      },
+      "SetShown": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70009:Completion.lua:365:\tself.Counts:SetShown(not collapsed)",
+          "origin/data/forever-1.60.1.70009:Map.lua:407:\t\tself.Portal:SetShown(instance ~= nil)"
+        ]
+      },
+      "SetCounted": {
+        "exit": 1,
+        "matches": []
+      },
+      "ns.TrackerHost": {
+        "exit": 1,
+        "matches": []
+      },
+      "ForeverTrackerHost": {
+        "exit": 1,
+        "matches": []
+      },
+      "AGF_TRACKER_HOSTS": {
+        "exit": 1,
+        "matches": []
+      },
+      "unlocated_tree": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70009:tools/screenshots.py:431:def unlocated_tree(live, data):",
+          "origin/data/forever-1.60.1.70009:tools/screenshots.py:555:    tops = unlocated_tree(live, data)"
+        ]
+      },
+      "main_menu": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70009:tools/screenshots.py:444:def main_menu(live, data):",
+          "origin/data/forever-1.60.1.70009:tools/screenshots.py:542:    entries = main_menu(live, data)",
+          "origin/data/forever-1.60.1.70009:tools/screenshots.py:551:    entries = main_menu(live, data)"
+        ]
+      },
+      "Integrations": {
+        "exit": 1,
+        "matches": []
+      },
+      "Asides": {
+        "exit": 1,
+        "matches": []
+      },
+      "Moments": {
+        "exit": 1,
+        "matches": []
+      },
+      "OnRouteChange": {
+        "exit": 1,
+        "matches": []
+      },
+      "OnTravelTick": {
+        "exit": 1,
+        "matches": []
+      },
+      "NearestDock": {
+        "exit": 1,
+        "matches": []
+      }
+    },
+    "origin/data/forever-1.60.1.70124": {
+      "SetOption": {
+        "exit": 1,
+        "matches": []
+      },
+      "SetShown": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70124:Completion.lua:373:\tself.Counts:SetShown(not collapsed)",
+          "origin/data/forever-1.60.1.70124:Map.lua:435:\t\tself.Portal:SetShown(instance ~= nil)",
+          "origin/data/forever-1.60.1.70124:Map.lua:707:\t\t\t\tpin:SetShown(false)"
+        ]
+      },
+      "SetCounted": {
+        "exit": 1,
+        "matches": []
+      },
+      "ns.TrackerHost": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70124:TrackerHost.lua:19:\tns.TrackerHost = ForeverTrackerHost",
+          "origin/data/forever-1.60.1.70124:TrackerHost.lua:316:ns.TrackerHost = api",
+          "origin/data/forever-1.60.1.70124:tests/tracker_host_spec.lua:164:\tns.TrackerHost.Attach(m)",
+          "origin/data/forever-1.60.1.70124:tests/tracker_host_spec.lua:185:check(ns.TrackerHost.IsAttached(first) and not ns.TrackerHost.IsAttached(nil), \"ownership lookup\")",
+          "origin/data/forever-1.60.1.70124:tests/tracker_host_spec.lua:186:ns.TrackerHost.Attach(first)",
+          "origin/data/forever-1.60.1.70124:tests/tracker_host_spec.lua:218:check(other.TrackerHost == ns.TrackerHost, \"addons share a single private host\")",
+          "origin/data/forever-1.60.1.70124:tests/tracker_lifecycle_spec.lua:86:\tenv.ForeverTrackerHost = ns.TrackerHost"
+        ]
+      },
+      "ForeverTrackerHost": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70124:Core.lua:15:---@field TrackerHost ForeverTrackerHostAPI",
+          "origin/data/forever-1.60.1.70124:Tracker.lua:119:\tif ForeverTrackerHost then",
+          "origin/data/forever-1.60.1.70124:Tracker.lua:120:\t\tForeverTrackerHost.Attach(trackerModule)",
+          "origin/data/forever-1.60.1.70124:Tracker.lua:135:\tif ForeverTrackerHost then",
+          "origin/data/forever-1.60.1.70124:Tracker.lua:136:\t\treturn ForeverTrackerHost.IsAttached(trackerModule)",
+          "origin/data/forever-1.60.1.70124:TrackerHost.lua:1:---@type string, { TrackerHost?: ForeverTrackerHostAPI }",
+          "origin/data/forever-1.60.1.70124:TrackerHost.lua:8:---@class ForeverTrackerHostAPI",
+          "origin/data/forever-1.60.1.70124:TrackerHost.lua:18:if ForeverTrackerHost then",
+          "origin/data/forever-1.60.1.70124:TrackerHost.lua:19:\tns.TrackerHost = ForeverTrackerHost",
+          "origin/data/forever-1.60.1.70124:TrackerHost.lua:274:---@class ForeverTrackerHostAPI",
+          "origin/data/forever-1.60.1.70124:TrackerHost.lua:315:ForeverTrackerHost = api -- taint-ok: addon-owned companion tracker registry",
+          "origin/data/forever-1.60.1.70124:tests/tracker_lifecycle_spec.lua:86:\tenv.ForeverTrackerHost = ns.TrackerHost",
+          "origin/data/forever-1.60.1.70124:types/addon.lua:188:---@class ForeverTrackerHostAPI",
+          "origin/data/forever-1.60.1.70124:types/addon.lua:191:---@type ForeverTrackerHostAPI?",
+          "origin/data/forever-1.60.1.70124:types/addon.lua:192:ForeverTrackerHost = nil"
+        ]
+      },
+      "AGF_TRACKER_HOSTS": {
+        "exit": 1,
+        "matches": []
+      },
+      "unlocated_tree": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70124:tools/screenshots.py:381:def unlocated_tree(live, data):",
+          "origin/data/forever-1.60.1.70124:tools/screenshots.py:512:    tops = unlocated_tree(live, data)"
+        ]
+      },
+      "main_menu": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70124:tools/screenshots.py:394:def main_menu(ui, live, data):",
+          "origin/data/forever-1.60.1.70124:tools/screenshots.py:499:    entries = main_menu(ui, live, data)",
+          "origin/data/forever-1.60.1.70124:tools/screenshots.py:508:    entries = main_menu(ui, live, data)",
+          "origin/data/forever-1.60.1.70124:tools/screenshots.py:671:            layers.append(menu_at(ui, main_menu(ui, live, data), right=bx + bw, top=by + bh)[:3])"
+        ]
+      },
+      "Integrations": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70124:tests/tracker_lifecycle_spec.lua:75:\t\tIntegrations = { OnTravelChange = noop, OnGuidanceChange = noop },"
+        ]
+      },
+      "Asides": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70124:tests/tracker_lifecycle_spec.lua:76:\t\tAsides = { OnChange = noop },"
+        ]
+      },
+      "Moments": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70124:tests/tracker_lifecycle_spec.lua:77:\t\tMoments = { OnChange = noop },"
+        ]
+      },
+      "OnRouteChange": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70124:tests/tracker_lifecycle_spec.lua:78:\t\tOnRouteChange = noop,"
+        ]
+      },
+      "OnTravelTick": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70124:tests/tracker_lifecycle_spec.lua:83:\t\tOnTravelTick = noop,"
+        ]
+      },
+      "NearestDock": {
+        "exit": 0,
+        "matches": [
+          "origin/data/forever-1.60.1.70124:tests/tracker_lifecycle_spec.lua:84:\t\tNearestDock = noop,"
+        ]
+      }
+    }
+  }
+}

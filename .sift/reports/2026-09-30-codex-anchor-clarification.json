@@ -1,0 +1,29 @@
+{
+  "id": "4b6cb24349",
+  "original_reason_preserved": "The three normal-layout SetPoint calls reconstruct the same saved point/relative frame/relative point/x/y fields, with only the final y shift changing. Their different times are necessary because changing height affects CENTER/BOTTOM geometry, but do not force three copies of the reconstruction; the combat call does change the point to a bottom anchor, so retain that difference rather than blindly merging all four as the reviewer proposed.",
+  "final_reason": "The three normal-layout SetPoint calls reconstruct the same saved point/relative frame/relative point/x/y fields, with only the final y shift changing. Their different times are necessary because changing height affects CENTER/BOTTOM geometry, but do not force three copies of the reconstruction; the combat call does change the point to a bottom anchor, so retain that difference rather than blindly merging all four as the reviewer proposed. In the final source receipt the normal-layout sites are TrackerHost.lua:276, :305 and :323; ledger whitespace matching picks the unrelated AvoidMinimap site at :193, so use the independently verified normal-layout locations rather than that ambiguous anchor hint.",
+  "ledger_anchor_line": 193,
+  "verified_locations": [
+    276,
+    305,
+    323
+  ],
+  "proof": "Exact tab-preserving quote search yields [276,305,323]. AvoidMinimap has an extra indent and a different x offset; it is a different reconstruction contract and is not included in this producer.",
+  "operation": {
+    "argv": [
+      "python3",
+      "/home/cjber/.agents/skills/sift/scripts/ledger.py",
+      "set",
+      "4b6cb24349",
+      "--status",
+      "confirmed",
+      "--reason",
+      "The three normal-layout SetPoint calls reconstruct the same saved point/relative frame/relative point/x/y fields, with only the final y shift changing. Their different times are necessary because changing height affects CENTER/BOTTOM geometry, but do not force three copies of the reconstruction; the combat call does change the point to a bottom anchor, so retain that difference rather than blindly merging all four as the reviewer proposed. In the final source receipt the normal-layout sites are TrackerHost.lua:276, :305 and :323; ledger whitespace matching picks the unrelated AvoidMinimap site at :193, so use the independently verified normal-layout locations rather than that ambiguous anchor hint.",
+      "--guard",
+      "lens-only: needs to distinguish repeated saved-anchor reconstruction from geometry-dependent reanchor timing"
+    ],
+    "exit": 0,
+    "stdout": "4b6cb24349 confirmed\n",
+    "stderr": ""
+  }
+}

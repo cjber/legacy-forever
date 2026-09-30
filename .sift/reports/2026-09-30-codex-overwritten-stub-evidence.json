@@ -1,0 +1,91 @@
+{
+  "producer": "private frame constructor: overwritten initial GetBottom",
+  "source_sha256": "1ba566c81a9ca660c9f0223d4eea97b5515634cf2ece4a4fa1b5964b3df3c43c",
+  "control_flow": "First GetBottom assignment is replaced on the same private f before frames insertion and return. No intermediate method reads, callbacks, yields or registrations expose it; the later GetBottom implementation and all its production-test callers are retained.",
+  "mutations": [
+    {
+      "label": "poison superseded GetBottom",
+      "argv": [
+        "luajit",
+        "/tmp/sift-overwritten-stub-9xd6_k4d/mutated_tracker_host_spec.lua"
+      ],
+      "env_overrides": {
+        "TRACKER_UI_ROOT": "/tmp/sift-overwritten-stub-9xd6_k4d",
+        "AGF_TRACKER_HOSTS": "TrackerHost.lua\n/home/cjber/.worktrees/adventure-guide-forever/local-fixes-20260928/TrackerHost.lua"
+      },
+      "exit": 0,
+      "stdout": "tracker_host_spec: 44 checks passed\n",
+      "stderr": ""
+    },
+    {
+      "label": "remove superseded GetBottom",
+      "argv": [
+        "luajit",
+        "/tmp/sift-overwritten-stub-9xd6_k4d/mutated_tracker_host_spec.lua"
+      ],
+      "env_overrides": {
+        "TRACKER_UI_ROOT": "/tmp/sift-overwritten-stub-9xd6_k4d",
+        "AGF_TRACKER_HOSTS": "TrackerHost.lua\n/home/cjber/.worktrees/adventure-guide-forever/local-fixes-20260928/TrackerHost.lua"
+      },
+      "exit": 0,
+      "stdout": "tracker_host_spec: 44 checks passed\n",
+      "stderr": ""
+    }
+  ],
+  "in_flight_searches": [
+    {
+      "ref": "cb/legacy-combat-release-066",
+      "exit": 0,
+      "stdout": "cb/legacy-combat-release-066:tests/tracker_host_spec.lua:32:\tfunction f:GetBottom()\n",
+      "stderr": ""
+    },
+    {
+      "ref": "cb/shared-tracker-host",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "ref": "cb/swarm-settings-legacy",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "ref": "main",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "ref": "origin/cb/swarm-settings-legacy",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "ref": "origin/cb/zone-completion",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "ref": "origin/data/forever-1.60.1.69977",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "ref": "origin/data/forever-1.60.1.70009",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "ref": "origin/data/forever-1.60.1.70124",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

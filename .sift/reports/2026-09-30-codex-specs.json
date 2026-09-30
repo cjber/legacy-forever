@@ -1,0 +1,116 @@
+[
+  {
+    "argv": [
+      "luajit",
+      "tests/api_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "api_spec: 62 checks passed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luajit",
+      "tests/data_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "ok\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luajit",
+      "tests/live_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "live_spec: 7 checks passed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luajit",
+      "tests/locale_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "locale_spec: 25 checks passed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luajit",
+      "tests/map_combat_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "map_combat: protected MapCanvas refresh contract passed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luajit",
+      "tests/model_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "model_spec: 85 checks passed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luajit",
+      "tests/navigate_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "navigate_spec: 18 checks passed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luajit",
+      "tests/quests_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "quests_spec: 46 checks passed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luajit",
+      "tests/settings_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "settings_spec: 105 checks passed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luajit",
+      "tests/tracker_host_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "tracker_host_spec: 32 checks passed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luajit",
+      "tests/tracker_lifecycle_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "tracker_lifecycle_spec: 2 load-order cases passed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "luajit",
+      "tests/whatsnew_spec.lua"
+    ],
+    "exit": 0,
+    "stdout": "whatsnew_spec: 9 checks passed\n",
+    "stderr": ""
+  },
+  {
+    "label": "Tracker direct host calls in lifecycle spec",
+    "exit": 0,
+    "stdout": "tracker_lifecycle_spec: 2 load-order cases passed\n",
+    "stderr": ""
+  }
+]

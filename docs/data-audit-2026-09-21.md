@@ -62,7 +62,7 @@ Build **1.60.1.69913**: **43 completion zones, 555 areas, 937 tiles** (one area
 without tiles), **65 taxis** (31 Alliance,
 30 Horde, 4 Neutral; 35 Alliance-usable and 34 Horde-usable), and **31 of 32 wings**
 with **62 references**. Twelve taxi exceptions and 31 wing locations are curated.
-There is **one raid entry / one boss / two refs**, Onyxia's Lair in Dustwallow
+Onyxia's Lair is the only raid entry; it has one boss and two refs in Dustwallow
 (1445), Type 0 / Asset 10184 / Amount 1; those refs no longer count as Legacy.
 The **two** remaining non-exploration references on completion maps collapse
 into **one Legacy entry** (one duplicate removed): Valthalak in Burning Steppes

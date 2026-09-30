@@ -1,4 +1,4 @@
-# Python here is the stdlib-only data tooling under tools/, run by CI on ubuntu-latest (3.12).
+# Most Python here is stdlib data tooling; the manual screenshot renderer also uses Pillow and wowmock.
 line-length = 120
 target-version = "py312"
 
