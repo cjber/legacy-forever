@@ -1,9 +1,9 @@
 -- Run by tools/screenshots.py from the repository root: luajit tools/screenshots_model.lua <character.lua>
--- The addon's own Data/Legacy.lua and Model.lua answer what the screenshots draw, for the character
+-- The addon's own Data/Legacy.lua and Core/Model.lua answer what the screenshots draw, for the character
 -- screenshots.py writes as a Lua table; the answers go to stdout as JSON.
 local ns = {}
 assert(loadfile("Data/Legacy.lua"))("LegacyForever", ns)
-assert(loadfile("Model.lua"))("LegacyForever", ns)
+assert(loadfile("Core/Model.lua"))("LegacyForever", ns)
 local Model, data = ns.Model, ns.Data
 local character = assert(loadfile(arg[1]))()
 
@@ -19,7 +19,7 @@ local function Name(achievementID)
 	return character.names[achievementID]
 end
 
--- Live.lua's RefsDone: done when any ref is, unknown when the game reports none of them.
+-- Core/Live.lua's RefsDone: done when any ref is, unknown when the game reports none of them.
 ---@param refs LegacyRefs
 ---@return boolean?
 local function RefsDone(refs)

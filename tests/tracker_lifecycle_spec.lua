@@ -84,7 +84,7 @@ for _, readyAtLoad in ipairs({ false, true }) do
 		NearestDock = noop,
 	}
 	env.ForeverTrackerHost = ns.TrackerHost
-	setfenv(assert(loadfile("Tracker.lua")), env)("Addon", ns)
+	setfenv(assert(loadfile("UI/Tracker.lua")), env)("Addon", ns)
 	if not readyAtLoad then
 		assert(owners[modules[1]] == native, "private host attachment is independent of Blizzard")
 		for _, fn in ipairs(callbacks) do

@@ -9,7 +9,7 @@ end
 SlashCmdList = {}
 local ns = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
-assert(loadfile("Core.lua"))("LegacyForever", ns)
+assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 local defaults = ns.DEFAULTS.zoneCompletion
 
 -- A fresh install: no saved variables at all.
@@ -159,7 +159,7 @@ local refreshed = 0
 ns.RefreshMap = function()
 	refreshed = refreshed + 1
 end
-assert(loadfile("Settings.lua"))("LegacyForever", ns)
+assert(loadfile("UI/Settings.lua"))("LegacyForever", ns)
 
 -- Every section is a subpage; the index holds one button per subpage, in order.
 check(#subcategories == 4, "four subcategory groups")

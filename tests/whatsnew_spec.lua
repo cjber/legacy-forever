@@ -27,11 +27,11 @@ end
 SlashCmdList = {}
 local ns = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
-assert(loadfile("Core.lua"))("LegacyForever", ns)
+assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 function ns.Print(msg)
 	printed[#printed + 1] = msg
 end
-assert(loadfile("WhatsNew.lua"))("LegacyForever", ns)
+assert(loadfile("UI/WhatsNew.lua"))("LegacyForever", ns)
 check(onLogin == ns.WhatsNew, "runs at login")
 
 -- A first install, even with no saved variables loaded at all: silent, and the version is remembered.

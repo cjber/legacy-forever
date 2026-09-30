@@ -148,7 +148,7 @@ class Progress:
 
 
 class Live:
-    """Live.lua's reads, answered from the client's achievement tables for the character above."""
+    """Core/Live.lua's reads, answered from the client's achievement tables for the character above."""
 
     def __init__(self, ui, data, explored=EXPLORED):
         self.ui, self.data = ui, data
@@ -237,9 +237,9 @@ class Live:
         return self._model
 
 
-# --------------------------------------------------------------------------------- Model.lua, run for real
+# --------------------------------------------------------------------------------- Core/Model.lua, run for real
 
-# Core.lua's DEFAULTS.zoneCompletion count_* keys: a new player counts only the Legacy categories.
+# Core/Core.lua's DEFAULTS.zoneCompletion count_* keys: a new player counts only the Legacy categories.
 COUNTED = {"areas", "dungeons", "raids", "legacy"}
 
 
@@ -258,8 +258,8 @@ def lua_literal(value):
 
 
 class Model:
-    """What Model.lua makes of this character: tools/screenshots_model.lua loads the addon's Data/Legacy.lua and
-    Model.lua under LuaJIT and answers every question the scenes ask, so the pictures follow the addon's own logic."""
+    """What Core/Model.lua makes of this character: tools/screenshots_model.lua loads the addon's Data/Legacy.lua and
+    Core/Model.lua under LuaJIT and answers the scenes' questions, keeping the pictures tied to addon logic."""
 
     def __init__(self, data, live):
         achievements = set(data["rewards"]) | set(data["feeds"])
@@ -322,7 +322,7 @@ class Model:
         return self.objectives[ui_map]["count"]
 
 
-# ------------------------------------------------------------------------------ Completion.lua, as text
+# ------------------------------------------------------------------------------ UI/Completion.lua, as text
 
 ICONS = {
     "areas": "islands-queue-prop-compass",
@@ -569,7 +569,7 @@ def zone_center(ui, zone, continent):
 
 
 def continent_zones(ui, data, live, continent):
-    """Map.lua's ContinentZones: the centre of each zone with unfinished place-bound objectives, for its badge."""
+    """UI/Map.lua's ContinentZones: the centre of each zone with unfinished place-bound objectives, for its badge."""
     parents = ui.table("UiMap")
     zones = []
     for ui_map in data["zones"]:
@@ -619,7 +619,7 @@ def render_tracker(ui, data, live):
     result = live.model.completion[ASHENVALE]
     legacy = []
     for block in live.model.tracked:
-        # Tracker.lua's line: the progress, then the step.
+        # UI/Tracker.lua's line: the progress, then the step.
         lines = [f"{line['detail']} {line['text']}" if "detail" in line else line["text"] for line in block["lines"]]
         shown = lines[:5] + ([("...", False)] if len(lines) > 5 else [])
         legacy.append(TrackerBlock(live.name(block["challenge"]), shown))

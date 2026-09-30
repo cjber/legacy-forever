@@ -1,7 +1,7 @@
 -- Run from the repository root: luajit tests/data_spec.lua
 local ns = {}
 assert(loadfile("Data/Legacy.lua"))("LegacyForever", ns)
-assert(loadfile("Model.lua"))("LegacyForever", ns)
+assert(loadfile("Core/Model.lua"))("LegacyForever", ns)
 local data = ns.Data
 assert(type(data) == "table", "generated data table")
 assert(type(data.build) == "string" and data.build:match("^%d+%.%d+%.%d+%.%d+$"), "build format")

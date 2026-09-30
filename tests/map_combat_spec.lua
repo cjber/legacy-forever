@@ -1,4 +1,4 @@
--- Load Map.lua through its normal addon-loaded callback and exercise the real provider.
+-- Load UI/Map.lua through its normal addon-loaded callback and exercise the real provider.
 -- This catches protected MapCanvas calls without copying the implementation into the test.
 -- luacheck: globals setfenv
 local combat, removed, acquired, hidden = false, 0, 0, 0
@@ -130,10 +130,10 @@ local ns = {
 		end,
 	},
 }
-local chunk = assert(loadfile("Map.lua"))
+local chunk = assert(loadfile("UI/Map.lua"))
 setfenv(chunk, env)
 chunk("LegacyForever", ns)
-assert(regenCallback, "Map.lua did not register its normal load callback")
+assert(regenCallback, "UI/Map.lua did not register its normal load callback")
 regenCallback()
 assert(provider and eventCallback, "normal map attachment did not install provider/events")
 provider.map = env.WorldMapFrame
@@ -146,4 +146,4 @@ assert(removed == 0 and acquired == 0 and hidden == 4, "combat refresh touched p
 combat = false
 eventCallback(nil, "PLAYER_REGEN_ENABLED")
 assert(removed == 2 and acquired == 1, "regen event did not rebuild and acquire pins exactly once")
-print("map_combat: real Map.lua attachment protected-refresh contract passed")
+print("map_combat: real UI/Map.lua attachment protected-refresh contract passed")

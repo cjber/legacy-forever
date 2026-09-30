@@ -130,8 +130,8 @@ local function Load()
 			end,
 		},
 	}
-	assert(loadfile("Model.lua"))("LegacyForever", ns)
-	assert(loadfile("Quests.lua"))("LegacyForever", ns)
+	assert(loadfile("Core/Model.lua"))("LegacyForever", ns)
+	assert(loadfile("Integrations/Quests.lua"))("LegacyForever", ns)
 	return ns
 end
 
