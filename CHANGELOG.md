@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Organise the source.** Group runtime modules by responsibility and update the manifest, tests and developer tools without changing client load order or behaviour.
+
 ## [0.6.6] - 2026-09-30
 
 - **Development disclosure.** This release was developed with AI assistance. Changes were reviewed and checked with automated tests, linting and type checks; live verification remains ongoing.

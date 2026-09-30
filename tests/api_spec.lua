@@ -48,10 +48,10 @@ local timers, errors, printed, waypoints, journeys = {}, {}, {}, {}, {}
 
 local ns = { Data = data }
 SlashCmdList = {}
--- The GlobalStrings Completion.lua labels its categories with.
+-- The GlobalStrings UI/Completion.lua labels its categories with.
 DUNGEONS, RAIDS, QUESTS_LABEL = "Dungeons", "Raids", "Quests"
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
-assert(loadfile("Core.lua"))("LegacyForever", ns)
+assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 local live = {}
 ns.Live = {
 	Visible = function()
@@ -208,7 +208,13 @@ local function InstallQuestieDB()
 	}
 end
 
-for _, file in ipairs({ "Model.lua", "Quests.lua", "Navigate.lua", "Completion.lua", "API.lua" }) do
+for _, file in ipairs({
+	"Core/Model.lua",
+	"Integrations/Quests.lua",
+	"Integrations/Navigate.lua",
+	"UI/Completion.lua",
+	"Core/API.lua",
+}) do
 	assert(loadfile(file))("LegacyForever", ns)
 end
 local API = LegacyForever.API
@@ -284,7 +290,7 @@ check(summary.questsStatus == "ready", "quests are ready once built")
 check(quests.scope == "character" and quests.done == 1 and quests.total == 2, "quests count this character's")
 -- A synchronous reader (the map, a reward check) building the index first still leaves the waiter notified.
 local scansBefore = scans
-assert(loadfile("Quests.lua"))("LegacyForever", ns)
+assert(loadfile("Integrations/Quests.lua"))("LegacyForever", ns)
 check(assert(API.ZoneSummary(100)).questsStatus == "loading" and #timers == 1, "a fresh index is cold again")
 ns.Quests.Zone(100)
 check(scans == scansBefore + 1 and assert(API.ZoneSummary(100)).questsStatus == "ready", "another reader built it")
