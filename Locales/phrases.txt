@@ -25,6 +25,7 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 L["A grey line in a pin's tooltip when Shortest Path Forever would plot the route."] =
 	"A grey line in a pin's tooltip when Shortest Path Forever would plot the route."
 L["Areas explored"] = "Areas explored"
+L["Attach to quest tracker"] = "Attach to quest tracker"
 L["Click the zone to see where."] = "Click the zone to see where."
 L["Click to collapse."] = "Click to collapse."
 L["Click to expand."] = "Click to expand."
@@ -33,6 +34,7 @@ L["Click to set a waypoint here."] = "Click to set a waypoint here."
 L["Click to track, with live progress."] = "Click to track, with live progress."
 L["Click to travel here with Shortest Path Forever."] = "Click to travel here with Shortest Path Forever."
 L["Defeat"] = "Defeat"
+L["Drag to move"] = "Drag to move"
 L["Dungeon or raid"] = "Dungeon or raid"
 L["Dungeons, raids and Legacy objectives count your progress on any character."] =
 	"Dungeons, raids and Legacy objectives count your progress on any character."
@@ -41,6 +43,7 @@ L["Enable Shortest Path Forever to have the route plotted for you."] =
 L["Every quest this character can take in the zone, from Questie."] =
 	"Every quest this character can take in the zone, from Questie."
 L["Flight paths"] = "Flight paths"
+L["Forever tracker"] = "Forever tracker"
 L["Hide from the tracker"] = "Hide from the tracker"
 L["Hints and updates"] = "Hints and updates"
 L["In the objective tracker"] = "In the objective tracker"
@@ -62,8 +65,6 @@ L["Open a flight master on this continent to check these."] = "Open a flight mas
 L["Open in the Legacy panel"] = "Open in the Legacy panel"
 L["Open the Legacy panel"] = "Open the Legacy panel"
 L["Open the map"] = "Open the map"
-L["Options now use short pages, and Legacy tracker sections stay clear of quests during combat."] =
-	"Options now use short pages, and Legacy tracker sections stay clear of quests during combat."
 L["Part of %s"] = "Part of %s"
 L["Part of %s: %s for exploring every zone"] = "Part of %s: %s for exploring every zone"
 L["Part of %s: %s for the whole challenge"] = "Part of %s: %s for the whole challenge"
@@ -77,6 +78,10 @@ L["Tell me what's new after an update"] = "Tell me what's new after an update"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"The zone you're viewing in the map's corner, and a badge on each zone of a continent map."
 L["This version of Questie isn't supported."] = "This version of Questie isn't supported."
+L["Turn off Attach to quest tracker in Settings to drag all Forever sections together."] =
+	"Turn off Attach to quest tracker in Settings to drag all Forever sections together."
+L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
+	"Turn this off to drag the shared Forever tracker anywhere on screen."
 L["Undiscovered area"] = "Undiscovered area"
 L["Waiting for Questie and your quest log."] = "Waiting for Questie and your quest log."
 L["Waiting for Questie to finish loading."] = "Waiting for Questie to finish loading."
