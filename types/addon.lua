@@ -167,6 +167,7 @@
 ---@field zoneCompletion LegacySettings
 
 ---@class LegacySavedVariables
+---@field trackerHost? ForeverTrackerSettings
 ---@field tracked? LegacyTrackingKey[]
 ---@field zoneCompletion? LegacySettings
 ---@field flightPaths? table<string, LegacyFlightRecord>
@@ -186,6 +187,11 @@ LegacyForeverDB = nil
 LegacyForever = nil
 
 ---@class ForeverTrackerHostAPI
+---@field GetSettings fun(): ForeverTrackerSettings
+---@field IsAttachedToQuestTracker fun(): boolean
+---@field SetAttached fun(attached: boolean)
+---@field OnAttachmentChanged fun(callback: fun(attached: boolean))
+---@field SavePosition fun(x: number, y: number)
 ---@field Attach fun(module: Frame)
 ---@field IsAttached fun(module: Frame?): boolean
 ---@type ForeverTrackerHostAPI?
@@ -228,3 +234,13 @@ ForeverTrackerHost = nil
 ---@class LegacyTexturePool
 ---@field Acquire fun(self: LegacyTexturePool): Texture, boolean
 ---@field ReleaseAll fun(self: LegacyTexturePool)
+
+---@class ForeverTrackerSettings
+---@field attached boolean
+---@field x? number
+---@field y? number
+
+---@class ForeverTrackerNamespace
+---@field TrackerHost? ForeverTrackerHostAPI
+---@field TrackerHostSettings? fun(): ForeverTrackerSettings
+---@field L table<string, string>

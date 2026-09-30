@@ -83,7 +83,37 @@ local function Category(name)
 		end,
 	}
 end
+local trackerState = { attached = true }
+local attachmentChanged, attachmentNotified
+ns.TrackerHost = {
+	GetSettings = function()
+		return trackerState
+	end,
+	SetAttached = function(value)
+		trackerState.attached = value
+		attachmentChanged()
+	end,
+	OnAttachmentChanged = function(callback)
+		attachmentChanged = callback
+	end,
+}
 Settings = {
+	RegisterProxySetting = function(_, variable, varType, name, default, get, set)
+		return {
+			variable = variable,
+			key = "trackerAttached",
+			varType = varType,
+			name = name,
+			default = default,
+			GetValue = get,
+			SetValue = function(_, value)
+				set(value)
+			end,
+		}
+	end,
+	NotifyUpdate = function(variable)
+		attachmentNotified = variable
+	end,
 	VarType = { Boolean = "boolean" },
 	RegisterVerticalLayoutCategory = function(name)
 		check(name == "Legacy Forever", "the category is named after the addon")
@@ -174,6 +204,7 @@ local kinds, expectedKinds =
 		"checkbox@World map",
 		"button@Legacy Forever",
 		"checkbox@Objective tracker",
+		"checkbox@Objective tracker",
 		"button@Legacy Forever",
 	}
 for _ = 1, 7 do
@@ -196,6 +227,7 @@ for _, entry in ipairs(registered) do
 	end
 end
 local expected = {
+	trackerAttached = true,
 	showAreas = true,
 	map = true,
 	tracker = false,
@@ -216,7 +248,7 @@ for key, default in pairs(expected) do
 	check(byKey[key].default == default, key .. " keeps its default")
 	check(byKey[key].variable == "LegacyForever_" .. key, key .. " has its own setting variable")
 end
-check(seen == 12, "all twelve settings are on the page")
+check(seen == 13, "all thirteen settings are on the page")
 
 -- The index buttons open their subpages, and never land in search.
 local buttons = {}
@@ -236,7 +268,7 @@ check(
 -- Quests grey out without Questie, as the map menu's box does, and the name and tooltip are translated.
 local quests = byKey.count_quests
 check(quests.name == "quests", "a category row is named by its label")
-check(#registered[7].initializer.modify == 0, "only quests can grey out")
+check(#registered[8].initializer.modify == 0, "only quests can grey out")
 local questsRow
 for _, entry in ipairs(registered) do
 	if entry.initializer.setting == quests then
@@ -262,3 +294,11 @@ ns.SetOption("missing", true)
 check(surfaceChanges == 3, "an unregistered switch is left alone")
 
 print(("settings_spec: %d checks passed"):format(checks))
+
+check(byKey.trackerAttached:GetValue() == true, "shared tracker starts attached")
+byKey.trackerAttached:SetValue(false)
+check(not byKey.trackerAttached:GetValue(), "toggle detaches shared tracker")
+check(attachmentNotified == "LegacyForever_trackerAttached", "change notifies proxy")
+trackerState.attached = true
+attachmentChanged()
+check(byKey.trackerAttached:GetValue(), "other addon updates same shared state")

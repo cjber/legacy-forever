@@ -13,6 +13,7 @@ local _, addon = ...
 ---@field Live LegacyLive
 ---@field Quests LegacyQuests
 ---@field TrackerHost ForeverTrackerHostAPI
+---@field TrackerHostSettings fun(): ForeverTrackerSettings
 ---@field Tracker LegacyTracker
 ---@field Completion LegacyCompletion
 ---@field SetOption fun(key: string, value: boolean)
@@ -28,7 +29,7 @@ ns.TITLE = "Legacy Forever"
 -- The Legacy shield: map pins, the map button, menu entries and the zone-completion count all wear it.
 ns.POINTS_ICON = "UI-Legacy-Points-icon-c60"
 -- One sentence for the chat line after an update (WhatsNew.lua): the headline of the release this ships in.
-ns.WHATS_NEW = L["Options now use short pages, and Legacy tracker sections stay clear of quests during combat."]
+ns.WHATS_NEW = L["Turn off Attach to quest tracker in Settings to drag all Forever sections together."]
 
 -- Every setting's default. A saved setting stays nil until the player changes it, and nil reads as the
 -- default here, so an old save file and a new option always agree.
@@ -70,6 +71,15 @@ function ns.SavedTable(key)
 	LegacyForeverDB = LegacyForeverDB or {}
 	LegacyForeverDB[key] = LegacyForeverDB[key] or {}
 	return LegacyForeverDB[key]
+end
+
+---@return ForeverTrackerSettings
+function ns.TrackerHostSettings()
+	LegacyForeverDB = LegacyForeverDB or {}
+	if type(LegacyForeverDB.trackerHost) ~= "table" then
+		LegacyForeverDB.trackerHost = { attached = true }
+	end
+	return LegacyForeverDB.trackerHost
 end
 
 -- A top-level switch, its default while unset.
