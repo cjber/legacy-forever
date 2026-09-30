@@ -76,13 +76,30 @@ function Completion.ShownOnMap()
 	return IsShown("map")
 end
 
----@param surface LegacySurface
-local function Toggle(surface)
-	Settings()[surface] = not IsShown(surface)
+-- The map and tracker surfaces changed (a Settings row wrote the value): redraw both.
+function Completion.SurfacesChanged()
 	Refresh()
 	for _, callback in ipairs(toggleListeners) do
 		callback()
 	end
+end
+
+-- Set from anywhere (the Legacy map menu, the tracker's own menu, the Settings page). Through the Settings
+-- setting where it exists, so its row stays in step while the page is open.
+---@param surface LegacySurface
+---@param shown boolean
+function Completion.SetShown(surface, shown)
+	if ns.SetOption then
+		ns.SetOption(surface, shown)
+	else
+		Settings()[surface] = shown
+		Completion.SurfacesChanged()
+	end
+end
+
+---@param surface LegacySurface
+local function Toggle(surface)
+	Completion.SetShown(surface, not IsShown(surface))
 end
 
 Completion.IsCounted = IsCounted
@@ -136,6 +153,12 @@ function Completion.Icon(key, size)
 		return ("|T%s:%d:%d:0:0:64:64:5:59:5:59|t"):format(icon.file, size, size)
 	end
 	return ns.AtlasMarkup(icon.atlas --[[@as string]], size)
+end
+
+---@param category LegacyCategoryKey
+---@return string
+function Completion.Label(category)
+	return LABELS[category]
 end
 
 -- What the player does to resolve a category's pending items.
@@ -536,13 +559,29 @@ end
 
 ns.Live.OnChange(CheckRewards)
 
---[[ Settings, in the Legacy map menu ]]
+--[[ Settings, in the Legacy map menu and on the Settings page ]]
+
+-- A counted category changed (a Settings row wrote the value): re-check rewards and redraw.
+function Completion.CountsChanged()
+	CheckRewards(true)
+	Refresh()
+end
+
+-- Set from anywhere, through the Settings setting where it exists so its row stays in step.
+---@param category LegacyCategoryKey
+---@param counted boolean
+function Completion.SetCounted(category, counted)
+	if ns.SetOption then
+		ns.SetOption("count_" .. category, counted)
+	else
+		Settings()["count_" .. category] = counted
+		Completion.CountsChanged()
+	end
+end
 
 ---@param category LegacyCategoryKey
 local function ToggleCounted(category)
-	Settings()["count_" .. category] = not IsCounted(category)
-	CheckRewards(true)
-	Refresh()
+	Completion.SetCounted(category, not IsCounted(category))
 end
 
 -- A zone's completion under a continent badge's tooltip: percent, then one row of counts.
@@ -574,7 +613,7 @@ end
 
 -- Quests are read from QuestieDB, which comes with Questie, so they can only be counted with it installed.
 ---@return boolean
-local function QuestsUsable()
+function Completion.QuestsUsable()
 	local status = ns.Quests.Status()
 	return status == "ready" or status == "loading"
 end
@@ -587,6 +626,11 @@ local QUESTS_STATUS = {
 	missing = L["Needs Questie, which lists each zone's quests."],
 	unsupported = L["This version of Questie isn't supported."],
 }
+
+---@return string
+function Completion.QuestsStatusText()
+	return QUESTS_STATUS[ns.Quests.Status()]
+end
 
 ---@param tooltip GameTooltip
 local function QuestsTooltip(tooltip)
@@ -615,7 +659,7 @@ function Completion.AddMenu(root)
 			key
 		)
 		if key == "quests" then
-			box:SetEnabled(QuestsUsable)
+			box:SetEnabled(Completion.QuestsUsable)
 			box:SetTooltip(QuestsTooltip)
 		end
 	end

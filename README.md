@@ -35,7 +35,7 @@ Install it from [CurseForge](https://www.curseforge.com/wow/addons/legacy-foreve
 
 ## Usage
 
-Open the world map, or type `/lf`. The Legacy button sits below the map's own tracking buttons. Tick a challenge in its menu to add it to the tracker.
+Open the world map, or type `/lf`. The Legacy button sits below the map's own tracking buttons. Tick a challenge in its menu to add it to the tracker. Every option also lives under Options > AddOns > Legacy Forever, grouped into short pages behind an index.
 
 | Command | What it does |
 |---|---|

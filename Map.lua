@@ -176,15 +176,13 @@ local function ShowAreas()
 end
 
 local function ToggleAreas()
-	LegacyForeverDB = LegacyForeverDB or {}
-	LegacyForeverDB.showAreas = not ShowAreas()
-	ns.RefreshMap()
+	-- Through the Settings setting, so the page's row stays in step while it is open.
+	ns.SetOption("showAreas", not ShowAreas())
 end
 
 ---@param key 'whatsNew'|'companions'
 local function ToggleSetting(key)
-	LegacyForeverDB = LegacyForeverDB or {}
-	LegacyForeverDB[key] = not ns.Setting(key)
+	ns.SetOption(key, not ns.Setting(key))
 end
 
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]

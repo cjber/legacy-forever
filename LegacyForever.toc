@@ -26,6 +26,7 @@ TrackerHost.lua
 Tracker.lua
 Completion.xml
 Completion.lua
+Settings.lua
 Map.xml
 Map.lua
 API.lua

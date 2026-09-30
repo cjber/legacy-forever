@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Find every option on the game's Options page.** Options > AddOns > Legacy Forever groups the map shading, zone completion and its "What counts" list into short pages behind an index, so nothing needs scrolling; the Legacy menu's quick toggles stay where they are.
+
 ## [0.6.5] - 2026-09-29
 
 - **Keep one tracker column.** Addon sections stack above the quest tracker regardless of which companion addon loads first, while keeping their frame pools separate from Blizzard's tracker.
