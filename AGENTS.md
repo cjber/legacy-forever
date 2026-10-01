@@ -12,6 +12,7 @@ luacheck .
 tools/typecheck.sh           # LuaLS 3.19.1 + multi-value lint (Python self-tests included)
 for s in tests/*_spec.lua; do luajit "$s" || exit 1; done
 python3 tools/gen_legacy.py   # regenerate Data/Legacy.lua after a data change
+python3 tools/check_generated.py   # regenerate in a disposable tree; require fresh, byte-stable Data/Legacy.lua
 python3 tools/changelog.py --check
 python3 .sift/gate.py --base origin/main && python3 .sift/agents.py check
 ```
