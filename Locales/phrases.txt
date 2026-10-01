@@ -33,6 +33,8 @@ L["Click to open the map. Right-click for options."] = "Click to open the map. R
 L["Click to set a waypoint here."] = "Click to set a waypoint here."
 L["Click to track, with live progress."] = "Click to track, with live progress."
 L["Click to travel here with Shortest Path Forever."] = "Click to travel here with Shortest Path Forever."
+L["Companion sections stay clear of the quest list when it grows during a fight."] =
+	"Companion sections stay clear of the quest list when it grows during a fight."
 L["Defeat"] = "Defeat"
 L["Drag to move"] = "Drag to move"
 L["Dungeon or raid"] = "Dungeon or raid"
@@ -78,8 +80,6 @@ L["Tell me what's new after an update"] = "Tell me what's new after an update"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"The zone you're viewing in the map's corner, and a badge on each zone of a continent map."
 L["This version of Questie isn't supported."] = "This version of Questie isn't supported."
-L["Turn off Attach to quest tracker in Settings to drag all Forever sections together."] =
-	"Turn off Attach to quest tracker in Settings to drag all Forever sections together."
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"Turn this off to drag the shared Forever tracker anywhere on screen."
 L["Undiscovered area"] = "Undiscovered area"

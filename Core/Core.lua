@@ -29,7 +29,7 @@ ns.TITLE = "Legacy Forever"
 -- The Legacy shield: map pins, the map button, menu entries and the zone-completion count all wear it.
 ns.POINTS_ICON = "UI-Legacy-Points-icon-c60"
 -- One sentence for the chat line after an update (WhatsNew.lua): the headline of the release this ships in.
-ns.WHATS_NEW = L["Turn off Attach to quest tracker in Settings to drag all Forever sections together."]
+ns.WHATS_NEW = L["Companion sections stay clear of the quest list when it grows during a fight."]
 
 -- Every setting's default. A saved setting stays nil until the player changes it, and nil reads as the
 -- default here, so an old save file and a new option always agree.
