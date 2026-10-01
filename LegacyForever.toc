@@ -23,6 +23,7 @@ Core\Model.lua
 Core\Live.lua
 Integrations\Quests.lua
 Integrations\Navigate.lua
+Core\ZoneCompletion.lua
 UI\TrackerHost.lua
 UI\Tracker.lua
 UI\Completion.xml

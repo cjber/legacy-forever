@@ -5,7 +5,8 @@ local L = ns.L
 -- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths, dungeons, raids,
 -- Legacy objectives, local reputations and quests are done, as a section in the objective tracker
 -- (the zone you're in) and in the world map's corner (the zone you're viewing). Each is optional and
--- collapsible.
+-- collapsible. The counting, what counts and when a completion is news are Core/ZoneCompletion.lua's; this file
+-- draws them.
 ---@class LegacyCompletion
 local Completion = {}
 ns.Completion = Completion
@@ -35,94 +36,12 @@ local MAX_LEFT = 6
 -- Remaining names listed under the tracker's counts before "...", matching the challenge section.
 local MAX_TRACKER_LEFT = 5
 
----@type (fun())[]
-local listeners = {}
-
----@param surface LegacySurface
----@return boolean
-local function IsShown(surface)
-	return ns.Saved.Get(surface)
-end
-
----@param category LegacyCategoryKey
----@return boolean
-local function IsCounted(category)
-	return ns.Saved.Get("count_" .. category)
-end
-
-local function Refresh()
-	for _, callback in ipairs(listeners) do
-		callback()
-	end
-end
-
----@type (fun())[]
-local toggleListeners = {}
-
--- For what other files draw under these switches: the continent map's zone badges follow "map".
----@param callback fun()
-function Completion.OnToggle(callback)
-	toggleListeners[#toggleListeners + 1] = callback
-end
-
----@return boolean
-function Completion.ShownOnMap()
-	return IsShown("map")
-end
-
--- The map and tracker surfaces changed: redraw both.
-local function SurfacesChanged()
-	Refresh()
-	for _, callback in ipairs(toggleListeners) do
-		callback()
-	end
-end
+local Zones = ns.ZoneCompletion
+local IsShown, IsCounted = Zones.IsShown, Zones.IsCounted
 
 ---@param surface LegacySurface
 local function Toggle(surface)
 	ns.Saved.Set(surface, not IsShown(surface))
-end
-
-Completion.IsCounted = IsCounted
-
--- For readers outside the map and tracker (API.lua): called whenever the counts or what counts may have changed.
----@param callback fun()
-function Completion.OnRefresh(callback)
-	listeners[#listeners + 1] = callback
-end
-
--- A zone's completion, even when nothing counts; nil for a map without completion data.
--- `deferred` reads the zone's quests without building QuestieDB's index (see Quests.Zone).
----@param uiMapID number?
----@param deferred? boolean
----@return LegacyZoneResult?
-function Completion.Result(uiMapID, deferred)
-	local zone = uiMapID and ns.Data.completion[uiMapID]
-	if not uiMapID or not zone then
-		return nil
-	end
-	local snapshot = ns.Live.ZoneSnapshot(uiMapID)
-	if deferred then
-		snapshot = {
-			explored = snapshot.explored,
-			taxis = snapshot.taxis,
-			faction = snapshot.faction,
-			refsDone = snapshot.refsDone,
-			reaction = snapshot.reaction,
-			completed = snapshot.completed,
-			quests = function()
-				return ns.Quests.Zone(uiMapID, true)
-			end,
-		}
-	end
-	return ns.Model.ZoneCompletion(zone, snapshot, IsCounted)
-end
-
----@param uiMapID number?
----@return LegacyZoneResult?
-function Completion.Of(uiMapID)
-	local result = Completion.Result(uiMapID)
-	return result and result.total > 0 and result or nil
 end
 
 ---@param key LegacyCategoryKey
@@ -257,7 +176,7 @@ local TrackerMixin = {}
 
 function TrackerMixin:LayoutContents()
 	local uiMapID = IsShown("tracker") and ns.Live.CurrentZone() or nil
-	local result = Completion.Of(uiMapID)
+	local result = Zones.Of(uiMapID)
 	if not uiMapID or not result then
 		return
 	end
@@ -284,7 +203,7 @@ end
 
 ---@param block LegacyTrackerBlock
 function TrackerMixin:OnBlockHeaderEnter(block)
-	local result = Completion.Of(block.id)
+	local result = Zones.Of(block.id)
 	if result then
 		GameTooltip:SetOwner(block, "ANCHOR_LEFT")
 		AddTooltip(GameTooltip, C_Map.GetMapInfo(block.id).name, result)
@@ -334,9 +253,9 @@ if trackerModule then
 		end
 		hooksecurefunc(trackerModule, "SetCollapsed", SaveCollapse) -- taint-ok: addon-owned tracker
 	end)
-	listeners[#listeners + 1] = function()
+	Zones.OnChange(function()
 		trackerModule:MarkDirty()
-	end
+	end)
 end
 
 --[[ World map: the zone you're viewing, in the corner; on a continent, in each zone badge's tooltip ]]
@@ -364,7 +283,7 @@ function LegacyForeverZoneOverlayMixin:Refresh()
 	---@type WorldMapFrame
 	local map = self:GetParent()
 	local uiMapID = map:GetMapID()
-	self.result = IsShown("map") and Completion.Of(uiMapID) or nil
+	self.result = IsShown("map") and Zones.Of(uiMapID) or nil
 	if not self.result then
 		self:Hide()
 		return
@@ -443,39 +362,22 @@ local function AttachMap()
 	)
 	local provider = CreateProvider(overlay)
 	map:AddDataProvider(provider)
-	listeners[#listeners + 1] = function()
+	Zones.OnChange(function()
 		if map:IsShown() then
 			provider:RefreshAllData()
 		end
-	end
+	end)
 end
 
 EventUtil.ContinueOnAddOnLoaded("Blizzard_WorldMap", AttachMap)
-ns.Live.OnChange(Refresh)
 
 --[[ A zone reaching 100%: a toast and a sound, GW2 style ]]
-
--- The reward follows "What counts", as the percentage does, so 100% on screen is what earns it.
--- Unticking a category isn't progress, so a zone that completes is noted without a toast.
----@param uiMapID number
----@return boolean
-local function IsZoneComplete(uiMapID)
-	local result = Completion.Result(uiMapID)
-	---@cast result -nil
-	return ns.Model.CompletionCounts(result) and result.complete
-end
 
 -- "Kalimdor: 3 of 20 zones complete (15%)", counting what the player counts.
 ---@param continentID number
 ---@return string?
 local function ContinentText(continentID)
-	local results = {}
-	for uiMapID in pairs(ns.Data.completion) do
-		if ns.Live.ContinentOf(uiMapID) == continentID then
-			results[#results + 1] = Completion.Result(uiMapID)
-		end
-	end
-	local continent = ns.Model.ContinentCompletion(results)
+	local continent = Zones.Continent(continentID)
 	local info = C_Map.GetMapInfo(continentID)
 	if not continent or not info then
 		return nil
@@ -516,43 +418,12 @@ end
 
 local toasts = AlertFrame:AddQueuedAlertFrameSubSystem("CriteriaAlertFrameTemplate", SetUpToast, 2, 6)
 
--- Zones already complete when you log in are not news. The first check (on entering the
--- world, however long the loading screen took) and those in the few seconds after it, while
--- the game is still sending achievement progress, only note completions.
-local QUIET_SECONDS = 10
-local quietUntil
-local rewarded = {}
-
----@param silent? boolean
-local function CheckRewards(silent)
-	quietUntil = quietUntil or GetTime() + QUIET_SECONDS
-	local quiet = silent or GetTime() < quietUntil
-	for uiMapID in pairs(ns.Data.completion) do
-		if not rewarded[uiMapID] and IsZoneComplete(uiMapID) then
-			rewarded[uiMapID] = true
-			-- Someone who has switched zone completion off entirely doesn't want its toasts.
-			if not quiet and (IsShown("map") or IsShown("tracker")) then
-				toasts:AddAlert(uiMapID)
-			end
-		end
-	end
-end
-
-ns.Live.OnChange(CheckRewards)
+-- Only a completion that is news asks for the toast (ZoneCompletion.OnComplete).
+Zones.OnComplete(function(uiMapID)
+	toasts:AddAlert(uiMapID)
+end)
 
 --[[ Settings, in the Legacy map menu and on the Settings page ]]
-
--- A switch was saved, from the Legacy map menu, the Settings page or anywhere else. A surface redraws the map
--- and tracker; a counted category re-checks rewards silently first, so the redraw already knows which zones
--- the new rules complete. The collapse states redraw themselves where they are clicked.
-ns.Saved.OnChange(function(key)
-	if key == "map" or key == "tracker" then
-		SurfacesChanged()
-	elseif key:find("^count_") then
-		CheckRewards(true)
-		Refresh()
-	end
-end)
 
 ---@param category LegacyCategoryKey
 local function ToggleCounted(category)
@@ -563,7 +434,7 @@ end
 ---@param tooltip GameTooltip
 ---@param uiMapID number
 function Completion.AddSummary(tooltip, uiMapID)
-	local result = IsShown("map") and Completion.Of(uiMapID) or nil
+	local result = IsShown("map") and Zones.Of(uiMapID) or nil
 	if not result then
 		return
 	end
@@ -636,54 +507,6 @@ function Completion.AddMenu(root)
 		if key == "quests" then
 			box:SetEnabled(Completion.QuestsUsable)
 			box:SetTooltip(QuestsTooltip)
-		end
-	end
-end
-
--- For /lf audit: the current zone's counts against what the game reports.
-function Completion.Audit()
-	local uiMapID = ns.Live.CurrentZone()
-	if not uiMapID then
-		ns.Print("zone completion: no data for the zone you're in.")
-		return
-	end
-	local zone = ns.Data.completion[uiMapID]
-	local snapshot = ns.Live.ZoneSnapshot(uiMapID)
-	local result = ns.Model.ZoneCompletion(zone, snapshot)
-	local parts = {}
-	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
-		local category = result[key]
-		parts[#parts + 1] = category and ("%s %d/%d"):format(key, category.done, category.total) or (key .. " -")
-	end
-	ns.Print(("quests from QuestieDB: %s"):format(ns.Quests.Failure() or ns.Quests.Status()))
-	ns.Print(
-		("zone completion for %s (map %d): %s"):format(
-			C_Map.GetMapInfo(uiMapID).name,
-			uiMapID,
-			table.concat(parts, ", ")
-		)
-	)
-
-	local known = {}
-	for _, area in ipairs(zone.areas) do
-		known[area.key] = true
-	end
-	for key in pairs(snapshot.explored) do
-		if not known[key] then
-			ns.Print("  explored area not in the data: " .. key)
-		end
-	end
-	if next(snapshot.explored) == nil then
-		ns.Print("  the game reports nothing explored in this zone")
-	end
-
-	for _, taxi in ipairs(zone.taxis) do
-		if taxi.faction == "Neutral" or taxi.faction == snapshot.faction then
-			local learned = snapshot.taxis[taxi.node]
-			local state = learned == nil and "unknown until you open a flight master on this continent"
-				or learned and "known"
-				or "not known"
-			ns.Print(("  flight path %d (%s): %s"):format(taxi.node, taxi.name, state))
 		end
 	end
 end

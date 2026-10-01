@@ -49,4 +49,5 @@ files["tests/api_spec.lua"] = {
 		"InCombatLockdown", "LibQuestieDB", "QUESTS_LABEL", "RAIDS", "ShortestPathForever", "UiMapPoint", "UnitClass", "UnitFactionGroup", "UnitRace",
 	},
 }
+files["tests/zone_completion_spec.lua"] = { globals = { "C_Map", "GetTime" } }
 read_globals[#read_globals + 1] = "EditModeManagerFrame"

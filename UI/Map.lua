@@ -667,8 +667,8 @@ local function Attach()
 			button:Refresh()
 		end
 	end
-	ns.Live.OnChange(ns.RefreshMap)
-	ns.Completion.OnToggle(ns.RefreshMap)
+	-- Progress moves the pins and the "On the world map" switch the badges: zone completion's notice covers both.
+	ns.ZoneCompletion.OnChange(ns.RefreshMap)
 	ns.Saved.OnChange(function(key)
 		if key == "showAreas" then
 			ns.RefreshMap()
