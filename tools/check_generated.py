@@ -32,10 +32,14 @@ def main() -> None:
         cache = ROOT / "tools" / ".cache"
         if cache.is_dir():
             shutil.copytree(cache, scratch / "tools" / ".cache")
+        (scratch / OUTPUT.relative_to(ROOT)).unlink()
         subprocess.run([sys.executable, *command], cwd=scratch, check=True)
+        if not args.offline:
+            shutil.copytree(scratch / "tools" / ".cache", cache, dirs_exist_ok=True)
         first = (scratch / OUTPUT.relative_to(ROOT)).read_bytes()
         if first != original:
             raise SystemExit("generated output is stale: Data/Legacy.lua")
+        (scratch / OUTPUT.relative_to(ROOT)).unlink()
         subprocess.run([sys.executable, "tools/gen_legacy.py", "--offline"], cwd=scratch, check=True)
         if (scratch / OUTPUT.relative_to(ROOT)).read_bytes() != first:
             raise SystemExit("generator is not byte-stable: Data/Legacy.lua")
