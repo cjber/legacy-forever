@@ -52,6 +52,9 @@ SlashCmdList = {}
 DUNGEONS, RAIDS, QUESTS_LABEL = "Dungeons", "Raids", "Quests"
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
+assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
+-- The save file: the specs below edit what counts in it directly, as a hand-edited file would.
+LegacyForeverDB = { zoneCompletion = settings }
 local live = {}
 ns.Live = {
 	Visible = function()
@@ -87,10 +90,6 @@ ns.Live = {
 		end
 	end,
 }
-function ns.SavedTable(key)
-	assert(key == "zoneCompletion")
-	return settings
-end
 function ns.Print(msg)
 	printed[#printed + 1] = msg
 end

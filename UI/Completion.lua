@@ -35,25 +35,19 @@ local MAX_LEFT = 6
 -- Remaining names listed under the tracker's counts before "...", matching the challenge section.
 local MAX_TRACKER_LEFT = 5
 
----@return LegacySettings
-local function Settings()
-	return ns.SavedTable("zoneCompletion")
-end
-
 ---@type (fun())[]
 local listeners = {}
 
--- Defaults are in ns.DEFAULTS.zoneCompletion.
 ---@param surface LegacySurface
 ---@return boolean
 local function IsShown(surface)
-	return ns.ZoneSetting(surface)
+	return ns.Saved.Get(surface)
 end
 
 ---@param category LegacyCategoryKey
 ---@return boolean
 local function IsCounted(category)
-	return ns.ZoneSetting("count_" .. category)
+	return ns.Saved.Get("count_" .. category)
 end
 
 local function Refresh()
@@ -76,30 +70,17 @@ function Completion.ShownOnMap()
 	return IsShown("map")
 end
 
--- The map and tracker surfaces changed (a Settings row wrote the value): redraw both.
-function Completion.SurfacesChanged()
+-- The map and tracker surfaces changed: redraw both.
+local function SurfacesChanged()
 	Refresh()
 	for _, callback in ipairs(toggleListeners) do
 		callback()
 	end
 end
 
--- Set from anywhere (the Legacy map menu, the tracker's own menu, the Settings page). Through the Settings
--- setting where it exists, so its row stays in step while the page is open.
----@param surface LegacySurface
----@param shown boolean
-function Completion.SetShown(surface, shown)
-	if ns.SetOption then
-		ns.SetOption(surface, shown)
-	else
-		Settings()[surface] = shown
-		Completion.SurfacesChanged()
-	end
-end
-
 ---@param surface LegacySurface
 local function Toggle(surface)
-	Completion.SetShown(surface, not IsShown(surface))
+	ns.Saved.Set(surface, not IsShown(surface))
 end
 
 Completion.IsCounted = IsCounted
@@ -347,9 +328,9 @@ if trackerModule then
 	header.Progress:SetPoint("BOTTOMRIGHT", header.Percent, "BOTTOMRIGHT", 0, 1)
 	-- Deferred so the collapse state is restored even on a client that ignores LoadSavedVariablesFirst.
 	EventUtil.ContinueOnAddOnLoaded(addonName, function()
-		trackerModule:SetCollapsed(ns.ZoneSetting("trackerCollapsed"))
+		trackerModule:SetCollapsed(ns.Saved.Get("trackerCollapsed"))
 		local function SaveCollapse(_, collapsed)
-			Settings().trackerCollapsed = collapsed
+			ns.Saved.Set("trackerCollapsed", collapsed)
 		end
 		hooksecurefunc(trackerModule, "SetCollapsed", SaveCollapse) -- taint-ok: addon-owned tracker
 	end)
@@ -388,7 +369,7 @@ function LegacyForeverZoneOverlayMixin:Refresh()
 		self:Hide()
 		return
 	end
-	local collapsed = ns.ZoneSetting("mapCollapsed")
+	local collapsed = ns.Saved.Get("mapCollapsed")
 	self.name = C_Map.GetMapInfo(uiMapID).name
 	self.Title:SetText(("%s  %s"):format(self.name, PercentText(self.result)))
 	SetProgress(self.Progress, self.result)
@@ -407,7 +388,7 @@ function LegacyForeverZoneOverlayMixin:Refresh()
 end
 
 function LegacyForeverZoneOverlayMixin:OnClick()
-	Settings().mapCollapsed = not ns.ZoneSetting("mapCollapsed")
+	ns.Saved.Set("mapCollapsed", not ns.Saved.Get("mapCollapsed"))
 	self:Refresh()
 	self:OnEnter()
 end
@@ -417,7 +398,7 @@ function LegacyForeverZoneOverlayMixin:OnEnter()
 	AddTooltip(GameTooltip, self.name, self.result)
 	GameTooltip_AddInstructionLine(
 		GameTooltip,
-		ns.ZoneSetting("mapCollapsed") and L["Click to expand."] or L["Click to collapse."]
+		ns.Saved.Get("mapCollapsed") and L["Click to expand."] or L["Click to collapse."]
 	)
 	GameTooltip:Show()
 end
@@ -561,27 +542,21 @@ ns.Live.OnChange(CheckRewards)
 
 --[[ Settings, in the Legacy map menu and on the Settings page ]]
 
--- A counted category changed (a Settings row wrote the value): re-check rewards and redraw.
-function Completion.CountsChanged()
-	CheckRewards(true)
-	Refresh()
-end
-
--- Set from anywhere, through the Settings setting where it exists so its row stays in step.
----@param category LegacyCategoryKey
----@param counted boolean
-function Completion.SetCounted(category, counted)
-	if ns.SetOption then
-		ns.SetOption("count_" .. category, counted)
-	else
-		Settings()["count_" .. category] = counted
-		Completion.CountsChanged()
+-- A switch was saved, from the Legacy map menu, the Settings page or anywhere else. A surface redraws the map
+-- and tracker; a counted category re-checks rewards silently first, so the redraw already knows which zones
+-- the new rules complete. The collapse states redraw themselves where they are clicked.
+ns.Saved.OnChange(function(key)
+	if key == "map" or key == "tracker" then
+		SurfacesChanged()
+	elseif key:find("^count_") then
+		CheckRewards(true)
+		Refresh()
 	end
-end
+end)
 
 ---@param category LegacyCategoryKey
 local function ToggleCounted(category)
-	Completion.SetCounted(category, not IsCounted(category))
+	ns.Saved.Set("count_" .. category, not IsCounted(category))
 end
 
 -- A zone's completion under a continent badge's tooltip: percent, then one row of counts.

@@ -115,9 +115,12 @@ local ns = {
 		end,
 		OnToggle = function() end,
 	},
-	Setting = function()
-		return false
-	end,
+	Saved = {
+		Get = function()
+			return false
+		end,
+		OnChange = function() end,
+	},
 	Live = {
 		Visible = function()
 			return false

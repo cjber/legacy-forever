@@ -10,11 +10,8 @@ function ns.WhatsNew()
 		return
 	end
 	-- Forever's beta client can start without the saved variables loaded; that reads as a first install.
-	local saved = LegacyForeverDB or {}
-	LegacyForeverDB = saved
-	local last = saved.lastVersion
-	saved.lastVersion = version
-	if last and last ~= version and ns.Setting("whatsNew") then
+	local last = ns.Saved.SeenVersion(version)
+	if last and last ~= version and ns.Saved.Get("whatsNew") then
 		ns.Print(L["updated to %s. %s"]:format(version, ns.WHATS_NEW))
 	end
 end
