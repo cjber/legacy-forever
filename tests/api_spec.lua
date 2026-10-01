@@ -34,7 +34,8 @@ local data = {
 	},
 }
 
--- Live progress: achievement 30 is finished, so not visible; criterion 3 is unknown to the game.
+-- Live progress: achievement 30 is finished, so not visible; criterion 3 is unknown to the game, and so is
+-- the wing's step (achievement 900) until a check below reports it.
 local visible = { [10] = true, [20] = true }
 local criteria = {
 	[10] = {
@@ -43,7 +44,6 @@ local criteria = {
 	},
 	[20] = { [5] = { text = "Slay ogres", completed = false, quantity = 3, required = 10, index = 1 } },
 }
-local wingDone -- nil: the game hasn't said
 local settings = {}
 local timers, errors, printed, waypoints, journeys = {}, {}, {}, {}, {}
 
@@ -69,8 +69,8 @@ ns.Live = {
 			explored = { ["0:0:1:1"] = true },
 			taxis = {},
 			faction = "Alliance",
-			refsDone = function()
-				return wingDone
+			criteria = function(achievementID)
+				return criteria[achievementID]
 			end,
 			reaction = function()
 				return 0
@@ -258,7 +258,7 @@ faction = "Alliance"
 settings.count_areas = false
 summary = assert(API.ZoneSummary(100))
 check(not Category(summary, "areas") and summary.total == 0, "an uncounted category is left out")
-wingDone = true
+criteria[900] = { { completed = true } }
 summary = assert(API.ZoneSummary(100))
 check(summary.complete and Category(summary, "dungeons").complete, "the counted wing done is complete")
 settings.count_dungeons = false
@@ -266,7 +266,7 @@ summary = assert(API.ZoneSummary(100))
 check(#summary.categories == 0 and not summary.complete, "an all-disabled summary is never complete")
 local empty = assert(API.ZoneSummary(200))
 check(#empty.categories == 0 and empty.total == 0 and not empty.complete, "an empty zone is never complete")
-settings.count_areas, settings.count_dungeons, wingDone = nil, nil, nil
+settings.count_areas, settings.count_dungeons, criteria[900] = nil, nil, nil
 
 -- Quests: counted without QuestieDB is missing; a cold QuestieDB reads as loading without scanning.
 settings.count_quests = true

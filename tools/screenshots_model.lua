@@ -19,23 +19,6 @@ local function Name(achievementID)
 	return character.names[achievementID]
 end
 
--- Core/Live.lua's RefsDone: done when any ref is, unknown when the game reports none of them.
----@param refs LegacyRefs
----@return boolean?
-local function RefsDone(refs)
-	local state
-	for _, ref in ipairs(refs) do
-		local progress = (Criteria(ref[1]) or {})[ref[2]]
-		if progress then
-			if progress.completed then
-				return true
-			end
-			state = false
-		end
-	end
-	return state
-end
-
 local function Encode(value)
 	local kind = type(value)
 	if kind == "string" then
@@ -81,7 +64,7 @@ for _, uiMapID in ipairs(character.completion) do
 		explored = character.explored,
 		taxis = character.taxis,
 		faction = character.faction,
-		refsDone = RefsDone,
+		criteria = Criteria,
 		reaction = function()
 			return 4
 		end,

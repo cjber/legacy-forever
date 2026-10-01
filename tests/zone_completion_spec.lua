@@ -57,8 +57,11 @@ ns.Live = {
 			explored = explored,
 			taxis = taxis,
 			faction = "Alliance",
-			refsDone = function(refs)
-				return stepsDone[refs[1][1]]
+			criteria = function(achievementID)
+				local done = stepsDone[achievementID]
+				if done ~= nil then
+					return { { completed = done } }
+				end
 			end,
 			reaction = function()
 				return 0

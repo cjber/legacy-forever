@@ -179,23 +179,6 @@ function Live.Invalidate()
 	Changed()
 end
 
--- A wing or Legacy objective counts as done when any of its Legacy steps (either variant) is.
----@param refs LegacyRefs
----@return boolean?
-local function RefsDone(refs)
-	local state
-	for _, ref in ipairs(refs) do
-		local progress = (Live.Criteria(ref[1]) or {})[ref[2]]
-		if progress then
-			if progress.completed then
-				return true
-			end
-			state = false
-		end
-	end
-	return state
-end
-
 -- A faction the player hasn't met yet has no data, which is simply not Friendly yet.
 ---@param factionID number
 ---@return number
@@ -278,7 +261,7 @@ function Live.ZoneSnapshot(uiMapID)
 		explored = {},
 		taxis = {},
 		faction = UnitFactionGroup("player"),
-		refsDone = RefsDone,
+		criteria = Live.Criteria,
 		reaction = Reaction,
 		quests = function()
 			return ns.Quests.Zone(uiMapID)

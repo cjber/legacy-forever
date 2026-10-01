@@ -552,14 +552,33 @@ local function QuestCategory(snapshot)
 	end)
 end
 
+-- A wing or Legacy objective counts as done when any of its Legacy steps (either variant) is;
+-- unknown while the game reports none of them.
+---@param refs LegacyRefs
+---@param criteria LegacyCriteriaReader
+---@return boolean?
+local function RefsDone(refs, criteria)
+	local state
+	for _, ref in ipairs(refs) do
+		local progress = (criteria(ref[1]) or {})[ref[2]]
+		if progress then
+			if progress.completed then
+				return true
+			end
+			state = false
+		end
+	end
+	return state
+end
+
 -- A raid is done when every boss is, and a boss when any of its refs is; unknown while any boss is.
 ---@param raid LegacyRaid
----@param refsDone fun(refs: LegacyRefs): boolean?
+---@param criteria LegacyCriteriaReader
 ---@return boolean?
-local function RaidDone(raid, refsDone)
+local function RaidDone(raid, criteria)
 	local done = true
 	for _, boss in ipairs(raid.bosses) do
-		local bossDone = refsDone(boss.refs)
+		local bossDone = RefsDone(boss.refs, criteria)
 		if bossDone == nil then
 			return nil
 		end
@@ -594,7 +613,7 @@ end
 -- `snapshot` = { explored = set of overlay keys, taxis = { [node] = known } once a
 -- flight master on the zone's continent has been opened (until then every node is pending),
 -- faction = "Alliance" | "Horde",
--- refsDone = function(refs) -> true/false/nil, reaction = function(factionID) -> number,
+-- criteria = the reader described at the top of this file, reaction = function(factionID) -> number,
 -- quests = function() -> the zone's LegacyQuestItem[], false while loading, or nil,
 -- completed = set of turned-in quest IDs or nil }.
 -- Areas, flight paths and reputations are per character; dungeon wings, raids and Legacy
@@ -614,13 +633,13 @@ function Model.ZoneCompletion(zone, snapshot, counted)
 			return snapshot.taxis[taxi.node]
 		end),
 		dungeons = CompletionCategory(zone.dungeons, function(wing)
-			return snapshot.refsDone(wing.refs)
+			return RefsDone(wing.refs, snapshot.criteria)
 		end),
 		raids = CompletionCategory(zone.raids, function(raid)
-			return RaidDone(raid, snapshot.refsDone)
+			return RaidDone(raid, snapshot.criteria)
 		end),
 		legacy = CompletionCategory(zone.legacy, function(objective)
-			return snapshot.refsDone(objective.refs)
+			return RefsDone(objective.refs, snapshot.criteria)
 		end),
 		reputations = CompletionCategory(Model.ForFaction(zone.reputations, snapshot.faction, "side"), function(rep)
 			return snapshot.reaction(rep.faction) >= REPUTATION_TARGET
