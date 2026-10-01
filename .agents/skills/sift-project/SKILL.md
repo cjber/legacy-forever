@@ -119,6 +119,8 @@ edit changed nothing. `gen_legacy.py --offline` fails when the cache holds an ol
 - Tabs, 120 columns, double quotes (StyLua). Python: 4 spaces, 120 columns (Ruff).
 - Comments explain game-client behaviour and why ("Forever's ruleset refuses ..."), not what.
 - Pure logic lives in `Core/Model.lua` with no WoW API calls so the tests can load it;
+  `UI/MapContents.lua` decides what a map shows (button count, menu entries, badges, pins, shaded areas, hover target)
+  as plain tables, so `UI/Map.lua` holds only frames, menus and tooltips;
   `Core/Live.lua` owns the snapshot reads (exploration, flight paths, achievements, completed quests),
   while `Integrations/Quests.lua`, `UI/Map.lua` and `Core/Core.lua` still call the client directly for their own needs.
 - Python generator fails loud: malformed input raises `ValueError` with a `name:line` label.

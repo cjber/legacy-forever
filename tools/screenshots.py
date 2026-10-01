@@ -569,7 +569,7 @@ def zone_center(ui, zone, continent):
 
 
 def continent_zones(ui, data, live, continent):
-    """UI/Map.lua's ContinentZones: the centre of each zone with unfinished place-bound objectives, for its badge."""
+    """UI/MapContents.lua's badges: the centre of each zone with unfinished place-bound objectives, for its badge."""
     parents = ui.table("UiMap")
     zones = []
     for ui_map in data["zones"]:

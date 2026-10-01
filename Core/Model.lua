@@ -129,7 +129,7 @@ end
 ---@param steps LegacyCriteria
 ---@return number done
 ---@return number total
-local function Tally(steps)
+function Model.Tally(steps)
 	local done, total = 0, 0
 	for _, step in pairs(steps) do
 		total = total + 1
@@ -148,7 +148,7 @@ local function StepLine(criteriaID, progress, criteria)
 	local detail, seen
 	local sub = progress.type == EARN_ACHIEVEMENT and criteria(progress.asset)
 	if sub then
-		detail = ("%d/%d"):format(Tally(sub))
+		detail = ("%d/%d"):format(Model.Tally(sub))
 		seen = "a" .. progress.asset
 	elseif progress.required and progress.required > 1 then
 		detail = ("%d/%d"):format(progress.quantity, progress.required)
@@ -231,7 +231,7 @@ local function ZoneLines(data, key, criteria, name)
 		return {}
 	end
 	if not uiMapID then
-		local done, total = Tally(steps)
+		local done, total = Model.Tally(steps)
 		if done == total then
 			return {}
 		end
@@ -679,93 +679,4 @@ function Model.ContinentCompletion(results)
 	end
 	continent.percent = math.floor(100 * continent.complete / continent.zones)
 	return continent
-end
-
--- offsetX, offsetY, width, height from an overlay key ("offsetX:offsetY:width:height").
----@param key string
----@return number offsetX
----@return number offsetY
----@return number width
----@return number height
-function Model.OverlayRect(key)
-	local offsetX, offsetY, width, height = key:match("^(%d+):(%d+):(%d+):(%d+)$")
-	-- The generator validates overlay keys; fail here if another caller violates that contract.
-	return assert(tonumber(offsetX)), assert(tonumber(offsetY)), assert(tonumber(width)), assert(tonumber(height))
-end
-
--- The area under a point on the map canvas, or nil. Overlay textures are rectangles around
--- irregular shapes and overlap, so of the areas whose texture holds the point, the one whose
--- centre (its hit rectangle's, Blizzard's own label target, else the texture's) is nearest wins.
----@param areas LegacyArea[]
----@param x number
----@param y number
----@return number?
-function Model.AreaAt(areas, x, y)
-	local best, bestDistance
-	for index, area in ipairs(areas) do
-		local offsetX, offsetY, width, height = Model.OverlayRect(area.key)
-		if x >= offsetX and x <= offsetX + width and y >= offsetY and y <= offsetY + height then
-			local left, top, right, bottom = offsetX, offsetY, offsetX + width, offsetY + height
-			if area.hit then
-				left, top, right, bottom = area.hit[1], area.hit[2], area.hit[3], area.hit[4]
-			end
-			local dx, dy = x - (left + right) / 2, y - (top + bottom) / 2
-			local distance = dx * dx + dy * dy
-			if not bestDistance or distance < bestDistance then
-				best, bestDistance = index, distance
-			end
-		end
-	end
-	return best
-end
-
--- A tile's drawn size and how much of its power-of-two file that covers; only the last
--- tile in a row or column is partial.
----@param total number
----@param tileSize number
----@param index number
----@param count number
----@return number pixels
----@return number fraction
-local function TileSpan(total, tileSize, index, count)
-	if index < count then
-		return tileSize, 1
-	end
-	local pixels = total % tileSize
-	if pixels == 0 then
-		pixels = tileSize
-	end
-	local file = 16
-	while file < pixels do
-		file = file * 2
-	end
-	return pixels, pixels / file
-end
-
--- How an overlay's tiles lay out, as Blizzard's MapExplorationPinMixin:RefreshOverlays
--- does it: row-major, `index` into the overlay's tile list, x/y from its top-left.
----@param width number
----@param height number
----@param tileWidth number
----@param tileHeight number
----@return LegacyTile[]
-function Model.OverlayTiles(width, height, tileWidth, tileHeight)
-	local wide, tall = math.ceil(width / tileWidth), math.ceil(height / tileHeight)
-	local tiles = {}
-	for row = 1, tall do
-		local tileH, v = TileSpan(height, tileHeight, row, tall)
-		for col = 1, wide do
-			local tileW, u = TileSpan(width, tileWidth, col, wide)
-			tiles[#tiles + 1] = {
-				index = (row - 1) * wide + col,
-				x = tileWidth * (col - 1),
-				y = tileHeight * (row - 1),
-				width = tileW,
-				height = tileH,
-				u = u,
-				v = v,
-			}
-		end
-	end
-	return tiles
 end

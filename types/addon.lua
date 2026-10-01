@@ -145,15 +145,6 @@
 ---@field zones number
 ---@field percent number
 
----@class LegacyTile
----@field index number
----@field x number
----@field y number
----@field width number
----@field height number
----@field u number
----@field v number
-
 ---@class LegacyFlightRecord
 ---@field known LegacySet
 ---@field continents LegacySet

@@ -27,6 +27,7 @@ UI\Tracker.lua
 UI\Completion.xml
 UI\Completion.lua
 UI\Settings.lua
+UI\MapContents.lua
 UI\Map.xml
 UI\Map.lua
 Core\API.lua

@@ -16,6 +16,7 @@ local _, addon = ...
 ---@field TrackerHostSettings fun(): ForeverTrackerSettings
 ---@field Tracker LegacyTracker
 ---@field Completion LegacyCompletion
+---@field MapContents LegacyMapContents
 ---@field SetOption fun(key: string, value: boolean)
 ---@field RefreshMap fun()
 ---@field OpenMapMenu fun()
