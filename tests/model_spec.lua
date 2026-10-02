@@ -153,13 +153,14 @@ local snapshot = {
 	explored = { ["0:0:10:10"] = true },
 	taxis = { [6] = true, [7] = false, [8] = false },
 	faction = "Alliance",
-	refsDone = function(refs)
-		if refs[1][1] == 1 then
-			return false
-		end
-		if refs[1][1] == 3 then
-			return refs[2][1] == 4
-		end
+	-- Gnomeregan's step is open, the unknown wing's achievement (2) isn't reported, and only the
+	-- second variant of the Legacy objective is done.
+	criteria = function(achievementID)
+		return ({
+			[1] = { [1] = { completed = false } },
+			[3] = { [3] = { completed = false } },
+			[4] = { [4] = { completed = true } },
+		})[achievementID]
 	end,
 	reaction = function(factionID)
 		return factionID == 21 and 5 or 4
@@ -203,14 +204,9 @@ local raidZone = {
 }
 local done = {}
 local raidSnapshot = {
-	refsDone = function(refs)
-		for _, ref in ipairs(refs) do
-			if done[ref[1]] then
-				return true
-			end
-		end
-		if not done.unknown then
-			return false
+	criteria = function(achievementID)
+		if not done.unknown or done[achievementID] then
+			return { { completed = done[achievementID] == true } }
 		end
 	end,
 }
@@ -223,6 +219,21 @@ done[52] = true
 equal(Model.ZoneCompletion(raidZone, raidSnapshot).complete, true, "every boss down by any variant")
 done[52], done.unknown = nil, true
 equal(Model.ZoneCompletion(raidZone, raidSnapshot).raids.pending, 1, "an unknown boss leaves the raid pending")
+
+-- A step is known by its criterion, not its achievement: one the game lists without that criterion is unknown,
+-- and one known open variant is enough to count the objective as not done.
+local steps = { [3] = { [9] = { completed = true } } }
+local stepSnapshot = {
+	criteria = function(achievementID)
+		return steps[achievementID]
+	end,
+}
+local legacy = Model.ZoneCompletion({ legacy = zone.legacy }, stepSnapshot).legacy
+equal(legacy and legacy.pending, 1, "an achievement reported without the step leaves it unknown")
+steps[4] = { [4] = { completed = false } }
+legacy = Model.ZoneCompletion({ legacy = zone.legacy }, stepSnapshot).legacy
+equal(legacy and legacy.total, 1, "one variant known is enough to count the objective")
+equal(legacy and legacy.done, 0, "and it is not done while that variant is open")
 
 -- A continent counts its zones that count anything, complete or not.
 local continent = Model.ContinentCompletion({

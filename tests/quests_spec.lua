@@ -191,7 +191,7 @@ local snapshot = {
 	explored = { ["0:0:10:10"] = true },
 	taxis = {},
 	faction = "Alliance",
-	refsDone = function() end,
+	criteria = function() end,
 	reaction = function()
 		return 0
 	end,

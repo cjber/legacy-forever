@@ -114,7 +114,7 @@
 ---@field explored table<string, boolean>
 ---@field taxis table<number, boolean>
 ---@field faction string
----@field refsDone fun(refs: LegacyRefs): boolean?
+---@field criteria LegacyCriteriaReader
 ---@field reaction fun(factionID: number): number
 ---@field quests? fun(): LegacyQuestItem[]|false|nil
 ---@field completed? LegacySet

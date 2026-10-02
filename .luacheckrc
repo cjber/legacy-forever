@@ -32,7 +32,8 @@ files["tests/"] = { std = "+luajit" }
 
 -- Headless API stubs are writable only in the Live regression harness.
 files["tests/live_spec.lua"] = {
-	globals = { "UnitGUID", "UnitFactionGroup", "Enum", "C_Map", "C_MapExplorationInfo", "C_TaxiMap", "C_QuestLog", "C_Timer", "tContains", "CreateFrame" },
+	globals = { "UnitGUID", "UnitFactionGroup", "Enum", "C_Map", "C_MapExplorationInfo", "C_TaxiMap", "C_QuestLog", "C_Reputation", "C_Timer", "tContains", "CreateFrame",
+		"GetCategoryList", "GetCategoryNumAchievements", "GetAchievementInfo", "GetAchievementNumCriteria", "GetAchievementCriteriaInfo" },
 }
 files["tests/quests_spec.lua"] = {
 	globals = { "LibQuestieDB", "Questie", "QuestieLoader", "UnitClass", "UnitFactionGroup", "UnitRace" },
