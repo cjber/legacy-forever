@@ -274,6 +274,7 @@ local BUTTON_SPACING = -32
 ---@return number
 local function TopRightOffset(map, own)
 	local offsetY = -2
+	-- The map's own list holds Blizzard's tracking options and pin buttons as well as ours.
 	---@diagnostic disable-next-line: undefined-field
 	for _, button in ipairs(map.overlayFrames or {}) do
 		if button ~= own and button:IsShown() and button:GetPoint(1) == "TOPRIGHT" then
