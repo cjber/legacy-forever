@@ -11,6 +11,10 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **The guides stay put in a fight.** In combat the game stretches its quest tracker and nudges it back on screen, which shoved the Forever sections sideways across the screen until the fight ended. They now stay stacked above the quest list.
+
+- **The map button clears Questie's.** With Questie installed, the Legacy button sat on top of its button in the map's top-right corner. It now takes the next place down.
+
 ## [0.6.8] - 2026-10-01
 
 - **Keep guides clear of quests in combat.** Companion sections stay clear when the quest list grows during a fight. Detaching restores the quest tracker’s original Edit Mode position.
