@@ -128,11 +128,16 @@ local ns = {
 		ZoneObjectives = function()
 			return { { objectives = { { entry = { kind = "kill", x = 0.5, y = 0.5 } } } } }
 		end,
+		CountObjectives = function()
+			return 1
+		end,
 	},
 }
-local chunk = assert(loadfile("UI/Map.lua"))
-setfenv(chunk, env)
-chunk("LegacyForever", ns)
+for _, file in ipairs({ "UI/MapContents.lua", "UI/Map.lua" }) do
+	local chunk = assert(loadfile(file))
+	setfenv(chunk, env)
+	chunk("LegacyForever", ns)
+end
 assert(regenCallback, "UI/Map.lua did not register its normal load callback")
 regenCallback()
 assert(provider and eventCallback, "normal map attachment did not install provider/events")

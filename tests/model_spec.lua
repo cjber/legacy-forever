@@ -56,6 +56,7 @@ equal(#groups[1].objectives, 1, "completed area left out")
 equal(groups[1].objectives[1].text, "Area A", "live criterion text")
 equal(groups[2].objectives[1].entry.kind, "kill", "direct objective kept")
 equal(Model.CountObjectives(groups), 2, "count across groups")
+equal(("%d/%d"):format(Model.Tally(live[10])), "1/4", "done and total of an achievement's criteria")
 
 equal(#Model.ZoneObjectives(data, 1, {}, criteria), 0, "nothing without a visible challenge")
 equal(#Model.ZoneObjectives(data, 3, visible, criteria), 0, "unknown map")
@@ -182,30 +183,6 @@ local noAreas = Model.ZoneCompletion(zone, snapshot, function(key)
 end)
 equal(noAreas.areas, nil, "an uncounted category is left out")
 equal(noAreas.total, completion.total - completion.areas.total, "and drops out of the total")
-
--- Hovering picks the area whose centre is nearest among those whose texture holds the point.
-local overlapping = {
-	{ key = "0:0:100:100" },
-	{ key = "50:0:100:100", hit = { 120, 40, 140, 60 } },
-}
-equal(Model.AreaAt(overlapping, 10, 50), 1, "only one texture holds the point")
-equal(Model.AreaAt(overlapping, 70, 50), 1, "nearer the first area's centre")
-equal(Model.AreaAt(overlapping, 95, 50), 2, "nearer the second area's hit rectangle")
-equal(Model.AreaAt(overlapping, 200, 50), nil, "outside every texture")
-
--- Overlay tiles, laid out like Blizzard's exploration overlays.
-local ox, oy, ow, oh = Model.OverlayRect("413:476:256:128")
-equal(ox, 413, "overlay key: offsetX")
-equal(oy, 476, "overlay key: offsetY")
-equal(ow, 256, "overlay key: width")
-equal(oh, 128, "overlay key: height")
-local tiles = Model.OverlayTiles(549, 241, 256, 256)
-equal(#tiles, 3, "549x241 needs three 256px tiles in one row")
-equal(tiles[3].x, 512, "third tile offset")
-equal(tiles[3].width, 37, "last tile keeps the remainder")
-equal(tiles[3].u, 37 / 64, "partial tile samples its power-of-two file")
-equal(tiles[1].u, 1, "full tile samples the whole file")
-equal(#Model.OverlayTiles(512, 512, 256, 256), 4, "exact multiples add no partial tile")
 
 snapshot.taxis = {}
 local unvisited = Model.ZoneCompletion(zone, snapshot).taxis

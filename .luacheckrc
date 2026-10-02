@@ -37,6 +37,7 @@ files["tests/live_spec.lua"] = {
 files["tests/quests_spec.lua"] = {
 	globals = { "LibQuestieDB", "Questie", "QuestieLoader", "UnitClass", "UnitFactionGroup", "UnitRace" },
 }
+files["tests/map_contents_spec.lua"] = { globals = { "C_Map", "Enum" } }
 files["tests/navigate_spec.lua"] = {
 	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "UiMapPoint", "ShortestPathForever" },
 }
