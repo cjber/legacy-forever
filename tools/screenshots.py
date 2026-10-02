@@ -412,7 +412,7 @@ def main_menu(ui, live):
         MenuDivider(),
         MenuButton("Open the Legacy panel"),
         MenuDivider(),
-        MenuCheckbox("Show what's new after updates", True),
+        MenuCheckbox("What's new after an update", True),
         MenuCheckbox("Suggest companion addons", True),
     ]
     return entries
