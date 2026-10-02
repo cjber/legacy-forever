@@ -25,7 +25,7 @@ read_globals = { "CreateFramePoolCollection", "C_XMLUtil", "CreateSettingsButton
 	"DUNGEONS", "LegacySystemFrame", "MenuUtil", "OTHER", "QUESTS_LABEL", "RAIDS", "REPUTATION", "Mixin", "OBJECTIVE_DASH_STYLE_HIDE", "ObjectiveTrackerFrame",
 	"ObjectiveTrackerManager", "ShortestPathForever", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "LibQuestieDB", "Questie", "QuestieLoader", "strtrim",
 	"C_MajorFactions", "Constants", "GameTooltip_AddErrorLine", "LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP", "RED_FONT_COLOR", "UIErrorsFrame",
-	"tContains", "ToggleLegacySystemUI", "ToggleWorldMap", "OpenWorldMap", "UnitClass", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
+	"tContains", "ToggleLegacySystemUI", "UnitClass", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 
 files["Data/Legacy.lua"] = { max_line_length = false }
@@ -44,7 +44,7 @@ files["tests/navigate_spec.lua"] = {
 	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "UiMapPoint", "ShortestPathForever" },
 }
 files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame" } }
-files["tests/settings_spec.lua"] = { globals = { "Settings", "CreateSettingsButtonInitializer", "strtrim", "ToggleWorldMap", "WorldMapFrame" } }
+files["tests/settings_spec.lua"] = { globals = { "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "WorldMapFrame" } }
 files["tests/api_spec.lua"] = {
 	globals = {
 		"AlertFrame", "C_Map", "C_SuperTrack", "C_Texture", "C_Timer", "CreateAtlasMarkup", "DUNGEONS", "EventUtil", "GetTime", "geterrorhandler",

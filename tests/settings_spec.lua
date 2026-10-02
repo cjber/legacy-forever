@@ -118,9 +118,12 @@ WorldMapFrame = {
 		return calls.map ~= nil
 	end,
 }
-function ToggleWorldMap()
-	calls.map = (calls.map or 0) + 1
-end
+C_Map = {
+	OpenWorldMap = function(uiMapID)
+		assert(uiMapID == nil, "the menu opens the map where the player is")
+		calls.map = (calls.map or 0) + 1
+	end,
+}
 function ns.OpenMapMenu()
 	calls.menu = (calls.menu or 0) + 1
 end
