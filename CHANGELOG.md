@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Say why the Legacy panel will not open.** Until the game unlocks its Legacy panel, the entries that open it are greyed out and show the game's own reason, in place of a button that did nothing.
+
 - **The guides stay put in a fight.** In combat the game stretches its quest tracker and nudges it back on screen, which shoved the Forever sections sideways across the screen until the fight ended. They now stay stacked above the quest list.
 
 - **The map button clears Questie's.** With Questie installed, the Legacy button sat on top of its button in the map's top-right corner. It now takes the next place down.

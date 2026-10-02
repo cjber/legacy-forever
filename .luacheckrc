@@ -24,6 +24,7 @@ read_globals = { "CreateFramePoolCollection", "C_XMLUtil", "CreateSettingsButton
 	"GetAchievementNumCriteria", "GetBuildInfo", "GetLocale", "geterrorhandler", "InCombatLockdown", "GetTime", "PlaySound", "SOUNDKIT", "GetCategoryInfo", "GetCategoryList", "GetCategoryNumAchievements", "hooksecurefunc",
 	"DUNGEONS", "LegacySystemFrame", "MenuUtil", "OTHER", "QUESTS_LABEL", "RAIDS", "REPUTATION", "Mixin", "OBJECTIVE_DASH_STYLE_HIDE", "ObjectiveTrackerFrame",
 	"ObjectiveTrackerManager", "ShortestPathForever", "MapCanvasDataProviderMixin", "MapCanvasPinMixin", "LibQuestieDB", "Questie", "QuestieLoader", "strtrim",
+	"C_MajorFactions", "Constants", "GameTooltip_AddErrorLine", "LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP", "RED_FONT_COLOR", "UIErrorsFrame",
 	"tContains", "ToggleLegacySystemUI", "ToggleWorldMap", "OpenWorldMap", "UnitClass", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 

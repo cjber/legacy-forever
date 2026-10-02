@@ -4,6 +4,8 @@
 ---@type Frame?
 LegacySystemFrame = nil
 function ToggleLegacySystemUI() end
+---@type string
+LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP = ""
 
 ---@param currencyID number
 ---@param achievementID number
