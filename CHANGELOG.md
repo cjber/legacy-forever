@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **The what's-new setting fits the settings panel.** Its name was cut off with an ellipsis; it now reads *Show what's new after updates*.
+
 - **Say why the Legacy panel will not open.** Until the game unlocks its Legacy panel, the entries that open it are greyed out and show the game's own reason, in place of a button that did nothing.
 
 - **The guides stay put in a fight.** In combat the game stretches its quest tracker and nudges it back on screen, which shoved the Forever sections sideways across the screen until the fight ended. They now stay stacked above the quest list.
