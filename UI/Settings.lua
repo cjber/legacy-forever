@@ -117,7 +117,7 @@ for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 end
 
 local hints = Section(category, L["Hints and updates"])
-AddCheckbox(hints, "whatsNew", L["Tell me what's new after an update"])
+AddCheckbox(hints, "whatsNew", L["What's new after an update"])
 AddCheckbox(
 	hints,
 	"companions",

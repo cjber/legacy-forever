@@ -238,9 +238,9 @@ local function BuildMenu(root, uiMapID)
 	root:CreateDivider()
 	ns.Completion.AddMenu(root)
 	root:CreateDivider()
-	root:CreateButton(L["Open the Legacy panel"], ToggleLegacySystemUI)
+	ns.Live.LockPanelEntry(root:CreateButton(L["Open the Legacy panel"], ToggleLegacySystemUI))
 	root:CreateDivider()
-	root:CreateCheckbox(L["Tell me what's new after an update"], ns.Saved.Get, ToggleSetting, "whatsNew")
+	root:CreateCheckbox(L["What's new after an update"], ns.Saved.Get, ToggleSetting, "whatsNew")
 	local companions = root:CreateCheckbox(L["Suggest companion addons"], ns.Saved.Get, ToggleSetting, "companions")
 	companions:SetTooltip(function(tooltip)
 		GameTooltip_SetTitle(tooltip, L["Suggest companion addons"])
@@ -264,20 +264,33 @@ function LegacyForeverMapButtonMixin:OnLoad()
 	end)
 end
 
--- Below whichever of Blizzard's top-right buttons are actually showing there: rulesets
--- disable them (C_GameRules) and layout addons move them, so this is checked per refresh.
-local TOP_RIGHT_BUTTONS = { "WorldMapTrackingOptionsButton", "WorldMapTrackingPinButton" }
+-- Below whichever other top-right buttons are actually showing there: rulesets disable Blizzard's
+-- (C_GameRules), layout addons move them, and this client keeps them unnamed, so the map's own list
+-- of overlay frames is checked per refresh.
 local BUTTON_SPACING = -32
 
 ---@param map WorldMapFrame
+---@param own Frame
 ---@return number
-local function TopRightOffset(map)
+local function TopRightOffset(map, own)
 	local offsetY = -2
-	for _, key in ipairs(TOP_RIGHT_BUTTONS) do
-		local button = map[key]
-		if button and button:IsShown() and button:GetPoint(1) == "TOPRIGHT" then
+	-- The map's own list holds Blizzard's tracking options and pin buttons as well as ours.
+	---@diagnostic disable-next-line: undefined-field
+	for _, button in ipairs(map.overlayFrames or {}) do
+		if button ~= own and button:IsShown() and button:GetPoint(1) == "TOPRIGHT" then
 			offsetY = offsetY + BUTTON_SPACING
 		end
+	end
+	-- Krowi_WorldMapButtons (Questie and others) lays its buttons along the top row from this
+	-- same corner, outside the map's list.
+	local index = 1
+	local other = _G["Krowi_WorldMapButtons" .. index]
+	while other do
+		if other:IsShown() then
+			return offsetY + BUTTON_SPACING
+		end
+		index = index + 1
+		other = _G["Krowi_WorldMapButtons" .. index]
 	end
 	return offsetY
 end
@@ -286,7 +299,7 @@ function LegacyForeverMapButtonMixin:Refresh()
 	---@type WorldMapFrame
 	local map = self:GetParent()
 	self:ClearAllPoints()
-	self:SetPoint("TOPRIGHT", map:GetCanvasContainer(), "TOPRIGHT", -4, TopRightOffset(map))
+	self:SetPoint("TOPRIGHT", map:GetCanvasContainer(), "TOPRIGHT", -4, TopRightOffset(map, self))
 	local _, count = ns.MapContents.Objectives(map:GetMapID())
 	self.Count:SetFontObject(
 		count >= 100 and GameFontNormalTiny or count >= 10 and GameFontNormalSmall or GameFontNormal

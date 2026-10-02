@@ -131,8 +131,29 @@ end
 -- page and only Legacy.SelectPage switches to the challenges page.
 local CHALLENGES_PAGE = 2
 
+-- The game keeps its Legacy panel shut until the reward track has renown, and its toggle then does nothing.
+---@return boolean
+function Live.PanelLocked()
+	return C_MajorFactions.GetCurrentRenownLevel(Constants.LegacyConsts.LEGACY_REWARD_TRACK_FACTION_ID) <= 0
+end
+
+-- A menu entry that opens the panel: greyed out with the game's own reason while it is locked.
+---@param button ElementMenuDescriptionProxy
+function Live.LockPanelEntry(button)
+	if Live.PanelLocked() then
+		button:SetEnabled(false)
+		button:SetTooltip(function(tooltip)
+			GameTooltip_AddErrorLine(tooltip, LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP)
+		end)
+	end
+end
+
 ---@param achievementID number
 function Live.ShowInLegacyPanel(achievementID)
+	if Live.PanelLocked() then
+		UIErrorsFrame:AddMessage(LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP, RED_FONT_COLOR:GetRGB())
+		return
+	end
 	if not (LegacySystemFrame and LegacySystemFrame:IsShown()) then
 		ToggleLegacySystemUI()
 	end

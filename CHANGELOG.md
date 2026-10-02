@@ -11,6 +11,13 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.9] - 2026-10-02
+
+- **The guides stay put in a fight.** In combat the game stretches its quest tracker and nudges it back on screen, which shoved the Forever sections sideways across the screen until the fight ended. They now stay stacked above the quest list.
+- **Say why the Legacy panel will not open.** Until the game unlocks its Legacy panel, the entries that open it are greyed out and show the game's own reason, in place of a button that did nothing.
+- **The map button clears Questie's.** With Questie installed, the Legacy button sat on top of its button in the map's top-right corner. It now takes the next place down.
+- **The what's-new setting fits the settings panel.** Its name was cut off with an ellipsis; it now reads *What's new after an update*.
+
 ## [0.6.8] - 2026-10-01
 
 - **Keep guides clear of quests in combat.** Companion sections stay clear when the quest list grows during a fight. Detaching restores the quest tracker’s original Edit Mode position.
