@@ -15,10 +15,12 @@ C_AddOns = {
 		return name == "ShortestPathForever" and loaded
 	end,
 }
-function ns.Setting(key)
-	assert(key == "companions", "reads the companions switch")
-	return suggest
-end
+ns.Saved = {
+	Get = function(key)
+		assert(key == "companions", "reads the companions switch")
+		return suggest
+	end,
+}
 
 local canSet = true
 C_Map = {

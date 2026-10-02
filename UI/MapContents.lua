@@ -157,7 +157,7 @@ end
 ---@param uiMapID number
 ---@return LegacyShade?
 local function Shade(uiMapID)
-	local zone = ns.Setting("showAreas") and ns.Data.completion[uiMapID]
+	local zone = ns.Saved.Get("showAreas") and ns.Data.completion[uiMapID]
 	if not (zone and zone.tileWidth and zone.tileHeight) then
 		return nil
 	end

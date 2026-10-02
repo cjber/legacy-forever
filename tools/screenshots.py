@@ -239,7 +239,7 @@ class Live:
 
 # --------------------------------------------------------------------------------- Core/Model.lua, run for real
 
-# Core/Core.lua's DEFAULTS.zoneCompletion count_* keys: a new player counts only the Legacy categories.
+# Core/Saved.lua's DEFAULTS.zoneCompletion count_* keys: a new player counts only the Legacy categories.
 COUNTED = {"areas", "dungeons", "raids", "legacy"}
 
 

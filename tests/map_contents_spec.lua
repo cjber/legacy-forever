@@ -41,9 +41,11 @@ live[100][5].completed = true
 local settings = { showAreas = true }
 local shownOnMap = true
 local explored = {}
-ns.Setting = function(key)
-	return settings[key]
-end
+ns.Saved = {
+	Get = function(key)
+		return settings[key]
+	end,
+}
 ns.Completion = {
 	ShownOnMap = function()
 		return shownOnMap

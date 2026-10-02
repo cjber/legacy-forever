@@ -1,5 +1,6 @@
 -- Run from the repository root: luajit tests/settings_spec.lua
--- Settings read through ns.DEFAULTS: a missing key is its default, a saved value always wins.
+-- ns.Saved is the one owner of the saved switches: a missing key is its default, a saved value always wins, a
+-- write lands where old save files keep it, and every write tells the listeners.
 local checks = 0
 local function check(condition, label)
 	checks = checks + 1
@@ -10,40 +11,102 @@ SlashCmdList = {}
 local ns = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
-local defaults = ns.DEFAULTS.zoneCompletion
+assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
+local Saved = ns.Saved
+local ZONE_KEYS = { "map", "tracker", "mapCollapsed", "trackerCollapsed" }
+for _, category in ipairs({ "areas", "taxis", "dungeons", "raids", "legacy", "reputations", "quests" }) do
+	ZONE_KEYS[#ZONE_KEYS + 1] = "count_" .. category
+end
 
 -- A fresh install: no saved variables at all.
 LegacyForeverDB = nil
-check(ns.Setting("showAreas") == true, "areas are shaded out of the box")
-check(ns.Setting("whatsNew") == true and ns.Setting("companions") == true, "update line and hints on out of the box")
-check(ns.ZoneSetting("map") == true and ns.ZoneSetting("tracker") == false, "on the map, not in the tracker")
-check(not ns.ZoneSetting("mapCollapsed") and not ns.ZoneSetting("trackerCollapsed"), "expanded out of the box")
+check(Saved.Get("showAreas") == true, "areas are shaded out of the box")
+check(Saved.Get("whatsNew") == true and Saved.Get("companions") == true, "update line and hints on out of the box")
+check(Saved.Get("map") == true and Saved.Get("tracker") == false, "on the map, not in the tracker")
+check(not Saved.Get("mapCollapsed") and not Saved.Get("trackerCollapsed"), "expanded out of the box")
 for _, category in ipairs({ "areas", "dungeons", "raids", "legacy" }) do
-	check(ns.ZoneSetting("count_" .. category) == true, category .. " count out of the box")
+	check(Saved.Get("count_" .. category) == true, category .. " count out of the box")
 end
 for _, category in ipairs({ "taxis", "reputations", "quests" }) do
-	check(ns.ZoneSetting("count_" .. category) == false, category .. " wait to be ticked")
+	check(Saved.Get("count_" .. category) == false, category .. " wait to be ticked")
 end
-check(ns.ZoneSetting("unknown") == false, "an undeclared key reads as off")
+check(Saved.Get("unknown") == false and Saved.Default("unknown") == false, "an undeclared key reads as off")
 check(LegacyForeverDB.showAreas == nil, "reading a default saves nothing")
-for key in pairs(defaults) do
+for _, key in ipairs(ZONE_KEYS) do
+	check(Saved.Default(key) == Saved.Get(key), key .. " reads as its default")
 	check(LegacyForeverDB.zoneCompletion[key] == nil, key .. " is not written by a read")
 end
 
--- A save file from before DEFAULTS: every saved true or false keeps its meaning.
+-- A save file from before the defaults were declared: every saved true or false keeps its meaning.
 LegacyForeverDB = {
 	showAreas = false,
 	zoneCompletion = { map = false, tracker = true, mapCollapsed = true, count_areas = false, count_quests = true },
 }
-check(ns.Setting("showAreas") == false, "a saved off stays off")
-check(ns.ZoneSetting("map") == false and ns.ZoneSetting("tracker") == true, "saved surfaces win")
-check(ns.ZoneSetting("mapCollapsed") == true and ns.ZoneSetting("trackerCollapsed") == false, "saved collapse wins")
-check(ns.ZoneSetting("count_areas") == false and ns.ZoneSetting("count_quests") == true, "saved categories win")
-check(ns.ZoneSetting("count_raids") == true, "a key the old file lacks is its default")
+check(Saved.Get("showAreas") == false, "a saved off stays off")
+check(Saved.Get("map") == false and Saved.Get("tracker") == true, "saved surfaces win")
+check(Saved.Get("mapCollapsed") == true and Saved.Get("trackerCollapsed") == false, "saved collapse wins")
+check(Saved.Get("count_areas") == false and Saved.Get("count_quests") == true, "saved categories win")
+check(Saved.Get("count_raids") == true, "a key the old file lacks is its default")
+check(Saved.Default("showAreas") == true and Saved.Default("map") == true, "a saved value leaves the default alone")
 
 -- Saved true for a default-on switch is still on.
 LegacyForeverDB = { showAreas = true }
-check(ns.Setting("showAreas") == true, "a saved on stays on")
+check(Saved.Get("showAreas") == true, "a saved on stays on")
+
+-- Writes keep the shape save files already have: three switches at the top, the rest under zoneCompletion
+-- by the same keys, beside the data tables and untouched by them.
+local tracked = { "a:1" }
+LegacyForeverDB = { tracked = tracked, lastVersion = "0.6.0", zoneCompletion = { count_taxis = true } }
+for _, key in ipairs({ "showAreas", "whatsNew", "companions" }) do
+	Saved.Set(key, false)
+	check(LegacyForeverDB[key] == false and Saved.Get(key) == false, key .. " is saved at the top level")
+	check(LegacyForeverDB.zoneCompletion[key] == nil, key .. " stays out of zone completion")
+end
+for _, key in ipairs(ZONE_KEYS) do
+	local value = not Saved.Get(key)
+	Saved.Set(key, value)
+	check(
+		LegacyForeverDB.zoneCompletion[key] == value and Saved.Get(key) == value,
+		key .. " is saved in zoneCompletion"
+	)
+	check(LegacyForeverDB[key] == nil, key .. " stays out of the top level")
+end
+check(LegacyForeverDB.tracked == tracked and ns.SavedTable("tracked") == tracked, "the tracked list is left alone")
+check(LegacyForeverDB.lastVersion == "0.6.0", "the remembered version is left alone")
+check(Saved.SeenVersion("0.7.0") == "0.6.0" and LegacyForeverDB.lastVersion == "0.7.0", "a new version is remembered")
+
+-- With no saved variables loaded at all, a write makes the table it needs.
+LegacyForeverDB = nil
+Saved.Set("tracker", true)
+check(LegacyForeverDB.zoneCompletion.tracker == true, "a write on an empty save file lands")
+LegacyForeverDB = nil
+check(Saved.SeenVersion("0.7.0") == nil and LegacyForeverDB.lastVersion == "0.7.0", "a first install has no version")
+check(next(ns.SavedTable("flightPaths")) == nil and LegacyForeverDB.flightPaths, "a data table is made on first use")
+check(ns.TrackerHostSettings().attached == true, "the shared tracker starts attached")
+LegacyForeverDB.trackerHost = "broken"
+check(ns.TrackerHostSettings().attached == true, "a malformed tracker record is replaced")
+
+-- The change notice: every write tells every listener the key and its new value, after the value is saved,
+-- in the order they registered.
+LegacyForeverDB = nil
+local heard = {}
+Saved.OnChange(function(key, value)
+	heard[#heard + 1] = ("first %s=%s saved=%s"):format(key, tostring(value), tostring(Saved.Get(key)))
+end)
+Saved.OnChange(function(key)
+	heard[#heard + 1] = "second " .. key
+end)
+Saved.Set("count_quests", true)
+check(
+	table.concat(heard, ", ") == "first count_quests=true saved=true, second count_quests",
+	"listeners hear a write in order, with the value already saved"
+)
+Saved.Set("showAreas", false)
+Saved.Set("showAreas", false)
+check(#heard == 6 and heard[5] == "first showAreas=false saved=false", "a repeated write is told again")
+Saved.Get("showAreas")
+check(#heard == 6, "a read tells nobody")
+LegacyForeverDB = nil
 
 -- A bare /lf opens the map's Legacy menu, where the options live, as the compartment entry does.
 function strtrim(text)
@@ -72,8 +135,8 @@ SlashCmdList.LEGACYFOREVER("help")
 check(#printed == 3 and calls.menu == 2, "/lf help prints the commands")
 
 -- The Settings page: the same options as subcategories with an index page, every row through
--- RegisterInitializer (CreateCheckbox and layout:AddInitializer would taint the settings search), and the
--- map menu's own toggles sharing the values.
+-- RegisterInitializer (CreateCheckbox and layout:AddInitializer would taint the settings search), and every
+-- row a proxy onto ns.Saved, so the page and the map menu's own toggles share one value.
 local registered, subcategories, opened = {}, {}, {}
 local function Category(name)
 	return {
@@ -84,7 +147,8 @@ local function Category(name)
 	}
 end
 local trackerState = { attached = true }
-local attachmentChanged, attachmentNotified
+local attachmentChanged
+local notified = {}
 ns.TrackerHost = {
 	GetSettings = function()
 		return trackerState
@@ -98,21 +162,24 @@ ns.TrackerHost = {
 	end,
 }
 Settings = {
+	-- As ProxySettingMixin: no value of its own, and a set only when the value differs.
 	RegisterProxySetting = function(_, variable, varType, name, default, get, set)
 		return {
 			variable = variable,
-			key = "trackerAttached",
+			key = (variable:gsub("^LegacyForever_", "")),
 			varType = varType,
 			name = name,
 			default = default,
 			GetValue = get,
 			SetValue = function(_, value)
-				set(value)
+				if get() ~= value then
+					set(value)
+				end
 			end,
 		}
 	end,
 	NotifyUpdate = function(variable)
-		attachmentNotified = variable
+		notified[#notified + 1] = variable
 	end,
 	VarType = { Boolean = "boolean" },
 	RegisterVerticalLayoutCategory = function(name)
@@ -123,23 +190,8 @@ Settings = {
 		subcategories[#subcategories + 1] = { parent = parent, category = Category(name) }
 		return subcategories[#subcategories].category
 	end,
-	RegisterAddOnSetting = function(_, variable, key, _, varType, name, default)
-		return {
-			variable = variable,
-			key = key,
-			varType = varType,
-			name = name,
-			default = default,
-			SetValueChangedCallback = function(self, callback)
-				self.changed = callback
-			end,
-			SetValue = function(self, value)
-				self.value = value
-				if self.changed then
-					self.changed()
-				end
-			end,
-		}
+	RegisterAddOnSetting = function()
+		error("a row that writes the saved table itself; use a proxy onto ns.Saved")
 	end,
 	CreateCheckbox = function()
 		error("addon code inserted a row; use Settings.RegisterInitializer")
@@ -167,16 +219,10 @@ function CreateSettingsButtonInitializer(name, text, click, _tooltip, addSearchT
 	return { button = true, name = name, click = click }
 end
 ns.Model = { COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons", "raids", "legacy", "reputations", "quests" } }
-local surfaceChanges, countChanges, questsUsable = 0, 0, true
+local questsUsable = true
 ns.Completion = {
 	Label = function(key)
 		return key
-	end,
-	SurfacesChanged = function()
-		surfaceChanges = surfaceChanges + 1
-	end,
-	CountsChanged = function()
-		countChanges = countChanges + 1
 	end,
 	QuestsUsable = function()
 		return questsUsable
@@ -185,11 +231,8 @@ ns.Completion = {
 		return "a quest source"
 	end,
 }
-local refreshed = 0
-ns.RefreshMap = function()
-	refreshed = refreshed + 1
-end
 assert(loadfile("UI/Settings.lua"))("LegacyForever", ns)
+check(LegacyForeverDB == nil or next(LegacyForeverDB.zoneCompletion or {}) == nil, "building the page saves nothing")
 
 -- Every section is a subpage; the index holds one button per subpage, in order.
 check(#subcategories == 4, "four subcategory groups")
@@ -280,25 +323,26 @@ questsUsable = false
 check(not questsRow.modify[1](), "quests grey out without Questie")
 check(questsRow.tooltip() == "a quest source", "the quest row explains its status")
 
--- A row change redraws what the switch affects; a toggle elsewhere drives the row through the setting.
-byKey.showAreas.changed()
-check(refreshed == 1, "showing areas refreshes the map")
-byKey.map.changed()
-byKey.tracker.changed()
-check(surfaceChanges == 2, "a surface row redraws the map and tracker")
-byKey.count_areas.changed()
-check(countChanges == 1, "a counted row re-checks rewards and redraws")
-ns.SetOption("map", false)
-check(surfaceChanges == 3, "the Legacy map menu's toggle drives the settings row")
-ns.SetOption("missing", true)
-check(surfaceChanges == 3, "an unregistered switch is left alone")
-
-print(("settings_spec: %d checks passed"):format(checks))
+-- A row saves through ns.Saved, so whoever listens for the switch hears a tick on the page exactly as it hears
+-- the map menu; a write from elsewhere has the row read its value again.
+local before = #heard
+check(byKey.map:GetValue() == true and byKey.tracker:GetValue() == false, "a row shows the default while unset")
+byKey.map:SetValue(false)
+check(LegacyForeverDB.zoneCompletion.map == false, "a row saves where the map menu does")
+check(heard[before + 1] == "first map=false saved=false" and #heard == before + 2, "a row tells the listeners once")
+check(notified[#notified] == "LegacyForever_map", "and its own row reads the value again")
+byKey.count_areas:SetValue(false)
+check(heard[#heard] == "second count_areas" and not Saved.Get("count_areas"), "a counted row saves and tells")
+Saved.Set("showAreas", false)
+check(byKey.showAreas:GetValue() == false, "a toggle elsewhere shows on the row")
+check(notified[#notified] == "LegacyForever_showAreas", "a toggle elsewhere has the row read again")
 
 check(byKey.trackerAttached:GetValue() == true, "shared tracker starts attached")
 byKey.trackerAttached:SetValue(false)
 check(not byKey.trackerAttached:GetValue(), "toggle detaches shared tracker")
-check(attachmentNotified == "LegacyForever_trackerAttached", "change notifies proxy")
+check(notified[#notified] == "LegacyForever_trackerAttached", "change notifies proxy")
 trackerState.attached = true
 attachmentChanged()
 check(byKey.trackerAttached:GetValue(), "other addon updates same shared state")
+
+print(("settings_spec: %d checks passed"):format(checks))

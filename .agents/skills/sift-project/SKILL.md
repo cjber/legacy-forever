@@ -63,10 +63,10 @@ edit changed nothing. `gen_legacy.py --offline` fails when the cache holds an ol
 
 ## Live roots
 
-- `LegacyForever.toc` file list — load order `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Data/Legacy.lua, Core, WhatsNew, Model, Live, Quests, Navigate,
+- `LegacyForever.toc` file list — load order `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Data/Legacy.lua, Core, Saved, WhatsNew, Model, Live, Quests, Navigate,
   Tracker, UI/Completion.xml, Completion, UI/Map.xml, Map, API`; never reorder as formatting.
 - `## SavedVariables: LegacyForeverDB` — persisted keys `tracked`, `zoneCompletion`,
-  `flightPaths`, `showAreas`, `whatsNew`, `companions`, `lastVersion` and any others read via `ns.SavedTable(key)`; old keys in players'
+  `flightPaths`, `trackerHost`, `showAreas`, `whatsNew`, `companions`, `lastVersion`, all named only in `Core/Saved.lua`; old keys in players'
   saved data are compatibility obligations.
 - `## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick` — global called by the client.
 - `SLASH_LEGACYFOREVER1/2` + `SlashCmdList.LEGACYFOREVER` (Core/Core.lua) — `/lf`, `/lf audit`, `/lf criteria`.
@@ -93,9 +93,9 @@ edit changed nothing. `gen_legacy.py --offline` fails when the cache holds an ol
 
 ## Open questions for reviewers
 
-- SavedVariables timing: `LegacyForever.toc` sets `LoadSavedVariablesFirst: 1` and Core/Core.lua relies
+- SavedVariables timing: `LegacyForever.toc` sets `LoadSavedVariablesFirst: 1` and Core/Saved.lua relies
   on it, but UI/Completion.lua still defers for a client that might ignore the directive. Until that
-  is confirmed in game, `LegacyForeverDB = LegacyForeverDB or {}` guards are not defensive noise.
+  is confirmed in game, the `LegacyForeverDB or {}` guard in `Core/Saved.lua` is not defensive noise.
 - FrameXML helpers (`tContains`, `tIndexOf`, `CountTable`, `Mixin`) are the platform for the
   reinvented-wheel lens, but only `tContains` and `Mixin` are confirmed on this client.
 
@@ -123,6 +123,10 @@ edit changed nothing. `gen_legacy.py --offline` fails when the cache holds an ol
   as plain tables, so `UI/Map.lua` holds only frames, menus and tooltips;
   `Core/Live.lua` owns the snapshot reads (exploration, flight paths, achievements, completed quests),
   while `Integrations/Quests.lua`, `UI/Map.lua` and `Core/Core.lua` still call the client directly for their own needs.
+- `Core/Saved.lua` (`ns.Saved`) owns the saved switches: where a key is saved, its default, the write and the
+  change notice (`Get`, `Set`, `Default`, `OnChange`). A toggle calls `ns.Saved.Set` and whoever draws from the
+  switch listens with `ns.Saved.OnChange`; the Settings page rows are proxies onto it. No other file names
+  `LegacyForeverDB`.
 - Python generator fails loud: malformed input raises `ValueError` with a `name:line` label.
 - Commit messages: Conventional Commits; CHANGELOG entries are prose per version.
 
@@ -147,9 +151,6 @@ finding.
   `---@cast`, e.g. `Core/Model.lua`
 - Tracker `uiOrder` `0` (defensive-noise): Legacy Forever's registered slot in WFA-5, not a missing
   negative, e.g. `UI/Tracker.lua`
-- `LegacyForeverDB = LegacyForeverDB or {}` before one saved write (parallel-implementations): a
-  two-line idiom, kept while SavedVariables timing is open; reads already share `ns.Setting`, e.g.
-  `UI/WhatsNew.lua`, `UI/Map.lua` `ToggleAreas`
 - mint `33ff99` chat prefix (standards, WFA-4): the WoW: Forever family's shared chat colour, kept by the
   owner on 2026-09-27 while the pack rule is updated to allow it, e.g. `Core/Core.lua` `ns.Print`
 

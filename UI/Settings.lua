@@ -7,57 +7,44 @@ local L = ns.L
 -- delegate: Settings.CreateCheckbox inserts from our code instead, and the settings search reads every layout,
 -- so that tainted it, and a restricted button in its results (Social's Discord Sign In) was then blocked and
 -- blamed on this addon.
--- The Legacy map menu keeps its own toggles; they set the same switches through this page, so the two never
--- disagree.
+-- The Legacy map menu keeps its own toggles. Both ends go through ns.Saved, so the two never disagree.
 
--- The registered rows, so a toggle elsewhere (the Legacy map menu, the tracker's own menu) can set one
--- through the Settings setting and keep the page in step while it is open.
-local settings = {}
+local PREFIX = "LegacyForever_"
 
----@param key string
----@param value boolean
-function ns.SetOption(key, value)
-	if settings[key] then
-		settings[key]:SetValue(value)
-	end
-end
-
----@return table<string, boolean>
-local function Database()
-	LegacyForeverDB = LegacyForeverDB or {}
-	return LegacyForeverDB
-end
-
--- One switch: the same key, default and tooltip the Legacy map menu uses. `usable` greys the row out;
--- `changed` redraws whatever the switch affects. The row inserts from Blizzard's delegate.
+-- One switch: the same key, default and tooltip the Legacy map menu uses. The row is a proxy: it holds no
+-- value of its own and reads and saves through ns.Saved, which redraws whatever the switch affects. `usable`
+-- greys the row out. The row inserts from Blizzard's delegate.
 ---@param category SettingsCategoryMixin
----@param table_ table<string, boolean>
 ---@param key string
 ---@param name string
----@param default boolean
 ---@param tooltip? string|fun(): string?
 ---@param usable? fun(): boolean
----@param changed? fun()
-local function AddCheckbox(category, table_, key, name, default, tooltip, usable, changed)
-	local setting = Settings.RegisterAddOnSetting(
+local function AddCheckbox(category, key, name, tooltip, usable)
+	local setting = Settings.RegisterProxySetting(
 		category,
-		"LegacyForever_" .. key,
-		key,
-		table_,
+		PREFIX .. key,
 		Settings.VarType.Boolean,
 		name,
-		default
+		ns.Saved.Default(key),
+		function()
+			return ns.Saved.Get(key)
+		end,
+		function(value)
+			ns.Saved.Set(key, value)
+		end
 	)
-	settings[key] = setting
-	if changed then
-		setting:SetValueChangedCallback(changed)
-	end
 	local initializer = Settings.CreateCheckboxInitializer(setting, nil, tooltip)
 	if usable then
 		initializer:AddModifyPredicate(usable)
 	end
 	Settings.RegisterInitializer(category, initializer)
 end
+
+-- A switch saved from anywhere (the Legacy map menu, this page): its row reads the value again, so the page
+-- stays in step while it is open. A switch with no row (a collapse state) has no setting to notify.
+ns.Saved.OnChange(function(key)
+	Settings.NotifyUpdate(PREFIX .. key)
+end)
 
 -- A subpage and its button on the index, which opens it. The index stays out of search: the search finds
 -- the settings themselves.
@@ -78,27 +65,18 @@ end
 local category = Settings.RegisterVerticalLayoutCategory(ns.TITLE)
 
 local map = Section(category, L["World map"])
-AddCheckbox(map, Database(), "showAreas", L["Show undiscovered areas"], ns.DEFAULTS.showAreas, nil, nil, function()
-	-- The map may not have loaded yet; it refreshes itself when it does.
-	if ns.RefreshMap then
-		ns.RefreshMap()
-	end
-end)
+AddCheckbox(map, "showAreas", L["Show undiscovered areas"])
 AddCheckbox(
 	map,
-	ns.SavedTable("zoneCompletion"),
 	"map",
 	L["On the world map"],
-	ns.DEFAULTS.zoneCompletion.map,
-	L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."],
-	nil,
-	ns.Completion.SurfacesChanged
+	L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."]
 )
 
 local tracker = Section(category, L["Objective tracker"])
 local host = ns.TrackerHost
 if host and host.GetSettings and host.SetAttached and host.OnAttachmentChanged then
-	local variable = "LegacyForever_trackerAttached"
+	local variable = PREFIX .. "trackerAttached"
 	local attachment = Settings.RegisterProxySetting(
 		tracker,
 		variable,
@@ -125,16 +103,7 @@ if host and host.GetSettings and host.SetAttached and host.OnAttachmentChanged t
 	end)
 end
 
-AddCheckbox(
-	tracker,
-	ns.SavedTable("zoneCompletion"),
-	"tracker",
-	L["In the objective tracker"],
-	ns.DEFAULTS.zoneCompletion.tracker,
-	nil,
-	nil,
-	ns.Completion.SurfacesChanged
-)
+AddCheckbox(tracker, "tracker", L["In the objective tracker"])
 
 local counts = Section(category, L["What counts"])
 for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
@@ -144,26 +113,15 @@ for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 		tooltip = ns.Completion.QuestsStatusText
 		usable = ns.Completion.QuestsUsable
 	end
-	AddCheckbox(
-		counts,
-		ns.SavedTable("zoneCompletion"),
-		"count_" .. key,
-		ns.Completion.Label(key),
-		ns.DEFAULTS.zoneCompletion["count_" .. key],
-		tooltip,
-		usable,
-		ns.Completion.CountsChanged
-	)
+	AddCheckbox(counts, "count_" .. key, ns.Completion.Label(key), tooltip, usable)
 end
 
 local hints = Section(category, L["Hints and updates"])
-AddCheckbox(hints, Database(), "whatsNew", L["Tell me what's new after an update"], ns.DEFAULTS.whatsNew)
+AddCheckbox(hints, "whatsNew", L["Tell me what's new after an update"])
 AddCheckbox(
 	hints,
-	Database(),
 	"companions",
 	L["Suggest companion addons"],
-	ns.DEFAULTS.companions,
 	L["A grey line in a pin's tooltip when Shortest Path Forever would plot the route."]
 )
 

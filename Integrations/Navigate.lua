@@ -22,7 +22,7 @@ local SHORTEST_PATH = "ShortestPathForever"
 -- included, where the game's waypoint is a straight line. Nothing once it is loaded, or with the suggestion off.
 ---@return string?
 function ns.CompanionHint()
-	if not ns.Setting("companions") or C_AddOns.IsAddOnLoaded(SHORTEST_PATH) then
+	if not ns.Saved.Get("companions") or C_AddOns.IsAddOnLoaded(SHORTEST_PATH) then
 		return nil
 	end
 	if C_AddOns.DoesAddOnExist(SHORTEST_PATH) then

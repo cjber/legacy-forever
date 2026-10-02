@@ -117,18 +117,9 @@ local function AddZoneTooltip(tooltip, zone)
 	GameTooltip_AddInstructionLine(tooltip, L["Click the zone to see where."])
 end
 
-local function ShowAreas()
-	return ns.Setting("showAreas")
-end
-
-local function ToggleAreas()
-	-- Through the Settings setting, so the page's row stays in step while it is open.
-	ns.SetOption("showAreas", not ShowAreas())
-end
-
----@param key 'whatsNew'|'companions'
+---@param key 'showAreas'|'whatsNew'|'companions'
 local function ToggleSetting(key)
-	ns.SetOption(key, not ns.Setting(key))
+	ns.Saved.Set(key, not ns.Saved.Get(key))
 end
 
 --[[ Button: sits in the map's top-right button column and lists this map's objectives ]]
@@ -242,15 +233,15 @@ local function BuildMenu(root, uiMapID)
 		AddGroup(root, group)
 	end
 	root:CreateDivider()
-	root:CreateCheckbox(L["Show undiscovered areas"], ShowAreas, ToggleAreas)
+	root:CreateCheckbox(L["Show undiscovered areas"], ns.Saved.Get, ToggleSetting, "showAreas")
 	AddUnlocated(root)
 	root:CreateDivider()
 	ns.Completion.AddMenu(root)
 	root:CreateDivider()
 	root:CreateButton(L["Open the Legacy panel"], ToggleLegacySystemUI)
 	root:CreateDivider()
-	root:CreateCheckbox(L["Tell me what's new after an update"], ns.Setting, ToggleSetting, "whatsNew")
-	local companions = root:CreateCheckbox(L["Suggest companion addons"], ns.Setting, ToggleSetting, "companions")
+	root:CreateCheckbox(L["Tell me what's new after an update"], ns.Saved.Get, ToggleSetting, "whatsNew")
+	local companions = root:CreateCheckbox(L["Suggest companion addons"], ns.Saved.Get, ToggleSetting, "companions")
 	companions:SetTooltip(function(tooltip)
 		GameTooltip_SetTitle(tooltip, L["Suggest companion addons"])
 		GameTooltip_AddNormalLine(
@@ -678,6 +669,11 @@ local function Attach()
 	end
 	ns.Live.OnChange(ns.RefreshMap)
 	ns.Completion.OnToggle(ns.RefreshMap)
+	ns.Saved.OnChange(function(key)
+		if key == "showAreas" then
+			ns.RefreshMap()
+		end
+	end)
 	button:Refresh()
 end
 
