@@ -577,7 +577,7 @@ local REPUTATION_TARGET = 5
 ---@param faction string
 ---@param sideKey string
 ---@return T[]
-local function ForFaction(items, faction, sideKey)
+function Model.ForFaction(items, faction, sideKey)
 	local own = {}
 	for _, item in ipairs(items or {}) do
 		local side = item[sideKey]
@@ -610,7 +610,7 @@ function Model.ZoneCompletion(zone, snapshot, counted)
 		areas = CompletionCategory(zone.areas, function(area)
 			return snapshot.explored[area.key] == true
 		end),
-		taxis = CompletionCategory(ForFaction(zone.taxis, snapshot.faction, "faction"), function(taxi)
+		taxis = CompletionCategory(Model.ForFaction(zone.taxis, snapshot.faction, "faction"), function(taxi)
 			return snapshot.taxis[taxi.node]
 		end),
 		dungeons = CompletionCategory(zone.dungeons, function(wing)
@@ -622,7 +622,7 @@ function Model.ZoneCompletion(zone, snapshot, counted)
 		legacy = CompletionCategory(zone.legacy, function(objective)
 			return snapshot.refsDone(objective.refs)
 		end),
-		reputations = CompletionCategory(ForFaction(zone.reputations, snapshot.faction, "side"), function(rep)
+		reputations = CompletionCategory(Model.ForFaction(zone.reputations, snapshot.faction, "side"), function(rep)
 			return snapshot.reaction(rep.faction) >= REPUTATION_TARGET
 		end),
 		-- Built from QuestieDB only when counted: the first zone reads its whole database.

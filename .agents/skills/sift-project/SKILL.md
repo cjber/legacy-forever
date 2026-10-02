@@ -64,7 +64,7 @@ edit changed nothing. `gen_legacy.py --offline` fails when the cache holds an ol
 ## Live roots
 
 - `LegacyForever.toc` file list — load order `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Data/Legacy.lua, Core, Saved, WhatsNew, Model, Live, Quests, Navigate,
-  Tracker, UI/Completion.xml, Completion, UI/Map.xml, Map, API`; never reorder as formatting.
+  ZoneCompletion, Tracker, UI/Completion.xml, Completion, UI/Map.xml, Map, API`; never reorder as formatting.
 - `## SavedVariables: LegacyForeverDB` — persisted keys `tracked`, `zoneCompletion`,
   `flightPaths`, `trackerHost`, `showAreas`, `whatsNew`, `companions`, `lastVersion`, all named only in `Core/Saved.lua`; old keys in players'
   saved data are compatibility obligations.
@@ -127,6 +127,12 @@ edit changed nothing. `gen_legacy.py --offline` fails when the cache holds an ol
   change notice (`Get`, `Set`, `Default`, `OnChange`). A toggle calls `ns.Saved.Set` and whoever draws from the
   switch listens with `ns.Saved.OnChange`; the Settings page rows are proxies onto it. No other file names
   `LegacyForeverDB`.
+- `Core/ZoneCompletion.lua` (`ns.ZoneCompletion`) owns zone completion without a frame: a zone's or continent's
+  result under "What counts" (`Result`, `Of`, `Continent`, `IsCounted`, `IsShown`), when a zone reaching 100% is
+  news (`OnComplete`: the quiet window after login, once per zone, never from unticking a category or with both
+  surfaces off) and the one change notice (`OnChange`). `UI/Completion.lua` (tracker section, map corner, toast,
+  menu), `UI/Map.lua`, `UI/MapContents.lua` and `Core/API.lua` read and listen there; `tests/zone_completion_spec.lua`
+  drives it with a stubbed clock.
 - Python generator fails loud: malformed input raises `ValueError` with a `name:line` label.
 - Commit messages: Conventional Commits; CHANGELOG entries are prose per version.
 

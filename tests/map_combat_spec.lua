@@ -109,11 +109,11 @@ local ns = {
 	}),
 	POINTS_ICON = "icon",
 	Data = { zones = {} },
-	Completion = {
-		ShownOnMap = function()
+	ZoneCompletion = {
+		IsShown = function()
 			return false
 		end,
-		OnToggle = function() end,
+		OnChange = function() end,
 	},
 	Saved = {
 		Get = function()
@@ -125,7 +125,6 @@ local ns = {
 		Visible = function()
 			return false
 		end,
-		OnChange = function() end,
 	},
 	Model = {
 		ZoneObjectives = function()

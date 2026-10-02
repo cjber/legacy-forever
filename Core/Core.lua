@@ -14,6 +14,7 @@ local _, addon = ...
 ---@field Quests LegacyQuests
 ---@field TrackerHost ForeverTrackerHostAPI
 ---@field Tracker LegacyTracker
+---@field ZoneCompletion LegacyZoneCompletion
 ---@field Completion LegacyCompletion
 ---@field MapContents LegacyMapContents
 ---@field RefreshMap fun()
@@ -123,7 +124,7 @@ local function Audit()
 	local version, build = GetBuildInfo()
 	ns.Print(("data from build %s, client build %s.%s"):format(data.build, version, build))
 	AuditChallenges(data)
-	ns.Completion.Audit()
+	ns.ZoneCompletion.Audit()
 end
 
 -- Every criterion the game reports for one achievement, for reporting data mismatches.

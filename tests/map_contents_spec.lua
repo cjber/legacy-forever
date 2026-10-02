@@ -46,9 +46,9 @@ ns.Saved = {
 		return settings[key]
 	end,
 }
-ns.Completion = {
-	ShownOnMap = function()
-		return shownOnMap
+ns.ZoneCompletion = {
+	IsShown = function(surface)
+		return surface == "map" and shownOnMap
 	end,
 }
 local parents =

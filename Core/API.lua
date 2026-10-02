@@ -26,7 +26,7 @@ end
 
 ---@return "disabled"|"ready"|"loading"|"missing"|"unsupported"
 local function QuestsStatus()
-	if not ns.Completion.IsCounted("quests") then
+	if not ns.ZoneCompletion.IsCounted("quests") then
 		return "disabled"
 	end
 	if ns.Quests.Cold() then
@@ -49,7 +49,7 @@ local function ZoneSummary(map)
 	if not UnitFactionGroup("player") then
 		return nil, "loading"
 	end
-	local result = assert(ns.Completion.Result(map, true))
+	local result = assert(ns.ZoneCompletion.Result(map, true))
 	---@type LFCategorySummary[]
 	local categories = {}
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
@@ -202,7 +202,7 @@ end
 
 -- Progress, a quest source or "What counts" changed. A copy, so a callback may unsubscribe; errors go to the
 -- game's error handler without stopping the other subscribers.
-ns.Completion.OnRefresh(function()
+ns.ZoneCompletion.OnChange(function()
 	local current = {}
 	for index, subscription in ipairs(subscriptions) do
 		current[index] = subscription

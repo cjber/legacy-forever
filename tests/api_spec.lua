@@ -1,5 +1,6 @@
 -- Run from the repository root: luajit tests/api_spec.lua
--- LegacyForever.API over the real Model, Quests, Completion and Navigate, with the game's progress faked.
+-- LegacyForever.API over the real Model, Quests, ZoneCompletion, Completion and Navigate, with the game's
+-- progress faked.
 local checks = 0
 local function check(condition, label)
 	checks = checks + 1
@@ -211,6 +212,7 @@ for _, file in ipairs({
 	"Core/Model.lua",
 	"Integrations/Quests.lua",
 	"Integrations/Navigate.lua",
+	"Core/ZoneCompletion.lua",
 	"UI/Completion.lua",
 	"Core/API.lua",
 }) do

@@ -185,7 +185,7 @@ function MapContents.Drawn(uiMapID)
 	local drawn = { badges = {}, pins = {} }
 	local info = uiMapID and C_Map.GetMapInfo(uiMapID)
 	if uiMapID and info and info.mapType == Enum.UIMapType.Continent then
-		if ns.Completion.ShownOnMap() then
+		if ns.ZoneCompletion.IsShown("map") then
 			drawn.badges = Badges(uiMapID)
 		end
 		return drawn
