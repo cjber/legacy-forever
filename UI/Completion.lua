@@ -221,14 +221,14 @@ end
 ---@param mouseButton string
 function TrackerMixin:OnBlockHeaderClick(block, mouseButton)
 	if mouseButton ~= "RightButton" then
-		OpenWorldMap(block.id)
+		C_Map.OpenWorldMap(block.id)
 		return
 	end
 	MenuUtil.CreateContextMenu(self:GetContextMenuParent(), function(_, root)
 		root:SetTag("MENU_LEGACY_HERE_ZONE_TRACKER", block)
 		root:CreateTitle(C_Map.GetMapInfo(block.id).name)
 		root:CreateButton(L["Open the map"], function()
-			OpenWorldMap(block.id)
+			C_Map.OpenWorldMap(block.id)
 		end)
 		root:CreateButton(L["Hide from the tracker"], function()
 			Toggle("tracker")
@@ -395,7 +395,7 @@ end
 ---@param down boolean
 local function OnToastClick(frame, button, down)
 	if not AlertFrame_OnClick(frame, button, down) then
-		OpenWorldMap(frame.uiMapID)
+		C_Map.OpenWorldMap(frame.uiMapID)
 	end
 end
 

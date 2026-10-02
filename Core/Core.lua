@@ -153,7 +153,7 @@ end
 -- The options live in the map's Legacy menu, so the slash command and the compartment entry both open it.
 local function OpenMenu()
 	if not (WorldMapFrame and WorldMapFrame:IsShown()) then
-		ToggleWorldMap()
+		C_Map.OpenWorldMap()
 	end
 	ns.OpenMapMenu()
 end

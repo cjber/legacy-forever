@@ -94,8 +94,10 @@ ns.Live = {
 function ns.Print(msg)
 	printed[#printed + 1] = msg
 end
+local zoneTracker
 ns.Tracker = {
-	AddModule = function()
+	AddModule = function(_, mixin)
+		zoneTracker = mixin
 		return nil
 	end,
 }
@@ -156,7 +158,11 @@ AlertFrame = {
 	end,
 }
 local canSet = true
+local openedMap
 C_Map = {
+	OpenWorldMap = function(uiMapID)
+		openedMap = uiMapID
+	end,
 	GetMapInfo = function(uiMapID)
 		return uiMapID == 100 and { name = "Elwynn Forest" } or nil
 	end,
@@ -218,6 +224,8 @@ for _, file in ipairs({
 }) do
 	assert(loadfile(file))("LegacyForever", ns)
 end
+zoneTracker:OnBlockHeaderClick({ id = 100 }, "LeftButton")
+check(openedMap == 100, "a click on the zone's tracker header asks the game to open its map")
 local API = LegacyForever.API
 check(API.version == 1, "version 1")
 
