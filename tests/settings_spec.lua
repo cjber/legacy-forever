@@ -323,6 +323,16 @@ questsUsable = false
 check(not questsRow.modify[1](), "quests grey out without Questie")
 check(questsRow.tooltip() == "a quest source", "the quest row explains its status")
 
+-- The tracker row says which section it switches: the Legacy section of tracked challenges is not its to hide.
+local trackerRow
+for _, entry in ipairs(registered) do
+	if entry.initializer.setting == byKey.tracker then
+		trackerRow = entry.initializer
+	end
+end
+check(byKey.tracker.name == "Zone completion in the tracker", "the tracker row names zone completion")
+check(trackerRow.tooltip:find("Legacy section", 1, true), "and says tracked challenges stay")
+
 -- A row saves through ns.Saved, so whoever listens for the switch hears a tick on the page exactly as it hears
 -- the map menu; a write from elsewhere has the row read its value again.
 local before = #heard
