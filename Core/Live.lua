@@ -127,8 +127,7 @@ function Live.Points(achievementID)
 	return points and points > 0 and points or nil
 end
 
--- Opens Blizzard's Legacy panel on this challenge. The panel opens on its first
--- page and only Legacy.SelectPage switches to the challenges page.
+-- The panel opens on its first page and only Legacy.SelectPage switches to the challenges page.
 local CHALLENGES_PAGE = 2
 
 -- The game keeps its Legacy panel shut until the reward track has renown, and its toggle then does nothing.
@@ -148,6 +147,7 @@ function Live.LockPanelEntry(button)
 	end
 end
 
+-- Opens Blizzard's Legacy panel on this challenge.
 ---@param achievementID number
 function Live.ShowInLegacyPanel(achievementID)
 	if Live.PanelLocked() then

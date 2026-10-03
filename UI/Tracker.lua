@@ -181,8 +181,8 @@ function Tracker.AddModule(name, mixin, uiOrder)
 	return trackerModule
 end
 
--- The manager adds its container only once both events have fired, so checking any sooner can
--- warn about a section that is about to attach.
+-- Runs after both events and the deferred attach pass: checking any sooner can warn about a
+-- section that is about to attach.
 local function WarnIfUnattached()
 	for _, trackerModule in ipairs(modules) do
 		if not IsAttached(trackerModule) then
