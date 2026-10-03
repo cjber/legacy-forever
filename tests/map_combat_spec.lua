@@ -1,6 +1,5 @@
 -- Load UI/Map.lua through its normal addon-loaded callback and exercise the real provider.
 -- This catches protected MapCanvas calls without copying the implementation into the test.
--- luacheck: globals setfenv
 local combat, removed, acquired, hidden = false, 0, 0, 0
 local regenCallback, provider, eventCallback
 
@@ -53,7 +52,6 @@ local env = setmetatable({
 			return { mapType = 1 }
 		end,
 	},
-	WorldMapFrame = nil,
 }, { __index = _G })
 
 env.WorldMapFrame = {

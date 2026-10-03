@@ -69,7 +69,7 @@ ns.Live = {
 	end,
 }
 
-Enum = { UIMapType = { Continent = 2, Zone = 3 } }
+Enum = { UIMapType = { Continent = 2 } }
 C_Map = {
 	GetMapInfo = function(uiMapID)
 		if uiMapID == CONTINENT or uiMapID == 2 then

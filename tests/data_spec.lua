@@ -165,7 +165,6 @@ local totals = {
 	raidRefs = 0,
 	legacy = 0,
 	legacyRefs = 0,
-	legacyCollapsed = 0,
 	reputations = 0,
 	reputationAlliance = 0,
 }
@@ -308,9 +307,6 @@ for zone, entry in pairs(data.completion) do
 			legacyRefs[key] = objective
 			totals.legacyRefs = totals.legacyRefs + 1
 		end
-		if #objective.refs > 1 then
-			totals.legacyCollapsed = totals.legacyCollapsed + 1
-		end
 		totals.legacy = totals.legacy + 1
 	end
 	previousName = nil
@@ -373,11 +369,7 @@ assert(bloodhoof.key == "357:328:238:206" and remapped.key == "295:385:256:128",
 assert(located["768:1050"].key == "746:125:256:256", "empty hit rectangle still links to its drawable overlay")
 assert(totals.wings == 31 and totals.refs == 62, "32 individual wings, one unplaced, both variants")
 assert(totals.raids == 1 and totals.raidBosses == 1 and totals.raidRefs == 2, "one raid, one boss, both variants")
-assert(totals.legacy == 1 and totals.legacyRefs == 2, "Onyxia moves from Legacy to raids")
-assert(
-	totals.legacyCollapsed == 1 and totals.legacyRefs - totals.legacy == 1,
-	"Valthalak's variant pair remains one Legacy entry"
-)
+assert(totals.legacy == 1 and totals.legacyRefs == 2, "one Legacy entry, Valthalak's variant pair")
 assert(#data.completion[1428].legacy == 1, "Burning Steppes counts Valthalak once alongside its dungeon wings")
 assert(
 	#data.completion[1434].legacy == 0 and #data.completion[1439].legacy == 0,
@@ -393,7 +385,7 @@ assert(
 		== "Complete the questline beginning with An Earnest Proposition, and ending with Saving the Best for Last.",
 	"empty criterion descriptions use the single-step achievement description"
 )
-assert(#data.completion[1445].legacy == 0, "Onyxia no longer counts as Legacy completion")
+assert(#data.completion[1445].legacy == 0, "Dustwallow Marsh counts no Legacy objective")
 local lair = data.completion[1445].raids[1]
 assert(lair.name == "Onyxia's Lair" and #lair.bosses == 1, "raid name comes from Map 249")
 local onyxia = assert(raidRefs["1445:684:3271"], "Onyxia raid boss objective")

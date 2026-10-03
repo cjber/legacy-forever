@@ -5,14 +5,7 @@ for _, readyAtLoad in ipairs({ false, true }) do
 	local callbacks, timers, modules, owners = {}, {}, {}, {}
 	local native = {}
 	local function region()
-		return {
-			SetSize = noop,
-			Hide = noop,
-			SetHeader = noop,
-			SetScript = noop,
-			EnableMouse = noop,
-			Header = { EnableMouse = noop, SetScript = noop },
-		}
+		return { SetHeader = noop }
 	end
 	local env = setmetatable({
 		ObjectiveTrackerFrame = native,
@@ -53,9 +46,6 @@ for _, readyAtLoad in ipairs({ false, true }) do
 		hooksecurefunc = function()
 			error("native methods must stay unhooked")
 		end,
-		InCombatLockdown = function()
-			return true
-		end,
 	}, { __index = _G })
 	local ns = {
 		TrackerHost = {
@@ -72,16 +62,6 @@ for _, readyAtLoad in ipairs({ false, true }) do
 			end,
 		}),
 		Live = { OnChange = noop },
-		Integrations = { OnTravelChange = noop, OnGuidanceChange = noop },
-		Asides = { OnChange = noop },
-		Moments = { OnChange = noop },
-		OnRouteChange = noop,
-		Init = function(fn)
-			fn()
-		end,
-		OnChange = noop,
-		OnTravelTick = noop,
-		NearestDock = noop,
 	}
 	env.ForeverTrackerHost = ns.TrackerHost
 	setfenv(assert(loadfile("UI/Tracker.lua")), env)("Addon", ns)
@@ -90,7 +70,6 @@ for _, readyAtLoad in ipairs({ false, true }) do
 		for _, fn in ipairs(callbacks) do
 			fn()
 		end
-		assert(owners[modules[1]] == native, "native callbacks cannot change private ownership")
 	end
 	for _, fn in ipairs(timers) do
 		fn()

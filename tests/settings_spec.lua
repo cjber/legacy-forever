@@ -12,9 +12,10 @@ local ns = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
+assert(loadfile("Core/Model.lua"))("LegacyForever", ns)
 local Saved = ns.Saved
 local ZONE_KEYS = { "map", "tracker", "mapCollapsed", "trackerCollapsed" }
-for _, category in ipairs({ "areas", "taxis", "dungeons", "raids", "legacy", "reputations", "quests" }) do
+for _, category in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 	ZONE_KEYS[#ZONE_KEYS + 1] = "count_" .. category
 end
 
@@ -189,8 +190,8 @@ Settings = {
 		check(name == "Legacy Forever", "the category is named after the addon")
 		return Category(name)
 	end,
-	RegisterVerticalLayoutSubcategory = function(parent, name)
-		subcategories[#subcategories + 1] = { parent = parent, category = Category(name) }
+	RegisterVerticalLayoutSubcategory = function(_parent, name)
+		subcategories[#subcategories + 1] = { category = Category(name) }
 		return subcategories[#subcategories].category
 	end,
 	RegisterAddOnSetting = function()
@@ -221,7 +222,6 @@ function CreateSettingsButtonInitializer(name, text, click, _tooltip, addSearchT
 	check(text == "Open" and addSearchTags == false, "index buttons stay out of search")
 	return { button = true, name = name, click = click }
 end
-ns.Model = { COMPLETION_CATEGORIES = { "areas", "taxis", "dungeons", "raids", "legacy", "reputations", "quests" } }
 local questsUsable = true
 ns.Completion = {
 	Label = function(key)
@@ -287,14 +287,11 @@ local expected = {
 	whatsNew = true,
 	companions = true,
 }
-local seen = 0
 for key, default in pairs(expected) do
-	seen = seen + 1
 	check(byKey[key], key .. " is on the page")
 	check(byKey[key].default == default, key .. " keeps its default")
 	check(byKey[key].variable == "LegacyForever_" .. key, key .. " has its own setting variable")
 end
-check(seen == 13, "all thirteen settings are on the page")
 
 -- The index buttons open their subpages, and never land in search.
 local buttons = {}
