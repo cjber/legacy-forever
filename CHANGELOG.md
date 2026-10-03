@@ -11,6 +11,9 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **A detached tracker keeps clear of your quests.** With Attach to quest tracker off, the Forever column could open on top of the quest list. Until you drag it, it now sits beside the quest tracker, level with its top; once dragged, it stays where you put it.
+- **The tracker setting says what it switches.** On the settings page, *In the objective tracker* read as if it hid everything Legacy puts in the tracker, but it only shows or hides the zone you're in. It is now *Zone completion in the tracker*, and its tooltip says the challenges you track keep their own Legacy section.
+
 ## [0.6.9] - 2026-10-02
 
 - **The guides stay put in a fight.** In combat the game stretches its quest tracker and nudges it back on screen, which shoved the Forever sections sideways across the screen until the fight ended. They now stay stacked above the quest list.

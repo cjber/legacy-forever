@@ -103,7 +103,14 @@ if host and host.GetSettings and host.SetAttached and host.OnAttachmentChanged t
 	end)
 end
 
-AddCheckbox(tracker, "tracker", L["In the objective tracker"])
+-- Named in full: this page has no "Zone completion" title above the row, as the map menu has, and the Legacy
+-- section of tracked challenges is not this switch's to hide.
+AddCheckbox(
+	tracker,
+	"tracker",
+	L["Zone completion in the tracker"],
+	L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."]
+)
 
 local counts = Section(category, L["What counts"])
 for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
