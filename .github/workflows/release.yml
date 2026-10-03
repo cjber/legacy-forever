@@ -17,12 +17,11 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      # The tagged commit must have a matching CHANGELOG entry; the next step extracts it.
-      # a tag without one fails here rather than shipping empty notes.
       - name: Verify full CI on the tagged commit
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 tools/release_check.py
+      # changelog.py fails on a tag with no CHANGELOG entry, or an empty one, rather than shipping empty notes.
       - name: Release notes
         run: python3 tools/changelog.py "$GITHUB_REF_NAME" > .release-notes.md
       - uses: BigWigsMods/packager@e50a250f8705041e40f2fa1ddcb280a686d65aa0 # v2.6.1
