@@ -296,7 +296,7 @@ or use a local. Intentional expansion needs a trailing comment with a reason:
 return select(2, ...) -- multi-value: forward every argument after the event name
 ```
 
-`tools/typecheck.sh` runs LuaLS coverage, multi-value and taint checks, then both unittest suites. The
-test command below exercises the tokenizer/parser and LuaLS report reader, including Information
-diagnostics and missing/malformed reports; `python3 -m unittest discover -s tools -p '*_test.py'` covers
-the checker and coverage helpers.
+`tools/typecheck.sh` runs both unittest suites, then the taint, coverage and multi-value checks, then
+LuaLS. `python3 -m unittest discover -s tests -p '*_test.py'` exercises the tokenizer/parser and LuaLS
+report reader, including Information diagnostics and missing/malformed reports;
+`python3 -m unittest discover -s tools -p '*_test.py'` covers the checker and coverage helpers.

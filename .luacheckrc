@@ -31,7 +31,7 @@ read_globals = { "CreateFramePoolCollection", "C_XMLUtil", "CreateSettingsButton
 files["Data/Legacy.lua"] = { max_line_length = false }
 files["tests/"] = { std = "+luajit" }
 
--- Headless API stubs are writable only in the Live regression harness.
+-- Each spec may write only the client APIs it stubs.
 files["tests/live_spec.lua"] = {
 	globals = { "UnitGUID", "UnitFactionGroup", "Enum", "C_Map", "C_MapExplorationInfo", "C_TaxiMap", "C_QuestLog", "C_Reputation", "C_Timer", "tContains", "CreateFrame",
 		"GetCategoryList", "GetCategoryNumAchievements", "GetAchievementInfo", "GetAchievementNumCriteria", "GetAchievementCriteriaInfo" },

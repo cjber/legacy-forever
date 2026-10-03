@@ -17,9 +17,9 @@ stay outside `total`. A zone with nothing counted is never `complete`.
 Each category has a `scope`: areas, flight paths, reputations and quests are this character's; dungeons, raids and
 Legacy objectives are account-wide.
 
-`questsStatus` is `"disabled"` when quests aren't counted, `"missing"` without QuestieDB, `"unsupported"` for a
-QuestieDB this version can't read, and `"loading"` while Questie starts or before its quests have been indexed. The
-index is never built during a call: a read that finds it cold schedules the build for the next frame, and
+`questsStatus` is `"ready"` when quests are counted and indexed, `"disabled"` when quests aren't counted,
+`"missing"` without QuestieDB, `"unsupported"` for a QuestieDB this version can't read, and `"loading"` while
+Questie starts or before its quests have been indexed. The index is never built during a call: a read that finds it cold schedules the build for the next frame, and
 subscribers hear when it is done.
 
 Errors: `"invalid"` for a map that isn't an integer, `"unsupported"` for a map Legacy Forever has no completion

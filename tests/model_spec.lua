@@ -177,7 +177,7 @@ equal(completion.reputations.total, 2, "the other faction's reputation is left o
 equal(completion.reputations.done, 1, "Friendly counts, Neutral doesn't")
 equal(completion.reputations.left[1], "Wintersaber Trainers", "reputation still to earn named")
 equal(completion.total, 8, "items across categories")
-equal(completion.percent, 50, "percent floors")
+equal(completion.percent, 50, "percent of items done")
 equal(Model.ZoneCompletion({}, snapshot).percent, nil, "empty zone has no percent")
 local noAreas = Model.ZoneCompletion(zone, snapshot, function(key)
 	return key ~= "areas"

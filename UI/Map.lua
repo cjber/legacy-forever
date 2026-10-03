@@ -530,7 +530,7 @@ local function DefineAreaPinMixin()
 		if not self.textures then
 			self:CreatePools()
 		end
-		-- Cleared here too: a pooled pin that missed OnReleased would otherwise stack another shade.
+		-- Start each acquisition with empty drawing and hover state.
 		self:ReleaseAreas()
 		self:SetSize(self:GetMap():GetCanvas():GetSize())
 		self:SetPosition(0.5, 0.5)

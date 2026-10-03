@@ -607,7 +607,7 @@ function Model.ForFaction(items, faction, sideKey)
 	return own
 end
 
--- A zone's completion, GW2 style: every area, flight path, dungeon, Legacy objective, local
+-- A zone's completion, GW2 style: every area, flight path, dungeon, raid, Legacy objective, local
 -- reputation and quest counts once.
 -- Items whose state is unknown (nil) are `pending`: shown, but outside done/total and the percent.
 -- `snapshot` = { explored = set of overlay keys, taxis = { [node] = known } once a

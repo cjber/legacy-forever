@@ -12,6 +12,14 @@ ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT / "Data" / "Legacy.lua"
 
 
+def input_cache() -> Path:
+    """The main checkout's tools/.cache, so every git worktree of the repository shares one set of inputs."""
+    common = subprocess.check_output(
+        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"], cwd=ROOT, text=True
+    ).strip()
+    return Path(common).parent / "tools" / ".cache"
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--offline", action="store_true")
@@ -29,7 +37,7 @@ def main() -> None:
             target = scratch / name
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, target)
-        cache = ROOT / "tools" / ".cache"
+        cache = input_cache()
         if cache.is_dir():
             shutil.copytree(cache, scratch / "tools" / ".cache")
         (scratch / OUTPUT.relative_to(ROOT)).unlink()

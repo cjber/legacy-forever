@@ -55,15 +55,15 @@ neither has a verified Map/encounter/entrance link in this build.
 All 43 completion zones use **256 × 256** tiles, and all 1,739 source tile rows use layer 0. One area has no
 tile rows: **WorldMapOverlay 5252, Zul'Gurub** in Stranglethorn (1434), key **`483:8:256:256`**; its Legacy
 criterion 1222 keeps its key and pin. 536 of the 555 areas carry a hit rectangle. Of the exploration entries,
-**535 match** a completion area's key and **14 do not**. The only raid is Onyxia's Lair (Map 249, Dustwallow
-1445): one boss, Onyxia, refs `{684, 3271}` and `{64030, 117792}`.
+**535 match** a completion area's key and **14 do not**.
 
 Build **1.60.1.69913**: **43 completion zones, 555 areas, 937 tiles** (one area
 without tiles), **65 taxis** (31 Alliance,
 30 Horde, 4 Neutral; 35 Alliance-usable and 34 Horde-usable), and **31 of 32 wings**
 with **62 references**. Twelve taxi exceptions and 31 wing locations are curated.
-Onyxia's Lair is the only raid entry; it has one boss and two refs in Dustwallow
-(1445), Type 0 / Asset 10184 / Amount 1; those refs no longer count as Legacy.
+Onyxia's Lair (Map 249) is the only raid entry; it has one boss, Onyxia, and two refs,
+`{684, 3271}` and `{64030, 117792}`, in Dustwallow (1445), Type 0 / Asset 10184 / Amount 1;
+those refs no longer count as Legacy.
 The **two** remaining non-exploration references on completion maps collapse
 into **one Legacy entry** (one duplicate removed): Valthalak in Burning Steppes
 (1428), Type 27 / Asset 84195 / Amount 1. Valthalak retains

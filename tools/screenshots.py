@@ -151,7 +151,7 @@ class Live:
     """Core/Live.lua's reads, answered from the client's achievement tables for the character above."""
 
     def __init__(self, ui, data, explored=EXPLORED):
-        self.ui, self.data = ui, data
+        self.data = data
         self.achievements = ui.table("Achievement")
         self.trees = ui.table("CriteriaTree")
         self.criteria_rows = ui.table("Criteria")
@@ -536,13 +536,11 @@ def render_menu(ui, data, live):
             parent_row = rows[next(i for i, e in enumerate(entries_at) if e.text == opened[level])]
     # A crop of the map's top-right corner, as a screenshot of that part of the screen would show it.
     crop_left, crop_top = bx - 330, 0
-    right = max(x + menu.width for menu, x, _ in layers)
     # Tall enough that the map, not the backdrop, sits behind the whole main menu.
     menu_bottom = layers[0][2] + layers[0][0].height
     frame = ui.canvas(canvas.width - crop_left, min(canvas.height, max(canvas.height - 150, menu_bottom + 40)))
     frame.paste(canvas, -crop_left, -crop_top)
     shifted = [(frame, crop_left, crop_top)] + layers
-    assert right > crop_left
     return scene(ui, shifted)
 
 
