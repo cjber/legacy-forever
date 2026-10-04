@@ -237,7 +237,7 @@
     },
     "7267": {
       "uiMap": 1446,
-      "name": "Zul'farrak",
+      "name": "Zul'Farrak",
       "area": 978,
       "instance": 209,
       "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230782, Criteria 3265 (Type 0, Asset 7267). Exterior AreaTable 978 (Zul'Farrak) -> 440; UiMapAssignment 46756 -> UiMap 1446 (Tanaris). Map 209 (Zul'Farrak), CorpseMapID 1, Corpse (-6790.5767, -2891.2781)."
@@ -293,21 +293,21 @@
     },
     "11492": {
       "uiMap": 1444,
-      "name": "Diremaul: East",
+      "name": "Dire Maul: East",
       "area": 2577,
       "instance": 429,
       "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230792, Criteria 545 (Type 0, Asset 11492). Exterior AreaTable 2577 (Dire Maul) -> 357; UiMapAssignment 46754 -> UiMap 1444 (Feralas). Map 429 (Dire Maul), CorpseMapID 1, Corpse (-3908.0300, 1130.0000)."
     },
     "11496": {
       "uiMap": 1444,
-      "name": "Diremaul: West",
+      "name": "Dire Maul: West",
       "area": 2577,
       "instance": 429,
       "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230794, Criteria 546 (Type 0, Asset 11496). Exterior AreaTable 2577 (Dire Maul) -> 357; UiMapAssignment 46754 -> UiMap 1444 (Feralas). Map 429 (Dire Maul), CorpseMapID 1, Corpse (-3908.0300, 1130.0000)."
     },
     "11501": {
       "uiMap": 1444,
-      "name": "Diremaul: North",
+      "name": "Dire Maul: North",
       "area": 2577,
       "instance": 429,
       "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230793, Criteria 18535 (Type 0, Asset 11501). Exterior AreaTable 2577 (Dire Maul) -> 357; UiMapAssignment 46754 -> UiMap 1444 (Feralas). Map 429 (Dire Maul), CorpseMapID 1, Corpse (-3908.0300, 1130.0000)."

@@ -14,6 +14,16 @@ EVIDENCE = re.compile(r"^Build [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:")
 BATTLEGROUNDS = {1459, 1460, 1461}
 
 
+def same_name(curated, client):
+    """A curated name is the reviewer's record of what a client ID meant, so it must still name the same
+    thing; a respelling (case, spacing, punctuation) is not a change of meaning."""
+
+    def letters(name):
+        return "".join(char for char in name.casefold() if char.isalnum())
+
+    return letters(curated) == letters(client)
+
+
 def unique_object(pairs):
     result = {}
     for key, value in pairs:
@@ -97,7 +107,7 @@ def validate_completion_row(tables, geography, section, key, row):
         if instance["InstanceType"] not in instance_types or (entrances and row["uiMap"] not in entrances):
             raise ValueError(f"{label}: invalid instance or conflicting client entrance")
     if section == "compoundInstances":
-        if instance["MapName_lang"] != row["instanceName"] or not instance["MapName_lang"].strip():
+        if not same_name(row["instanceName"], instance["MapName_lang"]) or not instance["MapName_lang"].strip():
             raise ValueError(f"{label}: stale/empty instance name")
         if row["uiMap"] not in entrances:
             raise ValueError(f"{label}: missing verified alternative entrance")
@@ -107,7 +117,7 @@ def validate_completion_row(tables, geography, section, key, row):
         if type(row["encounter"]) is not int:
             raise ValueError(f"{label}: invalid encounter ID")
         encounter = required(tables["DungeonEncounter"], row["encounter"], label)
-        if encounter["MapID"] != row["instance"] or encounter["Name_lang"] != row["name"]:
+        if encounter["MapID"] != row["instance"] or not same_name(row["name"], encounter["Name_lang"]):
             raise ValueError(f"{label}: stale encounter name/instance")
     elif section == "reputations":
         validate_reputation(tables, key, row, label)
@@ -115,7 +125,11 @@ def validate_completion_row(tables, geography, section, key, row):
 
 def validate_reputation(tables, key, row, label):
     faction = required(tables["Faction"], int(key), label)
-    if faction["Name_lang"] != row["name"] or not faction["Description_lang"].strip() or faction["ReputationIndex"] < 0:
+    if (
+        not same_name(row["name"], faction["Name_lang"])
+        or not faction["Description_lang"].strip()
+        or faction["ReputationIndex"] < 0
+    ):
         raise ValueError(f"{label}: stale faction name/description or non-reputation faction")
     if "side" in row and row["side"] not in ("Alliance", "Horde"):
         raise ValueError(f"{label}: invalid faction side")

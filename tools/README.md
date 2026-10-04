@@ -143,6 +143,23 @@ curation. Names, referenced IDs, instance types, ancestry, conflicts, and
 reachability are still checked against the newly fetched tables, so a build bump
 with identical rows passes and changed referenced facts fail.
 
+A curated `name` records what the reviewer saw a client ID mean; the ID is the fact
+and every emitted name comes from the client. `same_name` in `locations.py` compares
+letters and digits only, ignoring case, so a respelling (`Diremaul` to `Dire Maul`)
+passes and a different name fails, naming both, for a fresh review.
+
+## Refresh
+
+`.github/workflows/refresh-data.yml` runs daily. It sets `BUILD` to the newest
+Forever build `latest_build.py` reads from wago.tools and `SOURCE_DATE` to the day,
+regenerates, runs `check_generated.py --offline`, luacheck, the specs and StyLua,
+opens a data PR and dispatches CI on its branch. A failed run on the default branch
+opens an issue titled "Data refresh failed" linking the run, or comments on the open
+one. The client build is the only pin it moves. `REVISION` in `fetch_tracker_ui.py`
+(native tracker source for the integration spec, with per-file checksums) and
+`revision` in `typecheck.sh` (WoW API annotations) are test and checker inputs, not
+shipped data, and are bumped by hand with the code they check.
+
 The generator prints its coverage to stderr on every run: rewards, supporting achievements, zones, pinned and
 unpinned entries by kind, remaps, completion counts, unresolved reward criteria by kind and each unplaced
 Spelunker wing. Those printed numbers are the current ones. The review of one build, with its counts, the
@@ -202,7 +219,7 @@ runtime supplies progress and applies eligibility filters.
   compound step 19213/117733, "Ragefire Chasm or Hall of Thanes", gets a Legacy
   entrance pin but is not a single-boss wing; raids never enter this graph.
   `locations.json.dungeonWings`, keyed by boss ID,
-  supplies `uiMap`, the exact wing `name`, and `evidence`. Optional `area` and
+  supplies `uiMap`, the wing `name`, and `evidence`. Optional `area` and
   `instance` IDs validate the exterior AreaTable ancestry and Map entrance.
   Facts with a verified `instance` also locate Legacy objectives for the exact
   boss ID, using the instance entrance rules above; names are validation only.
