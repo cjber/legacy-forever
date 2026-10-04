@@ -18,7 +18,7 @@ from db2 import (
     required,
 )
 from legacy_render import COMPLETION_CATEGORIES, render
-from locations import BATTLEGROUNDS, curated_locations, same_name
+from locations import BATTLEGROUNDS, curated_locations
 
 BUILD = "1.60.1.70205"
 SOURCE_DATE = "2026-10-04"
@@ -372,8 +372,7 @@ def compound_objectives(tables, graph, curated):
                 or cid not in graph.leaves(achievement)
                 or (criterion["Type"], criterion["Asset"], criterion["Modifier_tree_ID"])
                 != (CRITERIA_KILL_ANY_CREATURE, 0, root)
-                or graph.objective_details(achievement, cid)[1] != 1
-                or not same_name(fact["name"], graph.objective_details(achievement, cid)[0])
+                or graph.objective_details(achievement, cid) != (fact["name"], 1)
             ):
                 raise ValueError(f"ModifierTree {root}: stale compound reference {ref}")
             if tuple(ref) in objectives:
@@ -453,7 +452,7 @@ def completion_taxis(tables, geography, curated, completion, counts):
         candidates = zone_names.get(suffix, set())
         fact = curated["taxiNodes"].get(node)
         if fact:
-            if not same_name(fact["name"], name) or candidates == {fact["uiMap"]}:
+            if fact["name"] != name or candidates == {fact["uiMap"]}:
                 raise ValueError(f"TaxiNodes {node}: stale/redundant curated location")
             used_taxis.add(node)
             zone = fact["uiMap"]
@@ -514,7 +513,7 @@ def completion_wings(tables, graph, curated, compounds, completion, counts):
         wing["refs"].sort()
         fact = curated["dungeonWings"].get(boss)
         if fact:
-            if not same_name(fact["name"], wing["name"]):
+            if fact["name"] != wing["name"]:
                 raise ValueError(
                     f"Spelunker boss {boss}: curated wing {fact['name']!r} is now {wing['name']!r}; "
                     "review the step and update tools/locations.json"

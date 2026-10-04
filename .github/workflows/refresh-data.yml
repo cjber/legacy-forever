@@ -102,5 +102,5 @@ jobs:
           if [ -n "$issue" ]; then
             gh issue comment "$issue" --repo "$GITHUB_REPOSITORY" --body "Failed again: $RUN_URL"
           else
-            gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$body"
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$body" --assignee "$GITHUB_REPOSITORY_OWNER"
           fi

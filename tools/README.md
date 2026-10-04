@@ -144,9 +144,8 @@ reachability are still checked against the newly fetched tables, so a build bump
 with identical rows passes and changed referenced facts fail.
 
 A curated `name` records what the reviewer saw a client ID mean; the ID is the fact
-and every emitted name comes from the client. `same_name` in `locations.py` compares
-letters and digits only, ignoring case, so a respelling (`Diremaul` to `Dire Maul`)
-passes and a different name fails, naming both, for a fresh review.
+and every emitted name comes from the client. The name must match the client's exactly,
+so a renamed or respelled entry stops the generator, naming both, for a fresh review.
 
 ## Refresh
 
