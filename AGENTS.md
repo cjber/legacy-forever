@@ -13,6 +13,7 @@ tools/typecheck.sh           # LuaLS 3.19.1 + multi-value lint (Python self-test
 for s in tests/*_spec.lua; do luajit "$s" || exit 1; done
 python3 tools/gen_legacy.py   # regenerate Data/Legacy.lua after a data change
 python3 tools/check_generated.py   # regenerate in a disposable tree; require fresh, byte-stable Data/Legacy.lua
+python3 tools/phrases.py > Locales/phrases.txt   # regenerate the translation template after a string change
 python3 tools/changelog.py --check
 python3 .sift/gate.py --base origin/main && python3 .sift/agents.py check
 ```
@@ -28,7 +29,7 @@ The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and
 - `Integrations/`: quest-state reads and navigation through companion addons.
 - `UI/`: map pins, completion panel, settings and the private tracker host.
 - `Locales/`: `enUS.lua` sets `ns.L`, keyed by the English phrase; a translation is `Locales/<locale>.lua`, listed in
-  the TOC after it. `Locales/phrases.txt` is `tools/phrases.py`'s template for one. No packager localization keyword: CurseForge's export is gone.
+  the TOC after it (`Locales/README.md` has the steps). `Locales/phrases.txt` is `tools/phrases.py`'s template for one. No packager localization keyword: CurseForge's export is gone.
 - `types/`: editor/checker declarations, never loaded by the TOC or shipped.
 - `docs/curseforge.md`: the store description, pasted into CurseForge and Wago by hand.
 
