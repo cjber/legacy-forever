@@ -11,6 +11,7 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Progress updates read less from the game.** Killing something or discovering an area used to re-read every Legacy challenge and every zone's explored overlay; those are kept now, so the tracker and map redraw without the extra work.
 - **The data matches the current client build.** Dire Maul and Zul'Farrak are spelled as the game now spells them in a zone's dungeon list, and Coldridge Valley has its pin on the Dun Morogh map.
 
 ## [0.6.10] - 2026-10-03

@@ -200,6 +200,21 @@ function Live.Invalidate()
 	Changed()
 end
 
+-- A criterion moved without changing which challenges the game lists: an achievement that
+-- completes fires ACHIEVEMENT_EARNED beside CRITERIA_UPDATE, so the list and the snapshots
+-- (whose explored and known-flight-path parts did not move) are kept and only progress is read.
+local function InvalidateProgress()
+	criteriaCache = {}
+	Changed()
+end
+
+-- A discovered area is both progress and the overlay the snapshot holds, so both are rebuilt.
+local function InvalidateExploration()
+	criteriaCache = {}
+	snapshots = {}
+	Changed()
+end
+
 -- A faction the player hasn't met yet has no data, which is simply not Friendly yet.
 ---@param factionID number
 ---@return number
@@ -213,15 +228,26 @@ local function OverlayKey(texture)
 	return ("%d:%d:%d:%d"):format(texture.offsetX, texture.offsetY, texture.textureWidth, texture.textureHeight)
 end
 
--- The continent a map sits on, or nil above continent level.
+-- The continent a map sits on, or nil above continent level. The map hierarchy never changes, so
+-- the walk is kept: a zone's continent is read again on every map badge, snapshot and tooltip.
+---@type table<number, number>
+local continents = {}
 ---@param uiMapID number
 ---@return number?
 function Live.ContinentOf(uiMapID)
+	local cached = continents[uiMapID]
+	if cached then
+		return cached
+	end
 	local info = C_Map.GetMapInfo(uiMapID)
 	while info and info.mapType > Enum.UIMapType.Continent do
 		info = C_Map.GetMapInfo(info.parentMapID)
 	end
-	return info and info.mapType == Enum.UIMapType.Continent and info.mapID or nil
+	local continent = info and info.mapType == Enum.UIMapType.Continent and info.mapID or nil
+	if continent then
+		continents[uiMapID] = continent
+	end
+	return continent
 end
 
 -- Which flight paths this character knows. Zone maps report every node as discovered on
@@ -319,13 +345,9 @@ function Live.CurrentZone()
 	return uiMapID
 end
 
-local INVALIDATING = {
-	"CRITERIA_UPDATE",
-	"ACHIEVEMENT_EARNED",
-	"RECEIVED_ACHIEVEMENT_LIST",
-	"PLAYER_ENTERING_WORLD",
-	"MAP_EXPLORATION_UPDATED",
-}
+-- Only these can add or drop a challenge from the game's list, so only these reread it.
+local LIST_CHANGES = { "ACHIEVEMENT_EARNED", "RECEIVED_ACHIEVEMENT_LIST", "PLAYER_ENTERING_WORLD" }
+local PROGRESS_CHANGES = { "CRITERIA_UPDATE", "MAP_EXPLORATION_UPDATED" }
 -- Flight paths and reputation feed only the zone snapshots.
 local SNAPSHOT_CHANGES = { "TAXI_NODE_STATUS_CHANGED", "TAXIMAP_OPENED", "UPDATE_FACTION" }
 local FLIGHT_MASTER = { TAXIMAP_OPENED = true, TAXI_NODE_STATUS_CHANGED = true }
@@ -333,7 +355,10 @@ local FLIGHT_MASTER = { TAXIMAP_OPENED = true, TAXI_NODE_STATUS_CHANGED = true }
 local ZONE_CHANGES = { "ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA" }
 
 local events = CreateFrame("Frame")
-for _, event in ipairs(INVALIDATING) do
+for _, event in ipairs(LIST_CHANGES) do
+	events:RegisterEvent(event)
+end
+for _, event in ipairs(PROGRESS_CHANGES) do
 	events:RegisterEvent(event)
 end
 for _, event in ipairs(ZONE_CHANGES) do
@@ -353,6 +378,10 @@ events:SetScript("OnEvent", function(_, event, questID)
 		end
 		snapshots = {}
 		Changed()
+	elseif event == "CRITERIA_UPDATE" then
+		InvalidateProgress()
+	elseif event == "MAP_EXPLORATION_UPDATED" then
+		InvalidateExploration()
 	elseif tContains(SNAPSHOT_CHANGES, event) then
 		if FLIGHT_MASTER[event] then
 			RecordFlightMaster()
