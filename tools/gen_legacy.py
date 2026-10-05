@@ -20,8 +20,8 @@ from db2 import (
 from legacy_render import COMPLETION_CATEGORIES, render
 from locations import BATTLEGROUNDS, curated_locations
 
-BUILD = "1.60.1.70124"
-SOURCE_DATE = "2026-09-30"
+BUILD = "1.60.1.70205"
+SOURCE_DATE = "2026-10-04"
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "tools" / ".cache"
 OUTPUT = ROOT / "Data" / "Legacy.lua"
@@ -514,7 +514,10 @@ def completion_wings(tables, graph, curated, compounds, completion, counts):
         fact = curated["dungeonWings"].get(boss)
         if fact:
             if fact["name"] != wing["name"]:
-                raise ValueError(f"Spelunker boss {boss}: stale curated wing name")
+                raise ValueError(
+                    f"Spelunker boss {boss}: curated wing {fact['name']!r} is now {wing['name']!r}; "
+                    "review the step and update tools/locations.json"
+                )
             completion[fact["uiMap"]]["dungeons"].append(wing)
             counts["completion wings placed"] += 1
         else:

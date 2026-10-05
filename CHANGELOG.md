@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **The data matches the current client build.** Dire Maul and Zul'Farrak are spelled as the game now spells them in a zone's dungeon list, and Coldridge Valley has its pin on the Dun Morogh map.
+
 ## [0.6.10] - 2026-10-03
 
 - **A detached tracker keeps clear of your quests.** With Attach to quest tracker off, the Forever column could open on top of the quest list. Until you drag it, it now sits beside the quest tracker, level with its top; once dragged, it stays where you put it.
