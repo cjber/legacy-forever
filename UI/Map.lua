@@ -22,7 +22,7 @@ local KIND_LABEL = {
 local function PointsText(challenge)
 	local points = ns.Live.Points(challenge)
 	if points then
-		return L["%s %d Legacy |4point:points;"]:format(ns.AtlasMarkup(POINTS_ICON, 14), points)
+		return L["%s %d Legacy |4point:points;"]:format(ns.Art.Markup(POINTS_ICON, 14), points)
 	end
 end
 
@@ -384,16 +384,16 @@ local function DefinePinMixin()
 		if entry and instance then
 			local atlas = entry.raid and "Raid" or "Dungeon"
 			self:SetSize(32, 32)
-			self.Portal:SetAtlas(atlas)
-			ns.FitAtlas(self.Icon, POINTS_ICON, 12, 17)
+			self.Portal:SetAtlas(atlas) -- art-ok: both portals are square atlases, over the 32x32 pin
+			ns.Art.Fit(self.Icon, POINTS_ICON, 12, 17)
 			self.Icon:SetPoint("BOTTOMRIGHT", 2, -2)
-			self.Highlight:SetAtlas(atlas)
+			self.Highlight:SetAtlas(atlas) -- art-ok: the portal again, over the square Portal texture
 			self.Highlight:SetAllPoints(self.Portal)
 		else
 			self:SetSize(20, 20)
-			ns.FitAtlas(self.Icon, POINTS_ICON, 14, 20)
+			ns.Art.Fit(self.Icon, POINTS_ICON, 14, 20)
 			self.Icon:SetPoint("CENTER")
-			self.Highlight:SetAtlas(POINTS_ICON)
+			self.Highlight:SetAtlas(POINTS_ICON) -- art-ok: the shield again, over the Icon that Art.Fit sized
 			self.Highlight:SetAllPoints(self.Icon)
 		end
 	end
@@ -515,6 +515,7 @@ local function DefineAreaPinMixin()
 			texture:AddMaskTexture(mask)
 			masks[texture] = mask
 		end
+		-- art-ok: a map tile at the size and crop the generated data gives it, and the pool only ever draws files
 		texture:SetTexture(tile.file, nil, nil, "TRILINEAR")
 		texture:SetSize(tile.width, tile.height)
 		texture:SetTexCoord(0, tile.u, 0, tile.v)

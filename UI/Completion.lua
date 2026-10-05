@@ -50,9 +50,10 @@ end
 function Completion.Icon(key, size)
 	local icon = ICONS[key]
 	if icon.file then
+		-- art-ok: a 64x64 file icon cropped to its square middle, in a square
 		return ("|T%s:%d:%d:0:0:64:64:5:59:5:59|t"):format(icon.file, size, size)
 	end
-	return ns.AtlasMarkup(icon.atlas --[[@as string]], size)
+	return ns.Art.Markup(icon.atlas --[[@as string]], size)
 end
 
 ---@param category LegacyCategoryKey
@@ -406,6 +407,7 @@ local function SetUpToast(frame, uiMapID)
 	frame.uiMapID = uiMapID
 	frame.Unlocked:SetText(L["Zone complete"])
 	frame.Name:SetText(C_Map.GetMapInfo(uiMapID).name)
+	-- art-ok: the stock toast sizes its icon square, and the compass is 300 by 297, within 2% of square
 	frame.Icon.Texture:SetAtlas(ICONS.areas.atlas)
 	frame:SetScript("OnClick", OnToastClick)
 	PlaySound(SOUNDKIT.UI_SCENARIO_STAGE_END)

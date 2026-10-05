@@ -4,7 +4,8 @@
 		<Size x="1" y="1"/>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<!-- A feathered dark wash keeps the text legible on pale parchment, with no edge to read as a box. -->
+				<!-- A feathered dark wash keeps the text legible on pale parchment, with no edge to read as a box.
+				     art-ok: a soft gradient with no shape of its own, stretched behind the text by design -->
 				<Texture parentKey="Shade" file="Interface\AddOns\LegacyForever\media\Shade" alpha="0.6">
 					<Anchors>
 						<Anchor point="TOPLEFT" x="-48" y="22"/>
