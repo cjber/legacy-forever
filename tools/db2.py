@@ -1,11 +1,11 @@
 """Pinned wago.tools DB2 exports: download, cache and parse them; the enum codes the generator reads (stdlib only)."""
 
-import csv
-import io
-import math
-import tempfile
-import urllib.request
-from pathlib import Path
+from forever_tools import wago
+from forever_tools.fsio import atomic_write
+
+__all__ = ["atomic_write", "db2", "required"]
+
+USER_AGENT = "LegacyForever/1.0"
 
 # Criteria.Type codes and the objective kind each one is. Two codes are kills: one names the creature
 # (Asset), the other leaves Asset 0 and lets a ModifierTree say which creatures count.
@@ -29,73 +29,20 @@ MAP_RAID = 2
 INSTANCE_TYPES = (MAP_DUNGEON, MAP_RAID)
 
 
-def atomic_write(path, data):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = None
-    try:
-        with tempfile.NamedTemporaryFile(dir=path.parent, prefix=path.name + ".", delete=False) as f:
-            temporary = Path(f.name)
-            f.write(data)
-        temporary.chmod(0o644)
-        temporary.replace(path)
-    finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
-
-
-def download(url, path, refresh=False, offline=False):
-    fetch = refresh or not path.exists()
-    if not fetch:
-        data = path.read_bytes()
-    elif offline:
-        raise ValueError(f"Missing cached source: {path}")
-    else:
-        request = urllib.request.Request(url, headers={"User-Agent": "LegacyForever/1.0"})
-        with urllib.request.urlopen(request, timeout=60) as response:
-            data = response.read()
-    content = data.decode("utf-8-sig")
-    if not content.strip() or content.lstrip().startswith("<"):
-        raise ValueError(f"Expected CSV, received empty data or HTML {f'from {url}' if fetch else f'in {path}'}")
-    if fetch:
-        atomic_write(path, data)
-    return content
-
-
 def db2(name, columns, build, cache, **options):
     """One table's rows by ID, parsed and checked; `columns` are the fields kept besides ID."""
-    content = download(
-        f"https://wago.tools/db2/{name}/csv?build={build}",
-        cache / f"{name}-{build}.csv",
-        **options,
-    )
-    reader = csv.DictReader(io.StringIO(content), strict=True)
-    fields = reader.fieldnames or []
-    missing = {"ID", *columns} - set(fields)
-    if missing or len(fields) != len(set(fields)):
-        raise ValueError(f"{name}: missing/duplicate columns (missing: {sorted(missing)})")
+    kept = ("ID", *columns)
+    # Only these projection fields are floating point; IDs stay exact integers.
+    floats = [key for key in kept if key.startswith(("Region_", "UiMin_", "UiMax_", "Corpse_"))]
+    ints = [key for key in kept if key not in floats and not key.endswith("_lang")]
     rows = {}
-    for number, row in enumerate(reader, 2):
-        if None in row or None in row.values():
-            raise ValueError(f"{name}:{number}: malformed CSV row")
-        # Only these projection fields are floating point; IDs stay exact integers.
-        parsed = {}
-        for key in ("ID", *columns):
-            if key.endswith("_lang"):
-                parsed[key] = row[key]
-                continue
-            try:
-                value = float(row[key]) if key.startswith(("Region_", "UiMin_", "UiMax_", "Corpse_")) else int(row[key])
-                if not math.isfinite(value):
-                    raise ValueError
-                parsed[key] = value
-            except ValueError as error:
-                raise ValueError(f"{name}:{number}: invalid {key}={row[key]!r}") from error
-        key = parsed["ID"]
+    for row in wago.db2_rows(
+        name, build, cache, user_agent=USER_AGENT, ints=ints, floats=floats, required=kept, **options
+    ):
+        key = row["ID"]
         if key < 0 or key in rows:
-            raise ValueError(f"{name}:{number}: negative/duplicate ID {key}")
-        rows[key] = parsed
-    if not rows:
-        raise ValueError(f"{name}: empty DB2 export for {build}")
+            raise ValueError(f"{name}: negative/duplicate ID {key}")
+        rows[key] = {column: row[column] for column in kept}
     return rows
 
 

@@ -40,6 +40,14 @@ jobs:
           python3 tools/gen_legacy.py
           python3 tools/check_generated.py --offline
       - if: steps.build.outputs.new == 'true'
+        id: report
+        run: |
+          {
+            echo 'markdown<<REPORT_EOF'
+            python3 tools/data_report.py
+            echo REPORT_EOF
+          } >> "$GITHUB_OUTPUT"
+      - if: steps.build.outputs.new == 'true'
         id: pr
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
@@ -48,6 +56,8 @@ jobs:
           commit-message: "data: Legacy data for Forever ${{ steps.build.outputs.version }}"
           body: |
             Regenerated `Data/Legacy.lua` from the achievement, criteria and world map DB2s of Forever build ${{ steps.build.outputs.version }}.
+
+            ${{ steps.report.outputs.markdown }}
 
             Before merging, run `/lf audit` in-game to confirm every located objective is one the client knows.
 

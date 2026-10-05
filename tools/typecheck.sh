@@ -29,6 +29,7 @@ if [[ $(git -C "$library" rev-parse HEAD) != "$revision" ]] ||
     exit 1
 fi
 
+python3 tools/forever_tools/sync.py check
 python3 -m unittest discover -s tests -p '*_test.py'
 python3 -m unittest discover -s tools -p '*_test.py'
 python3 -m tools.lint_taint

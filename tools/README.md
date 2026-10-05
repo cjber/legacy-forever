@@ -274,6 +274,18 @@ found in `~/.claude/skills/wow-mock-screenshots/` by default; set the
 another checkout. Art is fetched from wago.tools once and cached, and reruns
 are byte-identical.
 
+## Shared tooling
+
+`tools/forever_tools/` is the shared, offline Python (changelog and release checks, TOC traversal, the Lua
+taint and multi-value lints, strict DB2 CSV parsing, atomic writes, the generated-data gate). It is vendored
+byte for byte from `cjber/skills` (`wow-forever-addon/tooling`) and pinned by `forever_tools/MANIFEST.json`:
+never edit it here. `python3 tools/forever_tools/sync.py check` verifies it offline (it runs in
+`typecheck.sh`); `python3 tools/forever_tools/sync.py update --source <skills checkout>` refreshes it from a
+clean checkout of the producer. The other `tools/*.py` entry points stay thin and carry only this repo's policy.
+
+`python3 tools/data_report.py [--base REV]` prints what the generated data adds, removes and changes since a
+revision (default `HEAD`), by record key; `tools/check_generated.py` prints the same when output is stale.
+
 ## Type checking
 
 Run `tools/typecheck.sh` from any directory with LuaLS 3.19.1, Python 3.12+ and Git installed.
