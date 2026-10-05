@@ -338,7 +338,7 @@ WHITE = (1, 1, 1)
 
 
 def fitted_markup(ui, name, size):
-    """ns.AtlasMarkup: whole pixels keeping the atlas's shape within 2%, up to two pixels under `size`."""
+    """ns.Art.Markup: whole pixels keeping the atlas's shape within 2%, up to two pixels under `size`."""
     atlas = ui.atlas(name)
     aspect = atlas.width / atlas.height
     shape = min(aspect, 1 / aspect)
@@ -582,7 +582,7 @@ def continent_zones(ui, data, live, continent):
 def zone_pin(ui, canvas, x, y, portal=None):
     """LegacyForeverPinMixin:Layout centred on (x, y): the bare icon fitted in 14x20, or at an entrance the 32x32
     portal atlas with the icon fitted in 12x17 at its BOTTOMRIGHT offset (2, -2). A count is only ever in the tooltip.
-    ns.FitAtlas keeps the 50x73 shield's shape, so the full height sets the width."""
+    ns.Art.Fit keeps the 50x73 shield's shape, so the full height sets the width."""
     shield = ui.atlas(POINTS_ICON)
     if portal is None:
         w = 20 * shield.width / shield.height

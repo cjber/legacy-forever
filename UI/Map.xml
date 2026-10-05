@@ -10,6 +10,7 @@
 				<Texture parentKey="Portal" setAllPoints="true" hidden="true"/>
 			</Layer>
 			<Layer level="ARTWORK">
+				<!-- art-ok: LegacyForeverPinMixin:Layout sizes it with Art.Fit on every acquire -->
 				<Texture parentKey="Icon" atlas="UI-Legacy-Points-icon-c60"/>
 			</Layer>
 			<Layer level="OVERLAY">
@@ -31,6 +32,7 @@
 		</KeyValues>
 		<Layers>
 			<Layer level="ARTWORK">
+				<!-- art-ok: 30 by 44 is the 50 by 73 shield's own shape, within half a percent -->
 				<Texture parentKey="Icon" atlas="UI-Legacy-Points-icon-c60">
 					<Size x="30" y="44"/>
 					<Anchors>
@@ -46,6 +48,7 @@
 				</FontString>
 			</Layer>
 			<Layer level="HIGHLIGHT">
+				<!-- art-ok: the Icon again at the same 30 by 44, the shield's own shape -->
 				<Texture atlas="UI-Legacy-Points-icon-c60" alphaMode="ADD" alpha="0.5">
 					<Size x="30" y="44"/>
 					<Anchors>

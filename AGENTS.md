@@ -54,8 +54,10 @@ The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and
   work.
 - Progress is read from the game each time, so it matches the Legacy panel; the bundled data only
   says where objectives are.
-- Never stretch art: an icon, atlas or texture is drawn at its native aspect (size it from
-  `C_Texture.GetAtlasInfo`, fit inside the box); only nine-slice pieces, bars and fills stretch by design.
+- Never stretch art: an icon, atlas or texture is drawn at its native aspect, through `Core/Art.lua` (`Art.Fit`,
+  `Art.Markup`); only nine-slice pieces, bars and fills stretch by design. `tools/lint_art.py` refuses a raw
+  `SetAtlas`, `SetTexture`, button atlas or `|A`/`|T` markup anywhere else unless its line says why its shape is
+  right (`-- art-ok: reason`).
 - Store copy, README and posts pitch the addon as looking like it came with the game, in cjber's
   own voice, never AI marketing: `wow-forever-addon` WFA-23/24, checked before every store paste.
 
@@ -66,7 +68,7 @@ The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and
 
 ## Secure UI regression checks
 
-`tools/typecheck.sh` checks the TOC/XML load graph, LuaLS coverage and `tools/lint_taint.py`.
+`tools/typecheck.sh` checks the TOC/XML load graph, LuaLS coverage, `tools/lint_taint.py` and `tools/lint_art.py`.
 `tools/forever_tools/` is the shared tooling (cjber/skills, `wow-forever-addon/tooling`), vendored byte for byte: never edit it here.
 `python3 tools/forever_tools/sync.py check` verifies it offline; `sync.py update --source <checkout>` is the only way to refresh it.
 Do not hook Blizzard object methods: use events, `HookScript` or a supported callback registry.

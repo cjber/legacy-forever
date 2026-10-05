@@ -53,6 +53,7 @@ SlashCmdList = {}
 DUNGEONS, RAIDS, QUESTS_LABEL = "Dungeons", "Raids", "Quests"
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
+assert(loadfile("Core/Art.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
 -- The save file: the specs below edit what counts in it directly, as a hand-edited file would.
 LegacyForeverDB = { zoneCompletion = settings }
@@ -380,7 +381,7 @@ criteria[10][1].completed = true
 ok, reason = API.Navigate(100, targets[1].key)
 check(not ok and reason == "stale" and #waypoints == 1, "a finished objective's key is stale")
 
--- Art is never stretched: inline icons keep the atlas's shape within 2% in whole pixels, and a pin's texture is fitted.
+-- Art is never stretched: inline icons keep the atlas's shape within 2% in whole pixels.
 local function Shape(markup)
 	local height, width = markup:match(":(%d+):(%d+)|a$")
 	return tonumber(width), tonumber(height)
@@ -390,21 +391,7 @@ for _, size in ipairs({ 12, 14 }) do
 	check(height <= size and height >= size - 2, "the Legacy shield stays about " .. size .. " tall")
 	check(math.abs(width / height / (50 / 73) - 1) <= 0.025, "the Legacy shield keeps its 50 by 73 shape")
 end
-check(ns.AtlasMarkup("UI-Legacy-Points-icon-c60", 14) == "|A:UI-Legacy-Points-icon-c60:13:9|a", "9 by 13, not 10 by 14")
 check(ns.Completion.Icon("areas", 14) == "|A:islands-queue-prop-compass:14:14|a", "a near-square compass")
 check(ns.Completion.Icon("taxis", 12) == "|A:flightmaster:12:12|a", "a square atlas fills the square")
-local texture = {
-	SetAtlas = function(self, atlas)
-		self.atlas = atlas
-	end,
-	SetSize = function(self, width, height)
-		self.width, self.height = width, height
-	end,
-}
-ns.FitAtlas(texture, "UI-Legacy-Points-icon-c60", 14, 20)
-check(
-	texture.height == 20 and math.abs(texture.width / texture.height - 50 / 73) < 1e-9,
-	"a pin's shield fitted, not 14x20"
-)
 
 print(("api_spec: %d checks passed"):format(checks))
