@@ -614,6 +614,9 @@ def render_continent(ui, data, live):
 
 
 def render_tracker(ui, data, live):
+    """The shared column as the host lays it out: the game's All Objectives header, then Ashenvale's
+    completion and the tracked challenges. The quests below are the native frame's own and are not part
+    of this crop."""
     result = live.model.completion[ASHENVALE]
     legacy = []
     for block in live.model.tracked:
@@ -625,7 +628,7 @@ def render_tracker(ui, data, live):
         TrackerModule("Ashenvale", [TrackerBlock(counts_text(ui, result, 14))]),
         TrackerModule("Legacy", legacy),
     ]
-    canvas, rects = objective_tracker(ui, modules, container=False)
+    canvas, rects = objective_tracker(ui, modules, container=True)
     # The zone section's header: the percent left of the minimize button and a 2 px bar under both.
     hx, hy, hw, hh = rects["modules"][0]
     font = FONTS["ObjectiveTrackerHeaderFont"]
