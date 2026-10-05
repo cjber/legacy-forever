@@ -18,13 +18,25 @@ Discover an area and its shading lifts as the corner's percentage goes up. Click
 
 Half of Ashenvale explored: the shield's number is what's left on this map, and its menu lists it by challenge.
 
+<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/continent.png" width="640" alt="Kalimdor on the world map with a Legacy badge on each zone that still has dungeon objectives"></p>
+
+Zoom out and each zone with dungeon objectives left gets a badge.
+
+<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/tracker.png" width="320" alt="The objective tracker with the game's All Objectives header over Ashenvale's completion and the tracked Legacy challenges"></p>
+
+Challenges you track sit in the objective tracker under the game's own header, with live progress.
+
+<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/menu.png" width="640" alt="The Legacy map menu with tick boxes to track challenges, grouped by type"></p>
+
+Tick a challenge in the menu to track it.
+
 ## Features
 
 - **Map button** in the world map's top-right button column: a Legacy shield with a number inside, the unfinished objectives on the map you're viewing. Its menu lists them by challenge, with a tick box to track each one. Challenges with no fixed place are grouped the way the Legacy panel groups them.
-- **Tracker**: a Legacy section beside the objective tracker lists what you track, with live progress. A zone ticked in the map menu tracks just that zone, such as "0/12 Explore Felwood". Click a challenge to open it in the Legacy panel, or right-click to stop tracking it. [How it lists steps](docs/tracker.md).
+- **Tracker**: a Legacy section in the objective tracker, under the game's own All Objectives header, lists what you track, with live progress. A zone ticked in the map menu tracks just that zone, such as "0/12 Explore Felwood". Click a challenge to open it in the Legacy panel, or right-click to stop tracking it. [How it lists steps](docs/tracker.md).
 - **Map pins** on dungeon and raid entrances, with the challenge each counts toward and its Legacy points. Left-click a pin to travel there: with [Shortest Path Forever](https://github.com/cjber/shortest-path-forever) it plans the whole journey, otherwise it sets the game's own waypoint.
 - **Undiscovered areas** are shaded darker in their real shape on the zone map, so you can see where to go at a glance. Hovering one names it and, when a Legacy challenge counts it, shows the challenge, its points and how many of the zone's areas are left. The map menu turns the shading off.
-- **Zone completion**, Guild Wars 2 style: how much of a zone's areas, dungeons, raids and Legacy objectives you've done, as a percentage in the map's corner and, if you tick it, the tracker. Flight paths, local reputations and, with Questie, quests can be added under "What counts". A finished zone gets a toast and a sound. [What it counts](docs/zone-completion.md).
+- **Zone completion**, Guild Wars 2 style: how much of a zone's areas, dungeons, raids and Legacy objectives you've done, as a percentage in the map's corner, a badge on each zone of a continent map and, if you tick it, the tracker. Flight paths, local reputations and, with Questie, quests can be added under "What counts". A finished zone gets a toast and a sound. [What it counts](docs/zone-completion.md).
 - **No fixed location** lists challenges whose remaining work isn't tied to a place, such as levels, skills and ranks.
 
 Progress comes from the game each time, so it matches the Legacy panel and follows whichever challenge set your character sees.
@@ -35,7 +47,7 @@ Install it from [CurseForge](https://www.curseforge.com/wow/addons/legacy-foreve
 
 ## Usage
 
-Open the world map, or type `/lf`. The Legacy button sits below the map's own tracking buttons. Tick a challenge in its menu to add it to the tracker. Every option also lives under Options > AddOns > Legacy Forever, grouped into short pages behind an index.
+Open the world map, click the addon's icon in the addon compartment, or type `/lf`. The Legacy button sits below the map's own tracking buttons. Tick a challenge in its menu to add it to the tracker. Every option also lives under Options > AddOns > Legacy Forever, grouped into short pages behind an index. After an update, one chat line says which version you now have; "What's new after an update" turns it off.
 
 | Command | What it does |
 |---|---|
@@ -52,7 +64,7 @@ Everything is generated from the Forever client's own data (via [wago.tools](htt
 - **Areas:** each exploration criterion names a world map overlay. The zone map shades that overlay on the zone's current map art; exploration is never pinned.
 - **Dungeons and raids:** placed at the client's entrance marker, only where the zone is certain.
 - **Zone completion:** what each category counts, and where quests come from and why rares are left out, is in [docs/zone-completion.md](docs/zone-completion.md).
-- **Kills, quests and reputations:** the client ships no spawn or encounter data for these (none of the 53 Legacy kill targets has a Creature row), so they stay unpinned. The exception is Valthalak, a quest whose Blackrock Spire entrance was reviewed by hand. Track the challenge to follow their progress instead.
+- **Kills, quests and reputations:** the client ships no spawn or encounter data for these, so they stay unpinned. The exception is Valthalak, a quest whose Blackrock Spire entrance was reviewed by hand. Track the challenge to follow their progress instead.
 
 **Found a wrong or missing objective?** Run `/lf audit` and [open an issue](https://github.com/cjber/legacy-forever/issues/new) with the output.
 
@@ -60,7 +72,7 @@ Turn off **Attach to quest tracker** in Settings to drag the shared Forever colu
 
 ## Works alongside
 
-All optional: [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever) plans the journey when you click a map pin, and [Questie](https://www.curseforge.com/wow/addons/questie) supplies the quests zone completion can count (its [QuestieDB](https://github.com/Questie/QuestieDB/releases) addon on its own works too). Other addons can read zone completion through `LegacyForever.API` ([docs/api.md](docs/api.md)); [Adventure Guide Forever](https://www.curseforge.com/wow/addons/adventure-guide-forever) does.
+All optional: [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever) plans the journey when you click a map pin, and [Questie](https://www.curseforge.com/wow/addons/questie) supplies the quests zone completion can count (its [QuestieDB](https://github.com/Questie/QuestieDB/releases) addon on its own works too). A pin's tooltip carries a grey line suggesting Shortest Path Forever while it would plot the route; "Suggest companion addons" in the settings turns the line off. Other addons can read zone completion through `LegacyForever.API` ([docs/api.md](docs/api.md)); [Adventure Guide Forever](https://www.curseforge.com/wow/addons/adventure-guide-forever) does.
 
 ## Development
 
