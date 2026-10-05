@@ -30,8 +30,10 @@ UnitFactionGroup = function()
 	return "Alliance"
 end
 Enum = { UIMapType = { Continent = 2 }, FlightPathState = { Unreachable = 0 } }
+local mapInfoReads = 0
 C_Map = {
 	GetMapInfo = function(id)
+		mapInfoReads = mapInfoReads + 1
 		return id == 2 and { mapID = 2, mapType = 3, parentMapID = 1 } or { mapID = 1, mapType = 2 }
 	end,
 	GetBestMapForUnit = function()
@@ -167,6 +169,14 @@ check(Live.Name(100) == "Explorer", "names come from the game")
 check(snapshot.criteria == Live.Criteria, "a zone snapshot reads steps through the same criteria")
 check(snapshot.reaction(21) == 4 and snapshot.reaction(22) == 0, "a faction not met yet is not Friendly")
 
+-- The map hierarchy never changes, so a map's continent is walked once and then kept.
+local readsBefore = mapInfoReads
+check(Live.ContinentOf(3) == 1, "a map on continent 1 reports it")
+local afterWalk = mapInfoReads
+check(afterWalk > readsBefore, "the first walk reads the map")
+Live.ContinentOf(3)
+check(mapInfoReads == afterWalk, "a map's continent is kept after the first walk")
+
 -- Listeners run once per burst of events, half a second after the first.
 local notified = 0
 Live.OnChange(function()
@@ -211,19 +221,22 @@ end
 local turnedIn = Burst("QUEST_TURNED_IN", 4)
 check(turnedIn.snapshot and snapshot.completed[4], "QUEST_TURNED_IN: zone snapshots are rebuilt with the quest")
 check(not (turnedIn.visible or turnedIn.criteria or turnedIn.questLog), "QUEST_TURNED_IN: nothing else is reread")
-for _, event in ipairs({
-	"CRITERIA_UPDATE",
-	"ACHIEVEMENT_EARNED",
-	"RECEIVED_ACHIEVEMENT_LIST",
-	"PLAYER_ENTERING_WORLD",
-	"MAP_EXPLORATION_UPDATED",
-}) do
+for _, event in ipairs({ "ACHIEVEMENT_EARNED", "RECEIVED_ACHIEVEMENT_LIST", "PLAYER_ENTERING_WORLD" }) do
 	local reread = Burst(event)
 	check(
 		reread.visible and reread.criteria and reread.snapshot and reread.questLog,
 		event .. ": everything is read from the game again"
 	)
 end
+-- Progress moves without changing which challenges the game lists, so the list is kept.
+for _, event in ipairs({ "CRITERIA_UPDATE", "MAP_EXPLORATION_UPDATED" }) do
+	local reread = Burst(event)
+	check(reread.criteria, event .. ": criteria are read again")
+	check(not reread.visible and not reread.questLog, event .. ": the list and the quest log are kept")
+end
+-- A discovered area also moves the explored overlays a snapshot holds.
+check(Burst("MAP_EXPLORATION_UPDATED").snapshot, "MAP_EXPLORATION_UPDATED: zone snapshots are rebuilt")
+check(not Burst("CRITERIA_UPDATE").snapshot, "CRITERIA_UPDATE: zone snapshots are kept")
 local count = 0
 for _ in pairs(registered) do
 	count = count + 1

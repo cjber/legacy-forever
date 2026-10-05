@@ -11,6 +11,11 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.11] - 2026-10-05
+
+- **The tracker returns after Edit Mode is locked.** Hiding and locking Edit Mode without leaving it no longer keeps the Forever sections hidden.
+- **The tracker reads in game order.** The game's All Objectives header leads the shared column, the Forever sections follow it, and your quests stay below them. In combat the game keeps its quest list in its own slot, so the header and quests stay together and the Forever sections sit directly below them, keeping the tracker to one column.
+- **Progress updates read less from the game.** Killing something or discovering an area used to re-read every Legacy challenge and every zone's explored overlay; those are kept now, so the tracker and map redraw without the extra work.
 - **The data matches the current client build.** Dire Maul and Zul'Farrak are spelled as the game now spells them in a zone's dungeon list, and Coldridge Valley has its pin on the Dun Morogh map.
 
 ## [0.6.10] - 2026-10-03

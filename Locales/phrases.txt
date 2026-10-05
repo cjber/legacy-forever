@@ -22,7 +22,6 @@ L["/lf - open the world map and its Legacy menu"] = "/lf - open the world map an
 L["/lf audit - check the bundled data against the game"] = "/lf audit - check the bundled data against the game"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - list what the game reports for one achievement"
-L["A detached tracker keeps clear of your quests."] = "A detached tracker keeps clear of your quests."
 L["A grey line in a pin's tooltip when Shortest Path Forever would plot the route."] =
 	"A grey line in a pin's tooltip when Shortest Path Forever would plot the route."
 L["Areas explored"] = "Areas explored"
@@ -75,6 +74,8 @@ L["Reputations (Friendly)"] = "Reputations (Friendly)"
 L["Show undiscovered areas"] = "Show undiscovered areas"
 L["Stop tracking"] = "Stop tracking"
 L["Suggest companion addons"] = "Suggest companion addons"
+L["The tracker keeps its place when the game moves its own."] =
+	"The tracker keeps its place when the game moves its own."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

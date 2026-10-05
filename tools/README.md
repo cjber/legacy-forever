@@ -328,3 +328,10 @@ return select(2, ...) -- multi-value: forward every argument after the event nam
 LuaLS. `python3 -m unittest discover -s tests -p '*_test.py'` exercises the tokenizer/parser and LuaLS
 report reader, including Information diagnostics and missing/malformed reports;
 `python3 -m unittest discover -s tools -p '*_test.py'` covers the checker and coverage helpers.
+
+## Bench
+
+`luajit tools/perf_bench.lua` loads the bundled data and the frame-free modules over a stubbed
+client and prints the Lua time and game-API call count for loading, the login read, a
+`CRITERIA_UPDATE` burst and each map, tracker and tooltip build. It shows what a change to the
+event reads moves without the game, and is not part of the gate.
