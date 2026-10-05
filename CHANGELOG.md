@@ -11,6 +11,10 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.12] - 2026-10-05
+
+- **The addon keeps the same in-game behaviour.** This release includes the current help text and checks that keep icons at their own shape.
+
 ## [0.6.11] - 2026-10-05
 
 - **The tracker returns after Edit Mode is locked.** Hiding and locking Edit Mode without leaving it no longer keeps the Forever sections hidden.
