@@ -13,7 +13,7 @@ verbatim rather than rewritten as the addon moves.
 
 ## [0.6.12] - 2026-10-05
 
-- **The addon keeps the same in-game behaviour.** This release includes the current help text and checks that keep icons at their own shape.
+- **Updated help text.** The description explains the current tracker controls and how the addon works alongside the other Forever addons.
 
 ## [0.6.11] - 2026-10-05
 
