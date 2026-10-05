@@ -11,6 +11,10 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.12] - 2026-10-05
+
+- **Updated help text.** The description explains the current tracker controls and how the addon works alongside the other Forever addons.
+
 ## [0.6.11] - 2026-10-05
 
 - **The tracker returns after Edit Mode is locked.** Hiding and locking Edit Mode without leaving it no longer keeps the Forever sections hidden.
