@@ -11,6 +11,10 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.13] - 2026-10-06
+
+- **Current game data.** Legacy objectives use the latest selected Forever client data, build 1.60.1.70235.
+
 ## [0.6.12] - 2026-10-05
 
 - **Updated help text.** The description explains the current tracker controls and how the addon works alongside the other Forever addons.
