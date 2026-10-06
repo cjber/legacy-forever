@@ -50,6 +50,7 @@ The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and
 - A final `select(...)` argument, table element or return must be parenthesized to keep one value,
   or carry a trailing `-- multi-value: <reason>` when expansion is intentional.
 - Commits are signed (`git commit -S`) with the personal email.
+- Release: load `.agents/skills/release/SKILL.md` when preparing or publishing a release.
 - Quality: load `.agents/skills/sift-project/SKILL.md` before cleanup, dead-code or refactoring
   work.
 - Progress is read from the game each time, so it matches the Legacy panel; the bundled data only
