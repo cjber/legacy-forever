@@ -11,6 +11,10 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.14] - 2026-10-07
+
+- **Data checked against Forever 1.60.1.70245.** The bundled game data is unchanged.
+
 ## [0.6.13] - 2026-10-06
 
 - **Current game data.** Legacy objectives use the latest selected Forever client data, build 1.60.1.70235.
