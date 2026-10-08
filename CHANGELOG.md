@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Quest text stays on screen when the Forever tracker is smaller.** The native quest column and its header keep their full width at the edge of the screen.
+
 - **Shared tracker scaling.** Legacy follows the tracker scale selected in Shortest Path Forever.
 
 ## [0.6.15] - 2026-10-07
