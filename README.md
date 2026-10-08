@@ -8,7 +8,7 @@ Your unfinished WoW: Forever Legacy challenges, on the world map, for the zone y
 <a href="https://github.com/cjber/legacy-forever/releases/latest"><img src="https://img.shields.io/github/v/release/cjber/legacy-forever" alt="Latest release"></a>
 </p>
 
-Legacy points are account-wide and come from challenges spread over the whole world: areas to discover, dungeons to clear, bosses, quests and reputations. The Legacy panel lists them, but it doesn't tell you which ones you can work on where you are. This addon adds that to the world map, and keeps a small tracker of the challenges you pick. It uses the map's own buttons, menus and pins, and the objective tracker, so it looks like it came with the game. It only adds to them: nothing the game or your other addons draw is replaced or hidden.
+Legacy Forever shows unfinished challenges on the world map and tracks the ones you choose.
 
 <p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif" width="640" alt="Ashenvale on the world map as two areas are found, the completion corner folding away, then the Legacy menu"></p>
 
@@ -76,9 +76,6 @@ All optional: [Shortest Path Forever](https://www.curseforge.com/wow/addons/shor
 
 ## Development
 
-Developed with AI assistance; changes are reviewed and checked with automated tests, linting and type checks.
-
-
 ```sh
 # link the checkout into the game
 ln -s "$PWD" ".../World of Warcraft/_classic_beta_/Interface/AddOns/LegacyForever"
@@ -108,3 +105,5 @@ CI runs these checks on main pushes and pull requests. Each day a scheduled job 
 GPL-3.0-or-later. Game data comes from the client via [wago.tools](https://wago.tools).
 
 Made by Cillian Berragan · [cillian.dev](https://cillian.dev) · [GitHub](https://github.com/cjber) · [Twitter](https://twitter.com/cjberragan)
+
+Built with AI assistance.

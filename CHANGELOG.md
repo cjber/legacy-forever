@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Shared tracker scaling.** Legacy follows the tracker scale selected in Shortest Path Forever.
+
 ## [0.6.15] - 2026-10-07
 
 - **Quest objectives stay below the Forever tracker after reload.** The shared tracker no longer resizes Blizzard's quest container, which could move it over the addon sections.
