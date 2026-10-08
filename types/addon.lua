@@ -179,6 +179,8 @@ LegacyForever = nil
 
 ---@class ForeverTrackerHostAPI
 ---@field GetSettings fun(): ForeverTrackerSettings
+---@field GetScale fun(): number
+---@field SetScale fun(scale: number)
 ---@field IsAttachedToQuestTracker fun(): boolean
 ---@field SetAttached fun(attached: boolean)
 ---@field OnAttachmentChanged fun(callback: fun(attached: boolean))
@@ -228,6 +230,7 @@ ForeverTrackerHost = nil
 
 ---@class ForeverTrackerSettings
 ---@field attached boolean
+---@field scale? number tracker size, 1 is the stock size
 ---@field x? number
 ---@field y? number
 

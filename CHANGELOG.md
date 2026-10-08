@@ -11,6 +11,14 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.16] - 2026-10-08
+
+- **Shorter addon descriptions.** The README and store pages explain the features directly and keep the author and licence credits.
+
+- **Quest text stays on screen when the Forever tracker is smaller.** The native quest column and its header keep their full width at the edge of the screen.
+
+- **Shared tracker scaling.** Legacy follows the tracker scale selected in Shortest Path Forever.
+
 ## [0.6.15] - 2026-10-07
 
 - **Quest objectives stay below the Forever tracker after reload.** The shared tracker no longer resizes Blizzard's quest container, which could move it over the addon sections.

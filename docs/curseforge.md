@@ -1,6 +1,4 @@
-Developed with AI assistance; changes are reviewed and checked with automated tests, linting and type checks.
-
-The Legacy panel lists every challenge, but not which ones you can work on where you are. Legacy Forever puts that on the world map for the zone you're looking at, and keeps a small tracker of the challenges you pick. It uses the map's own buttons, menus, pins and the objective tracker, so it looks like it came with the game. It only adds to them: nothing the game or your other addons draw is replaced or hidden.
+Legacy Forever shows unfinished challenges on the world map and tracks the ones you choose.
 
 ![Ashenvale on the world map as two areas are found, the completion corner folding away, then the Legacy menu](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif)
 
@@ -50,3 +48,5 @@ It only shows what the game already tracks; it doesn't add challenges or change 
 Works with [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever), which plans the trip when you click a pin, and [Adventure Guide Forever](https://www.curseforge.com/wow/addons/adventure-guide-forever), which shows your zone completion.
 
 Source code: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.
+
+Built with AI assistance.
