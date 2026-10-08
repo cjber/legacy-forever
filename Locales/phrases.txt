@@ -79,11 +79,11 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"The zone you're viewing in the map's corner, and a badge on each zone of a continent map."
 L["This version of Questie isn't supported."] = "This version of Questie isn't supported."
+L["Tracker text stays on screen when you reduce the Forever tracker size."] =
+	"Tracker text stays on screen when you reduce the Forever tracker size."
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"Turn this off to drag the shared Forever tracker anywhere on screen."
 L["Undiscovered area"] = "Undiscovered area"
-L["Updated help text describes the current tracker controls and companion addons."] =
-	"Updated help text describes the current tracker controls and companion addons."
 L["Waiting for Questie and your quest log."] = "Waiting for Questie and your quest log."
 L["Waiting for Questie to finish loading."] = "Waiting for Questie to finish loading."
 L["What counts"] = "What counts"
