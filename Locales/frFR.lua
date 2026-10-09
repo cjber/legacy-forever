@@ -41,12 +41,12 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Toutes les quêtes que ce personnage peut prendre dans la région, d'après Questie."
 L["Flight paths"] = "Trajets aériens"
 L["Forever tracker"] = "Suivi Forever"
+L["French translation."] = "Traduction française."
 L["Hide from the tracker"] = "Masquer du suivi"
 L["Hints and updates"] = "Astuces et mises à jour"
 L["In the objective tracker"] = "Dans le suivi des objectifs"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Installez Shortest Path Forever pour que l'itinéraire soit tracé pour vous."
-L["Keep Blizzard's tracker methods intact."] = "Ne pas modifier les méthodes du suivi de Blizzard."
 L["Legacy"] = "Héritage"
 L["Legacy objectives"] = "Objectifs d'héritage"
 L["Levels, skills, ranks and anything without a fixed place."] =
