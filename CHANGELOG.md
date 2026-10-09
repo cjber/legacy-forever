@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **Keep Blizzard's tracker methods intact.** The shared Forever tracker responds to objective and player events without wrapping native layout methods.
+
 ## [0.6.16] - 2026-10-08
 
 - **Shorter addon descriptions.** The README and store pages explain the features directly and keep the author and licence credits.
