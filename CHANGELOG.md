@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.18] - 2026-10-09
+
 - **French translation.** Legacy Forever is available in French, contributed by Brainc3ll.
 
 - **How the Forever addons work together.** The README and store page list each of the other Forever addons and what it adds when installed alongside this one.

@@ -44,12 +44,12 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Every quest this character can take in the zone, from Questie."
 L["Flight paths"] = "Flight paths"
 L["Forever tracker"] = "Forever tracker"
+L["French translation."] = "French translation."
 L["Hide from the tracker"] = "Hide from the tracker"
 L["Hints and updates"] = "Hints and updates"
 L["In the objective tracker"] = "In the objective tracker"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Install Shortest Path Forever to have the route plotted for you."
-L["Keep Blizzard's tracker methods intact."] = "Keep Blizzard's tracker methods intact."
 L["Legacy"] = "Legacy"
 L["Legacy objectives"] = "Legacy objectives"
 L["Levels, skills, ranks and anything without a fixed place."] =
