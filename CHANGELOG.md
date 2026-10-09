@@ -11,6 +11,11 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.17] - 2026-10-09
+
+- **Keep Blizzard's tracker methods intact.** The shared Forever tracker responds to objective and player events without wrapping native layout methods.
+
+- **Current completion data.** Legacy uses the latest Forever client data for newly added achievements and map areas.
 ## [0.6.16] - 2026-10-08
 
 - **Shorter addon descriptions.** The README and store pages explain the features directly and keep the author and licence credits.
