@@ -6,7 +6,7 @@ description: "Prepare, publish and verify a complete Legacy Forever release. Use
 # Release Legacy Forever
 
 Run from the repository root. Read `AGENTS.md`, then the installed
-`wow-forever-addon` and `wow-addon-publish` skills. For images, also read
+`wow-forever-addon` and `wow-addon-publish` skills. Also read `/home/cjber/skills/copywriting/SKILL.md` for README, store, release-note and UI copy. For images, also read
 `wow-mock-screenshots`. These supply the shared standards and store procedures;
 this checklist supplies the release completion criteria. Use the user's existing
 authorization. A preparation-only request ends before tags or uploads.
