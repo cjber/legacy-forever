@@ -174,7 +174,8 @@ class Live:
         return {
             achievement
             for achievement in self.data["rewards"]
-            if int(self.achievements[str(achievement)]["Flags"]) & VARIANT_FLAG
+            if str(achievement) in self.achievements
+            and int(self.achievements[str(achievement)]["Flags"]) & VARIANT_FLAG
             and achievement not in COMPLETED_ACHIEVEMENTS
         }
 
