@@ -26,8 +26,8 @@ if not (WOWMOCK / "wowmock.py").exists():
     sys.exit(f"wowmock.py not found in {WOWMOCK}; clone cjber/skills or set WOWMOCK")
 sys.path.insert(0, str(WOWMOCK))
 
-from legacy_render import COMPLETION_CATEGORIES, lua_string, lua_unquote
 from gen_legacy import BUILD
+from legacy_render import COMPLETION_CATEGORIES, lua_string, lua_unquote
 from PIL import Image
 from wowmock import (
     FONTS,
