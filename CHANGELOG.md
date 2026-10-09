@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+- **How the Forever addons work together.** The README and store page list each of the other Forever addons and what it adds when installed alongside this one.
+
 ## [0.6.17] - 2026-10-09
 
 - **Keep Blizzard's tracker methods intact.** The shared Forever tracker responds to objective and player events without wrapping native layout methods.

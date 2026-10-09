@@ -45,7 +45,16 @@ Locations are generated from the Forever client's own data and joined by ID (fli
 
 It only shows what the game already tracks; it doesn't add challenges or change how they count.
 
-Works with [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever), which plans the trip when you click a pin, and [Adventure Guide Forever](https://www.curseforge.com/wow/addons/adventure-guide-forever), which shows your zone completion.
+## With my other Forever addons
+
+All optional:
+
+- [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever) plans the trip when you click a dungeon or raid pin.
+- [Adventure Guide Forever](https://www.curseforge.com/wow/addons/adventure-guide-forever) shows your zone completion in its guide.
+- [Tweaks Forever](https://www.curseforge.com/wow/addons/tweaks-forever) adds dungeon entrance icons and an unexplored-area tint. Both step aside where Legacy already marks the map.
+- [SkillUp Forever](https://www.curseforge.com/wow/addons/skillup-forever) plans profession levelling in the Professions window.
+
+Tracked challenges share one tracker column with the Shortest Path, Adventure Guide and SkillUp sections, above your quests.
 
 Source code: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.
 
