@@ -26,6 +26,7 @@ if not (WOWMOCK / "wowmock.py").exists():
     sys.exit(f"wowmock.py not found in {WOWMOCK}; clone cjber/skills or set WOWMOCK")
 sys.path.insert(0, str(WOWMOCK))
 
+from gen_legacy import BUILD
 from legacy_render import COMPLETION_CATEGORIES, lua_string, lua_unquote
 from PIL import Image
 from wowmock import (
@@ -661,7 +662,7 @@ DEMO_FADE = 3  # frames of cross-fade as an area's shading lifts; a click change
 def render_demo(data):
     """docs/screenshots/demo.gif: Ashenvale's shading lifting and its corner filling as areas are found, the corner
     collapsed with a click, then the Legacy menu. Rendered at 1x, the GIF's final size."""
-    ui = Ui(scale=1)
+    ui = Ui(build=BUILD, scale=1)
     steps = []
     for found, collapsed, menu, seconds in DEMO_STEPS:
         live = Live(ui, data, EXPLORED | set(DEMO_DISCOVERED[:found]))
@@ -708,7 +709,7 @@ def render_demo(data):
 
 
 def main():
-    ui = Ui(scale=2)
+    ui = Ui(build=BUILD, scale=2)
     data = load_data()
     live = Live(ui, data)
     OUT.mkdir(parents=True, exist_ok=True)
