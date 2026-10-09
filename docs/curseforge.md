@@ -39,7 +39,7 @@ Open the world map, or click the addon's icon in the addon compartment: the Lega
 - `/lf audit` compares the bundled data with what the game reports. Found a wrong or missing objective? Include its output in an issue on [GitHub](https://github.com/cjber/legacy-forever/issues).
 - `/lf criteria 684` lists what the game reports for one achievement, for reporting a data mismatch.
 
-It's in English for now. Translations are welcome as a pull request, or pasted into an issue, on GitHub: [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has a template.
+It's in English and French. More translations are welcome as a pull request, or pasted into an issue, on GitHub: [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has a template.
 
 Locations are generated from the Forever client's own data and joined by ID (flight paths by the zone in their name); nothing is scraped from a database site.
 
