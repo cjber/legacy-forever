@@ -49,6 +49,7 @@ L["Hints and updates"] = "Hints and updates"
 L["In the objective tracker"] = "In the objective tracker"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Install Shortest Path Forever to have the route plotted for you."
+L["Keep Blizzard's tracker methods intact."] = "Keep Blizzard's tracker methods intact."
 L["Legacy"] = "Legacy"
 L["Legacy objectives"] = "Legacy objectives"
 L["Levels, skills, ranks and anything without a fixed place."] =
@@ -79,8 +80,6 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"The zone you're viewing in the map's corner, and a badge on each zone of a continent map."
 L["This version of Questie isn't supported."] = "This version of Questie isn't supported."
-L["Tracker text stays on screen when you reduce the Forever tracker size."] =
-	"Tracker text stays on screen when you reduce the Forever tracker size."
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"Turn this off to drag the shared Forever tracker anywhere on screen."
 L["Undiscovered area"] = "Undiscovered area"
