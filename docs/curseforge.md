@@ -39,13 +39,22 @@ Open the world map, or click the addon's icon in the addon compartment: the Lega
 - `/lf audit` compares the bundled data with what the game reports. Found a wrong or missing objective? Include its output in an issue on [GitHub](https://github.com/cjber/legacy-forever/issues).
 - `/lf criteria 684` lists what the game reports for one achievement, for reporting a data mismatch.
 
-It's in English for now. Translations are welcome as a pull request, or pasted into an issue, on GitHub: [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has a template.
+It's in English and French. More translations are welcome as a pull request, or pasted into an issue, on GitHub: [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has a template.
 
 Locations are generated from the Forever client's own data and joined by ID (flight paths by the zone in their name); nothing is scraped from a database site.
 
 It only shows what the game already tracks; it doesn't add challenges or change how they count.
 
-Works with [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever), which plans the trip when you click a pin, and [Adventure Guide Forever](https://www.curseforge.com/wow/addons/adventure-guide-forever), which shows your zone completion.
+## With my other Forever addons
+
+All optional:
+
+- [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever) plans the trip when you click a dungeon or raid pin.
+- [Adventure Guide Forever](https://www.curseforge.com/wow/addons/adventure-guide-forever) shows your zone completion in its guide.
+- [Tweaks Forever](https://www.curseforge.com/wow/addons/tweaks-forever) adds dungeon entrance icons and an unexplored-area tint. Both step aside where Legacy already marks the map.
+- [SkillUp Forever](https://www.curseforge.com/wow/addons/skillup-forever) plans profession levelling in the Professions window.
+
+Tracked challenges share one tracker column with the Shortest Path, Adventure Guide and SkillUp sections, above your quests.
 
 Source code: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.
 
