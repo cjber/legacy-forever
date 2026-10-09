@@ -26,6 +26,12 @@ jobs:
         with:
           # create-pull-request authenticates with its own `token` input.
           persist-credentials: false
+      # Pinned inputs CI already downloaded, such as frozen dumps; each file is keyed by its pin.
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: tools/.cache
+          key: regeneration-${{ runner.os }}-${{ hashFiles('tools/gen_*.py', 'tools/db2.py') }}
+          restore-keys: regeneration-${{ runner.os }}-
       - name: Pin the newest Forever build
         id: build
         run: |
@@ -94,7 +100,8 @@ jobs:
   # A refresh that fails every day unnoticed is how the data falls behind: keep one open issue saying so.
   report:
     needs: [refresh, ci]
-    if: failure() && github.ref_name == github.event.repository.default_branch
+    # The first attempt stays quiet: retry-refresh.yml re-runs it, and only a failed re-run is reported.
+    if: failure() && github.run_attempt > 1 && github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     permissions:
       issues: write

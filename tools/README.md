@@ -153,6 +153,7 @@ so a renamed or respelled entry stops the generator, naming both, for a fresh re
 Forever build `latest_build.py` reads from wago.tools and `SOURCE_DATE` to the day,
 regenerates, runs `check_generated.py --offline`, luacheck, the specs and StyLua,
 opens a data PR and dispatches CI on its branch. A failed run on the default branch
+is re-run once ten minutes later by `retry-refresh.yml`; if that fails too it
 opens an issue titled "Data refresh failed" linking the run, or comments on the open
 one. The client build is the only pin it moves. `REVISION` in `fetch_tracker_ui.py`
 (native tracker source for the integration spec, with per-file checksums) and
