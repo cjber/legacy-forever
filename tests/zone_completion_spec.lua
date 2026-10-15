@@ -105,6 +105,9 @@ ns.Quests = {
 		end
 		return zoneQuests[uiMapID] or {}
 	end,
+	Cold = function()
+		return questsCold
+	end,
 	Status = function()
 		return "ready"
 	end,
@@ -314,5 +317,23 @@ Progress()
 check(#news == 3 and news[3] == 9, "once its quests are read, completing the zone is news")
 Progress()
 check(#news == 3, "and only once")
+
+-- Only Quests counted, ticked on a cold index: the zone is still drawn, pending with no percent, and a zone
+-- the tick completes is not news when the build's notice checks again a frame later.
+zoneQuests[4] = { { name = "Kobolds", ids = { 504 } } }
+completed[504] = true
+for _, key in ipairs({ "quests", "areas", "taxis", "dungeons", "raids", "legacy", "reputations" }) do
+	Saved.Set("count_" .. key, false)
+end
+questsCold = true
+Saved.Set("count_quests", true)
+local pending = assert(Zones.Of(4), "a zone whose only counted items are pending is drawn")
+check(pending.total == 0 and pending.pending == 1 and pending.percent == nil, "pending, with no percent yet")
+check(#news == 3, "nothing is complete while the quests load")
+questsCold = false
+Progress()
+check(Zones.Result(4).complete and #news == 3, "a zone completed by ticking Quests is not news once they load")
+Progress()
+check(#news == 3, "nor at the next check")
 
 print(("zone_completion_spec: %d checks passed"):format(checks))
