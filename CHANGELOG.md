@@ -11,6 +11,10 @@ verbatim rather than rewritten as the addon moves.
 
 ## [Unreleased]
 
+## [0.6.21] - 2026-10-15
+
+- **Data checked against Forever 1.60.1.70374.** The bundled data is unchanged apart from its build pin.
+
 - **Your quests stay below the Forever tracker with EllesmereUI and other UI suites.** When the game, Edit Mode or a UI addon put the quest tracker back in its saved spot, the Forever sections waited for the next quest event to restack, so your quests sat over them until then. The column now follows the quest tracker as soon as it moves, still without touching the game's own tracker code.
 
 ## [0.6.20] - 2026-10-13
