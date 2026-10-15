@@ -276,7 +276,7 @@ caught = ns.CaughtErrors()
 check(heard == 1, "the next listener still runs")
 check(caught[#caught].label == "settings listener" and caught[#caught].message == "listener failed", "caught")
 
--- A failing slash command is caught, kept and still reported.
+-- A failing audit: /lf audit's error is caught and reported; /lf report still opens, listing it.
 local before = #handled
 ns.ZoneCompletion.AuditLines = function()
 	error("audit failed", 0)
@@ -284,6 +284,24 @@ end
 Slash("audit")
 caught = ns.CaughtErrors()
 check(caught[#caught].label == "slash command" and #handled == before + 1, "a failing command is caught and reported")
+focus = nil
+Slash("report")
+text = focus and focus:GetText() or ""
+has(text, "audit: failed, see Errors", "a failing audit still opens the report")
+has(text, "- [report lines] x1 audit failed", "with the audit's error listed first")
+
+-- A long audit is cut to its room, so the errors after it still fit.
+ns.ZoneCompletion.AuditLines = function(lines)
+	for index = 1, 40 do
+		lines[#lines + 1] = ("  explored area not in the data: %d:%d:%d:%d"):format(index, index, index, index)
+	end
+	return lines
+end
+Slash("report")
+text = focus:GetText()
+has(text, " more audit lines in /lf audit", "a long audit says how many lines it left out")
+has(text, "- [report lines] x1 audit failed", "and the errors still fit")
+check(#text <= 2000, "in one message")
 
 -- Many other addons: the list says how many more, and the report stays one message.
 for index = 1, 300 do

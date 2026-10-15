@@ -6,6 +6,8 @@ local _, ns = ...
 -- tracker and the current zone's completion. English throughout, so a report reads the same in every locale.
 
 local MISSING_SHOWN = 10
+-- Room for the audit in the report's 2,000 characters, so it never crowds out the caught errors after it.
+local REPORT_ROOM = 1000
 
 ---@param data LegacyData
 ---@param lines string[]
@@ -59,8 +61,17 @@ function ns.AuditLines()
 	return lines
 end
 
--- The report's Legacy Forever lines: the audit's.
+-- The report's Legacy Forever lines: the audit's, as many as fit in REPORT_ROOM characters.
 ---@return string[]
 function ns.ReportLines()
-	return ns.AuditLines()
+	local audit, lines, used = ns.AuditLines(), {}, 0
+	for index, line in ipairs(audit) do
+		if used + #line + 1 > REPORT_ROOM then
+			lines[#lines + 1] = ("... %d more audit lines in /lf audit"):format(#audit - index + 1)
+			break
+		end
+		lines[#lines + 1] = line
+		used = used + #line + 1
+	end
+	return lines
 end

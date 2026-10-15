@@ -88,7 +88,9 @@ local function Slash(msg)
 	-- Lenient: "criteria 684", "criteria <684>" and a bare "684" all work.
 	local achievementID = (command:find("^criteria") or command:find("^%d+$")) and tonumber(command:match("%d+"))
 	if command == "report" then
-		ns.Report.Show(ns.Report.Text(ns.ReportLines()))
+		-- The report is for when something is wrong, so a failing audit still opens it, with the error listed.
+		local ok, lines = ns.SafeCall("report lines", ns.ReportLines)
+		ns.Report.Show(ns.Report.Text(ok and lines or { "audit: failed, see Errors" }))
 	elseif command == "audit" then
 		Audit()
 	elseif achievementID then
