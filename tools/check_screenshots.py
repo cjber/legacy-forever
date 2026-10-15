@@ -3,13 +3,13 @@
 
 tools/screenshots.py draws every scene from wowmock and asks the addon's Core/Model.lua
 (tools/screenshots_model.lua) what to show, porting the completion corner, map badges and tracker lines from UI/.
-Each image's dump is those files' hashes, so a change to any of them needs a fresh render. Generated `Data/` and
-`Locales/` are left out: the daily data refresh moves them and cannot render, and the release re-renders every image
-(the release skill). docs/screenshots/scenes.sha256 holds each image's hash beside its dump's; tools/screenshots.py
-rewrites it after a render.
+Each image's dump is those files' hashes, so a change to any of them needs a fresh render. Generated `Data/` is left
+out: the daily data refresh moves it and cannot render, and the release re-renders every image (the release skill).
+docs/screenshots/scenes.sha256 holds each image's hash beside its dump's; after a render, `--record` rewrites it
+(with `--force` for an image that came out the same).
 
     python3 tools/check_screenshots.py           # CI: fail on a stale image
-    python3 tools/check_screenshots.py --record  # after a render, if tools/screenshots.py did not
+    python3 tools/check_screenshots.py --record  # after tools/screenshots.py renders
 """
 
 import functools
