@@ -15,7 +15,6 @@ local STACK_LINES = 4
 ---@field message string the error, cut to 300 characters
 ---@field stack string up to four stack lines, outermost last
 ---@field count integer how many times this label and message were caught this session
----@field time number GetTime() when it was last caught
 
 -- Oldest first; a repeat moves to the end with its count raised.
 ---@type LegacyCaughtError[]
@@ -25,8 +24,17 @@ local caught = {}
 ---@param limit integer
 ---@return string
 local function Cut(text, limit)
-	return #text > limit and text:sub(1, limit - 3) .. "..." or text
+	if #text <= limit then
+		return text
+	end
+	local stop = limit - 3
+	-- Back off a UTF-8 continuation byte, so a character is never split.
+	while stop > 0 and text:byte(stop + 1) and text:byte(stop + 1) >= 0x80 and text:byte(stop + 1) < 0xC0 do
+		stop = stop - 1
+	end
+	return text:sub(1, stop) .. "..."
 end
+ns.CutText = Cut
 
 -- Keep `message` from `label`, with `stack` (a traceback) cut to its first lines that name a file.
 ---@param label string
@@ -37,7 +45,8 @@ function ns.RecordError(label, message, stack)
 	local lines = {}
 	for line in (stack or ""):gmatch("[^\n]+") do
 		line = strtrim(line)
-		if #lines < STACK_LINES and line:find("%.lua:%d+") then
+		-- LuaJIT writes "file.lua:12:", the client '[string "@Interface/AddOns/.../file.lua"]:12:'.
+		if #lines < STACK_LINES and line:find("%.lua%S-:%d+") then
 			lines[#lines + 1] = line
 		end
 	end
@@ -49,7 +58,7 @@ function ns.RecordError(label, message, stack)
 		end
 	end
 	entry = entry or { label = label, message = message, count = 0 }
-	entry.stack, entry.count, entry.time = table.concat(lines, "\n"), entry.count + 1, GetTime()
+	entry.stack, entry.count = table.concat(lines, "\n"), entry.count + 1
 	caught[#caught + 1] = entry
 	if #caught > MAX_ERRORS then
 		table.remove(caught, 1)
@@ -66,21 +75,26 @@ function ns.CaughtErrors()
 			message = entry.message,
 			stack = entry.stack,
 			count = entry.count,
-			time = entry.time,
 		}
 	end
 	return copies
 end
 
----@return table
-local function Pack(...)
-	return { n = select("#", ...), ... } -- multi-value: every result
+-- The labels of the SafeCalls under way, innermost last: the message handler names the call it runs in.
+---@type string[]
+local labels = {}
+
+-- xpcall's message handler, at the error, before the stack unwinds: keep it for the report, then hand it to the
+-- game's error handler here, so BugSack and the error frame capture the stack and locals where it happened.
+local function Trace(message)
+	ns.RecordError(labels[#labels] or "?", message, debugstack and debugstack(2) or debug.traceback())
+	pcall(geterrorhandler(), message)
+	return message
 end
 
-local stack
-local function Trace(message)
-	stack = debugstack and debugstack(2) or debug.traceback()
-	return message
+local function Finish(...)
+	labels[#labels] = nil
+	return ... -- multi-value: xpcall's answers, as pcall gives them
 end
 
 -- Run fn(...) as pcall would: true and its results, or false and the error. A failure is kept for the report and
@@ -89,13 +103,6 @@ end
 ---@param fn function
 ---@return boolean ok, any ...
 function ns.SafeCall(label, fn, ...)
-	local results = Pack(xpcall(fn, Trace, ...))
-	if not results[1] then
-		local message = results[2]
-		ns.RecordError(label, message, stack)
-		stack = nil
-		local handler = geterrorhandler()
-		pcall(handler, message)
-	end
-	return unpack(results, 1, results.n) -- multi-value: every result, as pcall
+	labels[#labels + 1] = label
+	return Finish(xpcall(fn, Trace, ...))
 end

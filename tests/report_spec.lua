@@ -89,6 +89,7 @@ strtrim = function(text)
 	return (text:gsub("^%s+", ""):gsub("%s+$", ""))
 end
 UIParent = {}
+UISpecialFrames = {}
 SlashCmdList = {}
 DEFAULT_CHAT_FRAME = { AddMessage = function() end }
 
@@ -196,6 +197,7 @@ local window = edit:GetParent():GetParent():GetParent()
 local text = edit:GetText()
 check(edit.highlighted == text, "the whole report is selected")
 check(window.template == "PortraitFrameTemplate" and window:IsShown(), "a stock portrait frame, shown")
+check(UISpecialFrames[1] == "LegacyForeverReport", "Escape closes it as a panel")
 check(window.title == "Legacy Forever report", "its title")
 check(window.portrait.file == "Interface\\AddOns\\LegacyForever\\media\\Icon", "the addon icon as its portrait")
 check(window.portrait.width == 62 and window.portrait.height == 62, "drawn square")
@@ -255,6 +257,8 @@ caught = ns.CaughtErrors()
 check(#caught == 5 and caught[5].message == "error 6" and caught[1].message == "error 2", "the last five kept")
 caught[1].message = "changed"
 check(ns.CaughtErrors()[1].message == "error 2", "CaughtErrors returns copies")
+local cut = ns.CutText(("é"):rep(10), 10):sub(1, -4)
+check(cut == ("é"):rep(3), "a cut never splits a character")
 ns.SafeCall("long", error, ("x"):rep(400), 0)
 check(#ns.CaughtErrors()[5].message == 300, "a long message is cut")
 Slash("report")
@@ -299,7 +303,7 @@ ns.ZoneCompletion.AuditLines = function(lines)
 end
 Slash("report")
 text = focus:GetText()
-has(text, " more audit lines in /lf audit", "a long audit says how many lines it left out")
+check(not text:find("40:40:40:40", 1, true), "a long audit is cut")
 has(text, "- [report lines] x1 audit failed", "and the errors still fit")
 check(#text <= 2000, "in one message")
 

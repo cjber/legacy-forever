@@ -5,33 +5,43 @@ local addonName, ns = ...
 -- already selected, for the player to copy into a bug report. The text opens with what every Forever addon reports
 -- (versions, build, locale, character, place), then the addon's own lines, the errors ns.SafeCall caught, and the other
 -- addons loaded, cut to fit one message. This file knows nothing else about the addon: it copies across the Forever
--- addons with only its strings (the two ns.L phrases) and the icon path changed. The field labels stay English in every
--- locale, so a report reads the same to whoever fixes it.
+-- addons with only its strings (its two ns.L phrases) changed. The field labels stay English in every locale; the names
+-- and the addon's own lines are the client's.
 
 local L, Art = ns.L, ns.Art
 -- One Discord or forum message; a GitHub issue field takes it whole.
 local LIMIT = 2000
-local ICON = "Interface\\AddOns\\LegacyForever\\media\\Icon"
+-- The addon's own lines and the caught errors each stop here, leaving room for the header and the addon list.
+local LINES_LIMIT, ERRORS_LIMIT = 1000, 600
+local ICON = "Interface\\AddOns\\" .. addonName .. "\\media\\Icon"
 local WIDTH, HEIGHT = 460, 380
 
 ---@class LegacyReportModule
 ---@field Text fun(lines: string[]): string the whole report around the addon's `lines`, at most 2000 characters
 ---@field Show fun(text: string) show `text` in the report window, selected for copying
+---@field Percent fun(value?: number): string a map coordinate as the map shows it
 local Report = {}
 ns.Report = Report
 
----@type Frame?
+-- PortraitFrameTemplate's own members this file uses (Mainline/SharedUIPanelTemplates.xml).
+---@class LegacyReportWindow : Frame
+---@field SetTitle fun(self: LegacyReportWindow, title: string)
+---@field GetPortrait fun(self: LegacyReportWindow): Texture
+
+---@type LegacyReportWindow?
 local window
 ---@type EditBox
 local editBox
 ---@type string
 local shown = ""
 
+-- A map coordinate (0-1) as the map shows it, to one decimal; "-" when there is none.
 ---@param value? number
 ---@return string
 local function Percent(value)
 	return value and ("%.1f"):format(value * 100) or "-"
 end
+Report.Percent = Percent
 
 -- The lines every Forever addon starts with.
 ---@return string[]
@@ -118,24 +128,19 @@ local function Addons(room)
 	return text
 end
 
--- The whole report: the header, the addon's `lines`, the caught errors, then the other addons in what room is left.
--- Over LIMIT characters, the end is cut.
+-- The whole report: the header, the addon's `lines` (at most LINES_LIMIT characters), the caught errors (at most
+-- ERRORS_LIMIT), then the other addons in what room is left. Each section has its own cap, so long addon lines never
+-- push the errors out.
 ---@param lines string[]
 ---@return string
 function Report.Text(lines)
-	local all = Header()
-	for _, line in ipairs(lines) do
-		all[#all + 1] = line
-	end
-	for _, line in ipairs(Errors()) do
-		all[#all + 1] = line
-	end
-	local text = table.concat(all, "\n")
+	local text = table.concat({
+		table.concat(Header(), "\n"),
+		ns.CutText(table.concat(lines, "\n"), LINES_LIMIT),
+		ns.CutText(table.concat(Errors(), "\n"), ERRORS_LIMIT),
+	}, "\n")
 	text = text .. "\n" .. Addons(math.max(LIMIT - #text - 1, 0))
-	if #text > LIMIT then
-		text = text:sub(1, LIMIT - 3) .. "..."
-	end
-	return text
+	return ns.CutText(text, LIMIT)
 end
 
 ---@param edit EditBox
@@ -144,12 +149,15 @@ local function Select(edit)
 	edit:HighlightText()
 end
 
----@return Frame
+---@return LegacyReportWindow
 local function Window()
 	if window then
 		return window
 	end
-	local frame = CreateFrame("Frame", nil, UIParent, "PortraitFrameTemplate") --[[@as PortraitFrameTemplate]]
+	local name = addonName .. "Report"
+	local frame = CreateFrame("Frame", name, UIParent, "PortraitFrameTemplate") --[[@as LegacyReportWindow]]
+	-- Escape closes it like any panel, with or without the edit box's focus (an addon-owned frame).
+	table.insert(UISpecialFrames, name)
 	frame:SetSize(WIDTH, HEIGHT)
 	frame:SetPoint("CENTER")
 	frame:SetFrameStrata("DIALOG")

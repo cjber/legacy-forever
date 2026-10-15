@@ -26,6 +26,7 @@ local _, addon = ...
 ---@field SafeCall fun(label: string, fn: function, ...: any): boolean, ... run fn as pcall does (Core/SafeCall.lua)
 ---@field RecordError fun(label: string, message: any, stack?: string) keep an error caught another way, for the report
 ---@field CaughtErrors fun(): LegacyCaughtError[] this session's caught errors, oldest first, as copies
+---@field CutText fun(text: string, limit: integer): string text cut to `limit` bytes on a UTF-8 boundary, ending "..."
 ---@field Report LegacyReportModule the report window (UI/Report.lua)
 ---@field AuditLines fun(): string[] what /lf audit prints (Core/Report.lua)
 ---@field ReportLines fun(): string[] Legacy Forever's own lines in the report (Core/Report.lua)
