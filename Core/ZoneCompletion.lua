@@ -23,27 +23,40 @@ function ZoneCompletion.IsCounted(category)
 	return ns.Saved.Get("count_" .. category)
 end
 
--- A zone's completion, even when nothing counts; nil for a map without completion data.
--- `deferred` reads the zone's quests without building QuestieDB's index (see Quests.Zone).
----@param uiMapID number?
----@param deferred? boolean
----@return LegacyZoneResult?
-function ZoneCompletion.Result(uiMapID, deferred)
-	local zone = uiMapID and ns.Data.completion[uiMapID]
-	if not uiMapID or not zone then
-		return nil
-	end
+-- Only the zone's quests differ from Live's cached snapshot: they are read deferred, so a draw never builds
+-- QuestieDB's index (see Quests.Zone). One view per zone, made again when Live replaces the snapshot.
+---@type table<number, LegacySnapshot>
+local deferredViews = {}
+---@type table<number, LegacySnapshot>
+local viewedSnapshots = {}
+
+---@param uiMapID number
+---@return LegacySnapshot
+local function DeferredSnapshot(uiMapID)
 	local snapshot = ns.Live.ZoneSnapshot(uiMapID)
-	if deferred then
-		-- The cached snapshot with only its quest read swapped.
+	if viewedSnapshots[uiMapID] ~= snapshot then
+		viewedSnapshots[uiMapID] = snapshot
 		---@type LegacySnapshot
-		snapshot = setmetatable({
+		deferredViews[uiMapID] = setmetatable({
 			quests = function()
 				return ns.Quests.Zone(uiMapID, true)
 			end,
 		}, { __index = snapshot })
 	end
-	return ns.Model.ZoneCompletion(zone, snapshot, ZoneCompletion.IsCounted)
+	return deferredViews[uiMapID]
+end
+
+-- A zone's completion, even when nothing counts; nil for a map without completion data.
+-- Every reader (the map, the tracker, news, the API) draws or checks it, so its quests never build QuestieDB's
+-- index: a cold index reads as pending until the build on the next frame announces a change.
+---@param uiMapID number?
+---@return LegacyZoneResult?
+function ZoneCompletion.Result(uiMapID)
+	local zone = uiMapID and ns.Data.completion[uiMapID]
+	if not uiMapID or not zone then
+		return nil
+	end
+	return ns.Model.ZoneCompletion(zone, DeferredSnapshot(uiMapID), ZoneCompletion.IsCounted)
 end
 
 -- What the map and tracker draw: the zone's completion, or nil when it has nothing to count.
@@ -108,13 +121,13 @@ local quietUntil
 local rewarded = {}
 
 -- The reward follows "What counts", as the percentage does, so 100% on screen is what earns it.
--- Read deferred: this runs for every zone on every progress change, the first just after entering the world,
--- and must not build QuestieDB's index there. A cold index reads as pending, so the zone is not complete and
--- not noted; the build on the next frame announces a change, and the zone is checked again with its quests.
+-- This runs for every zone on every progress change, the first just after entering the world. A cold index
+-- reads as pending (see Result), so the zone is not complete and not noted; the build on the next frame
+-- announces a change, and the zone is checked again with its quests.
 ---@param uiMapID number
 ---@return boolean
 local function IsComplete(uiMapID)
-	local result = ZoneCompletion.Result(uiMapID, true)
+	local result = ZoneCompletion.Result(uiMapID)
 	---@cast result -nil
 	return ns.Model.CompletionCounts(result) and result.complete
 end
@@ -154,7 +167,8 @@ ns.Saved.OnChange(function(key)
 	end
 end)
 
--- For /lf audit: the current zone's counts against what the game reports.
+-- For /lf audit: the current zone's counts against what the game reports. A typed command, so it reads the
+-- quests in full and may build QuestieDB's index.
 function ZoneCompletion.Audit()
 	local uiMapID = ns.Live.CurrentZone()
 	if not uiMapID then
