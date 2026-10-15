@@ -7,8 +7,9 @@ body:
     attributes:
       label: /lf report
       description: >-
-        Stand where the objective is (or where the pin wrongly is), type `/lf report`, press Ctrl+C and paste it here.
-        It has your versions, where you are, the audit lines and any errors.
+        Stand where the objective is (or where the pin wrongly is), type `/lf report`, press Ctrl+C (Cmd+C on a Mac)
+        and paste it here. It has your versions, where you are, the audit lines and any errors. On a version
+        without `/lf report`, paste the `/lf audit` output instead.
       render: text
     validations:
       required: true
@@ -37,7 +38,7 @@ body:
     attributes:
       label: What you expected
       description: >-
-        Where the objective really is, or what the count should be. If the audit lists an unknown criterion, the
-        output of `/lf criteria <achievement ID>` helps too.
+        Where the objective really is, or what the count should be. If the audit lists an unknown criterion
+        (`/lf audit` prints the whole list), the output of `/lf criteria <achievement ID>` helps too.
     validations:
       required: true

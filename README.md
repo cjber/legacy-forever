@@ -66,7 +66,7 @@ Everything is generated from the Forever client's own data (via [wago.tools](htt
 - **Zone completion:** what each category counts, and where quests come from and why rares are left out, is in [docs/zone-completion.md](docs/zone-completion.md).
 - **Kills, quests and reputations:** the client ships no spawn or encounter data for these, so they stay unpinned. The exception is Valthalak, a quest whose Blackrock Spire entrance was reviewed by hand. Track the challenge to follow their progress instead.
 
-**Found a wrong or missing objective?** Type `/lf report` and [open a wrong objective issue](https://github.com/cjber/legacy-forever/issues/new?template=wrong_objective.yml) with what it shows.
+**Found a wrong or missing objective?** Run `/lf audit` and [open an issue](https://github.com/cjber/legacy-forever/issues/new) with the output.
 
 Turn off **Attach to quest tracker** in Settings to drag the shared Forever column. Its position survives `/reload`; turn the setting back on to attach it above your quests.
 
