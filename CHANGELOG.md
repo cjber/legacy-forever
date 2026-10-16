@@ -18,6 +18,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 - **Data checked against Forever 1.60.1.70425.** No Legacy objective was added, removed or moved in this build, so the map and tracker show the same objectives as before. Only the bundled data's build pin changed.
 
+- **Collapsing All Objectives in combat hides the Forever sections at once.** During a fight they stayed on screen until combat ended. A Forever section that changes in combat now redraws in the space it already has, instead of keeping its old text. The game's quest tracker still isn't moved until combat ends.
+
 ## [0.7.0] - 2026-10-15
 
 - **`/lf report` gives you something to paste into a bug report.** It opens a small window with the text already selected: your addon and game versions, your character and where you are, the `/lf audit` lines, your other addons, and any errors Legacy Forever caught this session. Press Ctrl+C and paste it. It fits in one message, and you don't need a /reload or a saved-variables file. The wrong objective form on GitHub asks for it.
