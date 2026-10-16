@@ -265,9 +265,9 @@ end
 assert(loadfile("UI/ForeverFamily.lua"))("LegacyForever", ns)
 local panelArgs = {}
 local CreatePanel = ns.Family.CreatePanel
-ns.Family.CreatePanel = function(parent, db, current)
-	panelArgs.db, panelArgs.current = db, current
-	return CreatePanel(parent, db, current)
+ns.Family.CreatePanel = function(parent, db, current, locale)
+	panelArgs.db, panelArgs.current, panelArgs.locale = db, current, locale
+	return CreatePanel(parent, db, current, locale)
 end
 assert(loadfile("UI/Settings.lua"))("LegacyForever", ns)
 check(LegacyForeverDB == nil or next(LegacyForeverDB.zoneCompletion or {}) == nil, "building the page saves nothing")
@@ -394,6 +394,14 @@ check(byKey.trackerAttached:GetValue(), "other addon updates same shared state")
 -- same key. Legacy's own row says "This addon".
 check(byKey.suggestFamily == nil and byKey.companions == nil, "the family switch is the shared page's, not a row")
 check(panelArgs.db == ns.FamilyDB and panelArgs.current == "LegacyForever", "the page gets Legacy's saved table")
+-- Legacy's own L, so a translation (frFR sets plain entries on it) shows on the page even when another Forever
+-- addon's copy of the shared file is the one in use.
+check(panelArgs.locale == ns.L, "the page gets Legacy's own strings")
+local legacyRow = ns.Family.ADDONS[4]
+check(ns.Family.Line(legacyRow, panelArgs.locale) == legacyRow.phrase, "an untranslated line reads as English")
+rawset(ns.L, legacyRow.phrase, "Affiche les défis d'héritage")
+check(ns.Family.Line(legacyRow, panelArgs.locale) == "Affiche les défis d'héritage", "a translated line shows")
+rawset(ns.L, legacyRow.phrase, nil)
 LegacyForeverDB = { companions = false }
 check(panelArgs.db().suggestFamily == false and LegacyForeverDB.companions == nil, "read through the migration")
 
