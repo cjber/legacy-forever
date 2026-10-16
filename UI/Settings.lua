@@ -1,5 +1,5 @@
 ---@type string, LegacyForeverNamespace
-local _, ns = ...
+local addonName, ns = ...
 local L = ns.L
 
 -- Options -> AddOns -> Legacy Forever: a short index page, then a stock subpage per group so no page grows
@@ -123,13 +123,21 @@ for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 	AddCheckbox(counts, "count_" .. key, ns.Completion.Label(key), tooltip, usable)
 end
 
-local hints = Section(category, L["Hints and updates"])
-AddCheckbox(hints, "whatsNew", L["What's new after an update"])
-AddCheckbox(
-	hints,
-	"companions",
-	L["Suggest companion addons"],
-	L["A grey line in a pin's tooltip when Shortest Path Forever would plot the route."]
+local updates = Section(category, L["Updates"])
+AddCheckbox(updates, "whatsNew", L["What's new after an update"])
+
+-- The Forever addons page is shared by all five addons (UI/ForeverFamily.lua), with "Suggest my other Forever
+-- addons" on it. It reads and writes suggestFamily in the saved table itself; the map menu reads it on opening.
+local family = Settings.RegisterCanvasLayoutSubcategory(
+	category,
+	ns.Family.CreatePanel(nil, ns.FamilyDB, addonName),
+	L["Forever addons"]
+)
+Settings.RegisterInitializer(
+	category,
+	CreateSettingsButtonInitializer(L["Forever addons"], L["Open"], function()
+		Settings.OpenToCategory(family:GetID())
+	end, nil, false)
 )
 
 Settings.RegisterAddOnCategory(category)
