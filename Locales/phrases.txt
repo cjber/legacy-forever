@@ -23,8 +23,8 @@ L["/lf audit - check the bundled data against the game"] = "/lf audit - check th
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - list what the game reports for one achievement"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - show a report to copy into a bug report"
-L["A Forever addons page in the settings lists my other WoW: Forever addons."] =
-	"A Forever addons page in the settings lists my other WoW: Forever addons."
+L["A Forever addons page in the settings lists my WoW: Forever addons, with a link to each."] =
+	"A Forever addons page in the settings lists my WoW: Forever addons, with a link to each."
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever routes the quests left in this zone."
 L["Areas explored"] = "Areas explored"
