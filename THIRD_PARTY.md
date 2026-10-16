@@ -12,8 +12,8 @@ refresh that moves the pin never leaves this file behind. The addon itself is GP
 | `tools/locations.json` | Reviewed facts the client data cannot give (where a criterion happens), each with its evidence | Committed; `tools/locations.py` checks it against the pinned rows | This addon's own |
 
 No embedded libraries ship. `media/` is this addon's own: the icon is drawn in `media/icon.svg`, and `Shade.tga`
-is a plain black alpha gradient. `Locales/frFR.lua` is Brainc3ll's French translation (#99), under this addon's
-licence.
+is a plain black alpha gradient. `Locales/frFR.lua` is the French translation Brainc3ll wrote (#99), since extended for new
+strings, under this addon's licence.
 
 ## Read in game, never bundled
 
@@ -37,12 +37,12 @@ CI tools (StyLua, ruff, luacheck, lua-language-server, actionlint, zizmor, gitle
 
 ## Ideas and contributors
 
-Credit for ideas and reports, where no code or data was taken.
+Credit for the ideas, translations and reports behind the addon.
 
 | Who | What | Notes |
 |---|---|---|
-| [Polestar](https://github.com/fitzforge/polestar) by Fitz | The idea for `/lf report` with its copy box and caught errors, the wrong-objective issue form, and the shared tooling's zip check, `tools/doctor.py`, stale-screenshot check, this file and `.editorconfig` (cjber/adventure-guide-forever#156-#165) | GPL-3.0. Inspired only; no code was copied. Fitz is welcome to use our code. |
+| [Polestar](https://github.com/fitzforge/polestar) by Fitz | The idea for `/lf report` with its copy box and caught errors, and the shared tooling's zip check, `tools/doctor.py`, stale-screenshot check and `.editorconfig`, plus this file, the issue forms and the "For addon authors" changelog subsection (cjber/adventure-guide-forever#156-#158, #160-#163, #165) | GPL-3.0. Inspired only; no code was copied. Fitz is welcome to use our code. |
 | Brainc3ll | The French translation (#99) | |
 | Bigabyte | Found the quest tracker shifting when moved in Edit Mode (#103) | |
 
-Thanks also to everyone who reported a bug on CurseForge.
+Thanks also to everyone else who reported a bug, here or on CurseForge.
