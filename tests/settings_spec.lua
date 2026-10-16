@@ -260,7 +260,7 @@ ns.Completion = {
 -- The shared Forever addons page builds its rows the first time it shows; until then it is one empty frame.
 function CreateFrame(kind)
 	check(kind == "Frame", "the page is built when it first shows")
-	return { SetScript = function() end }
+	return { SetScript = function() end, Hide = function() end }
 end
 assert(loadfile("UI/ForeverFamily.lua"))("LegacyForever", ns)
 local panelArgs = {}
