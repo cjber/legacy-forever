@@ -115,8 +115,8 @@ state = "missing"
 db.suggestFamily = false
 check(ns.CompanionHint() == nil, "switched off: nothing")
 db.suggestFamily = true
-db.familyDismissed = { pinShortestPath = true }
+db.familyDismissed = { ["LegacyForever.pinShortestPath"] = true }
 check(ns.CompanionHint() == nil, "dismissed: nothing")
-db.familyDismissed = { zoneAdventureGuide = true }
+db.familyDismissed = { ["LegacyForever.zoneAdventureGuide"] = true }
 check(ns.CompanionHint() == INSTALL, "another dismissed suggestion leaves this one")
 print(("navigate_spec: %d checks passed"):format(checks))

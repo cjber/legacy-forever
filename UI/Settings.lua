@@ -7,7 +7,9 @@ local L = ns.L
 -- delegate: Settings.CreateCheckbox inserts from our code instead, and the settings search reads every layout,
 -- so that tainted it, and a restricted button in its results (Social's Discord Sign In) was then blocked and
 -- blamed on this addon.
--- The Legacy map menu keeps its own toggles. Both ends go through ns.Saved, so the two never disagree.
+-- The Legacy map menu keeps its own toggles. Both ends go through ns.Saved, so the two never disagree; the one
+-- exception is "Suggest my other Forever addons", which the shared Forever addons page writes in the saved
+-- table itself and the map menu reads each time it opens.
 
 local PREFIX = "LegacyForever_"
 

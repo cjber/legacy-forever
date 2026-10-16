@@ -503,7 +503,7 @@ agf = "missing"
 LegacyForeverDB.suggestFamily = false
 check(ZoneTooltip() == 0, "switched off: no line")
 LegacyForeverDB.suggestFamily = nil
-LegacyForeverDB.familyDismissed = { zoneAdventureGuide = true }
+LegacyForeverDB.familyDismissed = { ["LegacyForever.zoneAdventureGuide"] = true }
 check(ZoneTooltip() == 0, "dismissed: no line")
 LegacyForeverDB.familyDismissed = nil
 settings.count_areas, criteria[900] = false, { { completed = true } }

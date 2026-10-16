@@ -24,7 +24,7 @@ local SHORTEST_PATH = "ShortestPathForever"
 -- player's choice.
 ---@return string?
 function ns.CompanionHint()
-	if ns.Family.Hint(ns.FamilyDB(), "pinShortestPath", SHORTEST_PATH) then
+	if ns.Family.Hint(ns.FamilyDB(), "LegacyForever.pinShortestPath", SHORTEST_PATH) then
 		return L["Install Shortest Path Forever to have the route plotted for you."]
 	end
 	return nil
