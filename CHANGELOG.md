@@ -12,8 +12,11 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
-- **A Forever addons page in the settings.** Under Legacy Forever in the AddOns settings, *Forever addons* lists my five WoW: Forever addons with what each does and whether you have it: on, installed but turned off, or not installed. *Copy link* shows its CurseForge address to copy into your browser. *Suggest my other Forever addons* on the same page, also in the Legacy map menu, replaces "Suggest companion addons": if you had that off, this starts off too. *Hints and updates* is now *Updates*.
-- **Zone completion suggests Adventure Guide Forever when you don't have it.** On a zone you haven't finished, the zone completion tooltip, on the map and in the tracker, gets a grey line: Adventure Guide Forever routes the quests left in the zone. A pin's Shortest Path Forever line follows the same switch, and only shows while you don't have it: no more "Enable Shortest Path Forever" when you've turned it off.
+## [0.8.0] - 2026-10-16
+
+- **A Forever addons page in the settings.** Under Legacy Forever in the AddOns settings, *Forever addons* lists my five WoW: Forever addons with what each does and whether you have it: on, installed but turned off, or not installed. *Copy link* shows an addon's CurseForge address to copy into your browser. The page also has *Suggest my other Forever addons*, which replaces "Suggest companion addons" and is in the Legacy map menu too. If you had the old option off, the new one starts off. The *Hints and updates* page is now *Updates*.
+
+- **Zone completion suggests Adventure Guide Forever when you don't have it.** On a zone you haven't finished, the zone completion tooltip, on the map and in the tracker, ends with a grey line: Adventure Guide Forever routes the quests left in the zone. A pin's Shortest Path Forever line follows the same option, and only shows while you don't have Shortest Path Forever installed. If you've installed it and turned it off, the pin no longer asks you to enable it.
 
 ## [0.7.1] - 2026-10-16
 
