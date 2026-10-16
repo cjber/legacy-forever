@@ -19,18 +19,13 @@ end
 local SHORTEST_PATH = "ShortestPathForever"
 
 -- A grey suggestion under a pin's click hint: Shortest Path Forever plots the whole route, flights and boats
--- included, where the game's waypoint is a straight line. Behind the shared "Suggest my other Forever addons"
--- switch (UI/ForeverFamily.lua): install when it is missing and not dismissed, enable when it is installed but
--- turned off (that line explains why a click only sets a waypoint), nothing once it is on.
+-- included, where the game's waypoint is a straight line. Only while it isn't installed and the shared
+-- "Suggest my other Forever addons" switch is on (UI/ForeverFamily.lua); one installed but turned off was the
+-- player's choice.
 ---@return string?
 function ns.CompanionHint()
-	local Family = ns.Family
-	local db = ns.FamilyDB()
-	if Family.Hint(db, "pinShortestPath", SHORTEST_PATH) then
+	if ns.Family.Hint(ns.FamilyDB(), "pinShortestPath", SHORTEST_PATH) then
 		return L["Install Shortest Path Forever to have the route plotted for you."]
-	end
-	if db.suggestFamily ~= false and Family.State(SHORTEST_PATH) == "off" then
-		return L["Enable Shortest Path Forever to have the route plotted for you."]
 	end
 	return nil
 end

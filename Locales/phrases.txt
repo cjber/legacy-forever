@@ -43,8 +43,6 @@ L["Drag to move"] = "Drag to move"
 L["Dungeon or raid"] = "Dungeon or raid"
 L["Dungeons, raids and Legacy objectives count your progress on any character."] =
 	"Dungeons, raids and Legacy objectives count your progress on any character."
-L["Enable Shortest Path Forever to have the route plotted for you."] =
-	"Enable Shortest Path Forever to have the route plotted for you."
 L["Every quest this character can take in the zone, from Questie."] =
 	"Every quest this character can take in the zone, from Questie."
 L["Flight paths"] = "Flight paths"

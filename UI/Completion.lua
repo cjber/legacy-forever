@@ -148,9 +148,9 @@ local function AddTooltip(tooltip, name, result)
 			L["Dungeons, raids and Legacy objectives count your progress on any character."]
 		)
 	end
-	-- Zone completion counts what is left in a zone; Adventure Guide Forever plans its quests. A quiet line
-	-- while it is not installed, behind the shared "Suggest my other Forever addons" switch.
-	if ns.Family.Hint(ns.FamilyDB(), "zoneAdventureGuide", "AdventureGuideForever") then
+	-- Zone completion counts what is left in a zone; Adventure Guide Forever plans its quests. A quiet line on a
+	-- zone not yet done, while it is not installed, behind the shared "Suggest my other Forever addons" switch.
+	if not result.complete and ns.Family.Hint(ns.FamilyDB(), "zoneAdventureGuide", "AdventureGuideForever") then
 		GameTooltip_AddDisabledLine(tooltip, L["Adventure Guide Forever routes the quests left in this zone."])
 	end
 end

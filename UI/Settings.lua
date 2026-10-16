@@ -46,13 +46,13 @@ ns.Saved.OnChange(function(key)
 	Settings.NotifyUpdate(PREFIX .. key)
 end)
 
--- A subpage and its button on the index, which opens it. The index stays out of search: the search finds
--- the settings themselves.
+-- A subpage's button on the index, which opens it. The index stays out of search: the search finds the
+-- settings themselves.
 ---@param category SettingsCategoryMixin
+---@param subcategory SettingsCategoryMixin
 ---@param name string
 ---@return SettingsCategoryMixin
-local function Section(category, name)
-	local subcategory = Settings.RegisterVerticalLayoutSubcategory(category, name)
+local function IndexButton(category, subcategory, name)
 	Settings.RegisterInitializer(
 		category,
 		CreateSettingsButtonInitializer(name, L["Open"], function()
@@ -60,6 +60,14 @@ local function Section(category, name)
 		end, nil, false)
 	)
 	return subcategory
+end
+
+-- A subpage of rows and its button on the index.
+---@param category SettingsCategoryMixin
+---@param name string
+---@return SettingsCategoryMixin
+local function Section(category, name)
+	return IndexButton(category, Settings.RegisterVerticalLayoutSubcategory(category, name), name)
 end
 
 local category = Settings.RegisterVerticalLayoutCategory(ns.TITLE)
@@ -128,16 +136,8 @@ AddCheckbox(updates, "whatsNew", L["What's new after an update"])
 
 -- The Forever addons page is shared by all five addons (UI/ForeverFamily.lua), with "Suggest my other Forever
 -- addons" on it. It reads and writes suggestFamily in the saved table itself; the map menu reads it on opening.
-local family = Settings.RegisterCanvasLayoutSubcategory(
-	category,
-	ns.Family.CreatePanel(nil, ns.FamilyDB, addonName),
-	L["Forever addons"]
-)
-Settings.RegisterInitializer(
-	category,
-	CreateSettingsButtonInitializer(L["Forever addons"], L["Open"], function()
-		Settings.OpenToCategory(family:GetID())
-	end, nil, false)
-)
+local familyName = L["Forever addons"]
+local familyPanel = ns.Family.CreatePanel(nil, ns.FamilyDB, addonName)
+IndexButton(category, Settings.RegisterCanvasLayoutSubcategory(category, familyPanel, familyName), familyName)
 
 Settings.RegisterAddOnCategory(category)

@@ -103,23 +103,20 @@ check(#waypoints == 5, "Shortest Path loaded without its API falls back to the n
 ShortestPathForever, canSet = nil, false
 ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
 check(#waypoints == 5 and printed[1] == "Blackfathom Deeps is at 25.0, 50.0 in Ashenvale.", "the place goes to chat")
--- The companion hint, behind the shared family switch: install while missing, enable while turned off, nothing
--- once on, switched off or dismissed.
+-- The companion hint, behind the shared family switch: install while missing, nothing once installed (on or
+-- turned off: the player chose that), switched off or dismissed.
 local INSTALL = "Install Shortest Path Forever to have the route plotted for you."
-local ENABLE = "Enable Shortest Path Forever to have the route plotted for you."
 check(ns.CompanionHint() == INSTALL, "missing: install, on by default")
 state = "off"
-check(ns.CompanionHint() == ENABLE, "turned off: enable")
+check(ns.CompanionHint() == nil, "installed but turned off: nothing")
 state = "on"
 check(ns.CompanionHint() == nil, "on: nothing")
 state = "missing"
 db.suggestFamily = false
-check(ns.CompanionHint() == nil, "missing, switched off: nothing")
-state = "off"
-check(ns.CompanionHint() == nil, "turned off, switched off: nothing")
-db.suggestFamily, state = true, "missing"
+check(ns.CompanionHint() == nil, "switched off: nothing")
+db.suggestFamily = true
 db.familyDismissed = { pinShortestPath = true }
-check(ns.CompanionHint() == nil, "missing, dismissed: nothing")
+check(ns.CompanionHint() == nil, "dismissed: nothing")
 db.familyDismissed = { zoneAdventureGuide = true }
 check(ns.CompanionHint() == INSTALL, "another dismissed suggestion leaves this one")
 print(("navigate_spec: %d checks passed"):format(checks))

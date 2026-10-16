@@ -506,6 +506,11 @@ LegacyForeverDB.suggestFamily = nil
 LegacyForeverDB.familyDismissed = { zoneAdventureGuide = true }
 check(ZoneTooltip() == 0, "dismissed: no line")
 LegacyForeverDB.familyDismissed = nil
+settings.count_areas, criteria[900] = false, { { completed = true } }
+ns.Live.Invalidate()
+check(assert(ns.ZoneCompletion.Of(100)).complete and ZoneTooltip() == 0, "a zone with nothing left: no line")
+settings.count_areas, criteria[900] = nil, nil
+ns.Live.Invalidate()
 LegacyForeverDB.companions = false
 check(ZoneTooltip() == 0, "an old Suggest companion addons off carries over")
 check(LegacyForeverDB.suggestFamily == false and LegacyForeverDB.companions == nil, "and is migrated once")

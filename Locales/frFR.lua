@@ -41,8 +41,6 @@ L["Drag to move"] = "Glisser pour déplacer"
 L["Dungeon or raid"] = "Donjon ou raid"
 L["Dungeons, raids and Legacy objectives count your progress on any character."] =
 	"Les donjons, raids et objectifs d'héritage comptent votre progression sur n'importe quel personnage."
-L["Enable Shortest Path Forever to have the route plotted for you."] =
-	"Activez Shortest Path Forever pour que l'itinéraire soit tracé pour vous."
 L["Every quest this character can take in the zone, from Questie."] =
 	"Toutes les quêtes que ce personnage peut prendre dans la région, d'après Questie."
 L["Flight paths"] = "Trajets aériens"
