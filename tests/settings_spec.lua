@@ -394,14 +394,9 @@ check(byKey.trackerAttached:GetValue(), "other addon updates same shared state")
 -- same key. Legacy's own row says "This addon".
 check(byKey.suggestFamily == nil and byKey.companions == nil, "the family switch is the shared page's, not a row")
 check(panelArgs.db == ns.FamilyDB and panelArgs.current == "LegacyForever", "the page gets Legacy's saved table")
--- Legacy's own L, so a translation (frFR sets plain entries on it) shows on the page even when another Forever
--- addon's copy of the shared file is the one in use.
+-- Legacy's own L, so its translations show on the page whichever addon's copy of the shared file is in use
+-- (tests/family_locale_spec.lua).
 check(panelArgs.locale == ns.L, "the page gets Legacy's own strings")
-local legacyRow = ns.Family.ADDONS[4]
-check(ns.Family.Line(legacyRow, panelArgs.locale) == legacyRow.phrase, "an untranslated line reads as English")
-rawset(ns.L, legacyRow.phrase, "Affiche les défis d'héritage")
-check(ns.Family.Line(legacyRow, panelArgs.locale) == "Affiche les défis d'héritage", "a translated line shows")
-rawset(ns.L, legacyRow.phrase, nil)
 LegacyForeverDB = { companions = false }
 check(panelArgs.db().suggestFamily == false and LegacyForeverDB.companions == nil, "read through the migration")
 
