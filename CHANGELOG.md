@@ -18,6 +18,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 - **Zone completion suggests Adventure Guide Forever when you don't have it.** Hover the zone completion corner of the map, or the zone in the tracker, for a zone you haven't finished. Above the click hint, a grey line says "Adventure Guide Forever routes the quests left in this zone." A pin's Shortest Path Forever line follows the same option. It only shows while Shortest Path Forever isn't installed, so a pin no longer asks you to enable it when you've turned it off.
 
+- **The README now credits the people and addons behind Legacy Forever.** It names Brainc3ll for the French translation, the players who reported bugs or asked for features, and Polestar, which inspired some features. THIRD_PARTY.md has the full list.
+
 ## [0.7.1] - 2026-10-16
 
 - **Your quest tracker goes back to its own spot when the Forever column is empty.** To fit the Forever sections above your quests, the addon moves the game's quest tracker. It kept holding it there when no section had anything to show or All Objectives was collapsed, which could leave the tracker mid-screen or over the minimap. Now the tracker goes straight back to where the game, Edit Mode or your UI addon put it, and Legacy Forever moves it again only once a section has something to show. The Forever addons share this tracker code and only the first one loaded runs it, so the fix applies once every Forever addon you use has updated.
