@@ -51,8 +51,6 @@ L["In the objective tracker"] = "In the objective tracker"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Install Shortest Path Forever to have the route plotted for you."
 L["Legacy"] = "Legacy"
-L["Legacy Forever lets go of the quest tracker when it has nothing to show."] =
-	"Legacy Forever lets go of the quest tracker when it has nothing to show."
 L["Legacy Forever report"] = "Legacy Forever report"
 L["Legacy objectives"] = "Legacy objectives"
 L["Levels, skills, ranks and anything without a fixed place."] =
@@ -93,6 +91,8 @@ L["Waiting for Questie to finish loading."] = "Waiting for Questie to finish loa
 L["What counts"] = "What counts"
 L["What's new after an update"] = "What's new after an update"
 L["World map"] = "World map"
+L["Your quest tracker goes back to its own spot when the Forever column is empty."] =
+	"Your quest tracker goes back to its own spot when the Forever column is empty."
 L["Zone complete"] = "Zone complete"
 L["Zone completion"] = "Zone completion"
 L["Zone completion in the tracker"] = "Zone completion in the tracker"

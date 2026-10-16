@@ -49,8 +49,6 @@ L["In the objective tracker"] = "Dans le suivi des objectifs"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Installez Shortest Path Forever pour que l'itinéraire soit tracé pour vous."
 L["Legacy"] = "Héritage"
-L["Legacy Forever lets go of the quest tracker when it has nothing to show."] =
-	"Legacy Forever rend le suivi des quêtes à sa place quand il n'a rien à y afficher."
 L["Legacy Forever report"] = "Rapport de Legacy Forever"
 L["Legacy objectives"] = "Objectifs d'héritage"
 L["Levels, skills, ranks and anything without a fixed place."] =
@@ -93,6 +91,8 @@ L["Waiting for Questie to finish loading."] = "En attente de la fin du chargemen
 L["What counts"] = "Ce qui est compté"
 L["What's new after an update"] = "Nouveautés après une mise à jour"
 L["World map"] = "Carte du monde"
+L["Your quest tracker goes back to its own spot when the Forever column is empty."] =
+	"Votre suivi des quêtes retourne à sa place quand la colonne Forever est vide."
 L["Zone complete"] = "Région terminée"
 L["Zone completion"] = "Progression de la région"
 L["Zone completion in the tracker"] = "Progression de la région dans le suivi"
