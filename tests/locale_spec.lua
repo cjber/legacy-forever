@@ -220,4 +220,42 @@ locale = "deDE"
 template("LegacyForever", ns)
 check(rawget(ns.L, "Stop tracking") == "Stop tracking", "the template fills L on its own locale")
 
+-- Every translation the TOC loads fills L only on its own client, with keys the template has, and each of its
+-- lines formats without error given the arguments the English line takes.
+local english = rawget(ns, "L")
+local SAMPLES = { d = 7, i = 7, x = 7, f = 1.5, g = 1.5, e = 1.5, s = "Ashenvale" }
+local translations = 0
+for line in io.lines("LegacyForever.toc") do
+	local code = line:match("^Locales\\(%a%a%u%u)%.lua%s*$")
+	if code and code ~= "enUS" then
+		translations = translations + 1
+		local chunk = assert(loadfile("Locales/" .. code .. ".lua"))
+		local current = "enUS"
+		setfenv(chunk, {
+			GetLocale = function()
+				return current
+			end,
+		})
+		local other = { L = {} }
+		chunk("LegacyForever", other)
+		check(next(other.L) == nil, code .. " leaves L alone on another client")
+		current = code
+		local translated = { L = {} }
+		chunk("LegacyForever", translated)
+		check(next(translated.L) ~= nil, code .. " fills L on its own client")
+		for key, text in pairs(translated.L) do
+			local source = rawget(english, key)
+			check(type(source) == "string", ("%s: %q is not in Locales/phrases.txt"):format(code, key))
+			check(type(text) == "string" and text ~= "", ("%s: %q is empty"):format(code, key))
+			local args = {}
+			for conversion in source:gsub("%%%%", ""):gmatch("%%[-+# 0]*%d*%.?%d*(%a)") do
+				args[#args + 1] = SAMPLES[conversion]
+			end
+			local ok, result = pcall(string.format, text, unpack(args))
+			check(ok and result ~= "", ("%s: %q doesn't format: %s"):format(code, key, tostring(result)))
+		end
+	end
+end
+check(translations >= 9, "the TOC loads every shipped translation, not " .. translations)
+
 print(("locale_spec: %d checks passed"):format(checks))
