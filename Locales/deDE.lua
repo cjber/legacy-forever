@@ -94,7 +94,7 @@ L["Show a quiet line where one of my other Forever addons would help. Only for a
 	"Zeigt eine unauffällige Zeile, wo eines meiner anderen Forever-Addons helfen würde. Nur für Addons, die Ihr nicht habt."
 L["Show undiscovered areas"] = "Unentdeckte Gebiete anzeigen"
 L["Shows the Legacy challenges you can advance in each zone."] =
-	"Zeigt die Vermächtnisherausforderungen, die Ihr in jeder Zone voranbringen könnt."
+	"Zeigt die Vermächtnis-Herausforderungen, die Ihr in jeder Zone voranbringen könnt."
 L["Stop tracking"] = "Nicht mehr verfolgen"
 L["Suggest my other Forever addons"] = "Meine anderen Forever-Addons vorschlagen"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
