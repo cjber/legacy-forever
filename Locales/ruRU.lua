@@ -48,7 +48,7 @@ L["Copy the address, then open it in your browser."] =
 	"Скопируйте адрес и откройте его в браузере."
 L["Defeat"] = "Победить"
 L["Don't suggest this again"] = "Больше не предлагать"
-L["Drag to move"] = "Перетащите для перемещения"
+L["Drag to move"] = "Перетащите, чтобы переместить"
 L["Dungeon or raid"] = "Подземелье или рейд"
 L["Dungeons, raids and Legacy objectives count your progress on any character."] =
 	"Подземелья, рейды и цели старинных испытаний учитывают прогресс любого персонажа."

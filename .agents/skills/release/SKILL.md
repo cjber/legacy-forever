@@ -30,10 +30,11 @@ authorization. A preparation-only request ends before tags or uploads.
    Public API changes go under an optional `### For addon authors` subsection after the
    player bullets; the release notes carry it as written.
    Before the version entry, translate every phrase added or reworded since the last
-   tag into each shipped `Locales/<locale>.lua` (WFA-34): `python3 tools/check_locales.py`
-   lists each locale's gaps, machine lines are marked as the locale file says, Brainc3ll's
-   human French lines are never overwritten, and `python3 tools/check_locales.py --release`
-   passes before the PR.
+   tag into each shipped `Locales/<locale>.lua` (WFA-34):
+   `python3 tools/check_locales.py` lists each locale's gaps. Mark machine lines as
+   `Locales/README.md` says, and never overwrite a human line (in a mixed file, any line
+   without `-- mt`, Brainc3ll's French included). Then
+   `python3 tools/check_locales.py --release` must pass before the PR.
 
 ## Refresh every presentation surface
 
