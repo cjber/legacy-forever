@@ -26,8 +26,26 @@ local legacy = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", legacy)
 assert(loadfile("Locales/frFR.lua"))("LegacyForever", legacy)
 assert(loadfile("UI/ForeverFamily.lua"))("LegacyForever", legacy)
-local Family = legacy.Family
-check(Family == other.Family and Family == ForeverFamily, "the first copy loaded stays in use")
+local Family = ForeverFamily
+check(other.Family == Family.For(other.L), "the first copy loaded stays in use, bound to its own L")
+check(legacy.Family == Family.For(legacy.L), "Legacy's view is bound to Legacy's own L")
+check(legacy.Family ~= other.Family, "and not to the other addon's")
+
+-- The page and the link window are built with the L the view was bound to.
+local seen = {}
+local CreatePanel, ShowLink = Family.CreatePanel, Family.ShowLink
+Family.CreatePanel = function(_, _, _, locale)
+	seen.panel = locale
+end
+Family.ShowLink = function(_, _, _, _, locale)
+	seen.link = locale
+end
+legacy.Family.CreatePanel(nil, {}, "LegacyForever")
+legacy.Family.ShowLink(nil, nil, "ShortestPathForever")
+check(seen.panel == legacy.L and seen.link == legacy.L, "Legacy's page and window read in Legacy's L")
+other.Family.CreatePanel(nil, {}, "ShortestPathForever")
+check(seen.panel == other.L, "the other addon's page keeps its own L")
+Family.CreatePanel, Family.ShowLink = CreatePanel, ShowLink
 
 local row
 for _, addon in ipairs(Family.ADDONS) do
@@ -35,10 +53,8 @@ for _, addon in ipairs(Family.ADDONS) do
 		row = addon
 	end
 end
-local french = rawget(legacy.L, row.phrase)
-check(type(french) == "string" and french ~= row.phrase, "Legacy's French has its own line")
-check(Family.Line(row, legacy.L) == french, "with Legacy's L the line is in French")
-check(Family.Line(row) == row.phrase, "without it, the copy in use answers in English")
+local french = rawget(legacy.L, row.line)
+check(type(french) == "string" and french ~= row.line, "Legacy's French has its own line")
 
 -- Every phrase the shared file sends through L has a French entry, so none falls back to English on the page or
 -- in the link window. A phrase reworded in a later sync without a new translation fails here.
