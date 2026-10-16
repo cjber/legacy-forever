@@ -21,8 +21,6 @@ L["/lf report - show a report to copy into a bug report"] =
 L["/lf audit - check the bundled data against the game"] = "/lf audit - compare les données de l'addon avec le jeu"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - liste ce que le jeu indique pour un haut fait"
-L["/lf report gives you text to paste into a bug report."] =
-	"/lf report vous donne un texte à coller dans un signalement de bug."
 L["A grey line in a pin's tooltip when Shortest Path Forever would plot the route."] =
 	"Une ligne grise dans l'infobulle d'un repère quand Shortest Path Forever pourrait tracer l'itinéraire."
 L["Areas explored"] = "Zones explorées"
@@ -51,6 +49,8 @@ L["In the objective tracker"] = "Dans le suivi des objectifs"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Installez Shortest Path Forever pour que l'itinéraire soit tracé pour vous."
 L["Legacy"] = "Héritage"
+L["Legacy Forever lets go of the quest tracker when it has nothing to show."] =
+	"Legacy Forever rend le suivi des quêtes à sa place quand il n'a rien à y afficher."
 L["Legacy Forever report"] = "Rapport de Legacy Forever"
 L["Legacy objectives"] = "Objectifs d'héritage"
 L["Levels, skills, ranks and anything without a fixed place."] =
