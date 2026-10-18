@@ -294,7 +294,9 @@ local Pin = {}
 MapCanvas.PinMixin = Pin
 
 function Pin:OnLoad() end
-function Pin:OnAcquired() end
+---@param ... any
+-- luacheck: ignore 212 -- Each pin mixin defines its own acquired arguments.
+function Pin:OnAcquired(...) end
 function Pin:OnReleased() end
 function Pin:OnMouseEnter() end
 function Pin:OnMouseLeave() end
