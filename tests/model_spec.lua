@@ -68,7 +68,11 @@ local cleared = { [100] = { [3] = { text = "The Deadmines", completed = true, in
 local function clearedProgress(id)
 	return cleared[id]
 end
-equal(#Model.ZoneObjectives(entrance, 1, visible, clearedProgress), 0, "a cleared entrance is not an unfinished objective")
+equal(
+	#Model.ZoneObjectives(entrance, 1, visible, clearedProgress),
+	0,
+	"a cleared entrance is not an unfinished objective"
+)
 local kept = Model.ZoneObjectives(entrance, 1, visible, clearedProgress, true)
 equal(#kept, 1, "with includeDone a cleared entrance is kept")
 equal(kept[1].objectives[1].done, true, "and marked done")
