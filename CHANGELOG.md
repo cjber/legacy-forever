@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [0.11.1] - 2026-10-19
+
 - **No more Lua errors as the world map loads.** Since 0.11.0 the map button worked out its menu and its place before it was on the map, so every login and `/reload` raised two errors. It now waits for the map, and the button and its menu work as before.
 
 ## [0.11.0] - 2026-10-18
