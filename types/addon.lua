@@ -189,6 +189,8 @@ LegacyForever = nil
 ---@field SetAttached fun(attached: boolean)
 ---@field OnAttachmentChanged fun(callback: fun(attached: boolean))
 ---@field SavePosition fun(x: number, y: number)
+---@field IsLocked fun(): boolean
+---@field SetLocked fun(value: boolean)
 ---@field Attach fun(module: Frame)
 ---@field IsAttached fun(module: Frame?): boolean
 ---@type ForeverTrackerHostAPI?
@@ -234,12 +236,22 @@ ForeverTrackerHost = nil
 
 ---@class ForeverTrackerSettings
 ---@field attached boolean
+---@field locked? boolean the grip ignores drag while the tracker is locked
 ---@field scale? number tracker size, 1 is the stock size
 ---@field x? number
 ---@field y? number
 
+---@class ForeverTrackerGrip
+---@field Show fun(value: boolean) shows or hides the grip, which the host keeps hidden while attached
+---@field SetLabel fun(value: boolean) redraws the label from the switch, without waiting for a hover
+
+---@class ForeverTrackerLock
+---@field Locked fun(): boolean reads the saved switch through the host
+---@field Grip fun(host: Frame, source: ForeverTrackerHostAPI): ForeverTrackerGrip draws the grip on the column it drags
+
 ---@class ForeverTrackerNamespace
 ---@field TrackerHost? ForeverTrackerHostAPI
 ---@field TrackerQuestie? ForeverTrackerQuestie Questie's quest list, from UI/TrackerQuestie.lua
+---@field TrackerLock? ForeverTrackerLock the grip and its Lock switch, from UI/TrackerLock.lua
 ---@field TrackerHostSettings? fun(): ForeverTrackerSettings
 ---@field L table<string, string>

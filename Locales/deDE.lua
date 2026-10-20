@@ -54,11 +54,14 @@ L["In the objective tracker"] = "In der Questzielverfolgung"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Installiert Shortest Path Forever, damit die Route für Euch geplant wird."
 L["Installed, turned off"] = "Installiert, deaktiviert"
+L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
+	"Hält die gemeinsame Forever-Verfolgung dort, wo Ihr sie hingelegt habt. Der Griff oben zieht sie nicht mehr."
 L["Legacy"] = "Vermächtnis"
 L["Legacy Forever report"] = "Legacy Forever-Bericht"
 L["Legacy objectives"] = "Vermächtnisziele"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Stufen, Fertigkeiten, Ränge und alles ohne festen Ort."
+L["Lock the tracker"] = "Verfolgung sperren"
 L["Needs Questie, which lists each zone's quests."] = "Benötigt Questie, das die Quests jeder Zone auflistet."
 L["No fixed location"] = "Kein fester Ort"
 L["No unfinished Legacy objectives with a place on this map."] =
@@ -100,6 +103,8 @@ L["Suggest my other Forever addons"] = "Meine anderen Forever-Addons vorschlagen
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"Der Text ist markiert. Drückt Strg+C (Cmd+C auf dem Mac) zum Kopieren und fügt ihn in Eure Fehlermeldung ein."
 L["Questie's quest tracker can be moved again."] = "Questies Quest-Tracker lässt sich wieder verschieben."
+L["The tracker is locked. Turn off Lock the tracker to move it."] =
+	"Die Verfolgung ist gesperrt. Schaltet Verfolgung sperren aus, um sie zu verschieben."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Eure aktuelle Zone und was dort noch zu tun ist. Verfolgte Herausforderungen behalten ihren eigenen Vermächtnisbereich."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

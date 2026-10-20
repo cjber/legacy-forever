@@ -57,11 +57,14 @@ L["In the objective tracker"] = "목표 추적기에서"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Shortest Path Forever를 설치하면 경로를 대신 짜 줍니다."
 L["Installed, turned off"] = "설치됨, 사용 안 함"
+L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
+	"공유 Forever 추적기를 놓은 자리에 유지합니다. 위쪽 손잡이로 더 이상 끌 수 없습니다."
 L["Legacy"] = "유산"
 L["Legacy Forever report"] = "Legacy Forever 보고서"
 L["Legacy objectives"] = "유산 목표"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"레벨, 숙련, 등급 등 정해진 장소가 없는 모든 것."
+L["Lock the tracker"] = "추적기 잠금"
 L["Needs Questie, which lists each zone's quests."] =
 	"각 지역의 퀘스트 목록을 제공하는 Questie가 필요합니다."
 L["No fixed location"] = "정해진 장소 없음"
@@ -104,6 +107,8 @@ L["Suggest my other Forever addons"] = "제 다른 Forever 애드온 추천"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"텍스트가 선택되어 있습니다. Ctrl+C(Mac은 Cmd+C)로 복사한 뒤 오류 제보에 붙여 넣으세요."
 L["Questie's quest tracker can be moved again."] = "Questie의 퀘스트 추적기를 다시 옮길 수 있습니다."
+L["The tracker is locked. Turn off Lock the tracker to move it."] =
+	"추적기가 잠겨 있습니다. 추적기 잠금을 끄면 이동할 수 있습니다."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
