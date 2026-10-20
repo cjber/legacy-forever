@@ -95,8 +95,7 @@ L["Stop tracking"] = "停止追蹤"
 L["Suggest my other Forever addons"] = "推薦我的其他Forever插件"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"文字已選取。按Ctrl+C（Mac上為Cmd+C）複製，然後貼到你的錯誤回報中。"
-L["The tracker sections now move clear of Questie's quest list."] =
-	"追蹤欄現在會避開 Questie 的任務列表。"
+L["Questie's quest tracker can be moved again."] = "Questie 的任務追蹤器又可以移動了。"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地區以及那裡剩餘的事項。你追蹤的挑戰保留在各自的傳承區塊中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

@@ -99,8 +99,7 @@ L["Stop tracking"] = "Ne plus suivre"
 L["Suggest my other Forever addons"] = "Suggérer mes autres addons Forever" -- mt
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"Le texte est sélectionné : Ctrl+C (Cmd+C sur Mac) pour le copier, puis collez-le dans votre rapport de bug." -- mt
-L["The tracker sections now move clear of Questie's quest list."] =
-	"Les sections du suivi s'écartent désormais de la liste de quêtes de Questie." -- mt
+L["Questie's quest tracker can be moved again."] = "Le suivi de quêtes de Questie peut de nouveau être déplacé." -- mt
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"La région où vous êtes et ce qu'il reste à y faire. Les défis suivis gardent leur propre section Héritage."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
