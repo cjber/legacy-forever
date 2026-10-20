@@ -6,6 +6,7 @@
 Your unfinished WoW: Forever Legacy challenges, on the world map, for the zone you're looking at.<br>
 <a href="https://github.com/cjber/legacy-forever/actions/workflows/ci.yml"><img src="https://github.com/cjber/legacy-forever/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 <a href="https://github.com/cjber/legacy-forever/releases/latest"><img src="https://img.shields.io/github/v/release/cjber/legacy-forever" alt="Latest release"></a>
+<a href="https://ko-fi.com/cjber59408"><img src="https://img.shields.io/badge/Ko--fi-tip-ff5e5b?logo=ko-fi&logoColor=white" alt="Ko-fi"></a>
 </p>
 
 Legacy Forever shows unfinished challenges on the world map and tracks the ones you choose.
@@ -116,6 +117,10 @@ CI runs these checks on main pushes and pull requests. Each day a scheduled job 
 **Releasing:** move the `[Unreleased]` notes in `CHANGELOG.md` under `## [X.Y.Z] - YYYY-MM-DD`, then `git tag -s vX.Y.Z && git push --tags`, or run the Release workflow on main with `version` set. The [BigWigs packager](https://github.com/BigWigsMods/packager) builds the zip and uploads it to GitHub Releases, CurseForge and Wago, with that version's entry (`tools/changelog.py`) as the release notes.
 
 **Contributing:** read [CONTRIBUTING.md](https://github.com/cjber/.github/blob/main/CONTRIBUTING.md) and this repository's [AGENTS.md](AGENTS.md). Report security problems privately, as [SECURITY.md](https://github.com/cjber/.github/blob/main/SECURITY.md) describes.
+
+## Support
+
+The addon is free and stays GPL-3.0. If it saves you time, you can [buy me a coffee on Ko-fi](https://ko-fi.com/cjber59408); nothing is locked behind it and there is no paid version.
 
 ## Credits
 
