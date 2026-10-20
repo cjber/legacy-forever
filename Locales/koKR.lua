@@ -103,8 +103,7 @@ L["Stop tracking"] = "추적 해제"
 L["Suggest my other Forever addons"] = "제 다른 Forever 애드온 추천"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"텍스트가 선택되어 있습니다. Ctrl+C(Mac은 Cmd+C)로 복사한 뒤 오류 제보에 붙여 넣으세요."
-L["The tracker sections now move clear of Questie's quest list."] =
-	"이제 추적기 항목이 Questie 퀘스트 목록을 가리지 않도록 비켜 표시됩니다."
+L["Questie's quest tracker can be moved again."] = "Questie의 퀘스트 추적기를 다시 옮길 수 있습니다."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

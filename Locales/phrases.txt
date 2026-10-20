@@ -85,6 +85,7 @@ L["Plans the quickest way anywhere and guides you there, with live boat and zepp
 L["Quest"] = "Quest"
 L["Quest automation, rare alerts and merchant handling for the default UI."] =
 	"Quest automation, rare alerts and merchant handling for the default UI."
+L["Questie's quest tracker can be moved again."] = "Questie's quest tracker can be moved again."
 L["Repeatable, holiday and profession quests are left out."] = "Repeatable, holiday and profession quests are left out."
 L["Reputations (Friendly)"] = "Reputations (Friendly)"
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
@@ -97,8 +98,6 @@ L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."
-L["The tracker sections now move clear of Questie's quest list."] =
-	"The tracker sections now move clear of Questie's quest list."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

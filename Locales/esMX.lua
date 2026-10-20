@@ -98,8 +98,7 @@ L["Stop tracking"] = "Cancelar seguimiento"
 L["Suggest my other Forever addons"] = "Sugerir mis otros addons Forever"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"El texto está seleccionado. Presiona Ctrl+C (Cmd+C en Mac) para copiarlo y pégalo en tu reporte de error."
-L["The tracker sections now move clear of Questie's quest list."] =
-	"Las secciones del seguimiento ahora se apartan de la lista de misiones de Questie."
+L["Questie's quest tracker can be moved again."] = "El rastreador de misiones de Questie se puede volver a mover."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"La zona en la que estás y lo que queda por hacer. Los desafíos que sigues mantienen su propia sección de legado."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
