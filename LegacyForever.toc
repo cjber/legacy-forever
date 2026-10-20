@@ -37,6 +37,7 @@ Integrations\Quests.lua
 Integrations\Navigate.lua
 Core\ZoneCompletion.lua
 UI\TrackerQuestie.lua
+UI\TrackerLock.lua
 UI\TrackerHost.lua
 UI\Tracker.lua
 UI\MapCanvas.lua
