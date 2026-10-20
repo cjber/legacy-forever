@@ -169,7 +169,7 @@ local function Category(name)
 		end,
 	}
 end
-local trackerState = { attached = true }
+local trackerState = { attached = true, locked = false }
 local attachmentChanged
 local notified = {}
 ns.TrackerHost = {
@@ -179,6 +179,9 @@ ns.TrackerHost = {
 	SetAttached = function(value)
 		trackerState.attached = value
 		attachmentChanged()
+	end,
+	SetLocked = function(value)
+		trackerState.locked = value
 	end,
 	OnAttachmentChanged = function(callback)
 		attachmentChanged = callback
@@ -288,6 +291,7 @@ local kinds, expectedKinds =
 		"button@Legacy Forever",
 		"checkbox@Objective tracker",
 		"checkbox@Objective tracker",
+		"checkbox@Objective tracker",
 		"button@Legacy Forever",
 	}
 for _ = 1, 7 do
@@ -311,6 +315,7 @@ for _, entry in ipairs(registered) do
 end
 local expected = {
 	trackerAttached = true,
+	trackerLocked = false,
 	showAreas = true,
 	showEntrances = true,
 	map = true,
@@ -348,7 +353,7 @@ check(
 -- Quests grey out without Questie, as the map menu's box does, and the name and tooltip are translated.
 local quests = byKey.count_quests
 check(quests.name == "quests", "a category row is named by its label")
-check(#registered[9].initializer.modify == 0, "only quests can grey out")
+check(#registered[10].initializer.modify == 0, "only quests can grey out")
 local questsRow
 for _, entry in ipairs(registered) do
 	if entry.initializer.setting == quests then
@@ -399,6 +404,13 @@ check(notified[#notified] == "LegacyForever_trackerAttached", "change notifies p
 trackerState.attached = true
 attachmentChanged()
 check(byKey.trackerAttached:GetValue(), "other addon updates same shared state")
+
+-- Lock starts off, sits under the attach row, and drives the shared host rather than a copy of its own.
+check(byKey.trackerLocked:GetValue() == false, "shared tracker starts unlocked")
+byKey.trackerLocked:SetValue(true)
+check(trackerState.locked == true and byKey.trackerLocked:GetValue(), "locking writes the shared host state")
+byKey.trackerLocked:SetValue(false)
+check(trackerState.locked == false and not byKey.trackerLocked:GetValue(), "unlocking writes it back")
 
 -- The Forever addons page carries "Suggest my other Forever addons": it reads and writes suggestFamily in
 -- Legacy's own saved table (migrated from the old switch, as ns.FamilyDB returns it), and the map menu reads the

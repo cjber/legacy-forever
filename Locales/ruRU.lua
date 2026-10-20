@@ -61,11 +61,14 @@ L["In the objective tracker"] = "В отслеживании целей"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Установите Shortest Path Forever, чтобы маршрут прокладывался за вас."
 L["Installed, turned off"] = "Установлено, отключено"
+L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
+	"Оставляет общий трекер Forever там, где вы его поставили. Ручка сверху больше его не перетаскивает."
 L["Legacy"] = "Старинные испытания"
 L["Legacy Forever report"] = "Отчет Legacy Forever"
 L["Legacy objectives"] = "Цели старинных испытаний"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Уровни, навыки, звания и все, что не привязано к месту."
+L["Lock the tracker"] = "Закрепить трекер"
 L["Needs Questie, which lists each zone's quests."] =
 	"Нужен Questie: он знает задания каждой зоны."
 L["No fixed location"] = "Без точного места"
@@ -110,6 +113,8 @@ L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it
 	"Текст выделен. Нажмите Ctrl+C (Cmd+C на Mac), чтобы скопировать его, и вставьте в сообщение об ошибке."
 L["Questie's quest tracker can be moved again."] =
 	"Отслеживание заданий Questie снова можно перемещать."
+L["The tracker is locked. Turn off Lock the tracker to move it."] =
+	"Трекер закреплён. Отключите «Закрепить трекер», чтобы переместить его."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

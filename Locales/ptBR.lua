@@ -54,11 +54,14 @@ L["In the objective tracker"] = "No rastreador de objetivos"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Instale o Shortest Path Forever para traçar a rota para você."
 L["Installed, turned off"] = "Instalado, desativado"
+L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
+	"Mantém o rastreador Forever compartilhado onde você o colocou. A alça no topo não o arrasta mais."
 L["Legacy"] = "Legado"
 L["Legacy Forever report"] = "Relatório do Legacy Forever"
 L["Legacy objectives"] = "Objetivos de Legado"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Níveis, perícias, postos e tudo o que não tem lugar fixo."
+L["Lock the tracker"] = "Travar o rastreador"
 L["Needs Questie, which lists each zone's quests."] = "Requer o Questie, que lista as missões de cada zona."
 L["No fixed location"] = "Sem local fixo"
 L["No unfinished Legacy objectives with a place on this map."] =
@@ -100,6 +103,8 @@ L["Suggest my other Forever addons"] = "Sugerir meus outros AddOns Forever"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"O texto está selecionado. Pressione Ctrl+C (Cmd+C no Mac) para copiá-lo e cole-o no seu relato de erro."
 L["Questie's quest tracker can be moved again."] = "O rastreador de missões do Questie pode ser movido novamente."
+L["The tracker is locked. Turn off Lock the tracker to move it."] =
+	"O rastreador está travado. Desative Travar o rastreador para movê-lo."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"A zona em que você está e o que falta fazer nela. Desafios rastreados mantêm sua própria seção de Legado."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

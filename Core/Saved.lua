@@ -83,7 +83,11 @@ end
 function ns.TrackerHostSettings()
 	local root = Root()
 	if type(root.trackerHost) ~= "table" then
-		root.trackerHost = { attached = true }
+		root.trackerHost = { attached = true, locked = false }
+	end
+	-- Lock defaults off, and a trackerHost saved before it existed simply gains the key.
+	if type(root.trackerHost.locked) ~= "boolean" then
+		root.trackerHost.locked = false
 	end
 	return root.trackerHost
 end

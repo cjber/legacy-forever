@@ -55,11 +55,14 @@ L["In the objective tracker"] = "In the objective tracker"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Install Shortest Path Forever to have the route plotted for you."
 L["Installed, turned off"] = "Installed, turned off"
+L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
+	"Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."
 L["Legacy"] = "Legacy"
 L["Legacy Forever report"] = "Legacy Forever report"
 L["Legacy objectives"] = "Legacy objectives"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Levels, skills, ranks and anything without a fixed place."
+L["Lock the tracker"] = "Lock the tracker"
 L["Needs Questie, which lists each zone's quests."] = "Needs Questie, which lists each zone's quests."
 L["No fixed location"] = "No fixed location"
 L["No unfinished Legacy objectives with a place on this map."] =
@@ -98,6 +101,8 @@ L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."
+L["The tracker is locked. Turn off Lock the tracker to move it."] =
+	"The tracker is locked. Turn off Lock the tracker to move it."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

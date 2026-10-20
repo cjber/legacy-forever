@@ -52,11 +52,14 @@ L["In the objective tracker"] = "在目标追踪栏中"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"安装Shortest Path Forever即可为你规划路线。"
 L["Installed, turned off"] = "已安装，已禁用"
+L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
+	"将共享的 Forever 追踪器保持在您放置的位置。顶部的拖拽手柄不再移动它。"
 L["Legacy"] = "传承"
 L["Legacy Forever report"] = "Legacy Forever报告"
 L["Legacy objectives"] = "传承目标"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"等级、技能、级别以及其他没有固定地点的内容。"
+L["Lock the tracker"] = "锁定追踪器"
 L["Needs Questie, which lists each zone's quests."] = "需要Questie，它会列出每个地区的任务。"
 L["No fixed location"] = "无固定地点"
 L["No unfinished Legacy objectives with a place on this map."] =
@@ -96,6 +99,8 @@ L["Suggest my other Forever addons"] = "推荐我的其他Forever插件"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"文本已选中。按Ctrl+C（Mac上为Cmd+C）复制，然后粘贴到你的错误报告中。"
 L["Questie's quest tracker can be moved again."] = "Questie 的任务追踪器又可以移动了。"
+L["The tracker is locked. Turn off Lock the tracker to move it."] =
+	"追踪器已锁定。关闭“锁定追踪器”即可移动它。"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地区以及那里剩余的事项。你追踪的挑战保留在各自的传承区块中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
