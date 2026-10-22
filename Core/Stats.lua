@@ -6,6 +6,9 @@ local Stats = {}
 ns.Stats = Stats
 
 local PREFIX = "WFAStats"
+-- The family addons a shared row may name. Receive trusts only these, and a row this addon sends carries
+-- its own name, so a peer files it under the metrics table that addon declares.
+local ADDONS = { spf = true, fieldguide = true, agf = true, legacy = true, skillup = true }
 local CHANNELS = { GUILD = true, PARTY = true, RAID = true, INSTANCE_CHAT = true }
 local METRICS = {
 	spf = {
@@ -44,11 +47,10 @@ local FIRST = {
 	boss_first_kill = true,
 }
 
+-- The shared rows live in the family saved table every Forever addon reads, so a row one of them receives
+-- is visible to the rest, and neither this addon nor a peer has to be installed for the other to store it.
 local function DB()
-	if type(AdventureGuideForeverDB) ~= "table" then
-		return nil
-	end
-	local db = AdventureGuideForeverDB
+	local db = ns.FamilyDB()
 	if type(db.sharedStats) ~= "table" then
 		db.sharedStats = {}
 	end
@@ -56,7 +58,7 @@ local function DB()
 end
 
 local function Enabled()
-	return ns.Setting("statsShare") ~= false
+	return ns.Saved.Get("statsShare")
 end
 
 local function UnixNow()
@@ -127,7 +129,7 @@ local function Queue(row, channel)
 	if old and old.value >= row.value then
 		return
 	end
-	local payload = string.format("1|agf|%s|%s|%d|%d", row.metric, row.subject, row.value, row.eventUnix)
+	local payload = string.format("1|legacy|%s|%s|%d|%d", row.metric, row.subject, row.value, row.eventUnix)
 	queue[#queue + 1] = { key = key, value = row.value, payload = payload, channel = channel }
 	sent[key] = { value = row.value }
 	Pump()
@@ -196,6 +198,10 @@ function Stats.Receive(prefix, payload, channel, sender)
 		return
 	end
 	local peers = db.sharedStats
+	-- DB made it a table; this tells the checker what that guard established.
+	if type(peers) ~= "table" then
+		return
+	end
 	local peer = peers[sender]
 	if not peer then
 		local count = 0
