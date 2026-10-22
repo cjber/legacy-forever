@@ -149,6 +149,7 @@
 ---@class LegacyFlightRecord
 ---@field known LegacySet
 ---@field continents LegacySet
+---@field observedAt? integer last opened flight-master map timestamp
 
 ---@alias LegacySettings table<string, boolean>
 

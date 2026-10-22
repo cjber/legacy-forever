@@ -200,6 +200,30 @@ local function Subscribe(callback)
 	end
 end
 
+-- A flight path is counted only after the player opens a flight master's map, the one source that reliably tells
+-- this client which nodes the character knows. Zone exploration overlays are not used as a proxy on Forever.
+---@return LFActivityRecord[]
+local function Stats()
+	local guid = UnitGUID("player")
+	local record = guid and ns.SavedTable("flightPaths")[guid]
+	local rows = {}
+	for nodeID, value in pairs(record and record.known or {}) do
+		if value == true then
+			rows[#rows + 1] = {
+				addon = "LegacyForever",
+				metric = "flight_path_known",
+				subject = tostring(nodeID),
+				value = 1,
+				eventUnix = record and record.observedAt or nil,
+			}
+		end
+	end
+	table.sort(rows, function(a, b)
+		return a.subject < b.subject
+	end)
+	return rows
+end
+
 -- Progress, a quest source or "What counts" changed. A copy, so a callback may unsubscribe; errors go to the
 -- game's error handler without stopping the other subscribers.
 ns.ZoneCompletion.OnChange(function()
@@ -215,5 +239,12 @@ ns.ZoneCompletion.OnChange(function()
 end)
 
 LegacyForever = {
-	API = { version = 1, ZoneSummary = ZoneSummary, Targets = Targets, Navigate = Navigate, Subscribe = Subscribe },
+	API = {
+		version = 1,
+		ZoneSummary = ZoneSummary,
+		Targets = Targets,
+		Navigate = Navigate,
+		Subscribe = Subscribe,
+		Stats = Stats,
+	},
 }

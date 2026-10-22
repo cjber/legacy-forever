@@ -127,6 +127,12 @@ local faction = "Alliance"
 UnitFactionGroup = function()
 	return faction
 end
+UnitGUID = function(unit)
+	return unit == "player" and "Player-1"
+end
+time = function()
+	return 123
+end
 UnitRace = function()
 	return "Human", "Human", 1
 end
@@ -280,6 +286,14 @@ zoneTracker:OnBlockHeaderClick({ id = 100 }, "LeftButton")
 check(openedMap == 100, "a click on the zone's tracker header asks the game to open its map")
 local API = LegacyForever.API
 check(API.version == 1, "version 1")
+local guid = UnitGUID("player")
+ns.SavedTable("flightPaths")[guid] = { known = { [10] = true, [11] = false }, continents = {}, observedAt = time() }
+local activity = API.Stats()
+check(#activity == 1 and activity[1].metric == "flight_path_known", "one known node row")
+check(activity[1].subject == "10" and activity[1].value == 1, "node is the metric subject")
+check(activity[1].eventUnix == 123 and activity[1].addon == "LegacyForever", "row metadata")
+activity[1].value = 90
+check(API.Stats()[1].value == 1, "stats return a fresh table")
 
 local function Category(summary, key)
 	for _, category in ipairs(summary.categories) do

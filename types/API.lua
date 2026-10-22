@@ -43,3 +43,11 @@
 ---@field Targets fun(map: integer, limit: integer): LFTarget[]?, LFReadError?
 ---@field Navigate fun(map: integer, key: string): boolean, LFNavError?
 ---@field Subscribe fun(callback: fun()): fun()
+---@field Stats fun(): LFActivityRecord[] Character flight paths observed from opened flight-master maps.
+
+---@class LFActivityRecord
+---@field addon "LegacyForever"
+---@field metric "flight_path_known"
+---@field subject string flight node ID
+---@field value 1
+---@field eventUnix? integer last flight-master map snapshot time

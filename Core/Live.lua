@@ -276,6 +276,7 @@ local function RecordFlightMaster()
 	end
 	local record = FlightRecord()
 	record.continents[continent] = true
+	record.observedAt = type(time) == "function" and time() or nil
 	for _, node in ipairs(nodes) do
 		record.known[node.nodeID] = node.state ~= Enum.FlightPathState.Unreachable or nil
 	end
