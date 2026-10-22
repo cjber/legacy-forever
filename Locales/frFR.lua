@@ -23,6 +23,8 @@ L["/lf report - show a report to copy into a bug report"] =
 L["/lf audit - check the bundled data against the game"] = "/lf audit - compare les données de l'addon avec le jeu"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - liste ce que le jeu indique pour un haut fait"
+L["A quest item in your bags clicks normally while the tracker is loaded."] =
+	"Un objet de quête dans vos sacs se clique normalement tant que le suivi est chargé." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever trace le chemin des quêtes qu'il reste dans cette région." -- mt
 L["Already complete"] = "Déjà terminé" -- mt
@@ -102,7 +104,6 @@ L["Stop tracking"] = "Ne plus suivre"
 L["Suggest my other Forever addons"] = "Suggérer mes autres addons Forever" -- mt
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"Le texte est sélectionné : Ctrl+C (Cmd+C sur Mac) pour le copier, puis collez-le dans votre rapport de bug." -- mt
-L["Questie's quest tracker can be moved again."] = "Le suivi de quêtes de Questie peut de nouveau être déplacé." -- mt
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"Le suivi est verrouillé. Désactivez Verrouiller le suivi pour le déplacer." -- mt
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =

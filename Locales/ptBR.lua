@@ -22,6 +22,8 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - lista o que o jogo informa sobre uma conquista"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - mostra um relatório para copiar num relato de erro"
+L["A quest item in your bags clicks normally while the tracker is loaded."] =
+	"Um item de missão nas suas bolsas é clicado normalmente enquanto o rastreador está carregado." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever traça uma rota pelas missões que faltam nesta zona."
 L["Already complete"] = "Já concluído" -- mt
@@ -102,7 +104,6 @@ L["Stop tracking"] = "Não rastrear"
 L["Suggest my other Forever addons"] = "Sugerir meus outros AddOns Forever"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"O texto está selecionado. Pressione Ctrl+C (Cmd+C no Mac) para copiá-lo e cole-o no seu relato de erro."
-L["Questie's quest tracker can be moved again."] = "O rastreador de missões do Questie pode ser movido novamente."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"O rastreador está travado. Desative Travar o rastreador para movê-lo."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =

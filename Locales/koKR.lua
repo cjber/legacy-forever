@@ -23,6 +23,8 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 업적 하나에 대해 게임이 알려주는 내용을 표시합니다"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - 오류 제보에 붙여 넣을 보고서를 표시합니다"
+L["A quest item in your bags clicks normally while the tracker is loaded."] =
+	"가방의 퀘스트 아이템은 추적기가 켜져 있어도 정상적으로 클릭됩니다." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever는 이 지역에 남은 퀘스트의 경로를 짜 줍니다."
 L["Already complete"] = "이미 완료됨" -- mt
@@ -106,7 +108,6 @@ L["Stop tracking"] = "추적 해제"
 L["Suggest my other Forever addons"] = "제 다른 Forever 애드온 추천"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"텍스트가 선택되어 있습니다. Ctrl+C(Mac은 Cmd+C)로 복사한 뒤 오류 제보에 붙여 넣으세요."
-L["Questie's quest tracker can be moved again."] = "Questie의 퀘스트 추적기를 다시 옮길 수 있습니다."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"추적기가 잠겨 있습니다. 추적기 잠금을 끄면 이동할 수 있습니다."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
