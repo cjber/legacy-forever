@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-10-22
+
 - **Addon authors can read observed flight-path records.** `LegacyForever.API.Stats()` reports known taxi nodes recorded from this character's flight-master maps. It does not infer flight paths from zone exploration and does not share or claim realm-first records.
 
 ## [0.11.7] - 2026-10-22
