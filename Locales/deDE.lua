@@ -23,7 +23,8 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - listet, was das Spiel für einen Erfolg meldet"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - zeigt einen Bericht zum Kopieren in eine Fehlermeldung"
-L["A quest item in your bags clicks normally while the tracker is loaded."] = "Ein Questgegenstand in Euren Taschen lässt sich normal anklicken, solange die Verfolgung geladen ist." -- mt
+L["A quest item in your bags clicks normally while the tracker is loaded."] =
+	"Ein Questgegenstand in Euren Taschen lässt sich normal anklicken, solange die Verfolgung geladen ist." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever plant eine Route durch die übrigen Quests dieser Zone."
 L["Already complete"] = "Bereits abgeschlossen" -- mt

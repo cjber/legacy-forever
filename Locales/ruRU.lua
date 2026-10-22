@@ -25,7 +25,8 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - показать, что игра сообщает об одном достижении"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - показать отчет для сообщения об ошибке"
-L["A quest item in your bags clicks normally while the tracker is loaded."] = "Предмет задания в сумках нажимается как обычно, пока трекер загружен." -- mt
+L["A quest item in your bags clicks normally while the tracker is loaded."] =
+	"Предмет задания в сумках нажимается как обычно, пока трекер загружен." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever проложит маршрут по оставшимся заданиям этой зоны."
 L["Already complete"] = "Уже завершено" -- mt
