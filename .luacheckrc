@@ -3,7 +3,7 @@ max_line_length = 120
 exclude_files = { "tools/.cache/**", ".release/**", ".types/**", "types/**", ".claude/**" }
 ignore = { "212/_.*", "212/self" } -- unused args prefixed with _, and self on mixin handlers
 
-globals = { "ForeverFamily", "ForeverMapMarkers", "ForeverTrackerHost",
+globals = { "AdventureGuideForeverDB", "ForeverFamily", "ForeverMapMarkers", "ForeverTrackerHost",
 	"LegacyForeverMapButtonMixin",
 	"LegacyForeverZoneOverlayMixin",
 	"LegacyForever",
@@ -23,9 +23,12 @@ read_globals = { "CreateFramePoolCollection", "C_XMLUtil", "CreateSettingsButton
 	"DUNGEONS", "LegacySystemFrame", "MenuUtil", "OTHER", "QUESTS_LABEL", "RAIDS", "REPUTATION", "Mixin", "OBJECTIVE_DASH_STYLE_HIDE", "ObjectiveTrackerFrame",
 	"ObjectiveTrackerManager", "ShortestPathForever", "C_InputInterfaceStyle", "Lerp", "Saturate", "SoftCursor", "LibQuestieDB", "Questie", "QuestieLoader", "strtrim",
 	"C_MajorFactions", "Constants", "GameTooltip_AddErrorLine", "LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP", "RED_FONT_COLOR", "UIErrorsFrame",
-	"tContains", "ToggleLegacySystemUI", "UnitClass", "UnitLevel", "debugstack", "UISpecialFrames", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
+	"tContains", "time", "ToggleLegacySystemUI", "UnitClass", "UnitLevel", "debugstack", "UISpecialFrames", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 
+	for _, name in ipairs({ "GetServerTime", "GetRealmName", "IsInGuild", "IsInGroup", "IsInRaid", "LE_PARTY_CATEGORY_INSTANCE", "C_ChatInfo", "UnitName" }) do
+	read_globals[#read_globals + 1] = name
+end
 files["Data/Legacy.lua"] = { max_line_length = false }
 -- A translation line is one string, plus a trailing `-- mt` when machine translated (WFA-34): no room to wrap.
 files["Locales/"] = { max_line_length = false }
@@ -62,6 +65,9 @@ files["tests/api_spec.lua"] = {
 		"Enum", "WorldMapFrame", "CreateFrame", "Mixin", "CreateFromMixins", "Saturate", "Lerp",
 	},
 }
+for _, name in ipairs({ "UnitGUID", "time" }) do
+	files["tests/api_spec.lua"].globals[#files["tests/api_spec.lua"].globals + 1] = name
+end
 files["tests/report_spec.lua"] = {
 	globals = { "C_AddOns", "C_Map", "C_Texture", "CreateFrame", "DEFAULT_CHAT_FRAME", "GetBuildInfo", "GetLocale", "GetTime", "geterrorhandler",
 		"strtrim", "UIParent", "UISpecialFrames", "UnitClass", "UnitFactionGroup", "UnitLevel", "UnitRace" },

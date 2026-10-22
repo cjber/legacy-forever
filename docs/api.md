@@ -48,3 +48,10 @@ coordinates), `"combat"` (Shortest Path declined in combat and the map takes no 
 Calls `callback` with no arguments after progress, a quest source or "What counts" changes; reread what you show.
 Calls come at most once per burst of game events. The returned function unsubscribes and is safe to call twice. An
 error in a callback goes to the game's error handler without stopping the others.
+
+## `Stats() -> LFActivityRecord[]`
+
+Returns one row per flight path observed as known in this character's opened flight-master maps. Each row has
+`addon`, `metric`, `subject`, `value`, and `eventUnix` when the client provided a timestamp. Forever's zone
+exploration data marks every taxi node as discovered, so Legacy only records this metric from the flight master's
+own node states. Rows are local SavedVariables; Legacy does not broadcast them or treat them as realm records.

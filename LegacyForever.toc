@@ -49,5 +49,6 @@ UI\MapContents.lua
 UI\Map.xml
 UI\Map.lua
 Core\API.lua
+Core\Stats.lua
 Core\Report.lua
 UI\Report.lua

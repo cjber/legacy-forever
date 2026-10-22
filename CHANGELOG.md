@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **Addon authors can read observed flight-path records.** `LegacyForever.API.Stats()` reports known taxi nodes recorded from this character's flight-master maps. It does not infer flight paths from zone exploration and does not share or claim realm-first records.
+
 ## [0.11.7] - 2026-10-22
 
 - **A quest item in your bags clicks normally while the tracker is loaded.** Our tracker sections used to be handed to the game's own tracker manager, which marked the bag item click path insecure, so a click on an item in your bags could be turned into a blocked action while the Forever column was up. Each addon now parents its own sections and never calls the native manager, so the click path stays secure. Found in the shared tracker host and already released in SkillUp Forever 0.18.12 and Shortest Path Forever 1.21.10.
