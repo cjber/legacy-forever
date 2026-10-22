@@ -33,6 +33,8 @@ local _, addon = ...
 ---@field Report LegacyReportModule the report window (UI/Report.lua)
 ---@field AuditLines fun(): string[] what /lf audit prints (Core/Report.lua)
 ---@field ReportLines fun(): string[] Legacy Forever's own lines in the report (Core/Report.lua)
+---@field Stats LFStats shared activity rows: sender and receiver (Core/Stats.lua)
+---@field ActivityStats fun(): LFActivityRecord[] this character's observed flight paths, as rows (Core/API.lua)
 local ns = addon
 local L = ns.L
 
