@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [0.11.7] - 2026-10-22
+
+- **A quest item in your bags clicks normally while the tracker is loaded.** Our tracker sections used to be handed to the game's own tracker manager, which marked the bag item click path insecure, so a click on an item in your bags could be turned into a blocked action while the Forever column was up. Each addon now parents its own sections and never calls the native manager, so the click path stays secure. Found in the shared tracker host and already released in SkillUp Forever 0.18.12 and Shortest Path Forever 1.21.10.
+
 ## [0.11.6] - 2026-10-21
 
 - **Blizzard's *All Objectives* header stays where the game puts it.** Our column used to lift that header out of the objective tracker and hang it above the Forever rows; the game re-anchors it on every tracker update, so the two fought and left a stranded header with a blank band under it. Nothing of ours touches that header any more - no re-anchor, no show or hide, no reserved gap - so the column starts cleanly under the header and stays there through refreshes. Found in the shared tracker host and already released in Shortest Path Forever 1.21.8.

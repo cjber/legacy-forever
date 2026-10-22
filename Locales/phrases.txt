@@ -24,6 +24,8 @@ L["/lf audit - check the bundled data against the game"] = "/lf audit - check th
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - list what the game reports for one achievement"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - show a report to copy into a bug report"
+L["A quest item in your bags clicks normally while the tracker is loaded."] =
+	"A quest item in your bags clicks normally while the tracker is loaded."
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever routes the quests left in this zone."
 L["Already complete"] = "Already complete"
@@ -88,7 +90,6 @@ L["Plans the quickest way anywhere and guides you there, with live boat and zepp
 L["Quest"] = "Quest"
 L["Quest automation, rare alerts and merchant handling for the default UI."] =
 	"Quest automation, rare alerts and merchant handling for the default UI."
-L["Questie's quest tracker can be moved again."] = "Questie's quest tracker can be moved again."
 L["Repeatable, holiday and profession quests are left out."] = "Repeatable, holiday and profession quests are left out."
 L["Reputations (Friendly)"] = "Reputations (Friendly)"
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =

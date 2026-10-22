@@ -25,6 +25,7 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - показать, что игра сообщает об одном достижении"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - показать отчет для сообщения об ошибке"
+L["A quest item in your bags clicks normally while the tracker is loaded."] = "Предмет задания в сумках нажимается как обычно, пока трекер загружен." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever проложит маршрут по оставшимся заданиям этой зоны."
 L["Already complete"] = "Уже завершено" -- mt
@@ -111,8 +112,6 @@ L["Stop tracking"] = "Не отслеживать"
 L["Suggest my other Forever addons"] = "Предлагать другие мои модификации Forever"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"Текст выделен. Нажмите Ctrl+C (Cmd+C на Mac), чтобы скопировать его, и вставьте в сообщение об ошибке."
-L["Questie's quest tracker can be moved again."] =
-	"Отслеживание заданий Questie снова можно перемещать."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"Трекер закреплён. Отключите «Закрепить трекер», чтобы переместить его."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =

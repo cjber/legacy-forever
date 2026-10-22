@@ -21,6 +21,7 @@ L["/lf audit - check the bundled data against the game"] = "/lf audit - 將內�
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 列出遊戲對某個成就回報的內容"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 顯示可複製到錯誤回報中的報告"
+L["A quest item in your bags clicks normally while the tracker is loaded."] = "追蹤器載入時，背包中的任務物品可以正常點擊。" -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever會為此地區剩餘的任務規劃路線。"
 L["Already complete"] = "已完成" -- mt
@@ -98,7 +99,6 @@ L["Stop tracking"] = "停止追蹤"
 L["Suggest my other Forever addons"] = "推薦我的其他Forever插件"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"文字已選取。按Ctrl+C（Mac上為Cmd+C）複製，然後貼到你的錯誤回報中。"
-L["Questie's quest tracker can be moved again."] = "Questie 的任務追蹤器又可以移動了。"
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"追蹤器已鎖定。關閉「鎖定追蹤器」即可移動它。"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
