@@ -92,6 +92,12 @@ Each one works on its own, and they work together when you install more than one
 
 <!-- forever-family:end -->
 
+With Shortest Path Forever, clicking a dungeon or raid pin plans the trip there. Adventure Guide Forever shows your
+zone completion in its guide. Tweaks Forever's dungeon entrance icons and unexplored-area tint step aside where Legacy
+already marks the map.
+
+Tracked challenges share one tracker column with the other addons' tracker sections, above your quests.
+
 ## Development
 
 ```sh
