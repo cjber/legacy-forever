@@ -223,6 +223,7 @@ local function Stats()
 	end)
 	return rows
 end
+ns.ActivityStats = Stats
 
 -- Progress, a quest source or "What counts" changed. A copy, so a callback may unsubscribe; errors go to the
 -- game's error handler without stopping the other subscribers.

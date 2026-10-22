@@ -8,11 +8,25 @@ ns.Stats = Stats
 local PREFIX = "WFAStats"
 local CHANNELS = { GUILD = true, PARTY = true, RAID = true, INSTANCE_CHAT = true }
 local METRICS = {
-	spf = { distance_yards = true, routes_completed = true, transports_used = true, flights_taken = true, portals_used = true },
+	spf = {
+		distance_yards = true,
+		routes_completed = true,
+		transports_used = true,
+		flights_taken = true,
+		portals_used = true,
+	},
 	fieldguide = {
-		creature_kills = true, rare_kills = true, shiny_finds = true, first_sighting = true, first_kill = true,
-		first_rare = true, first_shiny = true, boss_sightings = true, boss_kills = true,
-		boss_first_sighting = true, boss_first_kill = true,
+		creature_kills = true,
+		rare_kills = true,
+		shiny_finds = true,
+		first_sighting = true,
+		first_kill = true,
+		first_rare = true,
+		first_shiny = true,
+		boss_sightings = true,
+		boss_kills = true,
+		boss_first_sighting = true,
+		boss_first_kill = true,
 	},
 	agf = { quest_turn_ins = true, quest_turn_in = true },
 	legacy = { flight_path_known = true },
@@ -22,8 +36,12 @@ local queue, sent = {}, {}
 local sending, lastReceive = false, {}
 local SEND_GAP, RECEIVE_GAP = 1.5, 0.2
 local FIRST = {
-	first_sighting = true, first_kill = true, first_rare = true, first_shiny = true,
-	boss_first_sighting = true, boss_first_kill = true,
+	first_sighting = true,
+	first_kill = true,
+	first_rare = true,
+	first_shiny = true,
+	boss_first_sighting = true,
+	boss_first_kill = true,
 }
 
 local function DB()
@@ -68,7 +86,7 @@ local function Pump()
 		return
 	end
 	sending = true
-	C_Timer.After(SEND_GAP, function Flush()
+	local function Flush()
 		if not Enabled() or not C_ChatInfo or not C_ChatInfo.SendAddonMessage then
 			queue, sending = {}, false
 			return
@@ -96,7 +114,8 @@ local function Pump()
 		else
 			sending = false
 		end
-	end)
+	end
+	C_Timer.After(SEND_GAP, Flush)
 end
 
 local function Queue(row, channel)
