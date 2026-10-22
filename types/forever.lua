@@ -24,10 +24,6 @@ QUESTS_LABEL = nil
 ---@type string
 REPUTATION = nil
 
--- FrameXML's party category that means an instance group, absent from the pinned annotations.
----@type number
-LE_PARTY_CATEGORY_INSTANCE = nil
-
 -- FrameXML's UiMapPoint factory (ObjectAPI/UiMapPoint.lua) is absent from the pinned Core annotations.
 ---@class LegacyUiMapPointFactory
 ---@field CreateFromCoordinates fun(uiMapID: number, x: number, y: number, z?: number): UiMapPoint
