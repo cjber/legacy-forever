@@ -23,8 +23,8 @@ L["/lf report - show a report to copy into a bug report"] =
 L["/lf audit - check the bundled data against the game"] = "/lf audit - compare les données de l'addon avec le jeu"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - liste ce que le jeu indique pour un haut fait"
-L["A quest item in your bags clicks normally while the tracker is loaded."] =
-	"Un objet de quête dans vos sacs se clique normalement tant que le suivi est chargé." -- mt
+L["The Forever addons link box selects its address without a Lua error."] =
+	"La zone d'adresse des addons Forever sélectionne son adresse sans erreur Lua." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever trace le chemin des quêtes qu'il reste dans cette région." -- mt
 L["Already complete"] = "Déjà terminé" -- mt

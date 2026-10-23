@@ -26,8 +26,6 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
 	"/lf issue - report a bug or request a feature with a ready-made GitHub issue link"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - show a report to copy into a bug report"
-L["A quest item in your bags clicks normally while the tracker is loaded."] =
-	"A quest item in your bags clicks normally while the tracker is loaded."
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever routes the quests left in this zone."
 L["Already complete"] = "Already complete"
@@ -109,6 +107,8 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"Shows the Legacy challenges you can advance in each zone."
 L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
+L["The Forever addons link box selects its address without a Lua error."] =
+	"The Forever addons link box selects its address without a Lua error."
 L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
 	"The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =

@@ -23,8 +23,8 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 업적 하나에 대해 게임이 알려주는 내용을 표시합니다"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - 오류 제보에 붙여 넣을 보고서를 표시합니다"
-L["A quest item in your bags clicks normally while the tracker is loaded."] =
-	"가방의 퀘스트 아이템은 추적기가 켜져 있어도 정상적으로 클릭됩니다." -- mt
+L["The Forever addons link box selects its address without a Lua error."] =
+	"Forever 애돼 링크 상자가 Lua 오류 없이 주소를 선택합니다." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever는 이 지역에 남은 퀘스트의 경로를 짜 줍니다."
 L["Already complete"] = "이미 완료됨" -- mt
