@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [0.12.1] - 2026-10-23
+
+- **Data checked against Forever 1.60.1.70532.** No Legacy objective was added, removed or moved in this build, so the map and tracker show the same objectives as before. Only the bundled data's build pin changed.
+
 ## [0.12.0] - 2026-10-22
 
 - **Addon authors can read observed flight-path records.** `LegacyForever.API.Stats()` reports known taxi nodes recorded from this character's flight-master maps. It does not infer flight paths from zone exploration and does not share or claim realm-first records.
