@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [0.12.2] - 2026-10-23
+
+- **The tracker hands Blizzard's objective frame back cleanly when you enter Edit Mode.** Legacy's own column now detaches instead of holding the native anchor, so dragging the objective tracker in Edit Mode no longer fights the addon, and leaving Edit Mode puts everything back where it was.
+
 ## [0.12.1] - 2026-10-23
 
 - **Data checked against Forever 1.60.1.70532.** No Legacy objective was added, removed or moved in this build, so the map and tracker show the same objectives as before. Only the bundled data's build pin changed.
