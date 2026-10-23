@@ -154,8 +154,12 @@ check(calls.map == 1 and calls.menu == 1 and #printed == 0, "a bare /lf opens th
 LegacyForever_OnAddonCompartmentClick()
 check(calls.map == 1 and calls.menu == 2, "the compartment entry opens the menu on the open map")
 SlashCmdList.LEGACYFOREVER("help")
-check(#printed == 4 and calls.menu == 2, "/lf help prints the commands")
+check(#printed == 5 and calls.menu == 2, "/lf help prints the commands")
 check(printed[2] == "/lf report - show a report to copy into a bug report", "the help names /lf report")
+check(
+	printed[3] == "/lf issue - report a bug or request a feature with a ready-made GitHub issue link",
+	"the help names /lf issue"
+)
 
 -- The Settings page: the same options as subcategories with an index page, every row through
 -- RegisterInitializer (CreateCheckbox and layout:AddInitializer would taint the settings search), and every

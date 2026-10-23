@@ -23,6 +23,8 @@ L["/lf - open the world map and its Legacy menu"] = "/lf - open the world map an
 L["/lf audit - check the bundled data against the game"] = "/lf audit - check the bundled data against the game"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - list what the game reports for one achievement"
+L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
+	"/lf issue - report a bug or request a feature with a ready-made GitHub issue link"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - show a report to copy into a bug report"
 L["A quest item in your bags clicks normally while the tracker is loaded."] =
 	"A quest item in your bags clicks normally while the tracker is loaded."
@@ -31,6 +33,8 @@ L["Adventure Guide Forever routes the quests left in this zone."] =
 L["Already complete"] = "Already complete"
 L["Areas explored"] = "Areas explored"
 L["Attach to quest tracker"] = "Attach to quest tracker"
+L["Bug"] = "Bug"
+L["Bug: "] = "Bug: "
 L["Click the zone to see where."] = "Click the zone to see where."
 L["Click to collapse."] = "Click to collapse."
 L["Click to expand."] = "Click to expand."
@@ -39,7 +43,9 @@ L["Click to set a waypoint here."] = "Click to set a waypoint here."
 L["Click to track, with live progress."] = "Click to track, with live progress."
 L["Click to travel here with Shortest Path Forever."] = "Click to travel here with Shortest Path Forever."
 L["Close"] = "Close"
+L["Copy issue link"] = "Copy issue link"
 L["Copy link"] = "Copy link"
+L["Copy report"] = "Copy report"
 L["Copy the address, then open it in your browser."] = "Copy the address, then open it in your browser."
 L["Defeat"] = "Defeat"
 L["Don't suggest this again"] = "Don't suggest this again"
@@ -49,6 +55,8 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 	"Dungeons, raids and Legacy objectives count your progress on any character."
 L["Every quest this character can take in the zone, from Questie."] =
 	"Every quest this character can take in the zone, from Questie."
+L["Feature request"] = "Feature request"
+L["Feature request: "] = "Feature request: "
 L["Flight paths"] = "Flight paths"
 L["Forever addons"] = "Forever addons"
 L["Forever tracker"] = "Forever tracker"
@@ -91,6 +99,7 @@ L["Quest"] = "Quest"
 L["Quest automation, rare alerts and merchant handling for the default UI."] =
 	"Quest automation, rare alerts and merchant handling for the default UI."
 L["Repeatable, holiday and profession quests are left out."] = "Repeatable, holiday and profession quests are left out."
+L["Report a bug or request a feature"] = "Report a bug or request a feature"
 L["Reputations (Friendly)"] = "Reputations (Friendly)"
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
 	"Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."
@@ -100,6 +109,8 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"Shows the Legacy challenges you can advance in each zone."
 L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
+L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
+	"The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
@@ -110,6 +121,7 @@ L["The zone you're viewing in the map's corner, and a badge on each zone of a co
 	"The zone you're viewing in the map's corner, and a badge on each zone of a continent map."
 L["This addon"] = "This addon"
 L["This version of Questie isn't supported."] = "This version of Questie isn't supported."
+L["Title"] = "Title"
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"Turn this off if another addon already marks them. The Legacy map menu still lists them."
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
@@ -119,6 +131,7 @@ L["Updates"] = "Updates"
 L["Waiting for Questie and your quest log."] = "Waiting for Questie and your quest log."
 L["Waiting for Questie to finish loading."] = "Waiting for Questie to finish loading."
 L["What counts"] = "What counts"
+L["What happened, or what you would like"] = "What happened, or what you would like"
 L["What's new after an update"] = "What's new after an update"
 L["World map"] = "World map"
 L["Zone complete"] = "Zone complete"
