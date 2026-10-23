@@ -10,6 +10,9 @@ end
 local function has(text, part, label)
 	check(text:find(part, 1, true) ~= nil, ("%s: %q not in\n%s"):format(label, part, text))
 end
+local function lacks(text, part, label)
+	check(text:find(part, 1, true) == nil, ("%s: %q unexpectedly in\n%s"):format(label, part, text))
+end
 
 -- Map 100 has one located objective of challenge 10, which the game lists unfinished.
 local data = {
@@ -24,7 +27,7 @@ local data = {
 local frames, handled = {}, {}
 local focus
 local metadata = {
-	LegacyForever = { Version = "1.2.3" },
+	LegacyForever = { Version = "1.2.3", ["X-Website"] = "https://github.com/cjber/legacy-forever/" },
 	Questie = { Version = "9.1.0" },
 	ShortestPathForever = { Version = "0.9.0" },
 }
@@ -188,6 +191,40 @@ for _, file in ipairs({ "Core/Report.lua", "UI/Report.lua" }) do
 	assert(loadfile(file))("LegacyForever", ns)
 end
 local Slash = SlashCmdList.LEGACYFOREVER
+
+-- The issue URL uses this addon's TOC repo and escapes its components.
+check(ns.Report.Encode("a b&#é~") == "a%20b%26%23%C3%A9~", "URL encoding")
+check(ns.Report.Repo() == "cjber/legacy-forever", "repo from X-Website")
+metadata.LegacyForever["X-Website"] = nil
+check(ns.Report.Repo() == "", "missing X-Website")
+metadata.LegacyForever["X-Website"] = "https://github.com/cjber/legacy-forever/"
+local issue = ns.Report.Issue("feature", "Feature request: one & two", "details", { "system line" })
+has(issue, "template=report.md", "issue template")
+has(issue, "labels=enhancement", "feature label")
+has(issue, "title=Feature%20request%3A%20one%20%26%20two", "encoded title")
+has(
+	ns.Report.Body("bug", "Bug: one", "details", { "system line" }),
+	"### System information",
+	"markdown system section"
+)
+check(#ns.Report.Issue("bug", "Bug: long", ("x"):rep(4000), { "system line" }) < 7000, "long detail URL cap")
+local previousBugGrabber = _G.BugGrabber
+_G.BugGrabber = {
+	GetDB = function()
+		return {
+			{ message = "stale session error", stack = "Old.lua:4", session = 6, counter = 8 },
+			{ message = "direct Lua failure", stack = "Addon/Feature.lua:42", session = 7, counter = 2 },
+		}
+	end,
+	GetSessionId = function()
+		return 7
+	end,
+}
+local issueBody = ns.Report.Body("bug", "Bug: direct Lua failure", "it broke", {})
+has(issueBody, "direct Lua failure", "BugGrabber runtime error in issue body")
+has(issueBody, "Addon/Feature.lua:42", "BugGrabber trace in issue body")
+lacks(issueBody, "stale session error", "old BugGrabber errors are excluded")
+_G.BugGrabber = previousBugGrabber
 
 -- The window: the edit box has the focus with the whole report selected, in a stock portrait frame.
 Slash("report")

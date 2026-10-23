@@ -97,6 +97,8 @@ local function Slash(msg)
 		-- The report is for when something is wrong, so a failing audit still opens it, with the error listed.
 		local ok, lines = ns.SafeCall("report lines", ns.ReportLines)
 		ns.Report.Show(ns.Report.Text(ok and lines or { "audit: failed, see Errors" }))
+	elseif command == "issue" or command == "bug" or command == "feature" then
+		ns.Report.Compose(command == "feature" and "feature" or "bug")
 	elseif command == "audit" then
 		Audit()
 	elseif achievementID then
@@ -108,6 +110,7 @@ local function Slash(msg)
 	else
 		ns.Print(L["/lf - open the world map and its Legacy menu"])
 		ns.Print(L["/lf report - show a report to copy into a bug report"])
+		ns.Print(L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"])
 		ns.Print(L["/lf audit - check the bundled data against the game"])
 		ns.Print(L["/lf criteria 684 - list what the game reports for one achievement"])
 	end
