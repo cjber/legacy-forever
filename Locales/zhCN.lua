@@ -21,8 +21,8 @@ L["/lf audit - check the bundled data against the game"] = "/lf audit - 将内�
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 列出游戏对某个成就报告的内容"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 显示可复制到错误报告中的报告"
-L["A quest item in your bags clicks normally while the tracker is loaded."] =
-	"追踪栏加载时，背包中的任务物品可以正常点击。" -- mt
+L["The Forever addons link box selects its address without a Lua error."] =
+	"Forever 插件链接框选中地址时不会再出现 Lua 错误。" -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever会为此地区剩余的任务规划路线。"
 L["Already complete"] = "已完成" -- mt

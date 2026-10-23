@@ -22,8 +22,8 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - lista o que o jogo informa sobre uma conquista"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - mostra um relatório para copiar num relato de erro"
-L["A quest item in your bags clicks normally while the tracker is loaded."] =
-	"Um item de missão nas suas bolsas é clicado normalmente enquanto o rastreador está carregado." -- mt
+L["The Forever addons link box selects its address without a Lua error."] =
+	"A caixa de links dos addons Forever seleciona o endereço sem um erro de Lua." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever traça uma rota pelas missões que faltam nesta zona."
 L["Already complete"] = "Já concluído" -- mt
