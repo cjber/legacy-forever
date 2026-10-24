@@ -295,7 +295,7 @@ are byte-identical.
 
 `tools/forever_tools/` is the shared, offline Python (changelog and release checks, TOC traversal, the Lua
 taint and multi-value lints, strict DB2 CSV parsing, atomic writes, the generated-data gate). It is vendored
-byte for byte from `cjber/skills` (`wow-forever-addon/tooling`) and pinned by `forever_tools/MANIFEST.json`:
+byte for byte from `cjber/forever-core` (`.agents/skills/wow-forever-addon/tooling`) and pinned by `forever_tools/MANIFEST.json`:
 never edit it here. `python3 tools/forever_tools/sync.py check` verifies it offline (it runs in
 `typecheck.sh`); `python3 tools/forever_tools/sync.py update --source <skills checkout>` refreshes it from a
 clean checkout of the producer. The other `tools/*.py` entry points stay thin and carry only this repo's policy.

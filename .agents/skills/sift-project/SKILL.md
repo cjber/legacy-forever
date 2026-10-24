@@ -60,7 +60,7 @@ tools/screenshots.py` rewrites `docs/screenshots/*.png`. A clean `git status` af
 edit changed nothing. `gen_legacy.py --offline` fails when the cache holds an older build than
 `BUILD`; run it once online to fetch the pinned build. The standards slice reads the pinned
 `wow-forever-addon` pack from the sift cache (`agents.py standards` prints its path);
-`SIFT_STANDARDS_PATH=$HOME/skills` overrides it with a local checkout that may not match the pin.
+`SIFT_STANDARDS_PATH=$HOME/forever-core` overrides it with a local checkout that may not match the pin.
 
 ## Live roots
 
