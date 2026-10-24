@@ -1,6 +1,7 @@
 local _, addon = ...
 
 ---@class LegacyForeverNamespace
+---@field ReportTitle string the localized title shown by the shared report window
 ---@field TITLE string
 ---@field POINTS_ICON string
 ---@field WHATS_NEW string
@@ -30,13 +31,14 @@ local _, addon = ...
 ---@field RecordError fun(label: string, message: any, stack?: string) keep an error caught another way, for the report
 ---@field CaughtErrors fun(): LegacyCaughtError[] this session's caught errors, oldest first, as copies
 ---@field CutText fun(text: string, limit: integer): string text cut to `limit` bytes on a UTF-8 boundary, ending "..."
----@field Report LegacyReportModule the report window (UI/Report.lua)
+---@field Report ForeverReportModule the report window (UI/Report.lua)
 ---@field AuditLines fun(): string[] what /lf audit prints (Core/Report.lua)
 ---@field ReportLines fun(): string[] Legacy Forever's own lines in the report (Core/Report.lua)
 ---@field Stats LFStats shared activity rows: sender and receiver (Core/Stats.lua)
 ---@field ActivityStats fun(): LFActivityRecord[] this character's observed flight paths, as rows (Core/API.lua)
 local ns = addon
 local L = ns.L
+ns.ReportTitle = L["Legacy Forever report"]
 
 ns.TITLE = "Legacy Forever"
 -- The Legacy shield: map pins, the map button, menu entries and the zone-completion count all wear it.
@@ -91,15 +93,12 @@ SLASH_LEGACYFOREVER1 = "/lf"
 SLASH_LEGACYFOREVER2 = "/legacyforever"
 local function Slash(msg)
 	local command = strtrim(msg or ""):lower()
+	if ns.Report and ns.Report.Command and ns.Report.Command(command) then
+		return
+	end
 	-- Lenient: "criteria 684", "criteria <684>" and a bare "684" all work.
 	local achievementID = (command:find("^criteria") or command:find("^%d+$")) and tonumber(command:match("%d+"))
-	if command == "report" then
-		-- The report is for when something is wrong, so a failing audit still opens it, with the error listed.
-		local ok, lines = ns.SafeCall("report lines", ns.ReportLines)
-		ns.Report.Show(ns.Report.Text(ok and lines or { "audit: failed, see Errors" }))
-	elseif command == "issue" or command == "bug" or command == "feature" then
-		ns.Report.Compose(command == "feature" and "feature" or "bug")
-	elseif command == "audit" then
+	if command == "audit" then
 		Audit()
 	elseif achievementID then
 		Criteria(achievementID)
