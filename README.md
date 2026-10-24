@@ -54,6 +54,7 @@ Open the world map, click the addon's icon in the addon compartment, or type `/l
 |---|---|
 | `/lf` | Open the world map with the Legacy menu showing (`/lf help` lists these commands) |
 | `/lf report` | Show a report to copy into a bug report: versions, the audit lines, recent errors |
+| `/lf issue` | Open a ready-made GitHub issue link to report a bug or request a feature |
 | `/lf audit` | Compare the bundled data with what the game reports, and list any objective the game doesn't know |
 | `/lf criteria 684` | List every criterion the game reports for one achievement (useful alongside an audit's unknown IDs) |
 
