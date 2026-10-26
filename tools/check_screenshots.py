@@ -30,6 +30,7 @@ SOURCES = (
     "UI/Completion.lua",
     "UI/MapContents.lua",
     "UI/Tracker.lua",
+    "media/Shade.tga",
 )
 SCENES = {
     path.name: functools.partial(screens.files, ROOT, SOURCES)
