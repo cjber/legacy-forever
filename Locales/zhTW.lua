@@ -21,8 +21,8 @@ L["/lf audit - check the bundled data against the game"] = "/lf audit - 將內�
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 列出遊戲對某個成就回報的內容"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 顯示可複製到錯誤回報中的報告"
-L["The Forever addons link box selects its address without a Lua error."] =
-	"Forever 外掛連結框選取網址時不會再出現 Lua 錯誤。" -- mt
+L["The addon now ships the suite's shared settings-page code."] =
+	"此外掛現在使用套件的共用設定頁面程式碼。" -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever會為此地區剩餘的任務規劃路線。"
 L["Already complete"] = "已完成" -- mt
