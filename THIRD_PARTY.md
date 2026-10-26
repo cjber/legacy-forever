@@ -11,8 +11,7 @@ refresh that moves the pin never leaves this file behind. The addon itself is GP
 | WoW: Forever client tables, via [wago.tools](https://wago.tools) | Achievements, criteria, zones and instances in `Data/Legacy.lua` | `BUILD` in `tools/gen_legacy.py` | Blizzard Entertainment's game data |
 | `tools/locations.json` | Reviewed facts the client data cannot give (where a criterion happens), each with its evidence | Committed; `tools/locations.py` checks it against the pinned rows | This addon's own |
 
-No embedded libraries ship. `media/` is this addon's own: the icon is drawn in `media/icon.svg`, and `Shade.tga`
-is a plain black alpha gradient. `Locales/frFR.lua` is the French translation Brainc3ll wrote (#99), since extended with
+No embedded libraries ship. `media/` contains this addon's icon, drawn in `media/icon.svg`. `Locales/frFR.lua` is the French translation Brainc3ll wrote (#99), since extended with
 machine-translated lines (marked `-- mt`) for new strings, under this addon's licence.
 
 ## Read in game, never bundled

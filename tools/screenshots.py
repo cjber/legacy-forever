@@ -464,8 +464,7 @@ def completion_corner(ui, canvas, rects, result, name, collapsed=False):
     if not collapsed:
         width = max(width, canvas.text_width(counts, counts_font))
         height += 6 + counts_font.height
-    shade = Image.open(ROOT / "media" / "Shade.tga").convert("RGBA")
-    canvas.draw(shade, x - 48, y - 22, width + 48 + 64, height + 44, (1, 1, 1, 0.6))
+    canvas.fill(x - 48, y - 22, width + 48 + 64, height + 44, (0.04, 0.06, 0.08, 0.72))
     canvas.text(x, y, title, title_font)
     bar_y = y + title_font.height + 4
     canvas.fill(x, bar_y, width, 2, (0, 0, 0, 0.45))
