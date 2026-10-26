@@ -536,8 +536,8 @@ def render_menu(ui, data, live):
         layers.append((menu, x, y))
         if level < len(opened):
             parent_row = rows[next(i for i, e in enumerate(entries_at) if e.text == opened[level])]
-    # A crop of the map's top-right corner, as a screenshot of that part of the screen would show it.
-    crop_left, crop_top = bx - 330, 0
+    # The whole frame: cropping into it sliced the frame's centred title mid-word, which no capture shows.
+    crop_left, crop_top = 0, 0
     # Tall enough that the map, not the backdrop, sits behind the whole main menu.
     menu_bottom = layers[0][2] + layers[0][0].height
     frame = ui.canvas(canvas.width - crop_left, min(canvas.height, max(canvas.height - 150, menu_bottom + 40)))
