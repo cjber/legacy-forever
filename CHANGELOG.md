@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- Forever Core's settings-page chrome (`UI/SettingsPage.lua`) and its spec are vendored byte for byte so the suite's shared-code drift gate covers this addon; Legacy keeps drawing its own settings page, so nothing changes in game.
+
 ## [0.12.6] - 2026-10-24
 
 - The report keeps the same error details, now captured by Forever Core alongside the other shared report code.
