@@ -286,8 +286,8 @@ a formatter or excluding the generated file from CI.
 `python3 tools/screenshots.py` redraws `docs/screenshots/{map,menu,tracker,continent,unvisited}.png`
 and `demo.gif` from the game's own art and `Data/Legacy.lua`; it never touches the client. It
 needs a checkout of the `cjber/skills` repository for the `wowmock` library,
-found in `~/.claude/skills/wow-mock-screenshots/` by default; set the
-`WOWMOCK` environment variable to the directory holding `wowmock.py` to use
+found in `../forever-core/tools/wowmock/` by default; set the
+`FOREVER_CORE` environment variable to the directory holding `wowmock.py` to use
 another checkout. Art is fetched from wago.tools once and cached, and reruns
 are byte-identical.
 
