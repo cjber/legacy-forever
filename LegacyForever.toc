@@ -45,6 +45,7 @@ UI\MapCanvas.lua
 UI\Completion.xml
 UI\Completion.lua
 UI\Settings.lua
+UI\SettingsPage.lua
 UI\MapContents.lua
 UI\Map.xml
 UI\Map.lua
