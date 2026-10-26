@@ -22,8 +22,8 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - muestra lo que indica el juego para un logro"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - muestra un informe para copiar en un reporte de error"
-L["The Forever addons link box selects its address without a Lua error."] =
-	"El cuadro de enlaces de los addons Forever selecciona su dirección sin un error de Lua." -- mt
+L["The addon now ships the suite's shared settings-page code."] =
+	"El addon ahora incluye el código compartido de la página de ajustes de la suite." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever traza una ruta por las misiones que quedan en esta zona."
 L["Already complete"] = "Ya completado" -- mt

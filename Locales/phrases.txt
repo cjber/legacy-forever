@@ -107,8 +107,8 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"Shows the Legacy challenges you can advance in each zone."
 L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
-L["The Forever addons link box selects its address without a Lua error."] =
-	"The Forever addons link box selects its address without a Lua error."
+L["The addon now ships the suite's shared settings-page code."] =
+	"The addon now ships the suite's shared settings-page code."
 L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
 	"The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
