@@ -2,12 +2,12 @@
 """Regenerate docs/screenshots/*.png and demo.gif as mocks drawn from the WoW: Forever client's own art and data.
 
 No game client is involved: map tiles, atlases, fonts and achievement data come from wago.tools via
-wowmock (the wow-mock-screenshots skill in cjber/skills). What the addon draws is reproduced here from
+wowmock (the forever-core shared renderer). What the addon draws is reproduced here from
 its Lua: the zone objectives, the menu, the continent badges, an unvisited zone, the zone completion corner and
 tracker section, and the Legacy tracker, computed from Data/Legacy.lua and the client's achievement tables for one
 plausible character.
 
-    python3 tools/screenshots.py            # WOWMOCK=/path/to/wow-mock-screenshots to override
+    python3 tools/screenshots.py            # FOREVER_CORE=/path/to/forever-core to override
 """
 
 import io
@@ -21,9 +21,10 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
-WOWMOCK = Path(os.environ.get("WOWMOCK", Path.home() / ".claude" / "skills" / "wow-mock-screenshots"))
-if not (WOWMOCK / "wowmock.py").exists():
-    sys.exit(f"wowmock.py not found in {WOWMOCK}; clone cjber/skills or set WOWMOCK")
+FOREVER_CORE = Path(os.environ.get("FOREVER_CORE", Path(__file__).resolve().parents[2] / "forever-core")).expanduser()
+WOWMOCK = FOREVER_CORE / "tools" / "wowmock"
+if not (WOWMOCK / "wowmock.py").is_file():
+    sys.exit(f"wowmock.py not found in {WOWMOCK}; set FOREVER_CORE to the forever-core checkout")
 sys.path.insert(0, str(WOWMOCK))
 
 from gen_legacy import BUILD
