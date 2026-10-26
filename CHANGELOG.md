@@ -12,6 +12,13 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [0.12.8] - 2026-10-26
+
+- **The README's map scene now draws its menu over the whole map frame, and the addon adopts the suite's
+  dead-code gate.** The mock used to clip the menu to part of the frame, so the screenshot is re-rendered and its
+  hash refreshed; `tools/deadcode.py` now scans the addon for namespace members no code reads, Lua files no TOC
+  loads and media nothing references, and runs as its own CI job. Nothing changes in game.
+
 ## [0.12.7] - 2026-10-26
 
 - **The addon now ships the suite's shared settings-page code.** Forever Core's settings-page chrome (`UI/SettingsPage.lua`) and its spec are vendored byte for byte so the suite's shared-code drift gate covers this addon; Legacy keeps drawing its own settings page, so nothing changes in game.
