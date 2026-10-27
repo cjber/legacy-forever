@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [0.12.9] - 2026-10-27
+
 - **Legacy data regenerated for client build 1.60.1.70630.** Achievements, reputations, skills and dungeon wings are rebuilt from the new build, and the generator now reads the newest Forever build from wago.tools' `wowf` product as well as `wow_classic_beta`. wago lists 1.60.1.70630 only under `wowf`, so the daily refresh had been reporting itself already current and skipped regeneration.
 
 ## [0.12.8] - 2026-10-26

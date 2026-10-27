@@ -44,7 +44,7 @@ ns.TITLE = "Legacy Forever"
 -- The Legacy shield: map pins, the map button, menu entries and the zone-completion count all wear it.
 ns.POINTS_ICON = "UI-Legacy-Points-icon-c60"
 -- One sentence for the chat line after an update (WhatsNew.lua): the headline of the release this ships in.
-ns.WHATS_NEW = L["The addon now ships the suite's shared settings-page code."]
+ns.WHATS_NEW = L["Legacy data regenerated for client build 1.60.1.70630."]
 
 ---@param msg string
 function ns.Print(msg)
