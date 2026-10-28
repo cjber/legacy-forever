@@ -21,7 +21,7 @@ L["/lf audit - check the bundled data against the game"] = "/lf audit - 将内�
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 列出游戏对某个成就报告的内容"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 显示可复制到错误报告中的报告"
-L["Legacy data regenerated for client build 1.60.1.70658."] =
+L["Legacy data regenerated for client build 1.60.1.70685."] =
 	"该插件现在使用套件的共用设置页面代码。" -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever会为此地区剩余的任务规划路线。"

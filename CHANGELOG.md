@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [[legacy-forever]] - 2026-10-28
+
+- **Legacy data regenerated for client build 1.60.1.70685.** Achievements, criteria and the completion tables are read against the newer Forever build; regenerating against it produces no player-visible change.
+
 ## [0.12.10] - 2026-10-28
 
 - **Legacy data regenerated for client build 1.60.1.70658.** Achievements, criteria and the
