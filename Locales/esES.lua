@@ -22,7 +22,7 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - muestra lo que indica el juego para un logro"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - muestra un informe para copiar en un aviso de error"
-L["Legacy data regenerated for client build 1.60.1.70658."] =
+L["Legacy data regenerated for client build 1.60.1.70685."] =
 	"El addon ahora incluye el código compartido de la página de ajustes de la suite." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever traza una ruta por las misiones que quedan en esta zona."
