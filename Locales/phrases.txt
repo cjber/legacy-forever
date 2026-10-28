@@ -67,7 +67,7 @@ L["Keeps the shared Forever tracker where you put it. The grip at its top no lon
 	"Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."
 L["Legacy"] = "Legacy"
 L["Legacy Forever report"] = "Legacy Forever report"
-L["Legacy data regenerated for client build 1.60.1.70630."] = "Legacy data regenerated for client build 1.60.1.70630."
+L["Legacy data regenerated for client build 1.60.1.70658."] = "Legacy data regenerated for client build 1.60.1.70658."
 L["Legacy objectives"] = "Legacy objectives"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Levels, skills, ranks and anything without a fixed place."

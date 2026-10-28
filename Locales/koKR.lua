@@ -23,7 +23,7 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 업적 하나에 대해 게임이 알려주는 내용을 표시합니다"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - 오류 제보에 붙여 넣을 보고서를 표시합니다"
-L["Legacy data regenerated for client build 1.60.1.70630."] =
+L["Legacy data regenerated for client build 1.60.1.70658."] =
 	"이제 애드온이 제품군의 공용 설정 페이지 코드를 사용합니다." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever는 이 지역에 남은 퀘스트의 경로를 짜 줍니다."
