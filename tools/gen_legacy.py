@@ -20,8 +20,8 @@ from db2 import (
 from legacy_render import COMPLETION_CATEGORIES, render
 from locations import BATTLEGROUNDS, curated_locations
 
-BUILD = "1.60.1.70630"
-SOURCE_DATE = "2026-10-27"
+BUILD = "1.60.1.70658"
+SOURCE_DATE = "2026-10-28"
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "tools" / ".cache"
 OUTPUT = ROOT / "Data" / "Legacy.lua"
