@@ -46,5 +46,7 @@ Credit for the ideas, translations and reports behind the addon.
 | Bigabyte | Found the quest tracker shifting when moved in Edit Mode (#103) | |
 | overspark | Asked on CurseForge for a way to hide the dungeon and raid entrance pins, which became *Show dungeon and raid entrances* (#139); the same comment prompted drawing a cleared dungeon or raid entrance faded so finished and unfinished instances read differently | |
 | deathmvp1 and berserkerlxl, on CurseForge | Found Questie's quest list covering the Forever tracker sections, which now move clear of it (cjber/shortest-path-forever#214) | |
+| [Mouchoir](https://github.com/Mouchoir) | Found the Lua errors the map button raised as the world map loaded, and wrote the fix (#148, #147, merged as #149) | Code contributor |
+| [DanielVafidis](https://github.com/DanielVafidis) | Reported the addons breaking Questie, fixed in 0.11.2 when nothing of ours was anchored to Questie's quest list any more (#150) | |
 
 Thanks also to everyone else who reported a bug, here or on CurseForge.
