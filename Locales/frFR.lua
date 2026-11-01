@@ -21,7 +21,7 @@ L["/lf - open the world map and its Legacy menu"] = "/lf - ouvrir la carte du mo
 L["/lf audit - check the bundled data against the game"] =
 	"/lf audit - vérifier les données intégrées par rapport au jeu"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
-	"/lf criteria 684 - lister ce que le jeu rapporte pour un hauts faits"
+	"/lf criteria 684 - lister ce que le jeu rapporte pour un haut fait"
 L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
 	"/lf issue - signaler un bug ou demander une fonctionnalité avec un lien d'issue GitHub prêt à l'emploi"
 L["/lf report - show a report to copy into a bug report"] =
@@ -84,7 +84,7 @@ L["On"] = "Activé"
 L["On the world map"] = "Sur la carte du monde"
 L["Open"] = "Ouvrir"
 L["Open a flight master on this continent to check these."] =
-	"Ouvrez un maître des vol sur ce continent pour les vérifier."
+	"Parlez à un maître de vol sur ce continent pour les vérifier."
 L["Open in the Legacy panel"] = "Ouvrir dans le panneau Legacy"
 L["Open the Legacy panel"] = "Ouvrir le panneau Legacy"
 L["Open the map"] = "Ouvrir la carte"

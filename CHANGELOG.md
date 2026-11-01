@@ -12,6 +12,13 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [0.12.14] - 2026-11-01
+
+- **The French translation is rewritten end to end by Brainc3ll.** Every one of the addon's 111 phrases now
+  reads as native French, including the issue-report window, the tracker instructions and the `/lf` command
+  help; the previous machine-translated lines are gone. Two phrases the rewrite introduced with a grammar
+  slip (`/lf criteria` and the flight master hint) are corrected here.
+
 ## [0.12.13] - 2026-10-30
 
 - **THIRD_PARTY.md credits more of the players behind the addon.** Its Ideas and contributors table gains rows for players whose reports, ideas or fixes shipped but were not yet credited there. Thanks to Mouchoir and DanielVafidis for what they reported, asked for and fixed.
