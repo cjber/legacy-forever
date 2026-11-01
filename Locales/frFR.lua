@@ -2,7 +2,7 @@
 -- corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
 local _, ns = ...
 if GetLocale() ~= "frFR" then
-    return
+	return
 end
 local L = ns.L
 
