@@ -12,6 +12,9 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **Continent maps draw their zone badges faster.** A continent's badges used to build every zone's exploration objectives only to throw them away; they now skip them, so opening a continent map does about a tenth of the work.
+- **One unfinished objective reads in the singular.** The map button's tooltip said "1 unfinished Legacy objectives on this map."
+
 ## [0.12.15] - 2026-11-02
 
 - **The report lines read in every shipped language.** The eleven phrases the `/lf issue` composer added were still English in German, Spanish, Korean, Portuguese, Russian and both Chinese files; they are translated now, so nothing in the report window falls back to English. `tools/typecheck.sh` runs the locale check with `--release` from now on, so an English line added without its translations fails the change that adds it.

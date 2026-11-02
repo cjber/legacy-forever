@@ -1,0 +1,36 @@
+version: 1
+
+# Speedpatrol profile for Legacy Forever, a WoW: Forever addon. The game client cannot run here, so
+# every benchmark is a command over the headless Lua harness the specs use. `speedpatrol init`
+# reads a repo without package.json as an HTTP API, so this file is written by hand.
+project:
+  name: legacy-forever
+  source: .
+app:
+  instructions: instructions.md
+  prepare: []
+  setup: []
+  teardown: []
+defaults:
+  iterations: 10
+  warmup: 1
+  timeoutMs: 180000
+  rounds: 2
+benchmarks:
+  - id: harness.perf
+    kind: command
+    critical: true
+    title: "Load and redraw cost in the harness"
+    run: "luajit tools/perf_bench.lua"
+    profile: { enabled: false }
+  - id: gate.specs
+    kind: command
+    critical: false
+    title: "The spec suite, as the gate runs it"
+    run: "for s in tests/*_spec.lua; do luajit \"$s\" >/dev/null || exit 1; done"
+    profile: { enabled: false }
+agents:
+  analyst: { use: claude, timeoutMinutes: 30 }
+  optimizer: { use: claude, enabled: true, maxPerCycle: 1, minImprovement: 0.05 }
+  github: { enabled: false }
+  patrol: { intervalMinutes: 30, pull: origin/main, cycles: 0 }

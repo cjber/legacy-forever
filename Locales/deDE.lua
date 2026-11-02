@@ -8,6 +8,7 @@ local L = ns.L
 L["%d Legacy objective left"] = "Noch %d Vermächtnisziel"
 L["%d Legacy objectives left"] = "Noch %d Vermächtnisziele"
 L["%d not known yet."] = "%d noch unbekannt."
+L["%d unfinished Legacy objective on this map."] = "%d offenes Vermächtnisziel auf dieser Karte."
 L["%d unfinished Legacy objectives on this map."] = "%d offene Vermächtnisziele auf dieser Karte."
 L["%s %d Legacy |4point:points;"] = "%s %d |4Vermächtnispunkt:Vermächtnispunkte;"
 L["%s complete. %s"] = "%s abgeschlossen. %s"
@@ -36,6 +37,7 @@ L["Click to set a waypoint here."] = "Klicken setzt hier eine Kartenmarkierung."
 L["Click to track, with live progress."] = "Klicken zum Verfolgen, mit aktuellem Fortschritt."
 L["Click to travel here with Shortest Path Forever."] = "Klicken, um mit Shortest Path Forever hierher zu reisen."
 L["Close"] = "Schließen"
+L["Continent maps draw their zone badges faster."] = "Kontinentkarten zeichnen ihre Gebietsabzeichen schneller."
 L["Copy link"] = "Link kopieren"
 L["Copy the address, then open it in your browser."] = "Kopiert die Adresse und öffnet sie dann in Eurem Browser."
 L["Defeat"] = "Besiegen"
@@ -108,8 +110,6 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 	"Eure aktuelle Zone und was dort noch zu tun ist. Verfolgte Herausforderungen behalten ihren eigenen Vermächtnisbereich."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"Die angezeigte Zone in der Kartenecke und eine Plakette auf jeder Zone einer Kontinentkarte."
-L["The report lines read in every shipped language."] =
-	"Die Berichtszeilen stehen jetzt in jeder ausgelieferten Sprache."
 L["This addon"] = "Dieses Addon"
 L["This version of Questie isn't supported."] = "Diese Version von Questie wird nicht unterstützt."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =

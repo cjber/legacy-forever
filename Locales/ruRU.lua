@@ -8,6 +8,8 @@ local L = ns.L
 L["%d Legacy objective left"] = "Осталось целей старинных испытаний: %d"
 L["%d Legacy objectives left"] = "Осталось целей старинных испытаний: %d"
 L["%d not known yet."] = "Пока неизвестно: %d."
+L["%d unfinished Legacy objective on this map."] =
+	"Невыполненных целей старинных испытаний на этой карте: %d."
 L["%d unfinished Legacy objectives on this map."] =
 	"Невыполненных целей старинных испытаний на этой карте: %d."
 L["%s %d Legacy |4point:points;"] = "%s %d |4очко:очка:очков; старинных наград"
@@ -42,6 +44,8 @@ L["Click to track, with live progress."] =
 L["Click to travel here with Shortest Path Forever."] =
 	"Щелкните, чтобы отправиться сюда с Shortest Path Forever."
 L["Close"] = "Закрыть"
+L["Continent maps draw their zone badges faster."] =
+	"Карты континентов быстрее рисуют значки зон."
 L["Copy link"] = "Копировать ссылку"
 L["Copy the address, then open it in your browser."] =
 	"Скопируйте адрес и откройте его в браузере."
@@ -117,8 +121,6 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"Просматриваемая зона в углу карты и значок на каждой зоне карты континента."
-L["The report lines read in every shipped language."] =
-	"Строки отчета теперь есть на каждом поставляемом языке."
 L["This addon"] = "Эта модификация"
 L["This version of Questie isn't supported."] = "Эта версия Questie не поддерживается."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =

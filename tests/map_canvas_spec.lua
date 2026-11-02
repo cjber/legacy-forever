@@ -144,6 +144,13 @@ check(button and button:GetParent() == Kit.map, "the map button is a frame of ou
 Kit.Tick()
 local pins = Pins()
 check(#pins == 1 and #Areas() == 1, "opening a zone map draws its objective and its undiscovered areas")
+-- The template binds OnEnter in XML; the harness calls the mixin method.
+button:OnEnter()
+check(
+	tooltip.lines[#tooltip.lines] == "1 unfinished Legacy objective on this map.",
+	"one objective reads in the singular"
+)
+button:OnLeave()
 local pin = pins[1]
 local host = pin:GetParent():GetParent()
 check(host:GetParent() == Kit.canvas, "the pins sit on a layer of ours over the map's canvas")

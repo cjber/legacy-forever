@@ -11,6 +11,7 @@ local L = ns.L
 L["%d Legacy objective left"] = "%d Legacy objective left"
 L["%d Legacy objectives left"] = "%d Legacy objectives left"
 L["%d not known yet."] = "%d not known yet."
+L["%d unfinished Legacy objective on this map."] = "%d unfinished Legacy objective on this map."
 L["%d unfinished Legacy objectives on this map."] = "%d unfinished Legacy objectives on this map."
 L["%s %d Legacy |4point:points;"] = "%s %d Legacy |4point:points;"
 L["%s complete. %s"] = "%s complete. %s"
@@ -41,6 +42,7 @@ L["Click to set a waypoint here."] = "Click to set a waypoint here."
 L["Click to track, with live progress."] = "Click to track, with live progress."
 L["Click to travel here with Shortest Path Forever."] = "Click to travel here with Shortest Path Forever."
 L["Close"] = "Close"
+L["Continent maps draw their zone badges faster."] = "Continent maps draw their zone badges faster."
 L["Copy issue link"] = "Copy issue link"
 L["Copy link"] = "Copy link"
 L["Copy report"] = "Copy report"
@@ -109,7 +111,6 @@ L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
 L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
 	"The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."
-L["The report lines read in every shipped language."] = "The report lines read in every shipped language."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =

@@ -121,7 +121,7 @@ local function AddZoneTooltip(tooltip, zone)
 	GameTooltip_AddInstructionLine(tooltip, L["Click the zone to see where."])
 end
 
----@param key 'showAreas'|'showEntrances'|'whatsNew'|'suggestFamily'
+---@param key LegacySwitchKey
 local function ToggleSetting(key)
 	ns.Saved.Set(key, not ns.Saved.Get(key))
 end
@@ -339,7 +339,9 @@ function LegacyForeverMapButtonMixin:OnEnter()
 	GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 	GameTooltip_SetTitle(GameTooltip, ns.TITLE)
 	if self.count and self.count > 0 then
-		GameTooltip_AddNormalLine(GameTooltip, L["%d unfinished Legacy objectives on this map."]:format(self.count))
+		local line = self.count == 1 and L["%d unfinished Legacy objective on this map."]
+			or L["%d unfinished Legacy objectives on this map."]
+		GameTooltip_AddNormalLine(GameTooltip, line:format(self.count))
 	else
 		GameTooltip_AddNormalLine(GameTooltip, L["No unfinished Legacy objectives with a place on this map."])
 	end

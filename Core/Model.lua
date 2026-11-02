@@ -38,28 +38,36 @@ end
 -- progress is unknown are left out rather than shown as unfinished; Audit reports them.
 -- With `includeDone`, a cleared dungeon or raid entrance is kept as well, marked
 -- `done`, so the map can show which instances are finished and which are not.
+-- With `placeBound`, a group whose first objective is exploration (MapContents.IsExploration) is
+-- left out, and its other entries are never read.
 ---@param data LegacyData
 ---@param uiMapID number
 ---@param visible LegacySet
 ---@param criteria LegacyCriteriaReader
 ---@param includeDone boolean? also keep cleared dungeon and raid entrances, marked done
+---@param placeBound boolean? leave out exploration groups
 ---@return LegacyGroup[]
-function Model.ZoneObjectives(data, uiMapID, visible, criteria, includeDone)
-	---@type LegacyGroup[], table<number, LegacyGroup>
+function Model.ZoneObjectives(data, uiMapID, visible, criteria, includeDone, placeBound)
+	---@type LegacyGroup[], table<number, LegacyGroup|false>
 	local groups, byAchievement = {}, {}
 	for _, entry in ipairs(data.zones[uiMapID] or {}) do
-		local challenge = Model.OwningChallenge(data, entry.achievement, visible)
+		local group = byAchievement[entry.achievement]
+		local challenge = group ~= false and Model.OwningChallenge(data, entry.achievement, visible)
 		local live = challenge and criteria(entry.achievement)
 		local progress = live and live[entry.criteria]
 		if challenge and progress and (not progress.completed or (includeDone and entry.kind == "instance")) then
-			local group = byAchievement[entry.achievement]
-			if not group then
-				group = { achievement = entry.achievement, challenge = challenge, uiMapID = uiMapID, objectives = {} }
+			if group == nil then
+				group = not (placeBound and entry.kind == "explore")
+					and { achievement = entry.achievement, challenge = challenge, uiMapID = uiMapID, objectives = {} }
 				byAchievement[entry.achievement] = group
-				groups[#groups + 1] = group
+				if group then
+					groups[#groups + 1] = group
+				end
 			end
-			group.objectives[#group.objectives + 1] =
-				{ entry = entry, text = progress.text, done = progress.completed or nil }
+			if group then
+				group.objectives[#group.objectives + 1] =
+					{ entry = entry, text = progress.text, done = progress.completed or nil }
+			end
 		end
 	end
 	return groups

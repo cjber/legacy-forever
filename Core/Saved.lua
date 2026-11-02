@@ -13,6 +13,25 @@ local ns = addon
 local Saved = {}
 ns.Saved = Saved
 
+-- Every switch's saved key: the top-level switches, then the ones under zoneCompletion (DEFAULTS below).
+---@alias LegacySwitchKey
+---| 'showAreas'
+---| 'showEntrances'
+---| 'whatsNew'
+---| 'statsShare'
+---| 'suggestFamily'
+---| 'map'
+---| 'tracker'
+---| 'mapCollapsed'
+---| 'trackerCollapsed'
+---| 'count_areas'
+---| 'count_taxis'
+---| 'count_dungeons'
+---| 'count_raids'
+---| 'count_legacy'
+---| 'count_reputations'
+---| 'count_quests'
+
 -- Every switch's default. A saved switch stays nil until the player changes it, and nil reads as the
 -- default here, so an old save file and a new option always agree.
 ---@type LegacyDefaults
@@ -97,7 +116,7 @@ end
 -- Where a switch is saved and where its default is declared: the top-level switches beside the data,
 -- every other key (the zone completion surfaces, collapse states and "count_" .. category) under
 -- zoneCompletion, as save files have always had them.
----@param key string
+---@param key LegacySwitchKey
 ---@return table<string, boolean> saved
 ---@return table<string, boolean> defaults
 local function Home(key)
@@ -110,7 +129,7 @@ local function Home(key)
 end
 
 -- A switch's default; a key nothing declares is off.
----@param key string
+---@param key LegacySwitchKey
 ---@return boolean
 function Saved.Default(key)
 	local _, defaults = Home(key)
@@ -118,7 +137,7 @@ function Saved.Default(key)
 end
 
 -- A switch: what the player saved, its default while unset. Reading never writes the switch.
----@param key string
+---@param key LegacySwitchKey
 ---@return boolean
 function Saved.Get(key)
 	local value = Home(key)[key]
@@ -128,18 +147,18 @@ function Saved.Get(key)
 	return value
 end
 
----@type (fun(key: string, value: boolean))[]
+---@type (fun(key: LegacySwitchKey, value: boolean))[]
 local listeners = {}
 
 -- Called after every Set with the key and its new value, in the order registered. A listener picks the keys
 -- it draws from.
----@param callback fun(key: string, value: boolean)
+---@param callback fun(key: LegacySwitchKey, value: boolean)
 function Saved.OnChange(callback)
 	listeners[#listeners + 1] = callback
 end
 
 -- Save a switch and tell the listeners, whoever asked: a menu, the Settings page, a collapse arrow.
----@param key string
+---@param key LegacySwitchKey
 ---@param value boolean
 function Saved.Set(key, value)
 	Home(key)[key] = value

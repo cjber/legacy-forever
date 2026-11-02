@@ -8,6 +8,8 @@ local L = ns.L
 L["%d Legacy objective left"] = "남은 유산 목표 %d개"
 L["%d Legacy objectives left"] = "남은 유산 목표 %d개"
 L["%d not known yet."] = "%d개는 아직 알 수 없습니다."
+L["%d unfinished Legacy objective on this map."] =
+	"이 지도에 완료하지 않은 유산 목표가 %d개 있습니다."
 L["%d unfinished Legacy objectives on this map."] =
 	"이 지도에 완료하지 않은 유산 목표가 %d개 있습니다."
 L["%s %d Legacy |4point:points;"] = "%s 유산 점수 %d|4점:점;"
@@ -39,6 +41,7 @@ L["Click to track, with live progress."] =
 L["Click to travel here with Shortest Path Forever."] =
 	"클릭하여 Shortest Path Forever로 이곳까지 이동합니다."
 L["Close"] = "닫기"
+L["Continent maps draw their zone badges faster."] = "대륙 지도가 지역 배지를 더 빨리 그립니다."
 L["Copy link"] = "링크 복사"
 L["Copy the address, then open it in your browser."] = "주소를 복사한 후 브라우저에서 여십시오."
 L["Defeat"] = "처치"
@@ -112,8 +115,6 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"지도 모서리에 보고 있는 지역을, 대륙 지도에는 각 지역에 배지를 표시합니다."
-L["The report lines read in every shipped language."] =
-	"보고서 문구가 이제 배포되는 모든 언어로 표시됩니다."
 L["This addon"] = "이 애드온"
 L["This version of Questie isn't supported."] = "이 버전의 Questie는 지원하지 않습니다."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =

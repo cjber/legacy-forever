@@ -78,6 +78,10 @@ equal(#kept, 1, "with includeDone a cleared entrance is kept")
 equal(kept[1].objectives[1].done, true, "and marked done")
 equal(kept[1].objectives[1].entry.kind, "instance", "the cleared entrance")
 
+local placeBound = Model.ZoneObjectives(data, 1, visible, criteria, false, true)
+equal(#placeBound, 1, "placeBound leaves out the exploration group")
+equal(placeBound[1].achievement, 100, "and keeps the challenge's own steps")
+
 equal(#Model.ZoneObjectives(data, 1, {}, criteria), 0, "nothing without a visible challenge")
 equal(#Model.ZoneObjectives(data, 3, visible, criteria), 0, "unknown map")
 local unknown = Model.ZoneObjectives(data, 1, visible, function()

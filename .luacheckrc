@@ -1,6 +1,6 @@
 std = "lua51"
 max_line_length = 120
-exclude_files = { "tools/.cache/**", ".release/**", ".types/**", "types/**", ".claude/**" }
+exclude_files = { "tools/.cache/**", ".release/**", ".types/**", "types/**", ".claude/**", ".bugpatrol/runs/**", ".speedpatrol/runs/**", ".sloppatrol/runs/**" }
 ignore = { "212/_.*", "212/self" } -- unused args prefixed with _, and self on mixin handlers
 
 globals = { "AdventureGuideForeverDB", "ForeverFamily", "ForeverMapMarkers", "ForeverTrackerHost",

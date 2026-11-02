@@ -9,6 +9,7 @@ local L = ns.L
 L["%d Legacy objective left"] = "%d objectif Legacy restant"
 L["%d Legacy objectives left"] = "%d objectifs Legacy restants"
 L["%d not known yet."] = "%d encore inconnu."
+L["%d unfinished Legacy objective on this map."] = "%d objectif Legacy non terminé sur cette carte."
 L["%d unfinished Legacy objectives on this map."] = "%d objectifs Legacy non terminés sur cette carte."
 L["%s %d Legacy |4point:points;"] = "%s %d |4point Legacy:points Legacy;"
 L["%s complete. %s"] = "%s terminé. %s"
@@ -41,6 +42,7 @@ L["Click to set a waypoint here."] = "Cliquez pour placer un point de repère ic
 L["Click to track, with live progress."] = "Cliquez pour suivre, avec progression en direct."
 L["Click to travel here with Shortest Path Forever."] = "Cliquez pour voyager ici avec Shortest Path Forever."
 L["Close"] = "Fermer"
+L["Continent maps draw their zone badges faster."] = "Les cartes de continent affichent plus vite leurs badges de zone."
 L["Copy issue link"] = "Copier le lien de l'issue"
 L["Copy link"] = "Copier le lien"
 L["Copy report"] = "Copier le rapport"
@@ -120,8 +122,6 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 	"La zone où vous vous trouvez et ce qui reste à y faire. Les défis que vous suivez gardent leur propre section Legacy."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"La zone que vous consultez dans le coin de la carte, et un badge sur chaque zone d'une carte de continent."
-L["The report lines read in every shipped language."] =
-	"Les lignes du rapport existent désormais dans chaque langue livrée."
 L["This addon"] = "Cet addon"
 L["This version of Questie isn't supported."] = "Cette version de Questie n'est pas prise en charge."
 L["Title"] = "Titre"

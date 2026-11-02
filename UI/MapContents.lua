@@ -67,12 +67,7 @@ local function Badges(continentID)
 	for uiMapID in pairs(ns.Data.zones) do
 		local info = C_Map.GetMapInfo(uiMapID)
 		if info and ns.Live.ContinentOf(uiMapID) == continentID then
-			local groups = {}
-			for _, group in ipairs((MapContents.Objectives(uiMapID))) do
-				if not MapContents.IsExploration(group) then
-					groups[#groups + 1] = group
-				end
-			end
+			local groups = ns.Model.ZoneObjectives(ns.Data, uiMapID, ns.Live.Visible(), ns.Live.Criteria, false, true)
 			local count = ns.Model.CountObjectives(groups)
 			local left, right, top, bottom = C_Map.GetMapRectOnMap(uiMapID, continentID)
 			if count > 0 and left then

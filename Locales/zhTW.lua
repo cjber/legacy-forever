@@ -8,6 +8,7 @@ local L = ns.L
 L["%d Legacy objective left"] = "剩餘%d個傳承目標"
 L["%d Legacy objectives left"] = "剩餘%d個傳承目標"
 L["%d not known yet."] = "還有%d個未知。"
+L["%d unfinished Legacy objective on this map."] = "此地圖上有%d個未完成的傳承目標。"
 L["%d unfinished Legacy objectives on this map."] = "此地圖上有%d個未完成的傳承目標。"
 L["%s %d Legacy |4point:points;"] = "%s %d|4個:個;傳承點"
 L["%s complete. %s"] = "%s已完成。%s"
@@ -34,6 +35,7 @@ L["Click to set a waypoint here."] = "點擊在此處放置地圖標記。"
 L["Click to track, with live progress."] = "點擊追蹤，即時顯示進度。"
 L["Click to travel here with Shortest Path Forever."] = "點擊使用Shortest Path Forever前往此處。"
 L["Close"] = "關閉"
+L["Continent maps draw their zone badges faster."] = "大陸地圖繪製區域徽章更快了。"
 L["Copy link"] = "複製連結"
 L["Copy the address, then open it in your browser."] = "複製該網址，然後在瀏覽器中開啟。"
 L["Defeat"] = "擊敗"
@@ -104,7 +106,6 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 	"你所在的地區以及那裡剩餘的事項。你追蹤的挑戰保留在各自的傳承區塊中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"地圖角落顯示目前查看的地區，大陸地圖上的每個地區顯示一個徽章。"
-L["The report lines read in every shipped language."] = "回報相關文字現在都有全部隨附語言的譯文。"
 L["This addon"] = "本插件"
 L["This version of Questie isn't supported."] = "不支援此版本的Questie。"
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
