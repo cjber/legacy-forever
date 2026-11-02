@@ -136,3 +136,16 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"목표 추적기를 사용할 수 없어 추적 중인 도전을 표시할 수 없습니다."
 L["updated to %s. %s"] = "%s 버전으로 업데이트되었습니다. %s"
+L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
+	"/lf issue - 오류 제보나 기능 요청에 바로 쓸 수 있는 GitHub 이슈 링크를 만듭니다"
+L["Bug"] = "오류"
+L["Bug: "] = "오류: "
+L["Copy issue link"] = "이슈 링크 복사"
+L["Copy report"] = "보고서 복사"
+L["Feature request"] = "기능 요청"
+L["Feature request: "] = "기능 요청: "
+L["Report a bug or request a feature"] = "오류 제보 및 기능 요청"
+L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
+	"링크가 선택되어 있습니다. Ctrl+C(Mac은 Cmd+C)를 누른 뒤 브라우저에 붙여 넣으십시오. GitHub에서 작성된 이슈가 열립니다."
+L["Title"] = "제목"
+L["What happened, or what you would like"] = "무슨 일이 있었는지 또는 원하시는 내용"

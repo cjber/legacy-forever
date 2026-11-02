@@ -132,3 +132,16 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"o rastreador de objetivos não está disponível, então os desafios rastreados não podem ser exibidos."
 L["updated to %s. %s"] = "atualizado para %s. %s"
+L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
+	"/lf issue - cria um link de issue do GitHub pronto para relatar um erro ou pedir um recurso"
+L["Bug"] = "Erro"
+L["Bug: "] = "Erro: "
+L["Copy issue link"] = "Copiar link da issue"
+L["Copy report"] = "Copiar relatório"
+L["Feature request"] = "Sugestão"
+L["Feature request: "] = "Sugestão: "
+L["Report a bug or request a feature"] = "Relatar um erro ou sugerir um recurso"
+L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
+	"O link está selecionado. Pressione Ctrl+C (Cmd+C no Mac) e cole num navegador; o GitHub abre uma issue já preenchida."
+L["Title"] = "Título"
+L["What happened, or what you would like"] = "O que aconteceu, ou o que você gostaria"

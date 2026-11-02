@@ -128,3 +128,16 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"目标追踪栏不可用，因此无法显示追踪的挑战。"
 L["updated to %s. %s"] = "已更新至%s。%s"
+L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
+	"/lf issue - 生成可直接使用的 GitHub issue 链接，用于报告错误或提出功能建议"
+L["Bug"] = "错误"
+L["Bug: "] = "错误："
+L["Copy issue link"] = "复制 issue 链接"
+L["Copy report"] = "复制报告"
+L["Feature request"] = "功能建议"
+L["Feature request: "] = "功能建议："
+L["Report a bug or request a feature"] = "报告错误或提出功能建议"
+L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
+	"链接已选中。按 Ctrl+C（Mac 上为 Cmd+C），然后粘贴到浏览器中；GitHub 会打开已填好的 issue。"
+L["Title"] = "标题"
+L["What happened, or what you would like"] = "发生了什么，或你希望有什么"

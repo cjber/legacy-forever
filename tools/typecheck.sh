@@ -36,7 +36,8 @@ python3 -m tools.lint_taint
 python3 tools/lint_art.py
 python3 tools/lint_secret.py
 python3 tools/check_editorconfig.py
-python3 tools/check_locales.py
+# --release: a shipped locale missing a line now fails the PR that adds the English string, not the release.
+python3 tools/check_locales.py --release
 python3 tools/check_family.py
 python3 tools/typecheck_coverage.py
 python3 tools/lint_multivalue.py
