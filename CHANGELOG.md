@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-02
+
+- **Legacy Forever 1.0 is the first stable release, ready for the WoW: Forever launch.** The map pins, tracker and settings work as they did in 0.12.16; the version number now marks the addon as ready for everyday play, and the chat line after the update says so in every shipped language.
+
 ## [0.12.16] - 2026-11-02
 
 - **Continent maps draw their zone badges faster.** A continent's badges used to build every zone's exploration objectives only to throw them away; they now skip them, so opening a continent map does about a tenth of the work.

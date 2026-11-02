@@ -41,7 +41,6 @@ L["Click to track, with live progress."] =
 L["Click to travel here with Shortest Path Forever."] =
 	"클릭하여 Shortest Path Forever로 이곳까지 이동합니다."
 L["Close"] = "닫기"
-L["Continent maps draw their zone badges faster."] = "대륙 지도가 지역 배지를 더 빨리 그립니다."
 L["Copy link"] = "링크 복사"
 L["Copy the address, then open it in your browser."] = "주소를 복사한 후 브라우저에서 여십시오."
 L["Defeat"] = "처치"
@@ -107,6 +106,8 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"각 지역에서 진행할 수 있는 유산 도전을 보여줍니다."
 L["Stop tracking"] = "추적 해제"
 L["Suggest my other Forever addons"] = "제 다른 Forever 애드온 추천"
+L["The first stable release, ready for the WoW: Forever launch."] =
+	"WoW: Forever 출시에 맞춘 첫 번째 안정 버전입니다."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"텍스트가 선택되어 있습니다. Ctrl+C(Mac은 Cmd+C)로 복사한 뒤 오류 제보에 붙여 넣으세요."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =

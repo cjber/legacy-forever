@@ -35,7 +35,6 @@ L["Click to set a waypoint here."] = "點擊在此處放置地圖標記。"
 L["Click to track, with live progress."] = "點擊追蹤，即時顯示進度。"
 L["Click to travel here with Shortest Path Forever."] = "點擊使用Shortest Path Forever前往此處。"
 L["Close"] = "關閉"
-L["Continent maps draw their zone badges faster."] = "大陸地圖繪製區域徽章更快了。"
 L["Copy link"] = "複製連結"
 L["Copy the address, then open it in your browser."] = "複製該網址，然後在瀏覽器中開啟。"
 L["Defeat"] = "擊敗"
@@ -98,6 +97,8 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"顯示每個地區中你可以推進的傳承挑戰。"
 L["Stop tracking"] = "停止追蹤"
 L["Suggest my other Forever addons"] = "推薦我的其他Forever插件"
+L["The first stable release, ready for the WoW: Forever launch."] =
+	"首個穩定版本，為 WoW: Forever 上線做好準備。"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"文字已選取。按Ctrl+C（Mac上為Cmd+C）複製，然後貼到你的錯誤回報中。"
 L["The tracker is locked. Turn off Lock the tracker to move it."] =

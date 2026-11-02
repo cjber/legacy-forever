@@ -37,8 +37,6 @@ L["Click to set a waypoint here."] = "Clique para pôr um marcador de mapa aqui.
 L["Click to track, with live progress."] = "Clique para rastrear, com o progresso ao vivo."
 L["Click to travel here with Shortest Path Forever."] = "Clique para viajar até aqui com o Shortest Path Forever."
 L["Close"] = "Fechar"
-L["Continent maps draw their zone badges faster."] =
-	"Os mapas de continente desenham seus emblemas de zona mais rápido."
 L["Copy link"] = "Copiar link"
 L["Copy the address, then open it in your browser."] = "Copie o endereço e abra-o no seu navegador."
 L["Defeat"] = "Derrotar"
@@ -103,6 +101,8 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"Mostra os Desafios de Legado que você pode avançar em cada zona."
 L["Stop tracking"] = "Não rastrear"
 L["Suggest my other Forever addons"] = "Sugerir meus outros AddOns Forever"
+L["The first stable release, ready for the WoW: Forever launch."] =
+	"A primeira versão estável, pronta para o lançamento de WoW: Forever."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"O texto está selecionado. Pressione Ctrl+C (Cmd+C no Mac) para copiá-lo e cole-o no seu relato de erro."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =

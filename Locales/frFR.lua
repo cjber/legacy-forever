@@ -42,7 +42,6 @@ L["Click to set a waypoint here."] = "Cliquez pour placer un point de repère ic
 L["Click to track, with live progress."] = "Cliquez pour suivre, avec progression en direct."
 L["Click to travel here with Shortest Path Forever."] = "Cliquez pour voyager ici avec Shortest Path Forever."
 L["Close"] = "Fermer"
-L["Continent maps draw their zone badges faster."] = "Les cartes de continent affichent plus vite leurs badges de zone."
 L["Copy issue link"] = "Copier le lien de l'issue"
 L["Copy link"] = "Copier le lien"
 L["Copy report"] = "Copier le rapport"
@@ -112,6 +111,8 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"Affiche les défis Legacy que vous pouvez progresser dans chaque zone."
 L["Stop tracking"] = "Arrêter le suivi"
 L["Suggest my other Forever addons"] = "Suggérer mes autres addons Forever"
+L["The first stable release, ready for the WoW: Forever launch."] =
+	"La première version stable, prête pour le lancement de WoW: Forever." -- mt
 L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
 	"Le lien est sélectionné. Appuyez sur Ctrl+C (Cmd+C sur Mac), puis collez-le dans un navigateur ; GitHub ouvrira une issue pré-remplie."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =

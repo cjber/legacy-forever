@@ -44,8 +44,6 @@ L["Click to track, with live progress."] =
 L["Click to travel here with Shortest Path Forever."] =
 	"Щелкните, чтобы отправиться сюда с Shortest Path Forever."
 L["Close"] = "Закрыть"
-L["Continent maps draw their zone badges faster."] =
-	"Карты континентов быстрее рисуют значки зон."
 L["Copy link"] = "Копировать ссылку"
 L["Copy the address, then open it in your browser."] =
 	"Скопируйте адрес и откройте его в браузере."
@@ -113,6 +111,8 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"Показывает старинные испытания, которые можно продвинуть в каждой зоне."
 L["Stop tracking"] = "Не отслеживать"
 L["Suggest my other Forever addons"] = "Предлагать другие мои модификации Forever"
+L["The first stable release, ready for the WoW: Forever launch."] =
+	"Первая стабильная версия, готовая к запуску WoW: Forever."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"Текст выделен. Нажмите Ctrl+C (Cmd+C на Mac), чтобы скопировать его, и вставьте в сообщение об ошибке."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
