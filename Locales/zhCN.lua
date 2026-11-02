@@ -21,8 +21,6 @@ L["/lf audit - check the bundled data against the game"] = "/lf audit - 将内�
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 列出游戏对某个成就报告的内容"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 显示可复制到错误报告中的报告"
-L["Legacy data regenerated for client build 1.60.1.70685."] =
-	"该插件现在使用套件的共用设置页面代码。" -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever会为此地区剩余的任务规划路线。"
 L["Already complete"] = "已完成" -- mt
@@ -106,6 +104,7 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 	"你所在的地区以及那里剩余的事项。你追踪的挑战保留在各自的传承区块中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"地图角落显示当前查看的地区，大陆地图上的每个地区显示一个徽章。"
+L["The report lines read in every shipped language."] = "报告相关文本现在都有全部随附语言的译文。"
 L["This addon"] = "本插件"
 L["This version of Questie isn't supported."] = "不支持此版本的Questie。"
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =

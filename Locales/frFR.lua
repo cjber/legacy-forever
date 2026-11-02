@@ -67,8 +67,6 @@ L["Keeps the shared Forever tracker where you put it. The grip at its top no lon
 	"Maintient le suivi partagé Forever là où vous l'avez placé. La poignée en haut ne permet plus de le glisser."
 L["Legacy"] = "Legacy"
 L["Legacy Forever report"] = "Rapport Legacy Forever"
-L["Legacy data regenerated for client build 1.60.1.70685."] =
-	"Données Legacy régénérées pour le build client 1.60.1.70685."
 L["Legacy objectives"] = "Objectifs Legacy"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Niveaux, compétences, rangs et tout ce qui n'a pas d'emplacement fixe."
@@ -122,6 +120,8 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 	"La zone où vous vous trouvez et ce qui reste à y faire. Les défis que vous suivez gardent leur propre section Legacy."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"La zone que vous consultez dans le coin de la carte, et un badge sur chaque zone d'une carte de continent."
+L["The report lines read in every shipped language."] =
+	"Les lignes du rapport existent désormais dans chaque langue livrée."
 L["This addon"] = "Cet addon"
 L["This version of Questie isn't supported."] = "Cette version de Questie n'est pas prise en charge."
 L["Title"] = "Titre"

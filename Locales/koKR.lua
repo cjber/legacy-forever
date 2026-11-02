@@ -23,8 +23,6 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 업적 하나에 대해 게임이 알려주는 내용을 표시합니다"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - 오류 제보에 붙여 넣을 보고서를 표시합니다"
-L["Legacy data regenerated for client build 1.60.1.70685."] =
-	"이제 애드온이 제품군의 공용 설정 페이지 코드를 사용합니다." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever는 이 지역에 남은 퀘스트의 경로를 짜 줍니다."
 L["Already complete"] = "이미 완료됨" -- mt
@@ -114,6 +112,8 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"지도 모서리에 보고 있는 지역을, 대륙 지도에는 각 지역에 배지를 표시합니다."
+L["The report lines read in every shipped language."] =
+	"보고서 문구가 이제 배포되는 모든 언어로 표시됩니다."
 L["This addon"] = "이 애드온"
 L["This version of Questie isn't supported."] = "이 버전의 Questie는 지원하지 않습니다."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =

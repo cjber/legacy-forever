@@ -23,8 +23,6 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - listet, was das Spiel für einen Erfolg meldet"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - zeigt einen Bericht zum Kopieren in eine Fehlermeldung"
-L["Legacy data regenerated for client build 1.60.1.70685."] =
-	"Das Addon nutzt jetzt den gemeinsamen Einstellungsseiten-Code der Suite." -- mt
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever plant eine Route durch die übrigen Quests dieser Zone."
 L["Already complete"] = "Bereits abgeschlossen" -- mt
@@ -110,6 +108,8 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 	"Eure aktuelle Zone und was dort noch zu tun ist. Verfolgte Herausforderungen behalten ihren eigenen Vermächtnisbereich."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"Die angezeigte Zone in der Kartenecke und eine Plakette auf jeder Zone einer Kontinentkarte."
+L["The report lines read in every shipped language."] =
+	"Die Berichtszeilen stehen jetzt in jeder ausgelieferten Sprache."
 L["This addon"] = "Dieses Addon"
 L["This version of Questie isn't supported."] = "Diese Version von Questie wird nicht unterstützt."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
