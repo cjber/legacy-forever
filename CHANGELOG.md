@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [0.12.16] - 2026-11-02
+
 - **Continent maps draw their zone badges faster.** A continent's badges used to build every zone's exploration objectives only to throw them away; they now skip them, so opening a continent map does about a tenth of the work.
 - **One unfinished objective reads in the singular.** The map button's tooltip said "1 unfinished Legacy objectives on this map."
 
