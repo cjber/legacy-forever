@@ -1,9 +1,9 @@
 ---
-name: sift-project
-description: "Project profile for sift in legacy-forever: the exact quality-gate and evidence commands, live roots that must never be deleted as dead code, exclusions, conventions and risk order. Load before running sift or any code-quality, cleanup or dead-code work in this repository."
+name: sloppatrol-project
+description: "Project profile for Sloppatrol in legacy-forever: the exact quality-gate and evidence commands, live roots that must never be deleted as dead code, exclusions, conventions and risk order. Load before running Sloppatrol or any code-quality, cleanup or dead-code work in this repository."
 ---
 
-# sift project profile: legacy-forever
+# Sloppatrol project profile: legacy-forever
 
 Legacy Forever is a World of Warcraft: Forever (Classic beta client, Interface 16001, Lua 5.1)
 addon that puts unfinished Legacy challenges on the world map and in the objective tracker.
@@ -27,7 +27,7 @@ Run in order from the repository root. All must pass before and after any audit 
 | Tests | `for s in tests/*_spec.lua; do luajit "$s" \|\| exit 1; done` | exit 0 (`model_spec: N checks passed`) |
 | Workflows | `actionlint && zizmor --offline .github` | exit 0, no findings |
 | Secrets | `gitleaks git --redact --no-banner .` | `no leaks found` |
-| Changelog, project rules | `python3 tools/changelog.py --check && python3 .sift/gate.py --base origin/main && python3 .sift/agents.py check` | exit 0 |
+| Changelog, project rules | `python3 tools/changelog.py --check && python3 .sloppatrol/gate.py --base origin/main && python3 .sloppatrol/agents.py check` | exit 0 |
 
 CI (`.github/workflows/ci.yml`) runs all of these with the versions above pinned. Where actionlint
 or zizmor is not installed, run `uvx --from actionlint-py==1.7.12.24 actionlint` and
@@ -44,13 +44,13 @@ On-demand tools for audits. Output is candidates, never verdicts.
 |---|---|---|
 | Dead code (Lua) | `luacheck .` (unused locals/args; currently clean) | mixin methods called by the host (see live roots) |
 | Dead code (Python) | `uvx vulture tools --min-confidence 60` | argparse handlers |
-| Duplication | `npx --yes jscpd@4 --silent --reporters json --output .sift/runs/jscpd --ignore "**/.sift/**,Data/**" .` | XML template blocks in `UI/Map.xml`/`UI/Completion.xml` (UI boilerplate) |
+| Duplication | `npx --yes jscpd@4 --silent --reporters json --output .sloppatrol/runs/jscpd --ignore "**/.sloppatrol/**,Data/**" .` | XML template blocks in `UI/Map.xml`/`UI/Completion.xml` (UI boilerplate) |
 | Globals drift | check runtime globals against `.luacheckrc`, pinned WoW annotations and `types/forever.lua` | no LuaLS globals whitelist |
 
 `rg` with no path argument reads stdin in a non-interactive shell and hangs: always pass `.`. Plain `rg` skips
 hidden paths; add `--hidden` when a search must cover `.github/`.
 
-sift's inventory marks `Core/Model.lua` and `tools/legacy_render.py` as generated because the word
+The audit's inventory marks `Core/Model.lua` and `tools/legacy_render.py` as generated because the word
 appears in their first five lines; only `Data/Legacy.lua` is generated.
 
 Behaviour-preserving proof for `tools/`: regenerate and diff against the committed output.
@@ -58,9 +58,7 @@ Behaviour-preserving proof for `tools/`: regenerate and diff against the committ
 from another checkout or run without `--offline` to fetch the pinned build), and `python3
 tools/screenshots.py` rewrites `docs/screenshots/*.png`. A clean `git status` afterwards proves the
 edit changed nothing. `gen_legacy.py --offline` fails when the cache holds an older build than
-`BUILD`; run it once online to fetch the pinned build. The standards slice reads the pinned
-`wow-forever-addon` pack from the sift cache (`agents.py standards` prints its path);
-`SIFT_STANDARDS_PATH=$HOME/forever-core` overrides it with a local checkout that may not match the pin.
+`BUILD`; run it once online to fetch the pinned build. The standards slice reads the installed `wow-forever-addon` skill.
 
 ## Live roots
 
@@ -178,9 +176,9 @@ confirmed defect of one of these shapes with `settled:<name>`.
 
 ## Project rules and lenses
 
-- Rules: `file-size-no-growth` (`.sift/scripts/`, from the sift catalog) fails a change that adds
+- Rules: `file-size-no-growth` (`.sloppatrol/scripts/`) fails a change that adds
   a file over 1000 lines or grows one. Generated `Data/*.lua` is excluded. `workflow-hashfiles-path`
-  (`.sift/scripts/`) fails a workflow whose `hashFiles` names a literal path that does not exist.
+  (`.sloppatrol/scripts/`) fails a workflow whose `hashFiles` names a literal path that does not exist.
 - The BigWigs packager drops every dot-prefixed path itself, so `.pkgmeta` lists only
   non-dot ignores; a dot entry there is dead config.
 - Lenses: none yet.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# sift-scope: all
-# sift-fix: delete the argument or name the replacement file: hashFiles ignores a path that matches nothing
+# sloppatrol-scope: all
+# sloppatrol-fix: delete the argument or name the replacement file: hashFiles ignores a path that matches nothing
 """Report a literal hashFiles() path in a workflow that names no file.
 
 Seen in .github/workflows/ci.yml: a cache key hashed 'tools/diff_forever.py', a file
@@ -21,9 +21,9 @@ GLOB = set("*?[!")
 
 
 def main() -> int:
-    rule = os.environ["SIFT_RULE"]
+    rule = os.environ["SLOPPATROL_RULE"]
     hits = []
-    for path in Path(os.environ["SIFT_FILES"]).read_text().splitlines():
+    for path in Path(os.environ["SLOPPATROL_FILES"]).read_text().splitlines():
         if not path.startswith(".github/workflows/") or not path.endswith((".yml", ".yaml")):
             continue
         for number, line in enumerate(Path(path).read_text().splitlines(), 1):
