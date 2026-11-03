@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **Dungeon entrances follow the world map's filter.** Turning off Show instance entrances also hides Legacy's dungeon and raid pins, while exploration and completion information remain visible. Thanks to cjber for requesting the compatibility audit (#235).
+
 - **The map menu stays beside the map's own controls.** Questie's and other Krowi map buttons stack on the left, so they no longer push Legacy's menu down an empty slot on the right. Thanks to cjber for requesting the compatibility audit (#235).
 
 - **Exploration tooltips remain available with Leatrix Maps.** Revealed ground stays clear until you hover an unfinished area, which still highlights and shows its Legacy information. Thanks to cjber for requesting the compatibility audit (#235).

@@ -46,6 +46,7 @@ GameTooltip_AddInstructionLine, GameTooltip_AddDisabledLine = Line, Line
 GameTooltip_AddColoredLine = Line
 
 -- What the map shows: on map 1429 an objective with a place and a shaded area; on continent 1415 a zone badge.
+local drawCalls = 0
 local group = { challenge = 10, achievement = 10, uiMapID = 1429, objectives = {} }
 local objective = { text = "Slay Hogger", entry = { kind = "kill", x = 0.25, y = 0.5 } }
 group.objectives[1] = objective
@@ -81,6 +82,7 @@ local ns = {
 	},
 	MapContents = {
 		Drawn = function(uiMapID)
+			drawCalls = drawCalls + 1
 			return drawn[uiMapID] or { badges = {}, pins = {} }
 		end,
 		Objectives = function()
@@ -302,6 +304,12 @@ check(#Pins() == 0 and #Areas() == 1, "turning entrances off redraws the pins")
 drawn[1429].pins = { { group = group, objective = objective } }
 switched("showAreas", true)
 check(#Pins() == 1 and #Kit.frames == before, "a redraw reuses the pins it released")
+
+local beforeFilter = drawCalls
+Kit.Fire("CVAR_UPDATE", "unrelatedSetting")
+check(drawCalls == beforeFilter, "unrelated native filters leave Legacy pins alone")
+Kit.Fire("CVAR_UPDATE", "showDungeonEntrancesOnMap")
+check(drawCalls == beforeFilter + 1, "the native entrance filter redraws an open map")
 
 -- Other addons find the shown pins through ForeverMapMarkers.
 local markers = ForeverMapMarkers.LegacyForever(Kit.map)

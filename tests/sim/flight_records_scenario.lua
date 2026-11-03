@@ -25,6 +25,12 @@ scenario("flight-path sharing keeps personal history", { stubs = { Questie = {} 
 	})
 	local api = assert(sim.G.LegacyForever.API)
 	assert(api.Leaderboard(0).rows[1].value == 1, "old personal history survives login")
+	-- The native map filter can change while the addon is loaded, including during combat.
+	sim:openWorldMap(1429)
+	for _, enabled in ipairs({ "0", "1" }) do
+		sim.G.SetCVar("showDungeonEntrancesOnMap", enabled)
+		sim:event("CVAR_UPDATE", "showDungeonEntrancesOnMap")
+	end
 	sim:input(function()
 		sim.G.SlashCmdList.LEGACYFOREVER("share off")
 	end)
@@ -32,6 +38,8 @@ scenario("flight-path sharing keeps personal history", { stubs = { Questie = {} 
 	assert(api.Leaderboard().rows[1].value == 1, "opting out retains the personal total")
 	sim:setGamepad(true)
 	sim:enterCombat()
+	sim.G.SetCVar("showDungeonEntrancesOnMap", "0")
+	sim:event("CVAR_UPDATE", "showDungeonEntrancesOnMap")
 	sim:hoverUnit({ name = "Defias Bandit", level = 12, friendly = false })
 	sim:input(function()
 		sim.G.SlashCmdList.LEGACYFOREVER("leaderboard")

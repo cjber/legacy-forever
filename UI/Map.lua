@@ -670,8 +670,9 @@ local function Attach()
 	end)
 	local events = CreateFrame("Frame")
 	events:RegisterEvent("PLAYER_REGEN_ENABLED")
-	events:SetScript("OnEvent", function()
-		if refreshPending and map:IsShown() then
+	events:RegisterEvent("CVAR_UPDATE")
+	events:SetScript("OnEvent", function(_, event, cvar)
+		if map:IsShown() and (refreshPending or event == "CVAR_UPDATE" and cvar == "showDungeonEntrancesOnMap") then
 			Draw()
 		end
 	end)
