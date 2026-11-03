@@ -12,6 +12,9 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+
+- **Controls use the Forever asset set.** Buttons use the native gold-bordered family, and CI rejects legacy loose chrome in runtime UI and screenshot renderers.
+
 ## [1.0.5] - 2026-11-03
 
 - **Dungeon ranges use one difficulty colour.** Both ends use the lower level's colour, with correctly formed tooltip colour markup.
