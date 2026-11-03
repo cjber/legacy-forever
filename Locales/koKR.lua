@@ -106,8 +106,6 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"각 지역에서 진행할 수 있는 유산 도전을 보여줍니다."
 L["Stop tracking"] = "추적 해제"
 L["Suggest my other Forever addons"] = "제 다른 Forever 애드온 추천"
-L["The first stable release, ready for the WoW: Forever launch."] =
-	"WoW: Forever 출시에 맞춘 첫 번째 안정 버전입니다."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"텍스트가 선택되어 있습니다. Ctrl+C(Mac은 Cmd+C)로 복사한 뒤 오류 제보에 붙여 넣으세요."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
@@ -151,3 +149,5 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 	"링크가 선택되어 있습니다. Ctrl+C(Mac은 Cmd+C)를 누른 뒤 브라우저에 붙여 넣으십시오. GitHub에서 작성된 이슈가 열립니다."
 L["Title"] = "제목"
 L["What happened, or what you would like"] = "무슨 일이 있었는지 또는 원하시는 내용"
+
+L["Zone completion counts faster."] = "지역 완료 진행도가 더 빠르게 계산됩니다." -- mt

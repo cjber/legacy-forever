@@ -111,8 +111,6 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"Показывает старинные испытания, которые можно продвинуть в каждой зоне."
 L["Stop tracking"] = "Не отслеживать"
 L["Suggest my other Forever addons"] = "Предлагать другие мои модификации Forever"
-L["The first stable release, ready for the WoW: Forever launch."] =
-	"Первая стабильная версия, готовая к запуску WoW: Forever."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"Текст выделен. Нажмите Ctrl+C (Cmd+C на Mac), чтобы скопировать его, и вставьте в сообщение об ошибке."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
@@ -158,3 +156,6 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Заголовок"
 L["What happened, or what you would like"] =
 	"Что произошло или что вы хотели бы видеть"
+
+L["Zone completion counts faster."] =
+	"Прогресс завершения зон рассчитывается быстрее." -- mt

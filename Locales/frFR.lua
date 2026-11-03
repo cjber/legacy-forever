@@ -111,8 +111,6 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"Affiche les défis Legacy que vous pouvez progresser dans chaque zone."
 L["Stop tracking"] = "Arrêter le suivi"
 L["Suggest my other Forever addons"] = "Suggérer mes autres addons Forever"
-L["The first stable release, ready for the WoW: Forever launch."] =
-	"La première version stable, prête pour le lancement de WoW: Forever." -- mt
 L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
 	"Le lien est sélectionné. Appuyez sur Ctrl+C (Cmd+C sur Mac), puis collez-le dans un navigateur ; GitHub ouvrira une issue pré-remplie."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
@@ -147,3 +145,5 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"le suivi des objectifs n'est pas disponible, les défis suivis ne peuvent donc pas être affichés."
 L["updated to %s. %s"] = "mis à jour vers %s. %s"
+
+L["Zone completion counts faster."] = "Le calcul de la progression des zones est plus rapide." -- mt

@@ -97,8 +97,6 @@ L["Shows the Legacy challenges you can advance in each zone."] =
 	"顯示每個地區中你可以推進的傳承挑戰。"
 L["Stop tracking"] = "停止追蹤"
 L["Suggest my other Forever addons"] = "推薦我的其他Forever插件"
-L["The first stable release, ready for the WoW: Forever launch."] =
-	"首個穩定版本，為 WoW: Forever 上線做好準備。"
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"文字已選取。按Ctrl+C（Mac上為Cmd+C）複製，然後貼到你的錯誤回報中。"
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
@@ -142,3 +140,5 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 	"連結已選取。按 Ctrl+C（Mac 上為 Cmd+C），然後貼到瀏覽器中；GitHub 會開啟已填好的 issue。"
 L["Title"] = "標題"
 L["What happened, or what you would like"] = "發生了什麼，或你希望有什麼"
+
+L["Zone completion counts faster."] = "區域完成進度計算更快。" -- mt
