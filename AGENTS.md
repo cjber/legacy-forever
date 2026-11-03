@@ -78,9 +78,9 @@ request against its base and fails on a regression. Every version needs a
 
 ## Standards
 
-- `wow-forever-addon`: https://github.com/cjber/forever-core/tree/af94fd89610c9128bc11ec07354bd9abafb5dd0/.agents/skills/wow-forever-addon (UI look,
+- `wow-forever-addon`: https://github.com/cjber/forever-core/tree/af94fd89610c9128bc11ec07354bd9dabafb5dd0/.agents/skills/wow-forever-addon (UI look,
   icon, README and store page, CI and release requirements shared by every WoW: Forever addon)
-- `wow-retail-ui-style`: https://github.com/cjber/forever-core/tree/af94fd89610c9128bc11ec07354bd9abafb5dd0/.agents/skills/wow-retail-ui-style (native host integration, compact layout rhythm, and asset blacklist)
+- `wow-retail-ui-style`: https://github.com/cjber/forever-core/tree/af94fd89610c9128bc11ec07354bd9dabafb5dd0/.agents/skills/wow-retail-ui-style (native host integration, compact layout rhythm, and asset blacklist)
 
 ## Secure UI regression checks
 
