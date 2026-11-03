@@ -27,7 +27,6 @@ if not (WOWMOCK / "wowmock.py").is_file():
     sys.exit(f"wowmock.py not found in {WOWMOCK}; set FOREVER_CORE to the forever-core checkout")
 sys.path.insert(0, str(WOWMOCK))
 
-import wowmock
 from legacy_render import COMPLETION_CATEGORIES, lua_string, lua_unquote
 from PIL import Image
 from wowmock import (
@@ -54,6 +53,8 @@ from wowmock import (
     tooltip,
     world_map_frame,
 )
+
+UI_ART_BUILD = "1.60.1.70124"
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "docs" / "screenshots"
@@ -707,7 +708,7 @@ DEMO_FADE = 3  # frames of cross-fade as an area's shading lifts; a click change
 def render_demo(data):
     """docs/screenshots/demo.gif: Ashenvale's shading lifting and its corner filling as areas are found, the corner
     collapsed with a click, then the Legacy menu. Rendered at 1x, the GIF's final size."""
-    ui = Ui(build=wowmock.BUILD, scale=1)
+    ui = Ui(build=UI_ART_BUILD, scale=1)
     steps = []
     for found, collapsed, menu, seconds in DEMO_STEPS:
         live = Live(ui, data, EXPLORED | set(DEMO_DISCOVERED[:found]))
@@ -754,7 +755,7 @@ def render_demo(data):
 
 
 def main():
-    ui = Ui(build=wowmock.BUILD, scale=2)
+    ui = Ui(build=UI_ART_BUILD, scale=2)
     data = load_data()
     live = Live(ui, data)
     OUT.mkdir(parents=True, exist_ok=True)
