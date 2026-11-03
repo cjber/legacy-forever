@@ -12,6 +12,7 @@ ruff format --check . && ruff check .
 luacheck .
 tools/typecheck.sh           # LuaLS 3.19.1 + multi-value lint (Python self-tests included)
 for s in tests/*_spec.lua; do luajit "$s" || exit 1; done
+luajit tools/perf_bench.lua   # load and redraw cost over the headless harness
 python3 tools/gen_legacy.py   # regenerate Data/Legacy.lua after a data change
 python3 tools/check_generated.py   # regenerate in a disposable tree; require fresh, byte-stable Data/Legacy.lua
 python3 tools/phrases.py > Locales/phrases.txt   # regenerate the translation template after a string change
@@ -25,7 +26,10 @@ CI's `package` job builds the zip with the release's packager without uploading 
 THIRD_PARTY.md ship with README's `## Credits` and THIRD_PARTY's `## Ideas and contributors` (WFA-10, WFA-31), and the
 specs pass on the packaged files.
 
-The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and history. Every version needs a
+The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and history. CI's jobs are `deadcode`,
+`check`, `typecheck`, `generated`, `project-rules`, `workflows`, `secrets` and `package`, and each runs on every pull
+request. `.github/workflows/speedpatrol.yml` times `tools/perf_bench.lua` (Speedpatrol's `harness.perf`) on the pull
+request against its base and fails on a regression. Every version needs a
 `CHANGELOG.md` entry (prose, bold-lead bullets) before its `v*` tag: the release publishes it as the notes.
 
 ## Layout

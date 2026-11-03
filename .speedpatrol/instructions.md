@@ -4,6 +4,8 @@ Legacy Forever is a World of Warcraft: Forever addon in Lua 5.1. The game cannot
 benchmarks run the headless harness the specs use, which stubs the client API and loads the files
 `LegacyForever.toc` lists in order.
 
+- CI runs `harness.perf` on every pull request (`.github/workflows/speedpatrol.yml`, 3 rounds) and fails on a
+  regression. `gate.specs` runs only in local patrols.
 - Keep a change only when it speeds up a file the TOC loads or the spec suite itself. A change to a
   bench script or other measuring code is not a speed-up.
 - Every change must pass the full gate in `AGENTS.md` under "Commands".

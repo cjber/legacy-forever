@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   deadcode:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -20,7 +20,7 @@ jobs:
       - run: python3 tools/deadcode.py --check
 
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -30,6 +30,8 @@ jobs:
       - run: pipx run ruff==0.16.8 format --check .
       - run: pipx run ruff==0.16.8 check .
       - run: for spec in tests/*_spec.lua; do luajit "$spec" || exit 1; done
+      # The load and redraw cost bench: it fails on a Lua error in any file it loads.
+      - run: luajit tools/perf_bench.lua
       # A screenshot older than the code it is drawn from (docs/screenshots/scenes.sha256).
       - run: python3 tools/check_screenshots.py
       - name: Native tracker integration
@@ -43,7 +45,7 @@ jobs:
           args: --check .
 
   typecheck:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -59,7 +61,7 @@ jobs:
           LUA_LANGUAGE_SERVER="$RUNNER_TEMP/luals/bin/lua-language-server" tools/typecheck.sh
 
   generated:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -73,7 +75,7 @@ jobs:
       - run: python3 tools/check_generated.py
 
   project-rules:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -87,7 +89,7 @@ jobs:
       - run: python3 .sloppatrol/agents.py check
 
   workflows:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -102,7 +104,7 @@ jobs:
       - run: pipx run zizmor==1.30.1 --offline .github
 
   secrets:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -119,7 +121,7 @@ jobs:
   # What a tag would ship, checked before it ships: the release workflow's packager without uploading or zipping,
   # then tools/check_package.py on .release/ (every loaded file present, no development folders, specs pass on it).
   package:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

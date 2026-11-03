@@ -1,0 +1,26 @@
+name: Speedpatrol
+
+# A/B timing of the pull request against its base on the harness bench (.speedpatrol/speedpatrol.yml), posted as one
+# comment. Only harness.perf runs: the spec-suite timing is for local patrols, not a pull request check.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - run: sudo apt-get update && sudo apt-get install -y luajit
+      - uses: agent-labs-dev/speedpatrol@726e8f5a08743ba46ab211860547a4bff901a502 # v0
+        with:
+          benchmarks: harness.perf
+          fail-on-regression: true
+          rounds: 3
+          package: speedpatrol@0.2.0
