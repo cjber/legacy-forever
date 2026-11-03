@@ -83,8 +83,10 @@ class SplitWago:
 
 def make_ui(scale):
     data_build = re.search(r"build ([0-9.]+)", (ROOT / "Data" / "Legacy.lua").read_text()).group(1).rstrip(".")
+    content = Ui(build=data_build, scale=scale)
     ui = Ui(build=data_build, scale=scale)
     ui.wago = SplitWago(ui.wago, Wago(UI_ART_BUILD))
+    ui.content = content
     return ui
 
 
@@ -464,16 +466,17 @@ def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False)
     """The world map on a Kalimdor zone with the addon's shading, pins, corner and button drawn in."""
     zone = data["completion"][ui_map]
     name = ui.table("UiMap")[str(ui_map)]["Name_lang"]
-    art = map_art(ui, ui_map)
+    content = ui.content
+    art = map_art(content, ui_map)
     # Blizzard's exploration pin: the explored overlays at full colour.
-    for overlay in map_overlays(ui, ui_map):
+    for overlay in map_overlays(content, ui_map):
         if overlay.key in live.explored:
-            draw_overlay(ui, art, overlay.offset_x, overlay.offset_y, overlay.width, overlay.height, overlay.tiles)
+            draw_overlay(content, art, overlay.offset_x, overlay.offset_y, overlay.width, overlay.height, overlay.tiles)
     # AreaPin (UI/Map.lua): every undiscovered area's tiles, black at AREA_ALPHA.
     for area in zone["areas"]:
         if area["key"] not in live.explored:
             x, y, w, h = (int(n) for n in area["key"].split(":"))
-            draw_overlay(ui, art, x, y, w, h, area["tiles"], (0, 0, 0, 0.25), zone["tileWidth"])
+            draw_overlay(content, art, x, y, w, h, area["tiles"], (0, 0, 0, 0.25), zone["tileWidth"])
     canvas, rects = world_map_frame(ui, art, ("World", "Kalimdor", name), arrows=("Kalimdor", name))
     mx, my, mw, mh = rects["map"]
     groups = live.model.zone_objectives(ui_map)
@@ -679,7 +682,7 @@ def render_unvisited(ui, data, live):
 def render_continent(ui, data, live):
     """Kalimdor with a Legacy badge on each zone that still has dungeon objectives. The map button's count
     is 0 here (a continent places nothing itself), so it is drawn desaturated with no number."""
-    art = map_art(ui, KALIMDOR)
+    art = map_art(ui.content, KALIMDOR)
     canvas, rects = world_map_frame(ui, art, ("World", "Kalimdor"), arrows=("Kalimdor",))
     mx, my, mw, mh = rects["map"]
     for nx, ny in continent_zones(ui, data, live, KALIMDOR):
