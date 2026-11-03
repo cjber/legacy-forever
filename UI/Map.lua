@@ -104,7 +104,7 @@ local function AddPinTooltip(tooltip, group, objective)
 			if minimum and maximum then
 				local color = GetQuestDifficultyColor(minimum)
 				local range = ("%d-%d"):format(minimum, maximum)
-				local text = WrapTextInColorCode(range, (RGBTableToColorCode(color)))
+				local text = RGBTableToColorCode(color) .. range .. FONT_COLOR_CODE_CLOSE
 				GameTooltip_AddNormalLine(tooltip, L["Recommended levels: %s (AtlasLoot)"]:format(text))
 			elseif hint then
 				GameTooltip_AddDisabledLine(tooltip, hint)

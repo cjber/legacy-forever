@@ -182,14 +182,12 @@ local entrance = { text = "Blackfathom Deeps", entry = { kind = "instance", inst
 local range = true
 GetQuestDifficultyColor = function(level)
 	check(level == 24, "the entire range uses its lower level for difficulty")
-	return { code = "ffffd100" }
+	return { r = 1, g = 0.82, b = 0 }
 end
 RGBTableToColorCode = function(color)
-	return color.code
+	return ("|cff%02x%02x%02x"):format(color.r * 255, color.g * 255, color.b * 255)
 end
-WrapTextInColorCode = function(text, code)
-	return "|c" .. code .. text .. "|r"
-end
+FONT_COLOR_CODE_CLOSE = "|r"
 ns.DungeonLevelRange = function(instance)
 	check(instance == 48, "the tooltip queries its entrance's instance ID")
 	if range then
