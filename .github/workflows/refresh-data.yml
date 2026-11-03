@@ -48,9 +48,18 @@ jobs:
         run: |
           python3 tools/gen_legacy.py
           python3 tools/check_generated.py --offline
+      # Ubuntu 24.04's release-pocket builds, which the archive never replaces.
+      - name: Install LuaJIT and luacheck
+        if: steps.build.outputs.new == 'true'
+        env:
+          LUAJIT: 2.1.0+git20231223.c525bcb+dfsg-1
+          LUACHECK: 1.1.2-1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends --allow-downgrades \
+            "luajit=$LUAJIT" "libluajit-5.1-2=$LUAJIT" "libluajit-5.1-common=$LUAJIT" "lua-check=$LUACHECK"
       - if: steps.build.outputs.new == 'true'
         run: |
-          sudo apt-get update && sudo apt-get install -y luajit lua-check
           luacheck .
           for spec in tests/*_spec.lua; do luajit "$spec" || exit 1; done
       - if: steps.build.outputs.new == 'true'
