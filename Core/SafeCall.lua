@@ -104,3 +104,5 @@ function ns.SafeCall(label, fn, ...)
 	labels[#labels + 1] = label
 	return Finish(xpcall(fn, Trace, ...))
 end
+
+-- canary: hand edit of a vendored file, must fail core-shared
