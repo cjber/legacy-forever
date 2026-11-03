@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **The map shading steps aside for Leatrix Maps.** With Leatrix Maps revealing the whole map, its own tiles are
+  already visible, so the black veil over undiscovered areas covered ground the player had asked to see. The shading
+  now stays off while Leatrix's reveal option is on, and comes back when it is off.
+
 ## [1.0.5] - 2026-11-03
 
 - **Dungeon ranges use one difficulty colour.** Both ends use the lower level's colour, with correctly formed tooltip colour markup.
