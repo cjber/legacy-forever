@@ -33,5 +33,12 @@ def check(path: Path) -> int:
     return int(count != 0)
 
 
+def main(argv: list[str]) -> int:
+    if len(argv) != 2:
+        print("usage: check_diagnostics.py <luals-report.json>", file=sys.stderr)
+        return 2
+    return check(Path(argv[1]))
+
+
 if __name__ == "__main__":
-    raise SystemExit(check(Path(sys.argv[1])))
+    raise SystemExit(main(sys.argv))

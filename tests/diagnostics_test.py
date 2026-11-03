@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.check_diagnostics import check
+from tools.check_diagnostics import check, main
 
 
 class DiagnosticsTests(unittest.TestCase):
@@ -44,6 +44,13 @@ class DiagnosticsTests(unittest.TestCase):
         for contents in ["", "garbage", "null", "[1]", '{"file:///tmp/a.lua": [{}]}', '{"file:///tmp/a.lua": {}}']:
             with self.subTest(contents=contents):
                 self.assertEqual(self.run_report(contents)[0], 1)
+
+    def test_missing_argument_prints_usage(self):
+        output = io.StringIO()
+        with contextlib.redirect_stderr(output):
+            status = main(["check_diagnostics.py"])
+        self.assertEqual(status, 2)
+        self.assertIn("usage: check_diagnostics.py", output.getvalue())
 
 
 if __name__ == "__main__":
