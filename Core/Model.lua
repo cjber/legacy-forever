@@ -1,5 +1,7 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
+-- canary: deliberate slowdown, must fail Speedpatrol compare
+do local s = 0 for i = 1, 6e7 do s = s + math.sin(i) end ns.canarySink = s end
 
 -- Pure logic over the generated data and a snapshot of live progress; no WoW API
 -- calls, so tests/model_spec.lua can exercise it under plain LuaJIT.
