@@ -285,7 +285,21 @@ check(#errors == errorsBefore, "the corner draws without an error")
 zoneTracker:OnBlockHeaderClick({ id = 100 }, "LeftButton")
 check(openedMap == 100, "a click on the zone's tracker header asks the game to open its map")
 local API = LegacyForever.API
-check(API.version == 1, "version 1")
+check(API.version == 1 and API.minor == 1, "version 1 retains existing methods and adds a minor capability")
+local forwardedLimit
+local leaderboard = { metric = "flight_path_known", rows = {} }
+ns.Stats = {
+	Leaderboard = function(limit)
+		forwardedLimit = limit
+		if limit == -1 then
+			return nil, "invalid"
+		end
+		return leaderboard
+	end,
+}
+check(API.Leaderboard(0) == leaderboard and forwardedLimit == 0, "leaderboard forwards zero without replacing it")
+local invalidBoard, invalidReason = API.Leaderboard(-1)
+check(invalidBoard == nil and invalidReason == "invalid", "leaderboard preserves reader errors")
 local guid = UnitGUID("player")
 ns.SavedTable("flightPaths")[guid] = { known = { [10] = true, [11] = false }, continents = {}, observedAt = time() }
 local activity = API.Stats()

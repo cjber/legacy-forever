@@ -162,3 +162,27 @@ L["The update message reflects the current release."] =
 L["Install AtlasLoot for recommended levels."] =
 	"Установите AtlasLoot, чтобы увидеть рекомендуемые уровни." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровни: %s (AtlasLoot)" -- mt
+
+-- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
+L["%d. %s: %d (player-reported)"] = "%d. %s: %d (со слов игрока)" -- mt
+L["%d. %s: %d (you)"] = "%d. %s: %d (вы)" -- mt
+L["/lf leaderboard - compare observed flight paths with guild and group"] =
+	"/lf leaderboard - сравнить обнаруженные маршруты полётов с гильдией и группой" -- mt
+L["/lf share on|off - share flight-path totals, keeping your history"] =
+	"/lf share on|off - делиться числом маршрутов полётов, сохраняя историю" -- mt
+L["Current client ruleset only. Other players' totals are player-reported."] =
+	"Только текущий набор правил клиента. Результаты других игроков указаны с их слов." -- mt
+L["Flight-path leaderboard"] = "Рейтинг маршрутов полётов" -- mt
+L["Flight-path records"] = "История маршрутов полётов" -- mt
+L["No peer totals received. Open a flight master's map to record your known paths."] =
+	"Результаты других игроков не получены. Откройте карту распорядителя полётов, чтобы записать известные маршруты." -- mt
+L["Observed flight paths: guild and group"] =
+	"Обнаруженные маршруты полётов: гильдия и группа" -- mt
+L["Ruleset unavailable. Only your personal record is shown."] =
+	"Набор правил недоступен. Показана только ваша личная история." -- mt
+L["Share flight-path totals with guild and group"] =
+	"Делиться числом маршрутов полётов с гильдией и группой" -- mt
+L["Sharing is off. Only your personal record is shown."] =
+	"Обмен отключён. Показана только ваша личная история." -- mt
+L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."] =
+	"Отключение прекращает отправку и сравнение. Уже полученные другими игроками результаты могут остаться видимыми." -- mt

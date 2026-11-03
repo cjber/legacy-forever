@@ -154,3 +154,25 @@ L["The update message reflects the current release."] =
 	"업데이트 메시지가 현재 버전의 내용을 안내합니다." -- mt
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "권장 레벨: %s (AtlasLoot)" -- mt
+
+-- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
+L["%d. %s: %d (player-reported)"] = "%d. %s: %d (플레이어 제공)" -- mt
+L["%d. %s: %d (you)"] = "%d. %s: %d (나)" -- mt
+L["/lf leaderboard - compare observed flight paths with guild and group"] =
+	"/lf leaderboard - 관찰한 비행 경로를 길드 및 파티와 비교" -- mt
+L["/lf share on|off - share flight-path totals, keeping your history"] =
+	"/lf share on|off - 기록을 유지하며 비행 경로 합계 공유" -- mt
+L["Current client ruleset only. Other players' totals are player-reported."] =
+	"현재 클라이언트 규칙만 적용됩니다. 다른 플레이어의 합계는 해당 플레이어가 제공한 값입니다." -- mt
+L["Flight-path leaderboard"] = "비행 경로 순위" -- mt
+L["Flight-path records"] = "비행 경로 기록" -- mt
+L["No peer totals received. Open a flight master's map to record your known paths."] =
+	"받은 합계가 없습니다. 비행 조련사의 지도를 열어 알고 있는 경로를 기록하세요." -- mt
+L["Observed flight paths: guild and group"] = "관찰한 비행 경로: 길드 및 파티" -- mt
+L["Ruleset unavailable. Only your personal record is shown."] =
+	"규칙을 확인할 수 없습니다. 개인 기록만 표시됩니다." -- mt
+L["Share flight-path totals with guild and group"] = "길드 및 파티와 비행 경로 합계 공유" -- mt
+L["Sharing is off. Only your personal record is shown."] =
+	"공유가 꺼져 있습니다. 개인 기록만 표시됩니다." -- mt
+L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."] =
+	"끄면 전송과 비교가 중단됩니다. 다른 플레이어가 이미 받은 합계는 계속 표시될 수 있습니다." -- mt

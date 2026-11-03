@@ -35,6 +35,7 @@ local _, addon = ...
 ---@field Report ForeverReportModule the report window (UI/Report.lua)
 ---@field AuditLines fun(): string[] what /lf audit prints (Core/Report.lua)
 ---@field ReportLines fun(): string[] Legacy Forever's own lines in the report (Core/Report.lua)
+---@field PeerStats ForeverPeerStatsNamespace
 ---@field Stats LFStats shared activity rows: sender and receiver (Core/Stats.lua)
 ---@field ActivityStats fun(): LFActivityRecord[] this character's observed flight paths, as rows (Core/API.lua)
 local ns = addon
@@ -105,6 +106,11 @@ local function Slash(msg)
 		Criteria(achievementID)
 	elseif command:find("^criteria") then
 		ns.Print("usage: /lf criteria 684")
+	elseif command == "leaderboard" or command == "stats" then
+		ns.Stats.Print()
+	elseif command == "share on" or command == "share off" then
+		ns.Saved.Set("statsShare", command == "share on")
+		ns.Stats.Print()
 	elseif command == "" then
 		OpenMenu()
 	else
@@ -113,6 +119,8 @@ local function Slash(msg)
 		ns.Print(L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"])
 		ns.Print(L["/lf audit - check the bundled data against the game"])
 		ns.Print(L["/lf criteria 684 - list what the game reports for one achievement"])
+		ns.Print(L["/lf leaderboard - compare observed flight paths with guild and group"])
+		ns.Print(L["/lf share on|off - share flight-path totals, keeping your history"])
 	end
 end
 SlashCmdList.LEGACYFOREVER = function(msg)

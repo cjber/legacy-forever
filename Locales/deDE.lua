@@ -148,3 +148,25 @@ L["What happened, or what you would like"] = "Was passiert ist oder was Ihr Euch
 L["The update message reflects the current release."] = "Die Update-Meldung entspricht der aktuellen Version." -- mt
 L["Install AtlasLoot for recommended levels."] = "Installiert AtlasLoot für empfohlene Stufen." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Empfohlene Stufen: %s (AtlasLoot)" -- mt
+
+-- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
+L["%d. %s: %d (player-reported)"] = "%d. %s: %d (Spielerangabe)" -- mt
+L["%d. %s: %d (you)"] = "%d. %s: %d (Ihr)" -- mt
+L["/lf leaderboard - compare observed flight paths with guild and group"] =
+	"/lf leaderboard - beobachtete Flugpunkte mit Gilde und Gruppe vergleichen" -- mt
+L["/lf share on|off - share flight-path totals, keeping your history"] =
+	"/lf share on|off - Flugpunktsummen teilen, ohne den Verlauf zu löschen" -- mt
+L["Current client ruleset only. Other players' totals are player-reported."] =
+	"Nur der aktuelle Spielmodus. Die Summen anderer Spieler beruhen auf deren Angaben." -- mt
+L["Flight-path leaderboard"] = "Flugpunkt-Rangliste" -- mt
+L["Flight-path records"] = "Flugpunktaufzeichnungen" -- mt
+L["No peer totals received. Open a flight master's map to record your known paths."] =
+	"Keine Summen anderer Spieler empfangen. Öffnet die Karte eines Flugmeisters, um bekannte Flugpunkte aufzuzeichnen." -- mt
+L["Observed flight paths: guild and group"] = "Beobachtete Flugpunkte: Gilde und Gruppe" -- mt
+L["Ruleset unavailable. Only your personal record is shown."] =
+	"Spielmodus nicht verfügbar. Nur Eure persönliche Aufzeichnung wird angezeigt." -- mt
+L["Share flight-path totals with guild and group"] = "Flugpunktsummen mit Gilde und Gruppe teilen" -- mt
+L["Sharing is off. Only your personal record is shown."] =
+	"Teilen ist ausgeschaltet. Nur Eure persönliche Aufzeichnung wird angezeigt." -- mt
+L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."] =
+	"Ausschalten beendet das Senden und Vergleichen. Bereits von anderen empfangene Summen können sichtbar bleiben." -- mt

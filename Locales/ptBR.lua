@@ -148,3 +148,25 @@ L["What happened, or what you would like"] = "O que aconteceu, ou o que você go
 L["The update message reflects the current release."] = "A mensagem de atualização corresponde à versão atual." -- mt
 L["Install AtlasLoot for recommended levels."] = "Instale AtlasLoot para ver os níveis recomendados." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Níveis recomendados: %s (AtlasLoot)" -- mt
+
+-- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
+L["%d. %s: %d (player-reported)"] = "%d. %s: %d (informado pelo jogador)" -- mt
+L["%d. %s: %d (you)"] = "%d. %s: %d (você)" -- mt
+L["/lf leaderboard - compare observed flight paths with guild and group"] =
+	"/lf leaderboard - comparar rotas de voo observadas com a guilda e o grupo" -- mt
+L["/lf share on|off - share flight-path totals, keeping your history"] =
+	"/lf share on|off - compartilhar totais de rotas de voo mantendo seu histórico" -- mt
+L["Current client ruleset only. Other players' totals are player-reported."] =
+	"Apenas as regras atuais do cliente. Os totais dos outros jogadores são informados por eles." -- mt
+L["Flight-path leaderboard"] = "Classificação de rotas de voo" -- mt
+L["Flight-path records"] = "Histórico de rotas de voo" -- mt
+L["No peer totals received. Open a flight master's map to record your known paths."] =
+	"Nenhum total recebido. Abra o mapa de um mestre de voo para registrar suas rotas conhecidas." -- mt
+L["Observed flight paths: guild and group"] = "Rotas de voo observadas: guilda e grupo" -- mt
+L["Ruleset unavailable. Only your personal record is shown."] =
+	"Regras indisponíveis. Apenas seu histórico pessoal é exibido." -- mt
+L["Share flight-path totals with guild and group"] = "Compartilhar totais de rotas de voo com a guilda e o grupo" -- mt
+L["Sharing is off. Only your personal record is shown."] =
+	"Compartilhamento desativado. Apenas seu histórico pessoal é exibido." -- mt
+L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."] =
+	"Desativar interrompe os envios e as comparações. Os totais já recebidos por outros podem continuar visíveis." -- mt

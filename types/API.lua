@@ -39,6 +39,8 @@
 
 ---@class LFAPI
 ---@field version 1
+---@field minor 1
+---@field Leaderboard fun(limit?: integer): LFFlightLeaderboard?, LFReadError?
 ---@field ZoneSummary fun(map: integer): LFZoneSummary?, LFReadError?
 ---@field Targets fun(map: integer, limit: integer): LFTarget[]?, LFReadError?
 ---@field Navigate fun(map: integer, key: string): boolean, LFNavError?

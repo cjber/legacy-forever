@@ -147,3 +147,25 @@ L["What happened, or what you would like"] = "Qué pasó o qué te gustaría"
 L["The update message reflects the current release."] = "El mensaje de actualización corresponde a la versión actual." -- mt
 L["Install AtlasLoot for recommended levels."] = "Instala AtlasLoot para ver los niveles recomendados." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Niveles recomendados: %s (AtlasLoot)" -- mt
+
+-- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
+L["%d. %s: %d (player-reported)"] = "%d. %s: %d (declarado por el jugador)" -- mt
+L["%d. %s: %d (you)"] = "%d. %s: %d (tú)" -- mt
+L["/lf leaderboard - compare observed flight paths with guild and group"] =
+	"/lf leaderboard - comparar rutas de vuelo observadas con la hermandad y el grupo" -- mt
+L["/lf share on|off - share flight-path totals, keeping your history"] =
+	"/lf share on|off - compartir totales de rutas de vuelo conservando tu historial" -- mt
+L["Current client ruleset only. Other players' totals are player-reported."] =
+	"Solo las reglas actuales del cliente. Los totales de otros jugadores son declarados por ellos." -- mt
+L["Flight-path leaderboard"] = "Clasificación de rutas de vuelo" -- mt
+L["Flight-path records"] = "Historial de rutas de vuelo" -- mt
+L["No peer totals received. Open a flight master's map to record your known paths."] =
+	"No se han recibido totales. Abre el mapa de un maestro de vuelo para registrar tus rutas conocidas." -- mt
+L["Observed flight paths: guild and group"] = "Rutas de vuelo observadas: hermandad y grupo" -- mt
+L["Ruleset unavailable. Only your personal record is shown."] =
+	"Reglas no disponibles. Solo se muestra tu historial personal." -- mt
+L["Share flight-path totals with guild and group"] = "Compartir totales de rutas de vuelo con la hermandad y el grupo" -- mt
+L["Sharing is off. Only your personal record is shown."] =
+	"Compartir está desactivado. Solo se muestra tu historial personal." -- mt
+L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."] =
+	"Desactivar detiene los envíos y las comparaciones. Los totales ya recibidos por otros pueden seguir visibles." -- mt

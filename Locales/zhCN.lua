@@ -144,3 +144,23 @@ L["What happened, or what you would like"] = "发生了什么，或你希望有�
 L["The update message reflects the current release."] = "更新消息与当前版本一致。" -- mt
 L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。" -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "推荐等级：%s（AtlasLoot）" -- mt
+
+-- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
+L["%d. %s: %d (player-reported)"] = "%d. %s：%d（玩家提供）" -- mt
+L["%d. %s: %d (you)"] = "%d. %s：%d（你）" -- mt
+L["/lf leaderboard - compare observed flight paths with guild and group"] =
+	"/lf leaderboard - 与公会和队伍比较已观察到的飞行路线" -- mt
+L["/lf share on|off - share flight-path totals, keeping your history"] =
+	"/lf share on|off - 分享飞行路线总数并保留个人记录" -- mt
+L["Current client ruleset only. Other players' totals are player-reported."] =
+	"仅比较当前客户端规则。其他玩家的总数由其自行提供。" -- mt
+L["Flight-path leaderboard"] = "飞行路线排行榜" -- mt
+L["Flight-path records"] = "飞行路线记录" -- mt
+L["No peer totals received. Open a flight master's map to record your known paths."] =
+	"尚未收到其他玩家的总数。打开飞行管理员的地图以记录已知路线。" -- mt
+L["Observed flight paths: guild and group"] = "已观察到的飞行路线：公会和队伍" -- mt
+L["Ruleset unavailable. Only your personal record is shown."] = "无法获取规则。仅显示个人记录。" -- mt
+L["Share flight-path totals with guild and group"] = "与公会和队伍分享飞行路线总数" -- mt
+L["Sharing is off. Only your personal record is shown."] = "分享已关闭。仅显示个人记录。" -- mt
+L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."] =
+	"关闭后将停止发送和比较。其他玩家已经收到的总数可能仍会显示。" -- mt
