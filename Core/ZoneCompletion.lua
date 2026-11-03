@@ -28,19 +28,28 @@ end
 ---@type table<number, LegacySnapshot>
 local deferredViews = {}
 
+-- Built apart from DeferredSnapshot so its kept path, taken for every zone on every draw, makes no closure.
+---@param uiMapID number
+---@param snapshot LegacySnapshot
+---@return LegacySnapshot
+local function NewView(uiMapID, snapshot)
+	---@type LegacySnapshot
+	local view = setmetatable({
+		quests = function()
+			return ns.Quests.Zone(uiMapID, true)
+		end,
+	}, { __index = snapshot })
+	deferredViews[uiMapID] = view
+	return view
+end
+
 ---@param uiMapID number
 ---@return LegacySnapshot
 local function DeferredSnapshot(uiMapID)
 	local snapshot = ns.Live.ZoneSnapshot(uiMapID)
 	local view = deferredViews[uiMapID]
 	if not view or getmetatable(view).__index ~= snapshot then
-		---@type LegacySnapshot
-		view = setmetatable({
-			quests = function()
-				return ns.Quests.Zone(uiMapID, true)
-			end,
-		}, { __index = snapshot })
-		deferredViews[uiMapID] = view
+		view = NewView(uiMapID, snapshot)
 	end
 	return view
 end

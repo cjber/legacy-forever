@@ -309,19 +309,20 @@ function Model.TrackedBlocks(data, tracked, visible, criteria, name)
 end
 
 -- One category of a zone's completion: { done, total, pending, complete, left = { names } }, or nil when
--- the zone has none. `state(item)` returns true (done),
+-- the zone has none. `state(item, snapshot)` returns true (done),
 -- false (not done) or nil (unknown, left out of the count).
 ---@generic T: { name: string }
 ---@param items T[]?
----@param state fun(item: T): boolean?
+---@param state fun(item: T, snapshot: LegacySnapshot): boolean?
+---@param snapshot LegacySnapshot
 ---@return LegacyCategory?
-local function CompletionCategory(items, state)
+local function CompletionCategory(items, state, snapshot)
 	if not items or #items == 0 then
 		return nil
 	end
 	local category = { done = 0, total = 0, left = {}, pending = 0 }
 	for _, item in ipairs(items) do
-		local done = state(item)
+		local done = state(item, snapshot)
 		if done == nil then
 			category.pending = category.pending + 1
 		else
@@ -551,6 +552,13 @@ local function QuestDone(item, completed)
 	return false
 end
 
+---@param item LegacyQuestItem
+---@param snapshot LegacySnapshot
+---@return boolean?
+local function QuestState(item, snapshot)
+	return QuestDone(item, snapshot.completed)
+end
+
 -- The zone's quests: absent without a source, one pending item while the source is still loading.
 ---@param snapshot LegacySnapshot
 ---@return LegacyCategory?
@@ -559,9 +567,7 @@ local function QuestCategory(snapshot)
 	if items == false then
 		return { done = 0, total = 0, left = {}, pending = 1, complete = false }
 	end
-	return CompletionCategory(items, function(item)
-		return QuestDone(item, snapshot.completed)
-	end)
+	return CompletionCategory(items, QuestState, snapshot)
 end
 
 -- A wing or Legacy objective counts as done when any of its Legacy steps (either variant) is;
@@ -572,7 +578,8 @@ end
 local function RefsDone(refs, criteria)
 	local state
 	for _, ref in ipairs(refs) do
-		local progress = (criteria(ref[1]) or {})[ref[2]]
+		local steps = criteria(ref[1])
+		local progress = steps and steps[ref[2]]
 		if progress then
 			if progress.completed then
 				return true
@@ -619,6 +626,44 @@ function Model.ForFaction(items, faction, sideKey)
 	return own
 end
 
+-- Each category's `state` for CompletionCategory, kept out of Model.ZoneCompletion so a call makes no closures:
+-- it runs for every zone on every continent badge and progress notice.
+---@param area LegacyArea
+---@param snapshot LegacySnapshot
+---@return boolean
+local function AreaState(area, snapshot)
+	return snapshot.explored[area.key] == true
+end
+
+---@param taxi LegacyTaxi
+---@param snapshot LegacySnapshot
+---@return boolean?
+local function TaxiState(taxi, snapshot)
+	return snapshot.taxis[taxi.node]
+end
+
+-- A dungeon wing or a Legacy objective.
+---@param item { refs: LegacyRefs }
+---@param snapshot LegacySnapshot
+---@return boolean?
+local function RefsState(item, snapshot)
+	return RefsDone(item.refs, snapshot.criteria)
+end
+
+---@param raid LegacyRaid
+---@param snapshot LegacySnapshot
+---@return boolean?
+local function RaidState(raid, snapshot)
+	return RaidDone(raid, snapshot.criteria)
+end
+
+---@param rep LegacyReputation
+---@param snapshot LegacySnapshot
+---@return boolean
+local function ReputationState(rep, snapshot)
+	return snapshot.reaction(rep.faction) >= REPUTATION_TARGET
+end
+
 -- A zone's completion, GW2 style: every area, flight path, dungeon, raid, Legacy objective, local
 -- reputation and quest counts once.
 -- Items whose state is unknown (nil) are `pending`: shown, but outside done/total and the percent.
@@ -638,24 +683,16 @@ end
 function Model.ZoneCompletion(zone, snapshot, counted)
 	---@type LegacyZoneResult
 	local result = {
-		areas = CompletionCategory(zone.areas, function(area)
-			return snapshot.explored[area.key] == true
-		end),
-		taxis = CompletionCategory(Model.ForFaction(zone.taxis, snapshot.faction, "faction"), function(taxi)
-			return snapshot.taxis[taxi.node]
-		end),
-		dungeons = CompletionCategory(zone.dungeons, function(wing)
-			return RefsDone(wing.refs, snapshot.criteria)
-		end),
-		raids = CompletionCategory(zone.raids, function(raid)
-			return RaidDone(raid, snapshot.criteria)
-		end),
-		legacy = CompletionCategory(zone.legacy, function(objective)
-			return RefsDone(objective.refs, snapshot.criteria)
-		end),
-		reputations = CompletionCategory(Model.ForFaction(zone.reputations, snapshot.faction, "side"), function(rep)
-			return snapshot.reaction(rep.faction) >= REPUTATION_TARGET
-		end),
+		areas = CompletionCategory(zone.areas, AreaState, snapshot),
+		taxis = CompletionCategory(Model.ForFaction(zone.taxis, snapshot.faction, "faction"), TaxiState, snapshot),
+		dungeons = CompletionCategory(zone.dungeons, RefsState, snapshot),
+		raids = CompletionCategory(zone.raids, RaidState, snapshot),
+		legacy = CompletionCategory(zone.legacy, RefsState, snapshot),
+		reputations = CompletionCategory(
+			Model.ForFaction(zone.reputations, snapshot.faction, "side"),
+			ReputationState,
+			snapshot
+		),
 		-- Built from QuestieDB only when counted: the first zone reads its whole database.
 		quests = (not counted or counted("quests")) and QuestCategory(snapshot) or nil,
 		done = 0,

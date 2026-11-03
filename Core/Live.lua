@@ -297,15 +297,11 @@ local function CompletedQuests()
 	return completedQuests
 end
 
--- Live progress for Model.ZoneCompletion.
+-- Built apart from Live.ZoneSnapshot so its cached path, taken on every read, makes no closure.
 ---@param uiMapID number
 ---@return LegacySnapshot
-function Live.ZoneSnapshot(uiMapID)
-	local snapshot = snapshots[uiMapID]
-	if snapshot then
-		return snapshot
-	end
-	snapshot = {
+local function NewSnapshot(uiMapID)
+	local snapshot = {
 		explored = {},
 		taxis = {},
 		faction = UnitFactionGroup("player"),
@@ -327,6 +323,14 @@ function Live.ZoneSnapshot(uiMapID)
 			snapshot.taxis[taxi.node] = record.known[taxi.node] == true
 		end
 	end
+	return snapshot
+end
+
+-- Live progress for Model.ZoneCompletion.
+---@param uiMapID number
+---@return LegacySnapshot
+function Live.ZoneSnapshot(uiMapID)
+	local snapshot = snapshots[uiMapID] or NewSnapshot(uiMapID)
 	snapshots[uiMapID] = snapshot
 	return snapshot
 end

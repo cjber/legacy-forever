@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **Zone completion counts faster.** Working out a zone's percent no longer builds a fresh set of helper functions for every zone, so continent badges and progress notices take about a sixth less time.
+
 ## [1.0.1] - 2026-11-03
 
 - **Legacy challenges and zone completion re-pinned to client build 1.60.1.70753.** The achievements the map and tracker count now come from the current client, so a challenge the build dropped is no longer listed as unfinished. Nothing else a player sees changes.
