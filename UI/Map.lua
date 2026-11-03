@@ -610,6 +610,13 @@ function AreaPin:Highlight(shaded)
 	GameTooltip:Show()
 end
 
+-- Leatrix Maps reveals the map's own tiles whether or not they were explored, so a black veil over ground it has
+-- already shown is the opposite of what the player asked for. The shading steps aside while that option is on.
+---@return boolean
+local function RevealedByLeatrix()
+	return type(LeaMapsDB) == "table" and LeaMapsDB.RevealMap == "On"
+end
+
 --[[ Wiring ]]
 
 local function Attach()
@@ -637,7 +644,7 @@ local function Attach()
 		for _, pin in ipairs(drawn.pins) do
 			pins:Acquire(pin.group, pin.objective)
 		end
-		if drawn.shade then
+		if drawn.shade and not RevealedByLeatrix() then
 			areas:Acquire(drawn.shade)
 		end
 		MapCanvas.SetShown(map, true)
