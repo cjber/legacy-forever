@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [1.0.5] - 2026-11-03
+
 - **Dungeon ranges use one difficulty colour.** Both ends use the lower level's colour, with correctly formed tooltip colour markup.
 
 ## [1.0.4] - 2026-11-03
