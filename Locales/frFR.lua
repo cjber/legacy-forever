@@ -146,4 +146,4 @@ L["the objective tracker isn't available, so tracked challenges can't be shown."
 	"le suivi des objectifs n'est pas disponible, les défis suivis ne peuvent donc pas être affichés."
 L["updated to %s. %s"] = "mis à jour vers %s. %s"
 
-L["Zone completion counts faster."] = "Le calcul de la progression des zones est plus rapide." -- mt
+L["The update message reflects the current release."] = "Le message de mise à jour correspond à la version actuelle." -- mt

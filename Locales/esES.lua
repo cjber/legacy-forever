@@ -144,4 +144,4 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Título"
 L["What happened, or what you would like"] = "Qué ha pasado o qué te gustaría"
 
-L["Zone completion counts faster."] = "El progreso de las zonas se calcula más rápido." -- mt
+L["The update message reflects the current release."] = "El mensaje de actualización corresponde a la versión actual." -- mt

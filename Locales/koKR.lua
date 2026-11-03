@@ -150,4 +150,5 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "제목"
 L["What happened, or what you would like"] = "무슨 일이 있었는지 또는 원하시는 내용"
 
-L["Zone completion counts faster."] = "지역 완료 진행도가 더 빠르게 계산됩니다." -- mt
+L["The update message reflects the current release."] =
+	"업데이트 메시지가 현재 버전의 내용을 안내합니다." -- mt

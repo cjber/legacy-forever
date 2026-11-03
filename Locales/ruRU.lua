@@ -157,5 +157,5 @@ L["Title"] = "Заголовок"
 L["What happened, or what you would like"] =
 	"Что произошло или что вы хотели бы видеть"
 
-L["Zone completion counts faster."] =
-	"Прогресс завершения зон рассчитывается быстрее." -- mt
+L["The update message reflects the current release."] =
+	"Сообщение об обновлении соответствует текущей версии." -- mt

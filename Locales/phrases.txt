@@ -114,6 +114,7 @@ L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it
 	"The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"The tracker is locked. Turn off Lock the tracker to move it."
+L["The update message reflects the current release."] = "The update message reflects the current release."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
@@ -135,7 +136,6 @@ L["What's new after an update"] = "What's new after an update"
 L["World map"] = "World map"
 L["Zone complete"] = "Zone complete"
 L["Zone completion"] = "Zone completion"
-L["Zone completion counts faster."] = "Zone completion counts faster."
 L["Zone completion in the tracker"] = "Zone completion in the tracker"
 L["and %d more"] = "and %d more"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =

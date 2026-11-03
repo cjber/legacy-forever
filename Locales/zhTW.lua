@@ -141,4 +141,4 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "標題"
 L["What happened, or what you would like"] = "發生了什麼，或你希望有什麼"
 
-L["Zone completion counts faster."] = "區域完成進度計算更快。" -- mt
+L["The update message reflects the current release."] = "更新訊息與目前版本一致。" -- mt
