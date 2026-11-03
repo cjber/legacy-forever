@@ -262,7 +262,45 @@ local function FlightRecord()
 		return { known = {}, continents = {} }
 	end
 	records[guid] = records[guid] or { known = {}, continents = {} }
-	return records[guid]
+	local record = records[guid]
+	if type(record.seen) ~= "table" then
+		record.seen = {}
+		-- Existing known nodes were observed at a real flight master. Preserve that evidence on upgrade.
+		for id, known in pairs(record.known) do
+			if known == true and type(id) == "number" and id > 0 and id < math.huge and id % 1 == 0 then
+				record.seen[id] = record.observedAt or 0
+			end
+		end
+	end
+	return record
+end
+
+-- Cumulative observations are separate from the map's current known/unreachable state. Reopening a flight
+-- master cannot lower the count or change its timestamp unless another distinct path is observed.
+---@return integer count
+---@return integer observedAt
+function Live.FlightPathTotal()
+	local record = FlightRecord()
+	local count, latest = 0, 0
+	local now = GetServerTime and GetServerTime() or 0
+	for id, stamp in pairs(record.seen or {}) do
+		if
+			type(id) == "number"
+			and id > 0
+			and id < math.huge
+			and id % 1 == 0
+			and type(stamp) == "number"
+			and stamp >= 0
+			and stamp <= now + 300
+			and stamp % 1 == 0
+		then
+			count = count + 1
+			if stamp > latest then
+				latest = stamp
+			end
+		end
+	end
+	return count, latest
 end
 
 local function RecordFlightMaster()
@@ -276,9 +314,24 @@ local function RecordFlightMaster()
 	end
 	local record = FlightRecord()
 	record.continents[continent] = true
-	record.observedAt = type(time) == "function" and time() or nil
+	record.observedAt = GetServerTime and GetServerTime() or nil
 	for _, node in ipairs(nodes) do
 		record.known[node.nodeID] = node.state ~= Enum.FlightPathState.Unreachable or nil
+		local id = node.nodeID
+		if
+			node.state ~= nil
+			and node.state ~= Enum.FlightPathState.Unreachable
+			and type(id) == "number"
+			and id > 0
+			and id < math.huge
+			and id % 1 == 0
+		then
+			record.seen = record.seen or {}
+			local first = record.seen[id]
+			if type(first) ~= "number" or first <= 0 or first % 1 ~= 0 or first > (record.observedAt or 0) + 300 then
+				record.seen[id] = record.observedAt or 0
+			end
+		end
 	end
 end
 

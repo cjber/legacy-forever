@@ -45,9 +45,14 @@ C_MapExplorationInfo = {
 		return nil
 	end,
 }
+local taxiNodes = { { nodeID = 10, state = 1 } }
+local serverTime = 1700000000
+GetServerTime = function()
+	return serverTime
+end
 C_TaxiMap = {
 	GetAllTaxiNodes = function()
-		return { { nodeID = 10, state = 1 } }
+		return taxiNodes
 	end,
 }
 local questLogReads = 0
@@ -145,6 +150,38 @@ check(records[guid] and snapshot.taxis[10] == nil, "a new character has no known
 onEvent(nil, "TAXIMAP_OPENED")
 snapshot = Live.ZoneSnapshot(2)
 check(snapshot.taxis[10] == true, "a later flight-master visit records this character's known nodes")
+local total, observed = Live.FlightPathTotal()
+check(total == 1 and observed == serverTime, "a real flight-master visit records a cumulative observation")
+serverTime = serverTime + 10
+onEvent(nil, "TAXIMAP_OPENED")
+total, observed = Live.FlightPathTotal()
+check(total == 1 and observed == serverTime - 10, "reopening does not count or timestamp the same node again")
+taxiNodes = { { nodeID = 10, state = 0 }, { nodeID = 11, state = 1 } }
+onEvent(nil, "TAXIMAP_OPENED")
+total, observed = Live.FlightPathTotal()
+check(total == 2 and observed == serverTime, "another distinct path adds to the total")
+snapshot = Live.ZoneSnapshot(2)
+check(snapshot.taxis[10] == false, "an unreachable node still updates the current map state")
+check(records[guid].seen[10] ~= nil, "an unreachable node does not erase cumulative history")
+taxiNodes = { { nodeID = 10, state = 1 } }
+onEvent(nil, "TAXIMAP_OPENED")
+guid = "Player-old"
+records[guid] = { known = { [21] = true, [22] = false }, continents = {}, observedAt = serverTime - 20 }
+total, observed = Live.FlightPathTotal()
+check(total == 1 and observed == serverTime - 20, "an upgrade retains previously observed known nodes")
+records[guid].seen[0] = serverTime
+records[guid].seen[1.5] = serverTime
+records[guid].seen[23] = false
+records[guid].seen[24] = serverTime + 301
+total = Live.FlightPathTotal()
+check(total == 1, "invalid saved IDs and timestamps do not create observations")
+records[guid].seen[10] = "invalid"
+onEvent(nil, "TAXIMAP_OPENED")
+total, observed = Live.FlightPathTotal()
+check(total == 2 and observed == serverTime, "a real observation repairs an invalid saved timestamp")
+guid = "Player-new"
+check(Live.FlightPathTotal() == 0, "another character does not inherit observed paths")
+guid = "Player-test"
 check(snapshot.completed[2] and not snapshot.completed[3], "turned-in quests come from the quest log")
 onEvent(nil, "QUEST_TURNED_IN", 3)
 snapshot = Live.ZoneSnapshot(2)

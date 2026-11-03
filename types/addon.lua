@@ -150,6 +150,7 @@
 ---@field known LegacySet
 ---@field continents LegacySet
 ---@field observedAt? integer last opened flight-master map timestamp
+---@field seen? table<integer, integer> distinct observed nodes, with first observed server timestamps
 
 ---@alias LegacySettings table<string, boolean>
 
