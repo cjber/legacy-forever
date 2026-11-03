@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-03
+
+- **Legacy challenges and zone completion re-pinned to client build 1.60.1.70753.** The achievements the map and tracker count now come from the current client, so a challenge the build dropped is no longer listed as unfinished. Nothing else a player sees changes.
+
 ## [1.0.0] - 2026-11-02
 
 - **Legacy Forever 1.0 is the first stable release, ready for the WoW: Forever launch.** The map pins, tracker and settings work as they did in 0.12.16; the version number now marks the addon as ready for everyday play, and the chat line after the update says so in every shipped language.
