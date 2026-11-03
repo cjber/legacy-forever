@@ -678,15 +678,36 @@ def match_explore_areas(zones, completion, counts):
                 )
 
 
+def reward_achievements(tables):
+    """AchievementIDs that grant Legacy Points, skipping rows the build no longer defines.
+
+    A build can drop an achievement while its TraitCurrencySource row survives, so the reward
+    set is filtered against the Achievement table and every dropped row is reported.
+    """
+    rewards = set()
+    for row in tables["TraitCurrencySource"].values():
+        if row["TraitCurrencyID"] != 4225:
+            continue
+        achievement = row["AchievementID"]
+        if achievement not in tables["Achievement"]:
+            print(
+                f"  TraitCurrencySource 4225: dropping missing achievement {achievement}",
+                file=sys.stderr,
+            )
+            continue
+        rewards.add(achievement)
+    if not rewards or 0 in rewards:
+        raise ValueError("TraitCurrencySource 4225: missing reward achievements")
+    return rewards
+
+
 def generate(tables):
     graph = Achievements(tables)
     geography = Geography(tables)
     curated, completion_curated = curated_locations(tables, geography)
     compounds = compound_objectives(tables, graph, completion_curated["compoundInstances"])
     instance_zones = curated_instance_zones(completion_curated)
-    rewards = {r["AchievementID"] for r in tables["TraitCurrencySource"].values() if r["TraitCurrencyID"] == 4225}
-    if not rewards or 0 in rewards:
-        raise ValueError("TraitCurrencySource 4225: missing reward achievements")
+    rewards = reward_achievements(tables)
     feeds = defaultdict(set)
     for reward in sorted(rewards):
         graph.expand(reward, reward, feeds, set())
