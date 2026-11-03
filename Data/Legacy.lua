@@ -190,7 +190,7 @@ ns.Data = {
 	-- Location-bound objectives by zone uiMapID.
 	zones = {
 		[1411] = {
-			{ achievement = 728, criteria = 822, kind = "explore", key = "355:320:256:256", x = 0.444, y = 0.670 },
+			{ achievement = 7289, criteria = 822, kind = "explore", key = "355:320:256:256", x = 0.444, y = 0.670 },
 			{ achievement = 728, criteria = 823, kind = "explore", key = "474:384:256:256", x = 0.561, y = 0.730 },
 			{ achievement = 728, criteria = 824, kind = "explore", key = "413:476:256:128", x = 0.489, y = 0.793 },
 			{ achievement = 728, criteria = 825, kind = "explore", key = "549:427:256:241", x = 0.654, y = 0.846 },
