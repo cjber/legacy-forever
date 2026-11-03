@@ -24,6 +24,8 @@ EXCLUDE = (
     # Generated JSON ledger that cannot carry an inline marker.
     ".sloppatrol/ledger.json",
     "Data/*.lua",
+    # Byte-for-byte producer code, verified by tools/forever_sim/sync.py check in CI.
+    "tools/forever_sim/*",
 )
 
 

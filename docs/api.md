@@ -1,7 +1,7 @@
 # LegacyForever.API
 
 Other addons can read Legacy Forever's zone completion and a zone's unfinished Legacy objectives, and send the
-player to one, through the global `LegacyForever.API`. It is version 1; check `version == 1` and that each function
+player to one, through the global `LegacyForever.API`. It is version 1, minor 1; check `version == 1` and that each function
 exists before calling it. The full types are in [`types/API.lua`](../types/API.lua).
 
 Every call returns fresh tables that you may keep or change. `map` is always a UiMapID and coordinates run from 0
@@ -51,7 +51,16 @@ error in a callback goes to the game's error handler without stopping the others
 
 ## `Stats() -> LFActivityRecord[]`
 
-Returns one row per flight path observed as known in this character's opened flight-master maps. Each row has
+Returns one row per flight path currently known in this character's most recently opened flight-master maps. A node that becomes unreachable leaves this current-known view. These rows use the latest map observation timestamp; the cumulative leaderboard retains distinct nodes and their discovery timestamps. Each row has
 `addon`, `metric`, `subject`, `value`, and `eventUnix` when the client provided a timestamp. Forever's zone
 exploration data marks every taxi node as discovered, so Legacy only records this metric from the flight master's
-own node states. Rows are local SavedVariables; Legacy does not broadcast them or treat them as realm records.
+own node states. These per-node rows remain local. The leaderboard shares only a cumulative distinct-path snapshot with guild and group channels, classified by the client mode and Hardcore flag; no realm-wide record is claimed.
+
+
+## `Leaderboard(limit?) -> LFFlightLeaderboard?, LFReadError?`
+
+Available from minor 1. Returns fresh ranked rows for cumulative observed flight paths: `rank`, `name`, `value`, optional `eventUnix`, and `self` for the personal row. `metric` is `flight_path_known`, `scope` is `guild_group`, `ruleset` contains the client mode ID and Hardcore flag, `sharing` reports active participation, and `total` counts all eligible rows. Peer values are player-reported. Only the current client ruleset is compared; an unknown ruleset has no peer comparison. Self-declared challenges such as Ironman are not automatically classified.
+
+The default top list is 10, capped at 25, with the personal row retained even below the limit. A non-integer or negative limit returns `nil, "invalid"`; zero requests only the personal row. Opt-out hides peer rows and cancels pending sends without deleting personal history or the classified peer cache. Legacy never migrates the old unclassified peer cache into a ruleset board.
+
+Opting out cannot retract totals already received by other players. Their cached copies can remain visible.

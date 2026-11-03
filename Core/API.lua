@@ -242,10 +242,14 @@ end)
 LegacyForever = {
 	API = {
 		version = 1,
+		minor = 1,
 		ZoneSummary = ZoneSummary,
 		Targets = Targets,
 		Navigate = Navigate,
 		Subscribe = Subscribe,
 		Stats = Stats,
+		Leaderboard = function(limit)
+			return ns.Stats.Leaderboard(limit)
+		end,
 	},
 }

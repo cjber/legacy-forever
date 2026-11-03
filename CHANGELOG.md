@@ -12,6 +12,12 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **Compare observed flight paths with guild and group members.** `/lf leaderboard` ranks distinct paths observed at flight masters on the same client ruleset. Peer totals are player-reported. Sharing starts on; `/lf share off`, the map menu or Flight-path records in Settings stops sends and peer comparisons while keeping personal history. Unknown rulesets keep only your personal row. Thanks to cjber for requesting the peer leaderboard work (cjber/forever-core#49, #231).
+
+### For addon authors
+
+- **`API.Leaderboard(limit)`** adds a bounded ranked snapshot at API version 1, minor 1. Existing methods retain their contracts.
+
 ## [1.0.7] - 2026-11-03
 
 - **Keep a cumulative record of observed flight paths.** A path already seen at a flight master stays in this character's history when it later appears unreachable. The map still shows the current state.

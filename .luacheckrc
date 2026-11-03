@@ -26,7 +26,7 @@ read_globals = { "GetQuestDifficultyColor", "RGBTableToColorCode", "FONT_COLOR_C
 	"tContains", "time", "ToggleLegacySystemUI", "UnitClass", "UnitLevel", "debugstack", "UISpecialFrames", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 
-	for _, name in ipairs({ "GetServerTime", "GetRealmName", "IsInGuild", "IsInGroup", "IsInRaid", "LE_PARTY_CATEGORY_INSTANCE", "C_ChatInfo", "UnitName" }) do
+	for _, name in ipairs({ "GetServerTime", "GetNormalizedRealmName", "GetNumGroupMembers", "LE_PARTY_CATEGORY_HOME", "issecretvalue", "C_GameRules", "GetRealmName", "IsInGuild", "IsInGroup", "IsInRaid", "LE_PARTY_CATEGORY_INSTANCE", "C_ChatInfo", "UnitName" }) do
 	read_globals[#read_globals + 1] = name
 end
 files["Data/Legacy.lua"] = { max_line_length = false }

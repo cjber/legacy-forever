@@ -164,6 +164,14 @@ for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 	AddCheckbox(counts, "count_" .. key, ns.Completion.Label(key), tooltip, usable)
 end
 
+local stats = Section(category, L["Flight-path records"])
+AddCheckbox(
+	stats,
+	"statsShare",
+	L["Share flight-path totals with guild and group"],
+	L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."]
+)
+
 local updates = Section(category, L["Updates"])
 AddCheckbox(updates, "whatsNew", L["What's new after an update"])
 

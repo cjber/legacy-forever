@@ -154,7 +154,7 @@ check(calls.map == 1 and calls.menu == 1 and #printed == 0, "a bare /lf opens th
 LegacyForever_OnAddonCompartmentClick()
 check(calls.map == 1 and calls.menu == 2, "the compartment entry opens the menu on the open map")
 SlashCmdList.LEGACYFOREVER("help")
-check(#printed == 5 and calls.menu == 2, "/lf help prints the commands")
+check(#printed == 7 and calls.menu == 2, "/lf help prints the commands")
 check(printed[2] == "/lf report - show a report to copy into a bug report", "the help names /lf report")
 check(
 	printed[3] == "/lf issue - report a bug or request a feature with a ready-made GitHub issue link",
@@ -281,8 +281,8 @@ assert(loadfile("UI/Settings.lua"))("LegacyForever", ns)
 check(LegacyForeverDB == nil or next(LegacyForeverDB.zoneCompletion or {}) == nil, "building the page saves nothing")
 
 -- Every section is a subpage; the index holds one button per subpage, in order.
-check(#subcategories == 5, "five subcategory groups")
-local names = { "World map", "Objective tracker", "What counts", "Updates", "Forever addons" }
+check(#subcategories == 6, "six subcategory groups")
+local names = { "World map", "Objective tracker", "What counts", "Flight-path records", "Updates", "Forever addons" }
 for index, name in ipairs(names) do
 	check(subcategories[index].category.name == name, name .. " is a subcategory")
 end
@@ -301,6 +301,8 @@ local kinds, expectedKinds =
 for _ = 1, 7 do
 	expectedKinds[#expectedKinds + 1] = "checkbox@What counts"
 end
+expectedKinds[#expectedKinds + 1] = "button@Legacy Forever"
+expectedKinds[#expectedKinds + 1] = "checkbox@Flight-path records"
 expectedKinds[#expectedKinds + 1] = "button@Legacy Forever"
 expectedKinds[#expectedKinds + 1] = "checkbox@Updates"
 expectedKinds[#expectedKinds + 1] = "button@Legacy Forever"
@@ -331,6 +333,7 @@ local expected = {
 	count_legacy = true,
 	count_reputations = false,
 	count_quests = false,
+	statsShare = true,
 	whatsNew = true,
 }
 for key, default in pairs(expected) do
@@ -350,7 +353,7 @@ for _, name in ipairs(names) do
 	buttons[name].click()
 end
 check(
-	table.concat(opened, " ") == "World map Objective tracker What counts Updates Forever addons",
+	table.concat(opened, " ") == "World map Objective tracker What counts Flight-path records Updates Forever addons",
 	"each button opens its subpage"
 )
 
