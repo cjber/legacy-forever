@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **The objective tracker column stays still as you enter and leave combat.** It no longer jumps in height or drops its last line during a fight, and the quest list below it stays where it is.
+
 ## [1.0.13] - 2026-11-04
 
 - **Legacy data now names the 1.60.1.70790 build.** The challenge data is regenerated from the new Forever client build, so the addon carries the build it came from. The regenerated values match the previous build, so nothing a player sees changes.
