@@ -124,6 +124,11 @@ local function Environment(data)
 		return "Warrior", "WARRIOR", 1
 	end
 	env.Enum = { UIMapType = { Continent = 2 }, FlightPathState = { Unreachable = 0 } }
+	env.GetCVarBool = function(name)
+		assert(name == "showDungeonEntrancesOnMap")
+		bump("GetCVarBool")
+		return true
+	end
 	env.C_Map = {
 		GetMapInfo = function(id)
 			bump("GetMapInfo")

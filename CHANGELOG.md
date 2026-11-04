@@ -12,6 +12,14 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [1.0.10] - 2026-11-04
+
+- **Dungeon entrances follow the world map's filter.** Turning off Show instance entrances also hides Legacy's dungeon and raid pins, while exploration and completion information remain visible. Thanks to cjber for requesting the compatibility audit (#235).
+
+- **The map menu stays beside the map's own controls.** Questie's and other Krowi map buttons stack on the left, so they no longer push Legacy's menu down an empty slot on the right. Thanks to cjber for requesting the compatibility audit (#235).
+
+- **Exploration tooltips remain available with Leatrix Maps.** Revealed ground stays clear until you hover an unfinished area, which still highlights and shows its Legacy information. Thanks to cjber for requesting the compatibility audit (#235).
+
 ## [1.0.9] - 2026-11-03
 
 - **Preview screenshots use the pinned client art build.** The rendered scenes now take their window art from the repo's pinned UI art build through Forever Core's shared renderer, so a preview cannot show chrome the shipped client does not draw. Data generation stays on the client build it already targets.

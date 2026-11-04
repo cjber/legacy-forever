@@ -39,6 +39,11 @@ end
 live[100][5].completed = true
 
 local settings = { showAreas = true, showEntrances = true }
+local nativeEntrances = true
+GetCVarBool = function(name)
+	assert(name == "showDungeonEntrancesOnMap")
+	return nativeEntrances
+end
 local shownOnMap = true
 local explored = {}
 ns.Saved = {
@@ -205,6 +210,13 @@ for _, zone in ipairs(MapContents.Drawn(CONTINENT).badges) do
 end
 equal(badge.count, 3, "a continent badge still counts the entrance")
 settings.showEntrances = true
+nativeEntrances = false
+drawn = MapContents.Drawn(ZONE)
+equal(#drawn.pins, 1, "native entrance filter hides entrance pins")
+equal(drawn.pins[1].objective.entry.criteria, 3, "native entrance filter preserves other objectives")
+equal(#assert(drawn.shade).areas, 3, "native entrance filter preserves exploration")
+nativeEntrances = true
+equal(#MapContents.Drawn(ZONE).pins, 2, "native entrance filter restores entrance pins")
 live[100][5].completed = true
 
 drawn = MapContents.Drawn(PLAIN)

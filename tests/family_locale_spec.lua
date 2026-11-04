@@ -31,9 +31,9 @@ end
 -- An older copy (VERSION 2, as shipped) loaded first: Legacy's newer copy takes over, bound to Legacy's L.
 ForeverFamily = { VERSION = 2 }
 local legacy = LoadLegacy()
-check(ForeverFamily.VERSION == 3 and legacy.Family == ForeverFamily.For(legacy.L), "a newer copy takes over")
+check(ForeverFamily.VERSION == 4 and legacy.Family == ForeverFamily.For(legacy.L), "a newer copy takes over")
 
--- A VERSION 3 copy of an English-only addon loaded first, as Shortest Path Forever does (Legacy's OptionalDeps):
+-- A VERSION 4 copy of an English-only addon loaded first, as Shortest Path Forever does (Legacy's OptionalDeps):
 -- it stays in use, and each addon's view keeps its own L.
 ForeverFamily = nil
 local other = English()
