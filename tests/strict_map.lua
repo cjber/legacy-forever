@@ -1,4 +1,4 @@
--- A world map that fails on any write, and frames enough to draw on it, for the specs that put Legacy on the map.
+-- A world map that fails on any write, and frames enough to draw on it, for map canvas specs.
 -- dofile("tests/strict_map.lua") returns the kit; Kit.Install(env) sets the client globals the map files read.
 --
 -- The map lets through only the reads UI/MapCanvas.lua lists: a field written on it, or any other method (such as
@@ -200,38 +200,7 @@ function Kit.MenuRoot()
 end
 
 -- The pieces the addon's XML templates give a frame.
-local TEMPLATES = {
-	LegacyForeverPinTemplate = function(frame)
-		frame.Icon, frame.Portal, frame.Highlight = Kit.Region(), Kit.Region(), Kit.Region()
-		frame.Highlight.shown = false
-	end,
-	LegacyForeverMapButtonTemplate = function(frame)
-		frame.Icon, frame.Count = Kit.Region(), Kit.Region()
-		Mixin(frame, LegacyForeverMapButtonMixin)
-		-- As DropdownButtonMixin:SetupMenu: the menu is built at once while the button shows.
-		frame.SetupMenu = function(self, generator)
-			if self.shown then
-				generator(self, Kit.MenuRoot())
-			end
-		end
-		frame.IsMenuOpen = function()
-			return false
-		end
-		frame.OpenMenu = function(self)
-			self.opened = true
-		end
-		frame:OnLoad()
-		-- Map.xml's OnShow: the client runs it as the frame is made, when it is made shown with no parent.
-		if not frame.parent then
-			frame:OnShow()
-		end
-	end,
-	LegacyForeverZoneOverlayTemplate = function(frame)
-		frame.Title, frame.Counts = Kit.Region(), Kit.Region()
-		Mixin(frame, LegacyForeverZoneOverlayMixin)
-		frame:OnLoad()
-	end,
-}
+Kit.templates = {}
 
 ---@return table
 function Kit.CreateFrame(frameType, name, parent, template)
@@ -246,7 +215,7 @@ function Kit.CreateFrame(frameType, name, parent, template)
 	}, Frame)
 	frame.shown = true
 	if template then
-		assert(TEMPLATES[template], "no stub for template " .. template)(frame)
+		assert(Kit.templates[template], "no stub for template " .. template)(frame)
 	end
 	Kit.frames[#Kit.frames + 1] = frame
 	return frame
@@ -328,10 +297,15 @@ local READS = {
 	end,
 }
 
+local overlays = setmetatable({}, {
+	__newindex = function(_, key)
+		error("wrote the map's overlayFrames: " .. tostring(key), 2)
+	end,
+})
 Kit.map = setmetatable({}, {
 	__index = function(_, key)
 		if key == "overlayFrames" then
-			return {}
+			return overlays
 		end
 		return READS[key] or error("called or read the map's " .. tostring(key), 2)
 	end,
