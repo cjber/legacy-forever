@@ -339,4 +339,4 @@ Pins()[1]:Run("OnLeave")
 ns.OpenMapMenu()
 check(button.opened, "/lf opens the map button's menu")
 
-print(("map_canvas: %d checks passed"):format(checks))
+print(("legacy_map_spec: %d checks passed"):format(checks))
