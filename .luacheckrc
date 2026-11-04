@@ -49,7 +49,7 @@ files["tests/navigate_spec.lua"] = {
 }
 files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame" } }
 files["tests/settings_spec.lua"] = { globals = { "CreateFrame", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "WorldMapFrame" } }
-files["tests/map_canvas_spec.lua"] = {
+files["tests/legacy_map_spec.lua"] = {
 	globals = {
 		"EventUtil", "REPUTATION", "WHITE_FONT_COLOR", "Enum", "GameTooltip", "GameTooltip_SetTitle", "GameTooltip_AddNormalLine",
 		"GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine", "GameTooltip_AddDisabledLine",

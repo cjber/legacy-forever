@@ -377,7 +377,7 @@ end
 
 --[[ Pins: one per unfinished objective the data can place on this map, on frames of our own (UI/MapCanvas.lua) ]]
 
----@class LegacyObjectivePin : LegacyCanvasPin
+---@class LegacyObjectivePin : ForeverCanvasPin
 ---@field Icon Texture
 ---@field Portal Texture
 ---@field Highlight Texture
@@ -485,7 +485,7 @@ end
 -- discovery (see MapExplorationPinMixin:RefreshOverlays). It never takes the mouse, which would swallow the map's own
 -- clicks (right-click to zoom out, drag to pan): while the cursor is on bare map, the area under it is polled
 -- (MapContents.AreaAt).
----@class LegacyAreaPin : LegacyCanvasPin
+---@class LegacyAreaPin : ForeverCanvasPin
 ---@field textures LegacyTexturePool
 ---@field shade? LegacyShade
 ---@field hovered? LegacyShadedArea

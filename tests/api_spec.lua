@@ -166,7 +166,7 @@ C_Texture = {
 	end,
 }
 -- The world map, which fails on any write (tests/strict_map.lua); the corner overlay attaches once it loads.
-local Kit = dofile("tests/strict_map.lua")
+local Kit = dofile("tests/legacy_map_kit.lua")
 Kit.mapID = 100
 Enum = Enum or {}
 WorldMapFrame, CreateFrame, Mixin, CreateFromMixins = Kit.map, Kit.CreateFrame, nil, nil

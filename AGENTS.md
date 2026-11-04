@@ -90,7 +90,7 @@ request against its base and fails on a regression. Every version needs a
 Do not hook Blizzard object methods: use events, `HookScript` or a supported callback registry.
 Draw on the world map only through `UI/MapCanvas.lua`: frames of our own, made with no parent and then set on the
 canvas or map, never `AddDataProvider`, `AcquirePin`, `AddOverlayFrame` or a `MapCanvasPinMixin` (the gamepad
-interface walks the map's providers, pins and overlay frames from secure code). `tests/map_canvas_spec.lua` runs the
+interface walks the map's providers, pins and overlay frames from secure code). `tests/legacy_map_spec.lua` runs the
 map files against a map that fails on any write.
 Keep addon tracker sections and pools in `UI/TrackerHost.lua`, outside Blizzard's registry.
 Render only after `PLAYER_ENTERING_WORLD` and `VARIABLES_LOADED`, deferred one frame.

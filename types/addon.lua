@@ -259,6 +259,8 @@ ForeverTrackerHost = nil
 ---@field Grip fun(host: Frame, source: ForeverTrackerHostAPI): ForeverTrackerGrip draws the grip on the column it drags
 
 ---@class ForeverTrackerNamespace
+---@field MapCanvas? ForeverMapCanvas
+---@field SafeCall fun(label: string, fn: function, ...: any): boolean, ...any
 ---@field TrackerHost? ForeverTrackerHostAPI
 ---@field TrackerOrder? ForeverTrackerOrderAPI the section order, from UI/TrackerOrder.lua
 ---@field TrackerQuestie? ForeverTrackerQuestie Questie's quest list, from UI/TrackerQuestie.lua
