@@ -27,7 +27,6 @@ if not (WOWMOCK / "wowmock.py").is_file():
     sys.exit(f"wowmock.py not found in {WOWMOCK}; set FOREVER_CORE to the forever-core checkout")
 sys.path.insert(0, str(WOWMOCK))
 
-from gen_legacy import BUILD
 from legacy_render import COMPLETION_CATEGORIES, lua_string, lua_unquote
 from PIL import Image
 from wowmock import (
@@ -42,6 +41,7 @@ from wowmock import (
     TrackerBlock,
     TrackerModule,
     Ui,
+    Wago,
     atlas_markup,
     backdrop,
     colored,
@@ -55,8 +55,39 @@ from wowmock import (
     world_map_frame,
 )
 
+UI_ART_BUILD = "1.60.1.70124"
+ART_DB2 = frozenset(
+    {"UiCanvas", "UiTextureAtlas", "UiTextureAtlasElement", "UiTextureAtlasElementSliceData", "UiTextureAtlasMember"}
+)
+
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "docs" / "screenshots"
+
+
+class SplitWago:
+    """Keep generated data on its build while pinning UI art to the reviewed Forever art build."""
+
+    def __init__(self, data, art):
+        self.data = data
+        self.art = art
+
+    def db2(self, table):
+        return (self.art if table in ART_DB2 else self.data).db2(table)
+
+    def fdid(self, path):
+        return self.art.fdid(path)
+
+    def file(self, fdid):
+        return self.art.file(fdid)
+
+
+def make_ui(scale):
+    data_build = re.search(r"build ([0-9.]+)", (ROOT / "Data" / "Legacy.lua").read_text()).group(1).rstrip(".")
+    ui = Ui(build=data_build, scale=scale)
+    ui.wago = SplitWago(ui.wago, Wago(UI_ART_BUILD))
+    return ui
+
+
 # GameFontNormalTiny: SystemFont_Tiny (Friz 9, no shadow) in gold; wowmock has no entry for it.
 TINY = Font(FRIZQT, 9, FONTS["GameFontNormal"].color, None)
 
@@ -707,7 +738,7 @@ DEMO_FADE = 3  # frames of cross-fade as an area's shading lifts; a click change
 def render_demo(data):
     """docs/screenshots/demo.gif: Ashenvale's shading lifting and its corner filling as areas are found, the corner
     collapsed with a click, then the Legacy menu. Rendered at 1x, the GIF's final size."""
-    ui = Ui(build=BUILD, scale=1)
+    ui = make_ui(scale=1)
     steps = []
     for found, collapsed, menu, seconds in DEMO_STEPS:
         live = Live(ui, data, EXPLORED | set(DEMO_DISCOVERED[:found]))
@@ -754,7 +785,7 @@ def render_demo(data):
 
 
 def main():
-    ui = Ui(build=BUILD, scale=2)
+    ui = make_ui(scale=2)
     data = load_data()
     live = Live(ui, data)
     OUT.mkdir(parents=True, exist_ok=True)
