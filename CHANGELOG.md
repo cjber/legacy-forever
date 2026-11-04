@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [1.0.13] - 2026-11-04
+
+- **Legacy data now names the 1.60.1.70790 build.** The challenge data is regenerated from the new Forever client build, so the addon carries the build it came from. The regenerated values match the previous build, so nothing a player sees changes.
+
 ## [1.0.12] - 2026-11-04
 
 - **Legacy data now names the 1.60.1.70755 build.** The legacy challenge data is regenerated from the new Forever client build, so the addon's own data carries the build it came from. The regenerated values match the previous build, so nothing a player sees changes.
