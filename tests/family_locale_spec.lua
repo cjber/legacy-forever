@@ -28,7 +28,7 @@ local function LoadLegacy()
 	return legacy
 end
 
--- An older copy (VERSION 2, as shipped) loaded first: Legacy's newer copy takes over, bound to Legacy's L.
+-- An older copy (VERSION 3) loaded first: Legacy's newer VERSION 4 copy takes over, bound to Legacy's L.
 ForeverFamily = { VERSION = 2 }
 local legacy = LoadLegacy()
 check(ForeverFamily.VERSION == 3 and legacy.Family == ForeverFamily.For(legacy.L), "a newer copy takes over")
