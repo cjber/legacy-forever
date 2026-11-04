@@ -1,19 +1,20 @@
----@type string, ForeverTrackerNamespace
-local addonName, ns = ...
+---@type string, LegacyForeverNamespace
+local _, ns = ...
 
--- Addon drawings on the world map, on frames of its own, with nothing written into the map.
+-- Legacy's drawings on the world map, on frames of its own, with nothing written into the map.
 --
 -- Forever's gamepad interface runs the map's Lua from secure code: every frame MapCanvasMixin:UpdateGamepadCursor walks
 -- each pin in map.pinPools and keeps the ones under its cursor in map.currentPoIPins. A data provider an addon adds
 -- sits in map.dataProviders, a pin it acquires puts its template, pool and frame in map.pinPools, and an overlay frame
 -- it adds goes into map.overlayFrames, so that secure walk ran through the addon's values, tainted, and the gamepad's
--- later protected calls were blocked. The canvas adds no data provider, acquires no pin, adds no overlay frame
--- and calls no map method that writes. It only reads the map:
+-- later protected calls were blocked. So Legacy adds no data provider, acquires no pin, adds no overlay frame and calls
+-- no map method that writes. It only reads the map:
 --   map:GetMapID(), map:GetCanvas(), map:GetCanvasScale(), map:GetCanvasZoomPercent(), map:GetGlobalPinScale(),
---   map:IsVisible() and map:GetPinFrameLevelsManager():GetValidFrameLevel(type)
+--   map:IsVisible(), map:GetPinFrameLevelsManager():GetValidFrameLevel(type), map:GetCanvasContainer(),
+--   map:IsCanvasMouseFocus(), map:GetMaskTexture() and map:GetUseMaskTexture()
 -- (each returns a field or works one out from fields: Blizzard_MapCanvas.lua, MapCanvas_PinFrameLevelsManager.lua),
--- plus the canvas's size and the gamepad's SoftCursor. tests/map_canvas_spec.lua runs this shared helper against a map
--- that fails on any write.
+-- plus the canvas's size and the gamepad's SoftCursor. tests/map_canvas_spec.lua runs the map files against a map that
+-- fails on any write.
 --
 -- One view per map: a frame of ours on the canvas, which clips it and shows and hides it with the map. It is made
 -- with no parent and then moved there, since the gamepad interface follows frames created inside an open window.
@@ -24,20 +25,18 @@ local addonName, ns = ...
 --
 -- Pins are plain frames that take the mouse with OnEnter and OnLeave only (the gamepad interface reads a frame with a
 -- click script as a button of the window it scans). A click is a press and release over the hovered pin, seen through
--- GLOBAL_MOUSE_DOWN and GLOBAL_MOUSE_UP on a frame of ours. By default the right button goes through to the canvas
--- (zoom out); a pin may override it. Under the gamepad interface the nearest pin shows its tooltip.
+-- GLOBAL_MOUSE_DOWN and GLOBAL_MOUSE_UP on a frame of ours. The right button goes through to the canvas (zoom out), as
+-- on the map's own pins. Under the gamepad interface the pin nearest the map's cursor shows its tooltip.
 
----@alias ForeverCanvasMap WorldMapFrame
-
----@class ForeverMapCanvas
+---@class LegacyMapCanvas
 local MapCanvas = {}
 ns.MapCanvas = MapCanvas
 
 -- How near the gamepad's map cursor comes to a pin to point at it, in UI units (the map's MIN_PIN_DISTANCE_SQUARED).
 local CURSOR_REACH = 12
 
----@class ForeverCanvasView
----@field map ForeverCanvasMap
+---@class LegacyCanvasView
+---@field map WorldMapFrame
 ---@field canvas Frame
 ---@field host Frame
 ---@field layer Frame
@@ -48,14 +47,14 @@ local CURSOR_REACH = 12
 ---@field scale number
 ---@field zoom number
 ---@field pinScale number
----@field listeners fun(view: ForeverCanvasView, what: string)[]
----@field pools ForeverCanvasPool[]
+---@field listeners fun(view: LegacyCanvasView, what: string)[]
+---@field pools LegacyCanvasPool[]
 local View = {}
 View.__index = View
 
----@type table<ForeverCanvasMap, ForeverCanvasView>
+---@type table<WorldMapFrame, LegacyCanvasView>
 local views = {}
----@type ForeverCanvasPin?, ForeverCanvasPin?, string?
+---@type LegacyCanvasPin?, LegacyCanvasPin?, string?
 local hovered, pressed, pressedButton
 -- Whether the gamepad's map cursor, not the mouse, hovered the pin.
 local hoveredByCursor = false
@@ -78,7 +77,7 @@ function View:Level(levelType)
 	return level or self.canvas:GetFrameLevel() + 1
 end
 
----@param view ForeverCanvasView
+---@param view LegacyCanvasView
 ---@param what string
 local function Fire(view, what)
 	if what ~= "hide" then
@@ -94,7 +93,7 @@ local function Fire(view, what)
 	end
 end
 
----@param pin ForeverCanvasPin?
+---@param pin LegacyCanvasPin?
 local function SetHovered(pin)
 	if hovered == pin then
 		return
@@ -110,8 +109,8 @@ local function SetHovered(pin)
 end
 
 -- The pin nearest the gamepad's map cursor and within reach, among those that take the mouse.
----@param view ForeverCanvasView
----@return ForeverCanvasPin?
+---@param view LegacyCanvasView
+---@return LegacyCanvasPin?
 local function PinAtCursor(view)
 	local cursor = SoftCursor
 	if not (cursor and cursor:IsShown()) then
@@ -143,7 +142,7 @@ local function PinAtCursor(view)
 	return best
 end
 
----@param view ForeverCanvasView
+---@param view LegacyCanvasView
 local function Update(view)
 	local map, canvas = view.map, view.canvas
 	if not map:IsVisible() then
@@ -187,7 +186,7 @@ local function Update(view)
 	end
 end
 
----@param view ForeverCanvasView
+---@param view LegacyCanvasView
 local function Hide(view)
 	if hovered and hovered.view == view then
 		SetHovered(nil)
@@ -221,9 +220,9 @@ function MapCanvas.FrameUnder(frameType, parent, template)
 end
 
 -- The view of `map`, made the first time it is asked for; `listener`, when given, hears what changes.
----@param map ForeverCanvasMap
----@param listener? fun(view: ForeverCanvasView, what: string)
----@return ForeverCanvasView
+---@param map WorldMapFrame
+---@param listener? fun(view: LegacyCanvasView, what: string)
+---@return LegacyCanvasView
 function MapCanvas.Watch(map, listener)
 	local view = views[map]
 	if not view then
@@ -262,7 +261,7 @@ function MapCanvas.Watch(map, listener)
 end
 
 -- Shows or hides every pin of ours on `map`: combat hides them.
----@param map ForeverCanvasMap
+---@param map WorldMapFrame
 ---@param shown boolean
 function MapCanvas.SetShown(map, shown)
 	local view = views[map]
@@ -279,8 +278,8 @@ end
 -- The base of every pin: placed at map fractions, and a constant size on screen between startScale zoomed out and
 -- endScale zoomed in, times the map's pin scale unless it ignores it, as the map's own pins (MapCanvasPinMixin).
 -- A pin with no limits that ignores the pin scale grows with the terrain.
----@class ForeverCanvasPin : Frame
----@field view ForeverCanvasView
+---@class LegacyCanvasPin : Frame
+---@field view LegacyCanvasView
 ---@field mapX? number
 ---@field mapY? number
 ---@field scaleFactor? number
@@ -289,12 +288,12 @@ end
 ---@field ignoreGlobalPinScale? boolean
 ---@field levelType? string
 ---@field takesMouse? boolean
----@field clicks? boolean whether clicks act on this pin
----@field OnMouseClickAction? fun(self: ForeverCanvasPin, button: string)
+---@field clicks? boolean whether a left click acts; the right button always goes through to the canvas
+---@field OnMouseClickAction? fun(self: LegacyCanvasPin, button: string)
 local Pin = {}
 MapCanvas.PinMixin = Pin
 
-function Pin.OnLoad() end
+function Pin:OnLoad() end
 ---@param ... any
 -- luacheck: ignore 212 -- Each pin mixin defines its own acquired arguments.
 function Pin:OnAcquired(...) end
@@ -302,13 +301,7 @@ function Pin:OnReleased() end
 function Pin:OnMouseEnter() end
 function Pin:OnMouseLeave() end
 
----@param button string
----@return boolean
-function Pin.ShouldMouseButtonBePassthrough(_, button)
-	return button ~= "LeftButton"
-end
-
----@return ForeverCanvasMap
+---@return WorldMapFrame
 function Pin:GetMap()
 	return self.view.map
 end
@@ -368,32 +361,27 @@ function Pin:ApplyPosition()
 	self:SetPoint("CENTER", view.canvas, "TOPLEFT", view.width * x / scale, -view.height * y / scale)
 end
 
--- Clicking pins choose which buttons pass through to the canvas; non-clicking pins let every press through.
+-- The left button acts only on a pin that clicks, and the right goes through to the canvas beneath (zoom out); a pin
+-- that doesn't click lets the map take every press.
 function Pin:ApplyClicks()
 	if not self.takesMouse then
 		return
 	end
 	self:SetMouseClickEnabled(self.clicks == true)
 	if self.clicks then
-		local through = {}
-		for _, button in ipairs({ "LeftButton", "RightButton" }) do
-			if self:ShouldMouseButtonBePassthrough(button) then
-				through[#through + 1] = button
-			end
-		end
-		self:SetPassThroughButtons(unpack(through))
+		self:SetPassThroughButtons("RightButton")
 	end
 end
 
 --[[ Pools ]]
 
----@class ForeverCanvasPool
----@field view ForeverCanvasView
+---@class LegacyCanvasPool
+---@field view LegacyCanvasView
 ---@field mixin table
 ---@field template? string
 ---@field marker? string
----@field active ForeverCanvasPin[]
----@field free ForeverCanvasPin[]
+---@field active LegacyCanvasPin[]
+---@field free LegacyCanvasPin[]
 local Pool = {}
 Pool.__index = Pool
 
@@ -408,11 +396,11 @@ local function OnLeave(pin)
 	end
 end
 
----@return ForeverCanvasPin
+---@return LegacyCanvasPin
 function Pool:Acquire(...)
 	local pin = table.remove(self.free)
 	if not pin then
-		pin = MapCanvas.FrameUnder("Frame", self.view.layer, self.template) --[[@as ForeverCanvasPin]]
+		pin = MapCanvas.FrameUnder("Frame", self.view.layer, self.template) --[[@as LegacyCanvasPin]]
 		Mixin(pin, self.mixin)
 		pin.view = self.view
 		pin:OnLoad()
@@ -430,12 +418,6 @@ function Pool:Acquire(...)
 	pin:ApplyPosition()
 	pin:ApplyClicks()
 	return pin
-end
-
----@return ForeverCanvasPin[]
--- The live list: finish iterating before acquiring or releasing pins.
-function Pool:Active()
-	return self.active
 end
 
 function Pool:ReleaseAll()
@@ -458,10 +440,10 @@ end
 
 -- A pool of pins on `map`'s view: frames from `template` wearing `mixin`, which builds on MapCanvas.PinMixin. A pool
 -- with a `marker` kind lists its shown pins for the other Forever addons (ForeverMapMarkers, below).
----@param map ForeverCanvasMap
+---@param map WorldMapFrame
 ---@param mixin table
 ---@param options? {template?: string, marker?: string}
----@return ForeverCanvasPool
+---@return LegacyCanvasPool
 function MapCanvas.Pool(map, mixin, options)
 	local view = MapCanvas.Watch(map)
 	options = options or {}
@@ -479,10 +461,10 @@ end
 
 --[[ Clicks ]]
 
----@param pin ForeverCanvasPin
+---@param pin LegacyCanvasPin
 ---@param button string
 local function Click(pin, button)
-	if pin.clicks and not pin:ShouldMouseButtonBePassthrough(button) and pin.OnMouseClickAction then
+	if pin.clicks and button == "LeftButton" and pin.OnMouseClickAction then
 		pin:OnMouseClickAction(button)
 	end
 end
@@ -535,5 +517,5 @@ local published = {}
 for addon, markers in pairs(ForeverMapMarkers or {}) do
 	published[addon] = markers
 end
-published[addonName] = OurMarkers
+published.LegacyForever = OurMarkers
 ForeverMapMarkers = published
