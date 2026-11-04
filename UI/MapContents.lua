@@ -180,7 +180,7 @@ end
 function MapContents.Drawn(uiMapID)
 	---@type LegacyMapDrawing
 	local drawn = { badges = {}, pins = {} }
-	local entrances = ns.Saved.Get("showEntrances")
+	local entrances = ns.Saved.Get("showEntrances") and GetCVarBool("showDungeonEntrancesOnMap")
 	local info = uiMapID and C_Map.GetMapInfo(uiMapID)
 	if uiMapID and info and info.mapType == Enum.UIMapType.Continent then
 		if ns.ZoneCompletion.IsShown("map") then

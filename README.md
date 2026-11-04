@@ -99,6 +99,8 @@ With Shortest Path Forever, clicking a dungeon or raid pin plans the trip there.
 zone completion in its guide. Tweaks Forever's dungeon entrance icons and unexplored-area tint step aside where Legacy
 already marks the map.
 
+With Leatrix Maps revealing unexplored ground, Legacy leaves the map clear and keeps its exploration tooltips on hover.
+
 Tracked challenges share one tracker column with the other addons' tracker sections, above your quests.
 
 ## Development

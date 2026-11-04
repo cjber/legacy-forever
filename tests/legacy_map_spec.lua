@@ -46,6 +46,7 @@ GameTooltip_AddInstructionLine, GameTooltip_AddDisabledLine = Line, Line
 GameTooltip_AddColoredLine = Line
 
 -- What the map shows: on map 1429 an objective with a place and a shaded area; on continent 1415 a zone badge.
+local drawCalls = 0
 local group = { challenge = 10, achievement = 10, uiMapID = 1429, objectives = {} }
 local objective = { text = "Slay Hogger", entry = { kind = "kill", x = 0.25, y = 0.5 } }
 group.objectives[1] = objective
@@ -81,6 +82,7 @@ local ns = {
 	},
 	MapContents = {
 		Drawn = function(uiMapID)
+			drawCalls = drawCalls + 1
 			return drawn[uiMapID] or { badges = {}, pins = {} }
 		end,
 		Objectives = function()
@@ -139,6 +141,29 @@ local function Areas()
 end
 local button = Kit.Made("LegacyForeverMapButtonTemplate")[1]
 check(button and button:GetParent() == Kit.map, "the map button is a frame of ours on the map, not an overlay frame")
+-- Krowi v1.4 minor 11 stacks Forever buttons at TOPLEFT, clear of our TOPRIGHT column.
+local offset = button.point[5]
+_G.Krowi_WorldMapButtons1 = {
+	IsShown = function()
+		return true
+	end,
+	GetPoint = function()
+		return "TOPLEFT", Kit.container, "TOPLEFT", 3, 0
+	end,
+}
+button:Refresh()
+check(button.point[5] == offset, "top-left Krowi buttons do not reserve a top-right slot")
+_G.Krowi_WorldMapButtons1.GetPoint = function()
+	return "TOPRIGHT", Kit.container, "TOPRIGHT", -4, -2
+end
+button:Refresh()
+check(button.point[5] == offset - 32, "a top-right Krowi button still reserves its slot")
+_G.Krowi_WorldMapButtons1.IsShown = function()
+	return false
+end
+button:Refresh()
+check(button.point[5] == offset, "a hidden Krowi button reserves no slot")
+_G.Krowi_WorldMapButtons1 = nil
 
 -- Opening the map draws on the next frame of the view, under a host and layer of ours on the canvas.
 Kit.Tick()
@@ -233,6 +258,25 @@ Kit.mouseFocus = false
 Kit.Tick()
 check(tooltip.owner == nil, "the cursor leaving the canvas hides the area's tooltip")
 
+-- Leatrix reveals the terrain, but Legacy still owns the exploration challenge hover.
+_G.LeaMapsDB = { RevealMap = "On" }
+ns.RefreshMap()
+check(#Areas() == 1, "Leatrix reveal preserves exploration hovers")
+local revealed = Areas()[1]
+local tile = revealed.drawn[area.key][1]
+check(tile.color[4] == 0, "revealed ground has no resting black veil")
+revealed:Highlight(shade.areas[1])
+check(
+	tooltip.owner == revealed and tile.color[4] == 0.4,
+	"a revealed exploration area still highlights and names itself"
+)
+revealed:Highlight(nil)
+check(tile.color[4] == 0 and tooltip.owner == nil, "leaving revealed ground restores transparent shading")
+_G.LeaMapsDB.RevealMap = "Off"
+ns.RefreshMap()
+check(Areas()[1].drawn[area.key][1].color[4] == 0.25, "turning reveal off restores the pooled layer's normal veil")
+_G.LeaMapsDB = nil
+
 -- Nothing of ours is made inside an open window, the canvas holds one frame of ours, and no pin has a click script
 -- or a field the map reads off its mouse focus.
 local onCanvas = 0
@@ -260,6 +304,12 @@ check(#Pins() == 0 and #Areas() == 1, "turning entrances off redraws the pins")
 drawn[1429].pins = { { group = group, objective = objective } }
 switched("showAreas", true)
 check(#Pins() == 1 and #Kit.frames == before, "a redraw reuses the pins it released")
+
+local beforeFilter = drawCalls
+Kit.Fire("CVAR_UPDATE", "unrelatedSetting")
+check(drawCalls == beforeFilter, "unrelated native filters leave Legacy pins alone")
+Kit.Fire("CVAR_UPDATE", "showDungeonEntrancesOnMap")
+check(drawCalls == beforeFilter + 1, "the native entrance filter redraws an open map")
 
 -- Other addons find the shown pins through ForeverMapMarkers.
 local markers = ForeverMapMarkers.LegacyForever(Kit.map)

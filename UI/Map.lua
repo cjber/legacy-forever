@@ -315,12 +315,11 @@ local function TopRightOffset(map, own)
 			offsetY = offsetY + BUTTON_SPACING
 		end
 	end
-	-- Krowi_WorldMapButtons (Questie and others) lays its buttons along the top row from this
-	-- same corner, outside the map's list.
+	-- Current Krowi buttons stack from TOPLEFT on Forever. Older copies may still use this corner.
 	local index = 1
 	local other = _G["Krowi_WorldMapButtons" .. index]
 	while other do
-		if other:IsShown() then
+		if other:IsShown() and other:GetPoint(1) == "TOPRIGHT" then
 			return offsetY + BUTTON_SPACING
 		end
 		index = index + 1
@@ -492,6 +491,7 @@ end
 ---@field cursorX? number
 ---@field cursorY? number
 ---@field drawn table<string, Texture[]>
+---@field shadeAlpha number
 local AreaPin = CreateFromMixins(ns.MapCanvas.PinMixin)
 
 function AreaPin:OnLoad()
@@ -549,16 +549,18 @@ function AreaPin:DrawTile(tile)
 	texture:SetTexCoord(0, tile.u, 0, tile.v)
 	texture:ClearAllPoints()
 	texture:SetPoint("TOPLEFT", tile.x, -tile.y)
-	texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
+	texture:SetVertexColor(0, 0, 0, self.shadeAlpha)
 	texture:Show()
 	return texture
 end
 
 ---@param shade LegacyShade
-function AreaPin:OnAcquired(shade)
+---@param alpha number
+function AreaPin:OnAcquired(shade, alpha)
 	self:SetSize(self:GetMap():GetCanvas():GetSize())
 	self:SetPosition(0.5, 0.5)
 	self.shade = shade
+	self.shadeAlpha = alpha
 	for _, shaded in ipairs(shade.areas) do
 		local textures = {}
 		for _, tile in ipairs(shaded.tiles) do
@@ -590,7 +592,7 @@ end
 function AreaPin:Highlight(shaded)
 	if self.hovered then
 		for _, texture in ipairs(self.drawn[self.hovered.area.key]) do
-			texture:SetVertexColor(0, 0, 0, AREA_ALPHA)
+			texture:SetVertexColor(0, 0, 0, self.shadeAlpha)
 		end
 		-- Only our own tooltip: a pin the cursor just moved onto has already shown its own.
 		if GameTooltip:GetOwner() == self then
@@ -616,7 +618,7 @@ function AreaPin:Highlight(shaded)
 end
 
 -- Leatrix Maps reveals the map's own tiles whether or not they were explored, so a black veil over ground it has
--- already shown is the opposite of what the player asked for. The shading steps aside while that option is on.
+-- already shown is the opposite of what the player asked for. Keep exploration hovers without resting shading.
 ---@return boolean
 local function RevealedByLeatrix()
 	return type(LeaMapsDB) == "table" and LeaMapsDB.RevealMap == "On"
@@ -649,8 +651,8 @@ local function Attach()
 		for _, pin in ipairs(drawn.pins) do
 			pins:Acquire(pin.group, pin.objective)
 		end
-		if drawn.shade and not RevealedByLeatrix() then
-			areas:Acquire(drawn.shade)
+		if drawn.shade then
+			areas:Acquire(drawn.shade, RevealedByLeatrix() and 0 or AREA_ALPHA)
 		end
 		MapCanvas.SetShown(map, true)
 	end
@@ -668,8 +670,9 @@ local function Attach()
 	end)
 	local events = CreateFrame("Frame")
 	events:RegisterEvent("PLAYER_REGEN_ENABLED")
-	events:SetScript("OnEvent", function()
-		if refreshPending and map:IsShown() then
+	events:RegisterEvent("CVAR_UPDATE")
+	events:SetScript("OnEvent", function(_, event, cvar)
+		if map:IsShown() and (refreshPending or event == "CVAR_UPDATE" and cvar == "showDungeonEntrancesOnMap") then
 			Draw()
 		end
 	end)
