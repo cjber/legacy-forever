@@ -150,8 +150,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "제목"
 L["What happened, or what you would like"] = "무슨 일이 있었는지 또는 원하시는 내용"
 
-L["The update message reflects the current release."] =
-	"업데이트 메시지가 현재 버전의 내용을 안내합니다." -- mt
+L["The settings page opens without an error."] = "설정 페이지가 오류 없이 열립니다." -- mt
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "권장 레벨: %s (AtlasLoot)" -- mt
 

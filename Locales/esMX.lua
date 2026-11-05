@@ -144,7 +144,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Título"
 L["What happened, or what you would like"] = "Qué pasó o qué te gustaría"
 
-L["The update message reflects the current release."] = "El mensaje de actualización corresponde a la versión actual." -- mt
+L["The settings page opens without an error."] = "La página de ajustes se abre sin errores." -- mt
 L["Install AtlasLoot for recommended levels."] = "Instala AtlasLoot para ver los niveles recomendados." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Niveles recomendados: %s (AtlasLoot)" -- mt
 

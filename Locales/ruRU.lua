@@ -157,8 +157,8 @@ L["Title"] = "Заголовок"
 L["What happened, or what you would like"] =
 	"Что произошло или что вы хотели бы видеть"
 
-L["The update message reflects the current release."] =
-	"Сообщение об обновлении соответствует текущей версии." -- mt
+L["The settings page opens without an error."] =
+	"Страница настроек открывается без ошибки." -- mt
 L["Install AtlasLoot for recommended levels."] =
 	"Установите AtlasLoot, чтобы увидеть рекомендуемые уровни." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровни: %s (AtlasLoot)" -- mt

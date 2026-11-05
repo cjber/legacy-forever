@@ -141,7 +141,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "标题"
 L["What happened, or what you would like"] = "发生了什么，或你希望有什么"
 
-L["The update message reflects the current release."] = "更新消息与当前版本一致。" -- mt
+L["The settings page opens without an error."] = "设置页面打开时不再报错。" -- mt
 L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。" -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "推荐等级：%s（AtlasLoot）" -- mt
 
