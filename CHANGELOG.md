@@ -12,7 +12,9 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [1.0.19] - 2026-11-05
 - **Only an opened flight map adds to your flight-path history.** A taxi status change away from a flight master could record a path you had never visited; now the cumulative count grows only when you open a flight master's map.
+
 ## [1.0.18] - 2026-11-05
 
 - **The Forever addons settings page ends with a Ko-fi link.** If the addons help you, its Copy link button shows the address, ready to paste into your browser. Nothing is locked behind it, and it shows nowhere else.
