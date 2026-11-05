@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **Long challenge lists on the map menu scroll.** The zone's challenges and every level of No fixed location show 20 rows at a time and scroll the rest, instead of running off the bottom of the screen.
+
 ## [1.0.16] - 2026-11-05
 
 - **The settings page opens without an error.** Its title asked the game for a font Forever does not have, which logged a Lua error each time the page was built; it now uses the font the game's own settings pages title with.

@@ -494,7 +494,7 @@ function Completion.AddMenu(root)
 		)
 	end)
 	local counts = root:CreateButton(L["What counts"])
-	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
+	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do -- menu-scroll-ok: COMPLETION_CATEGORIES is seven fixed kinds
 		local box = counts:CreateCheckbox(
 			("%s %s"):format(Completion.Icon(key, 14), LABELS[key]),
 			IsCounted,

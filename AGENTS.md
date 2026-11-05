@@ -18,6 +18,7 @@ python3 tools/check_generated.py   # regenerate in a disposable tree; require fr
 python3 tools/phrases.py > Locales/phrases.txt   # regenerate the translation template after a string change
 python3 tools/changelog.py --check
 python3 tools/check_screenshots.py   # an image older than its sources; --record after tools/screenshots.py
+python3 tools/check_menu_scroll.py # menus built from a list scroll (WFA-36); CI runs it in core-shared
 python3 .sloppatrol/gate.py --base origin/main && python3 .sloppatrol/agents.py check
 ```
 

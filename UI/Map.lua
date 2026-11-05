@@ -8,6 +8,8 @@ local PIN_TEMPLATE = "LegacyForeverPinTemplate"
 local AREA_ALPHA, AREA_HOVER_ALPHA = 0.25, 0.4
 -- A cleared dungeon or raid entrance reads as done the way an explored area reads as explored: faded.
 local DONE_ALPHA = 0.4
+-- Lists in the map menu scroll past 20 rows of 20 px: Blizzard's submenus never clamp to the screen (WFA-36).
+local MENU_EXTENT = 20 * 20
 local POINTS_ICON = ns.POINTS_ICON
 
 local KIND_LABEL = {
@@ -222,10 +224,13 @@ local function AddUnlocated(root)
 		end
 	end
 	local submenu = root:CreateButton(ChallengeText(L["No fixed location"], #unlocated))
+	submenu:SetScrollMode(MENU_EXTENT)
 	for _, top in ipairs(tops) do
 		local topMenu = submenu:CreateButton(top.name)
+		topMenu:SetScrollMode(MENU_EXTENT)
 		for _, sub in ipairs(top.subs) do
 			local subMenu = topMenu:CreateButton(sub.name)
+			subMenu:SetScrollMode(MENU_EXTENT)
 			for _, item in ipairs(sub.items) do
 				AddUnlocatedItem(subMenu, item)
 			end
@@ -240,6 +245,7 @@ end
 ---@param uiMapID number?
 local function BuildMenu(root, uiMapID)
 	root:SetTag("MENU_LEGACY_HERE")
+	root:SetScrollMode(MENU_EXTENT)
 	local mapInfo = uiMapID and C_Map.GetMapInfo(uiMapID)
 	root:CreateTitle(mapInfo and mapInfo.name or ns.TITLE)
 	local groups = ns.MapContents.Objectives(uiMapID)
