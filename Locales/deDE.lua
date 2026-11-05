@@ -147,7 +147,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Titel"
 L["What happened, or what you would like"] = "Was passiert ist oder was Ihr Euch wünscht"
 
-L["The Forever addons settings page ends with a Ko-fi link."] = "Die Einstellungsseite der Forever-Addons endet mit einem Ko-fi-Link." -- mt
+L["The Forever addons settings page ends with a Ko-fi link."] =
+	"Die Einstellungsseite der Forever-Addons endet mit einem Ko-fi-Link." -- mt
 L["Install AtlasLoot for recommended levels."] = "Installiert AtlasLoot für empfohlene Stufen." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Empfohlene Stufen: %s (AtlasLoot)" -- mt
 

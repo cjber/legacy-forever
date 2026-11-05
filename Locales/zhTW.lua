@@ -143,7 +143,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "標題"
 L["What happened, or what you would like"] = "發生了什麼，或你希望有什麼"
 
-L["The Forever addons settings page ends with a Ko-fi link."] = "Forever 插件設定頁面末端有一個 Ko-fi 連結。" -- mt
+L["The Forever addons settings page ends with a Ko-fi link."] =
+	"Forever 插件設定頁面末端有一個 Ko-fi 連結。" -- mt
 L["Install AtlasLoot for recommended levels."] = "安裝AtlasLoot以查看建議等級。" -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "建議等級：%s（AtlasLoot）" -- mt
 
