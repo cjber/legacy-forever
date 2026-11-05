@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **The Forever addons settings page ends with a Ko-fi link.** If the addons help you, its Copy link button shows the address, ready to paste into your browser. Nothing is locked behind it, and it shows nowhere else.
+
 ## [1.0.17] - 2026-11-05
 
 - **Long challenge lists on the map menu scroll.** The zone's challenges and every level of No fixed location show 20 rows at a time and scroll the rest, instead of running off the bottom of the screen.

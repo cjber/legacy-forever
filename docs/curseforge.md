@@ -1,5 +1,7 @@
 Legacy Forever shows unfinished challenges on the world map and tracks the ones you choose.
 
+Free, with nothing locked behind it. If it saves you time, you can [buy me a coffee on Ko-fi](https://ko-fi.com/cjber).
+
 ![Ashenvale on the world map as two areas are found, the completion corner folding away, then the Legacy menu](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif)
 
 Discover an area and its shading lifts as the corner's percentage goes up. Click the corner to fold it away.
@@ -68,7 +70,5 @@ With Shortest Path Forever, clicking a dungeon or raid pin plans the trip there.
 Tracked challenges share one tracker column with the other addons' tracker sections, above your quests.
 
 Source code: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.
-
-The addon is free. If it saves you time, you can [buy me a coffee on Ko-fi](https://ko-fi.com/cjber59408).
 
 Built with AI assistance.

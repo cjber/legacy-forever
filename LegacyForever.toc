@@ -6,6 +6,7 @@
 ## Category: Map
 ## X-License: GPL-3.0-or-later
 ## X-Website: https://github.com/cjber/legacy-forever
+## X-Donate: https://ko-fi.com/cjber
 ## X-Curse-Project-ID: 1705879
 ## X-Wago-ID: b6mzA7KP
 ## IconTexture: Interface\AddOns\LegacyForever\media\Icon
