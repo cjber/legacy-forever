@@ -157,8 +157,8 @@ L["Title"] = "Заголовок"
 L["What happened, or what you would like"] =
 	"Что произошло или что вы хотели бы видеть"
 
-L["The settings page opens without an error."] =
-	"Страница настроек открывается без ошибки." -- mt
+L["Long challenge lists on the map menu scroll."] =
+	"Длинные списки испытаний в меню карты прокручиваются." -- mt
 L["Install AtlasLoot for recommended levels."] =
 	"Установите AtlasLoot, чтобы увидеть рекомендуемые уровни." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровни: %s (AtlasLoot)" -- mt

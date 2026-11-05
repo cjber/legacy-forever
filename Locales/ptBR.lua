@@ -145,7 +145,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Título"
 L["What happened, or what you would like"] = "O que aconteceu, ou o que você gostaria"
 
-L["The settings page opens without an error."] = "A página de configurações abre sem erro." -- mt
+L["Long challenge lists on the map menu scroll."] = "Listas longas de desafios no menu do mapa rolam." -- mt
 L["Install AtlasLoot for recommended levels."] = "Instale AtlasLoot para ver os níveis recomendados." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Níveis recomendados: %s (AtlasLoot)" -- mt
 

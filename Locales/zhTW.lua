@@ -141,7 +141,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "標題"
 L["What happened, or what you would like"] = "發生了什麼，或你希望有什麼"
 
-L["The settings page opens without an error."] = "設定頁面開啟時不再報錯。" -- mt
+L["Long challenge lists on the map menu scroll."] = "地圖選單中的長挑戰清單可以捲動。" -- mt
 L["Install AtlasLoot for recommended levels."] = "安裝AtlasLoot以查看建議等級。" -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "建議等級：%s（AtlasLoot）" -- mt
 
