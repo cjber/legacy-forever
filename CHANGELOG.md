@@ -12,6 +12,9 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [1.0.21] - 2026-11-05
+- **The tracker header menu opens without a Lua error.** Forever's Blizzard_Menu can assert when a context menu is acquired, so the header's attach and lock switches now open through Legacy's own menu when it has one and fall back to Blizzard's otherwise. Nothing looks different, and a right click on the section header still attach, detaches or locks the tracker.
+
 ## [1.0.20] - 2026-11-05
 - **Right-click the tracker header to attach, detach or lock it.** The section header in the quest tracker now opens a small menu with Attach to quest tracker and Lock the tracker, the same switches as in the settings, so moving the section no longer needs a trip to the options.
 
