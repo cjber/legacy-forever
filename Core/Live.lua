@@ -408,7 +408,8 @@ local LIST_CHANGES = { "ACHIEVEMENT_EARNED", "RECEIVED_ACHIEVEMENT_LIST", "PLAYE
 local PROGRESS_CHANGES = { "CRITERIA_UPDATE", "MAP_EXPLORATION_UPDATED" }
 -- Flight paths and reputation feed only the zone snapshots.
 local SNAPSHOT_CHANGES = { "TAXI_NODE_STATUS_CHANGED", "TAXIMAP_OPENED", "UPDATE_FACTION" }
-local FLIGHT_MASTER = { TAXIMAP_OPENED = true, TAXI_NODE_STATUS_CHANGED = true }
+-- Status changes also fire away from a flight master, where Forever can report every path as discovered.
+local FLIGHT_MASTER = { TAXIMAP_OPENED = true }
 -- Moving between zones changes which zone is shown, not anyone's progress.
 local ZONE_CHANGES = { "ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA" }
 

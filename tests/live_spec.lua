@@ -157,6 +157,8 @@ onEvent(nil, "TAXIMAP_OPENED")
 total, observed = Live.FlightPathTotal()
 check(total == 1 and observed == serverTime - 10, "reopening does not count or timestamp the same node again")
 taxiNodes = { { nodeID = 10, state = 0 }, { nodeID = 11, state = 1 } }
+onEvent(nil, "TAXI_NODE_STATUS_CHANGED")
+check(Live.FlightPathTotal() == 1, "a status event without an opened flight map cannot add permanent observations")
 onEvent(nil, "TAXIMAP_OPENED")
 total, observed = Live.FlightPathTotal()
 check(total == 2 and observed == serverTime, "another distinct path adds to the total")
