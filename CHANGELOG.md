@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [1.0.15] - 2026-11-05
+
+- **The retired merge bot's workflow is gone.** The MergeLoop workflow, its config and its agent skill were removed from the repo, so nothing here waits on a bot that no longer runs. Nothing a player sees changes.
+
 ## [1.0.14] - 2026-11-05
 
 - **The objective tracker column stays still as you enter and leave combat.** All Objectives and your quests keep their place at the top, and the Forever sections always follow below them, so nothing swaps order, jumps or loses a line when a fight starts or ends.
