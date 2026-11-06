@@ -26,6 +26,8 @@ EXCLUDE = (
     "Data/*.lua",
     # Byte-for-byte producer code, verified by tools/forever_sim/sync.py check in CI.
     "tools/forever_sim/*",
+    # Byte-for-byte producer tooling and its pinned-build data, verified by tools/forever_tools/sync.py check in CI.
+    "tools/forever_tools/*",
 )
 
 
