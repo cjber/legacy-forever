@@ -11,6 +11,7 @@ verbatim rather than rewritten as the addon moves. API changes other addons' aut
 optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
+- **You appear once on leaderboards with a two-part name.** A Forever name like Hel Io no longer shows twice, once as you and once as a reported player with the same value.
 
 ## [1.0.23] - 2026-11-06
 - **The zone completion bar wears the Legacy panel's own progress bar.** The corner of the map and the zone's section in the tracker now fill the same recessed bar with the bronze frame that the Legacy panel uses, instead of a thin gold line, and the corner no longer paints a dark wash behind its text.
