@@ -11,6 +11,8 @@ verbatim rather than rewritten as the addon moves. API changes other addons' aut
 optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
+
+## [1.0.23] - 2026-11-06
 - **The zone completion bar wears the Legacy panel's own progress bar.** The corner of the map and the zone's section in the tracker now fill the same recessed bar with the bronze frame that the Legacy panel uses, instead of a thin gold line, and the corner no longer paints a dark wash behind its text.
 
 ## [1.0.22] - 2026-11-06
