@@ -171,6 +171,7 @@ function Tracker.AddModule(name, mixin, uiOrder)
 	---@field Header LegacyTrackerHeader
 	---@field headerText? string
 	---@field uiOrder number
+	---@field fromHeaderOffsetY? number The native module's gap from the header to its first block.
 	---@field GetBlock fun(self: LegacyTrackerModule, id: number): LegacyTrackerBlock
 	local trackerModule = CreateFrame("Frame", name, UIParent, "ObjectiveTrackerModuleTemplate")
 	Mixin(trackerModule, mixin)

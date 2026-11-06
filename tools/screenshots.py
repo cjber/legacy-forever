@@ -524,6 +524,19 @@ def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False)
     return canvas, button
 
 
+def legacy_bar(ui, canvas, x, y, width, percent, color):
+    """The Legacy panel's own bar (LegacyProgressBarTemplate at the reward track's sizes): a 12 recess, a 9 fill,
+    and the frame's 26, which hangs 8 outside each end and 7 above and 10 below the fill. The frame and recess are
+    nine-sliced, as the client sizes them; the fill is the status bar's texture, cropped to the percent."""
+    canvas.draw(ui.atlas("Legacy-Progressbar-BG"), x + 8, y + 7, width - 16, 12)
+    if percent > 0 and width > 16:
+        fill = ui.canvas(width - 16, 9)
+        fill.draw(ui.atlas("Legacy-Progressbar-Fill"), 0, 0, width - 16, 9, color)
+        cropped = fill.image.crop((0, 0, canvas.px((width - 16) * percent / 100), fill.image.height))
+        canvas.composite(cropped, canvas.px(x + 8), canvas.px(y + 7))
+    canvas.draw(ui.atlas("Legacy-Progressbar-Frame"), x, y, width, 26)
+
+
 def completion_corner(ui, canvas, rects, result, name, collapsed=False):
     """LegacyForeverZoneOverlayTemplate at the canvas container's TOPLEFT (44, -18); a click collapses it to the
     title and bar."""
@@ -533,18 +546,16 @@ def completion_corner(ui, canvas, rects, result, name, collapsed=False):
     title = f"{name}  {result['percent']}%"
     counts = counts_text(ui, result, 16)
     width = max(canvas.text_width(title, title_font), 140)
-    height = title_font.height + 4 + 2
+    height = title_font.height + 4 + 26
     if not collapsed:
         width = max(width, canvas.text_width(counts, counts_font))
         height += 6 + counts_font.height
-    shade = Image.open(ROOT / "media" / "Shade.tga").convert("RGBA")
-    canvas.draw(shade, x - 48, y - 22, width + 48 + 64, height + 44, (1, 1, 1, 0.6))
     canvas.text(x, y, title, title_font)
     bar_y = y + title_font.height + 4
-    canvas.fill(x, bar_y, width, 2, (0, 0, 0, 0.45))
-    canvas.fill(x, bar_y, width * result["percent"] / 100, 2, ui.global_color("NORMAL_FONT_COLOR"))
+    color = ui.global_color("GREEN_FONT_COLOR" if result["complete"] else "NORMAL_FONT_COLOR")
+    legacy_bar(ui, canvas, x, bar_y, width, result["percent"], color)
     if not collapsed:
-        canvas.text(x, y + title_font.height + 12, counts, counts_font)
+        canvas.text(x, y + title_font.height + 4 + 26 + 6, counts, counts_font)
 
 
 def map_button(ui, canvas, rects, count):
@@ -704,23 +715,34 @@ def render_tracker(ui, data, live):
         lines = [f"{line['detail']} {line['text']}" if "detail" in line else line["text"] for line in block["lines"]]
         shown = lines[:5] + ([("...", False)] if len(lines) > 5 else [])
         legacy.append(TrackerBlock(live.name(block["challenge"]), shown))
-    modules = [
-        TrackerModule("Ashenvale", [TrackerBlock(counts_text(ui, result, 14))]),
-        TrackerModule("Legacy", legacy),
-    ]
-    canvas, rects = objective_tracker(ui, modules, container=True)
-    # The zone section's header: the percent left of the minimize button and a 2 px bar under both.
+    # The zone section's header on a canvas of its own: the Legacy bar and the counts sit in the row
+    # UI/Completion.lua reserves below the header, so the tracked challenges start after that row.
+    canvas, rects = objective_tracker(ui, [TrackerModule("Ashenvale", [])], container=True)
     hx, hy, hw, hh = rects["modules"][0]
-    font = FONTS["ObjectiveTrackerHeaderFont"]
+    font, line_font = FONTS["ObjectiveTrackerHeaderFont"], FONTS["ObjectiveTrackerLineFont"]
     minimize = ui.atlas("ui-questtrackerbutton-secondary-collapse")
     percent = f"{result['percent']}%"
     percent_right = hx + hw + 1 - minimize.width - 4
-    text_top = hy + (hh - font.height) / 2
-    canvas.text(percent_right - canvas.text_width(percent, font), text_top, percent, font)
-    bar_y, bar_w = hy + hh - 1 - 2, percent_right - (hx + 7)
-    canvas.fill(hx + 7, bar_y, bar_w, 2, (0, 0, 0, 0.45))
-    canvas.fill(hx + 7, bar_y, bar_w * result["percent"] / 100, 2, ui.global_color("NORMAL_FONT_COLOR"))
-    return scene(ui, [(canvas, 0, 0)])
+    canvas.text(percent_right - canvas.text_width(percent, font), hy + (hh - font.height) / 2, percent, font)
+    bar_canvas = ui.canvas(hw, 26)
+    color = ui.global_color("GREEN_FONT_COLOR" if result["complete"] else "NORMAL_FONT_COLOR")
+    legacy_bar(ui, bar_canvas, 0, 0, hw, result["percent"], color)
+    counts = counts_text(ui, result, 14)
+    counts_canvas = ui.canvas(max(1, canvas.text_width(counts, line_font)), line_font.height)
+    counts_canvas.text(0, 0, counts, line_font, ui.global_color("OBJECTIVE_TRACKER_BLOCK_HEADER_COLOR"))
+    tracked_canvas, _ = objective_tracker(ui, [TrackerModule("Legacy", legacy)], container=False)
+    # Completion reserves its first line 34 under the header (2, the bar's 26, then 6) and the module counts
+    # from headerHeight (25), then the host leaves 10 between sections.
+    tracked_top = hy + 25 + line_font.height + 34 + 10
+    return scene(
+        ui,
+        [
+            (canvas, 0, 0),
+            (bar_canvas, hx, hy + hh + 2),
+            (counts_canvas, hx + 20, hy + hh + 34),
+            (tracked_canvas, hx, tracked_top),
+        ],
+    )
 
 
 # The demo's character explores two more areas east of Astranaar, then collapses the corner and opens the menu.

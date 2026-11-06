@@ -157,19 +157,28 @@ local function AddTooltip(tooltip, name, result)
 	end
 end
 
--- A thin fill for the percent, in the tracker's gold; green once the zone is done.
-local BAR_HEIGHT = 2
+-- The Legacy panel's own progress bar, at the sizes its reward track gives it: a 12-unit recess, a 9-unit fill and
+-- the frame's own 26, which hangs 8 units outside each end and 7 above and 10 below the fill
+-- (Blizzard_LegacySystemTemplates.xml's LegacyProgressBarTemplate, as Blizzard_LegacyRewardTrack.xml draws it).
+local BAR_HEIGHT = 9
+local BAR_TOP, BAR_BOTTOM, BAR_SIDE = 7, 10, 8
+local BAR_SPACE = BAR_HEIGHT + BAR_TOP + BAR_BOTTOM
 
 ---@param parent Frame
 ---@return StatusBar
 local function CreateProgressBar(parent)
 	local bar = CreateFrame("StatusBar", nil, parent)
 	bar:SetHeight(BAR_HEIGHT)
-	bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+	bar:SetStatusBarTexture("Legacy-Progressbar-Fill")
 	bar:SetMinMaxValues(0, 100)
 	local background = bar:CreateTexture(nil, "BACKGROUND")
-	background:SetAllPoints()
-	background:SetColorTexture(0, 0, 0, 0.45)
+	background:SetAtlas("Legacy-Progressbar-BG") -- art-ok: the bar's nine-slice recess, at the panel's own height
+	background:SetPoint("TOPLEFT")
+	background:SetPoint("BOTTOMRIGHT", 0, -3)
+	local frame = bar:CreateTexture(nil, "OVERLAY")
+	frame:SetAtlas("Legacy-Progressbar-Frame") -- art-ok: the panel's nine-slice frame, at its own 26
+	frame:SetPoint("TOPLEFT", -BAR_SIDE, BAR_TOP)
+	frame:SetPoint("BOTTOMRIGHT", BAR_SIDE, -BAR_BOTTOM)
 	return bar
 end
 
@@ -252,10 +261,12 @@ if trackerModule then
 	local header = trackerModule.Header
 	header.Percent = header:CreateFontString(nil, "ARTWORK", "ObjectiveTrackerHeaderFont")
 	header.Percent:SetPoint("RIGHT", header.MinimizeButton, "LEFT", -4, 0)
-	-- Along the header art's own underline, under the zone name and percent.
+	-- The bar's own row under the header band: its frame lines up with the band, 2 below it, and the section's
+	-- first line starts 6 below the frame. The module's own layout then places the first block below the bar.
+	trackerModule.fromHeaderOffsetY = -(2 + BAR_SPACE + 6)
 	header.Progress = CreateProgressBar(header)
-	header.Progress:SetPoint("BOTTOMLEFT", 7, 1)
-	header.Progress:SetPoint("BOTTOMRIGHT", header.Percent, "BOTTOMRIGHT", 0, 1)
+	header.Progress:SetPoint("TOPLEFT", header, "BOTTOMLEFT", BAR_SIDE, -(2 + BAR_TOP))
+	header.Progress:SetPoint("TOPRIGHT", header, "BOTTOMRIGHT", -BAR_SIDE, -(2 + BAR_TOP))
 	-- Deferred so the collapse state is restored even on a client that ignores LoadSavedVariablesFirst.
 	EventUtil.ContinueOnAddOnLoaded(addonName, function()
 		trackerModule:SetCollapsed(ns.Saved.Get("trackerCollapsed"))
@@ -280,13 +291,16 @@ end
 ---@field name string
 LegacyForeverZoneOverlayMixin = {}
 
--- Room for the text, the bar and a fade on the right, so it never looks boxed.
+-- Room for the text and the bar, so it never looks boxed.
 local OVERLAY_MIN_WIDTH = 140
+-- The bar's gap under the title, and between its frame and the counts' row.
+local OVERLAY_BAR_GAP, OVERLAY_COUNTS_GAP = 4, 6
 
 function LegacyForeverZoneOverlayMixin:OnLoad()
 	self.Progress = CreateProgressBar(self)
-	self.Progress:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT", 0, -4)
-	self.Progress:SetPoint("RIGHT")
+	-- The counts read under the bar, aligned with its frame's left edge.
+	self.Counts:ClearAllPoints()
+	self.Counts:SetPoint("TOPLEFT", self.Progress, "BOTTOMLEFT", -BAR_SIDE, -(BAR_BOTTOM + OVERLAY_COUNTS_GAP))
 end
 
 -- Called as the world map opens or changes map.
@@ -305,9 +319,15 @@ function LegacyForeverZoneOverlayMixin:Refresh()
 	SetProgress(self.Progress, self.result)
 	self.Counts:SetText(CountsText(self.result, 16))
 	self.Counts:SetShown(not collapsed)
-	local height = self.Title:GetStringHeight() + 4 + BAR_HEIGHT
+	-- The frame spans the corner and the fill sits BAR_SIDE in from each end, under the title.
+	local titleHeight = self.Title:GetStringHeight()
+	local barTop = -(titleHeight + OVERLAY_BAR_GAP + BAR_TOP)
+	self.Progress:ClearAllPoints()
+	self.Progress:SetPoint("TOPLEFT", self, "TOPLEFT", BAR_SIDE, barTop)
+	self.Progress:SetPoint("TOPRIGHT", self, "TOPRIGHT", -BAR_SIDE, barTop)
+	local height = titleHeight + OVERLAY_BAR_GAP + BAR_SPACE
 	if not collapsed then
-		height = height + 6 + self.Counts:GetStringHeight()
+		height = height + OVERLAY_COUNTS_GAP + self.Counts:GetStringHeight()
 	end
 	local width = math.max(self.Title:GetStringWidth(), OVERLAY_MIN_WIDTH)
 	if not collapsed then

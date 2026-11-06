@@ -75,5 +75,11 @@ files["tests/report_spec.lua"] = {
 		"strtrim", "UIParent", "UISpecialFrames", "UnitClass", "UnitFactionGroup", "UnitLevel", "UnitRace" },
 }
 files["tests/zone_completion_spec.lua"] = { globals = { "C_Map", "GetTime" } }
+files["tests/completion_art_spec.lua"] = {
+	globals = {
+		"AlertFrame", "C_Map", "CreateFrame", "DUNGEONS", "EventUtil", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR",
+		"HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "QUESTS_LABEL",
+	},
+}
 read_globals[#read_globals + 1] = "EditModeManagerFrame"
 files["tests/family_locale_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "GetLocale" } }

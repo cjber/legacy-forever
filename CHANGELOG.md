@@ -11,6 +11,7 @@ verbatim rather than rewritten as the addon moves. API changes other addons' aut
 optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
+- **The zone completion bar wears the Legacy panel's own progress bar.** The corner of the map and the zone's section in the tracker now fill the same recessed bar with the bronze frame that the Legacy panel uses, instead of a thin gold line, and the corner no longer paints a dark wash behind its text.
 
 ## [1.0.22] - 2026-11-06
 - **The tracker column steps aside for EQ Objective Tracker.** EQ Objective Tracker hides the game's quest tracker and draws its own list in that same slot, so its quests and this addon's tracker section drew over each other and neither could be read. The section now asks EQOT where its list is through EQOT's public API and re-places itself below, above or beside it after every redraw, and reads EQOT's own frame the same way when that API is not there. Turn EQOT off and the column goes back where it was.
