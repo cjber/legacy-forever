@@ -143,8 +143,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "标题"
 L["What happened, or what you would like"] = "发生了什么，或你希望有什么"
 
-L["The Forever addons settings page ends with a Ko-fi link."] =
-	"Forever 插件设置页面末尾有一个 Ko-fi 链接。" -- mt
+L["The tracker column steps aside for EQ Objective Tracker."] = "追踪栏避开 EQ 目标追踪器。" -- mt
 L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。" -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "推荐等级：%s（AtlasLoot）" -- mt
 

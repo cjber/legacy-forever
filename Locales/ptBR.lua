@@ -147,8 +147,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Título"
 L["What happened, or what you would like"] = "O que aconteceu, ou o que você gostaria"
 
-L["The Forever addons settings page ends with a Ko-fi link."] =
-	"A página de configurações dos addons Forever termina com um link do Ko-fi." -- mt
+L["The tracker column steps aside for EQ Objective Tracker."] =
+	"A coluna do rastreador sai do caminho do EQ Objective Tracker." -- mt
 L["Install AtlasLoot for recommended levels."] = "Instale AtlasLoot para ver os níveis recomendados." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Níveis recomendados: %s (AtlasLoot)" -- mt
 
