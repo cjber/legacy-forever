@@ -1,5 +1,0 @@
-jobs:
-  a:
-    steps:
-      - with:
-          key: k-${{ hashFiles('tools/a.txt', 'tools/gen_*.txt') }}
