@@ -31,8 +31,6 @@ L["Already complete"] = "이미 완료됨" -- mt
 L["Areas explored"] = "탐험한 구역"
 L["Attach to quest tracker"] = "퀘스트 추적기에 붙이기"
 L["Click the zone to see where."] = "지역을 클릭하면 위치를 볼 수 있습니다."
-L["Click to collapse."] = "클릭하여 접기"
-L["Click to expand."] = "클릭하여 펼치기"
 L["Click to open the map. Right-click for options."] =
 	"클릭하면 지도를 엽니다. 오른쪽 클릭하면 설정을 엽니다."
 L["Click to set a waypoint here."] = "클릭하여 여기에 지도 핀을 꽂습니다."
@@ -114,8 +112,8 @@ L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"추적기가 잠겨 있습니다. 추적기 잠금을 끄면 이동할 수 있습니다."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
-L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
-	"지도 모서리에 보고 있는 지역을, 대륙 지도에는 각 지역에 배지를 표시합니다."
+L["A badge on each zone of a continent map, with the zone's completion."] =
+	"대륙 지도의 각 지역에 지역 완료도를 보여주는 배지가 표시됩니다." -- mt
 L["This addon"] = "이 애드온"
 L["This version of Questie isn't supported."] = "이 버전의 Questie는 지원하지 않습니다."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
@@ -152,8 +150,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "제목"
 L["What happened, or what you would like"] = "무슨 일이 있었는지 또는 원하시는 내용"
 
-L["The tracker column steps aside for EQ Objective Tracker."] =
-	"추적기 열이 EQ Objective Tracker를 피해 자리를 비웁니다." -- mt
+L["The zone progress bar now wears the quest tracker's own bar, and the map corner is gone."] =
+	"지역 진행 표시줄이 이제 퀘스트 추적기의 표시줄을 사용하며, 지도 모서리는 사라졌습니다." -- mt
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "권장 레벨: %s (AtlasLoot)" -- mt
 

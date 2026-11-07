@@ -3,9 +3,9 @@
 
 No game client is involved: map tiles, atlases, fonts and achievement data come from wago.tools via
 wowmock (the forever-core shared renderer). What the addon draws is reproduced here from
-its Lua: the zone objectives, the menu, the continent badges, an unvisited zone, the zone completion corner and
-tracker section, and the Legacy tracker, computed from Data/Legacy.lua and the client's achievement tables for one
-plausible character.
+its Lua: the zone objectives, the menu, the continent badges, an unvisited zone, the zone completion tracker section
+and the Legacy tracker, computed from Data/Legacy.lua and the client's achievement tables for one plausible
+character.
 
     python3 tools/screenshots.py            # FOREVER_CORE=/path/to/forever-core to override
 """
@@ -363,11 +363,12 @@ class Model:
 
 ICONS = {
     "areas": "islands-queue-prop-compass",
-    "taxis": "flightmaster",
-    "dungeons": "dungeon",
-    "raids": "raid",
+    "taxis": "taxinode_neutral",
+    "dungeons": "questlog-questtypeicon-dungeon",
+    "raids": "Raid",
     "legacy": "UI-Legacy-Points-icon-c60",
     "reputations": "Interface\\Icons\\Achievement_Reputation_01",
+    "quests": "QuestNormal",
 }
 TEXTURES = {"reputations"}
 POINTS_ICON = "UI-Legacy-Points-icon-c60"
@@ -462,8 +463,8 @@ def main_menu(ui, live):
 # ------------------------------------------------------------------------------------------ the scenes
 
 
-def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False):
-    """The world map on a Kalimdor zone with the addon's shading, pins, corner and button drawn in."""
+def world_map(ui, data, live, ui_map=ASHENVALE, entrance=False):
+    """The world map on a Kalimdor zone with the addon's shading, pins and button drawn in."""
     zone = data["completion"][ui_map]
     name = ui.table("UiMap")[str(ui_map)]["Name_lang"]
     content = ui.content
@@ -486,7 +487,6 @@ def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False)
             if entry["kind"] != "explore" and "x" in entry:
                 portal = ("Raid" if entry.get("raid") else "Dungeon") if "instance" in entry else None
                 zone_pin(ui, canvas, mx + entry["x"] * mw, my + entry["y"] * mh, portal)
-    completion_corner(ui, canvas, rects, live.model.completion[ui_map], name, collapsed)
     button = map_button(ui, canvas, rects, live.model.count(ui_map))
     if entrance:
         # AtlasLootClassic_DungeonsAndRaids' BFD fixture: entry level 15, recommended levels 24-32.
@@ -524,38 +524,21 @@ def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False)
     return canvas, button
 
 
-def legacy_bar(ui, canvas, x, y, width, percent, color):
-    """The Legacy panel's own bar (LegacyProgressBarTemplate at the reward track's sizes): a 12 recess, a 9 fill,
-    and the frame's 26, which hangs 8 outside each end and 7 above and 10 below the fill. The frame and recess are
-    nine-sliced, as the client sizes them; the fill is the status bar's texture, cropped to the percent."""
-    canvas.draw(ui.atlas("Legacy-Progressbar-BG"), x + 8, y + 7, width - 16, 12)
-    if percent > 0 and width > 16:
-        fill = ui.canvas(width - 16, 9)
-        fill.draw(ui.atlas("Legacy-Progressbar-Fill"), 0, 0, width - 16, 9, color)
-        cropped = fill.image.crop((0, 0, canvas.px((width - 16) * percent / 100), fill.image.height))
-        canvas.composite(cropped, canvas.px(x + 8), canvas.px(y + 7))
-    canvas.draw(ui.atlas("Legacy-Progressbar-Frame"), x, y, width, 26)
-
-
-def completion_corner(ui, canvas, rects, result, name, collapsed=False):
-    """LegacyForeverZoneOverlayTemplate at the canvas container's TOPLEFT (44, -18); a click collapses it to the
-    title and bar."""
-    cx, cy, _, _ = rects["container"]
-    x, y = cx + 44, cy + 18
-    title_font, counts_font = FONTS["GameFontNormalLarge"], FONTS["GameFontHighlight"]
-    title = f"{name}  {result['percent']}%"
-    counts = counts_text(ui, result, 16)
-    width = max(canvas.text_width(title, title_font), 140)
-    height = title_font.height + 4 + 26
-    if not collapsed:
-        width = max(width, canvas.text_width(counts, counts_font))
-        height += 6 + counts_font.height
-    canvas.text(x, y, title, title_font)
-    bar_y = y + title_font.height + 4
-    color = ui.global_color("GREEN_FONT_COLOR" if result["complete"] else "NORMAL_FONT_COLOR")
-    legacy_bar(ui, canvas, x, bar_y, width, result["percent"], color)
-    if not collapsed:
-        canvas.text(x, y + title_font.height + 4 + 26 + 6, counts, counts_font)
+def tracker_bar(ui, canvas, x, y, width, percent):
+    """ObjectiveTrackerProgressBarTemplate's StatusBar at the atlas set's native sizes: the 15-unit blue
+    widgetstatusbar fill over its navy backing, inside the objectivewidget bar's 10 by 32 caps and middle strip.
+    The fill is a bar texture, so it stretches along the bar as the client's own does."""
+    back = ui.canvas(width, 15)
+    back.image.paste((10, 18, 46, 255), (0, 0, back.image.width, back.image.height))
+    canvas.composite(back.image, canvas.px(x), canvas.px(y))
+    canvas.draw(ui.atlas("widgetstatusbar-fill-blue"), x, y, width * percent / 100, 15)
+    left = ui.atlas("objectivewidget-bar-border-left")
+    right = ui.atlas("objectivewidget-bar-border-right")
+    mid = ui.atlas("objectivewidget-bar-border-middle")
+    cap_y = y + 7.5 - left.height / 2
+    canvas.draw(left, x - 5, cap_y, 10, 32)
+    canvas.draw(right, x + width + 5 - 10, cap_y, 10, 32)
+    canvas.draw(mid, x - 5 + 10, cap_y, width + 10 - 20, 32)
 
 
 def map_button(ui, canvas, rects, count):
@@ -593,7 +576,7 @@ def render_entrance(ui, data, live):
 
 
 def render_menu(ui, data, live):
-    """The menu's "No fixed location" cascade open down to one skill's challenges, over the map's corner."""
+    """The menu's "No fixed location" cascade open down to one skill's challenges, over the map."""
     canvas, button = world_map(ui, data, live)
     bx, by, bw, bh = button
     entries = main_menu(ui, live)
@@ -685,7 +668,7 @@ def zone_pin(ui, canvas, x, y, portal=None):
 
 
 def render_unvisited(ui, data, live):
-    """Felwood, where this character has never been: every area shaded and the corner at 0%, its bar empty."""
+    """Felwood, where this character has never been: every area shaded."""
     canvas, _ = world_map(ui, data, live, FELWOOD)
     return scene(ui, [(canvas, 0, 0)])
 
@@ -715,59 +698,62 @@ def render_tracker(ui, data, live):
         lines = [f"{line['detail']} {line['text']}" if "detail" in line else line["text"] for line in block["lines"]]
         shown = lines[:5] + ([("...", False)] if len(lines) > 5 else [])
         legacy.append(TrackerBlock(live.name(block["challenge"]), shown))
-    # The zone section's header on a canvas of its own: the Legacy bar and the counts sit in the row
+    # The zone section's header on a canvas of its own: the tracker's own bar and the counts sit in the row
     # UI/Completion.lua reserves below the header, so the tracked challenges start after that row.
     canvas, rects = objective_tracker(ui, [TrackerModule("Ashenvale", [])], container=True)
     hx, hy, hw, hh = rects["modules"][0]
-    font, line_font = FONTS["ObjectiveTrackerHeaderFont"], FONTS["ObjectiveTrackerLineFont"]
-    minimize = ui.atlas("ui-questtrackerbutton-secondary-collapse")
-    percent = f"{result['percent']}%"
-    percent_right = hx + hw + 1 - minimize.width - 4
-    canvas.text(percent_right - canvas.text_width(percent, font), hy + (hh - font.height) / 2, percent, font)
-    bar_canvas = ui.canvas(hw, 26)
-    color = ui.global_color("GREEN_FONT_COLOR" if result["complete"] else "NORMAL_FONT_COLOR")
-    legacy_bar(ui, bar_canvas, 0, 0, hw, result["percent"], color)
-    counts = counts_text(ui, result, 14)
+    line_font, percent_font = FONTS["ObjectiveTrackerLineFont"], FONTS["GameFontHighlightMedium"]
+    # The bar canvas starts at the caps' overhang and centres the percent on the 15-unit fill.
+    bar_canvas = ui.canvas(hw, 32)
+    tracker_bar(ui, bar_canvas, 5, 8.5, hw - 10, result["percent"])
+    bar_canvas.text(
+        0,
+        8.5,
+        f"{result['percent']}%",
+        percent_font,
+        justify="CENTER",
+        width=hw,
+        box_height=15,
+    )
+    counts = counts_text(ui, result, 16)
     counts_canvas = ui.canvas(max(1, canvas.text_width(counts, line_font)), line_font.height)
     counts_canvas.text(0, 0, counts, line_font, ui.global_color("OBJECTIVE_TRACKER_BLOCK_HEADER_COLOR"))
     tracked_canvas, _ = objective_tracker(ui, [TrackerModule("Legacy", legacy)], container=False)
-    # Completion reserves its first line 34 under the header (2, the bar's 26, then 6) and the module counts
-    # from headerHeight (25), then the host leaves 10 between sections.
-    tracked_top = hy + 25 + line_font.height + 34 + 10
+    # Completion reserves its first line 31.5 under the header (7, the bar's 15, its cap overhang and 6), the
+    # module counts from headerHeight (25), then the host leaves 10 between sections.
+    tracked_top = hy + 25 + line_font.height + 31.5 + 10
     return scene(
         ui,
         [
             (canvas, 0, 0),
-            (bar_canvas, hx, hy + hh + 2),
-            (counts_canvas, hx + 20, hy + hh + 34),
+            (bar_canvas, hx, hy + hh + 7 - 8.5),
+            (counts_canvas, hx, hy + hh + 32),
             (tracked_canvas, hx, tracked_top),
         ],
     )
 
 
-# The demo's character explores two more areas east of Astranaar, then collapses the corner and opens the menu.
+# The demo's character explores two more areas east of Astranaar, then opens the menu.
 DEMO_DISCOVERED = ["Mystral Lake", "Raynewood Retreat"]
-# (explored beyond EXPLORED, corner collapsed, menu open, seconds held): ten seconds in all.
+# (explored beyond EXPLORED, menu open, seconds held): nine seconds in all.
 DEMO_STEPS = [
-    (0, False, False, 1.5),
-    (1, False, False, 1.5),
-    (2, False, False, 2.0),
-    (2, True, False, 1.5),
-    (2, False, False, 1.0),
-    (2, False, True, 2.5),
+    (0, False, 1.5),
+    (1, False, 1.5),
+    (2, False, 2.0),
+    (2, True, 3.0),
 ]
 DEMO_FPS = 10
 DEMO_FADE = 3  # frames of cross-fade as an area's shading lifts; a click changes the map at once
 
 
 def render_demo(data):
-    """docs/screenshots/demo.gif: Ashenvale's shading lifting and its corner filling as areas are found, the corner
-    collapsed with a click, then the Legacy menu. Rendered at 1x, the GIF's final size."""
+    """docs/screenshots/demo.gif: Ashenvale's shading lifting as areas are found, then the Legacy menu.
+    Rendered at 1x, the GIF's final size."""
     ui = make_ui(scale=1)
     steps = []
-    for found, collapsed, menu, seconds in DEMO_STEPS:
+    for found, menu, seconds in DEMO_STEPS:
         live = Live(ui, data, EXPLORED | set(DEMO_DISCOVERED[:found]))
-        canvas, button = world_map(ui, data, live, collapsed=collapsed)
+        canvas, button = world_map(ui, data, live)
         layers = [(canvas, 0, 0)]
         if menu:
             bx, by, bw, bh = button

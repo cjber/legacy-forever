@@ -2,7 +2,7 @@
 """Fail when a screenshot is older than what it shows (WFA-9, forever_tools.screens).
 
 tools/screenshots.py draws every scene from wowmock and asks the addon's Core/Model.lua
-(tools/screenshots_model.lua) what to show, porting the completion corner, map badges and tracker lines from UI/.
+(tools/screenshots_model.lua) what to show, porting the map badges and tracker lines from UI/.
 Each image's dump is those files' hashes, so a change to any of them needs a fresh render. Generated `Data/` is left
 out: the daily data refresh moves it and cannot render, and the release re-renders every image (the release skill).
 docs/screenshots/scenes.sha256 holds each image's hash beside its dump's; after a render, `--record` rewrites it
@@ -32,7 +32,6 @@ SOURCES = (
     "UI/Map.lua",
     "Integrations/AtlasLoot.lua",
     "UI/Tracker.lua",
-    "UI/Completion.xml",
 )
 SCENES = {
     path.name: functools.partial(screens.files, ROOT, SOURCES)

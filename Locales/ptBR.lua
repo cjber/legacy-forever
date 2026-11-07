@@ -29,8 +29,6 @@ L["Already complete"] = "Já concluído" -- mt
 L["Areas explored"] = "Áreas exploradas"
 L["Attach to quest tracker"] = "Prender ao rastreador de missões"
 L["Click the zone to see where."] = "Clique na zona para ver onde."
-L["Click to collapse."] = "Clique para recolher."
-L["Click to expand."] = "Clique para expandir."
 L["Click to open the map. Right-click for options."] =
 	"Clique para abrir o mapa. Clique com o botão direito para opções."
 L["Click to set a waypoint here."] = "Clique para pôr um marcador de mapa aqui."
@@ -109,8 +107,8 @@ L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"O rastreador está travado. Desative Travar o rastreador para movê-lo."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"A zona em que você está e o que falta fazer nela. Desafios rastreados mantêm sua própria seção de Legado."
-L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
-	"A zona exibida, no canto do mapa, e um selo em cada zona do mapa de um continente."
+L["A badge on each zone of a continent map, with the zone's completion."] =
+	"Um emblema em cada zona de um mapa de continente, com o progresso da zona." -- mt
 L["This addon"] = "Este AddOn"
 L["This version of Questie isn't supported."] = "Esta versão do Questie não é compatível."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
@@ -147,8 +145,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Título"
 L["What happened, or what you would like"] = "O que aconteceu, ou o que você gostaria"
 
-L["The tracker column steps aside for EQ Objective Tracker."] =
-	"A coluna do rastreador sai do caminho do EQ Objective Tracker." -- mt
+L["The zone progress bar now wears the quest tracker's own bar, and the map corner is gone."] =
+	"A barra de progresso da zona agora usa a barra do rastreador de missões, e o canto do mapa sumiu." -- mt
 L["Install AtlasLoot for recommended levels."] = "Instale AtlasLoot para ver os níveis recomendados." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Níveis recomendados: %s (AtlasLoot)" -- mt
 

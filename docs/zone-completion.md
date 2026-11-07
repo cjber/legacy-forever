@@ -4,7 +4,7 @@ Each category's objectives come from `Data/Legacy.lua`, which `tools/gen_legacy.
 is read from the game. The README says
 [where the locations come from](../README.md#where-the-locations-come-from).
 
-![Felwood on the world map before the character has been there: every area shaded and the completion corner at 0%](screenshots/unvisited.png)
+![Felwood on the world map before the character has been there: every area shaded](screenshots/unvisited.png)
 
 - **Areas** are the zone's map overlays, the same ones the game reveals as you explore.
 - **Flight paths**, counted only once ticked under "What counts", are the client's flight nodes for your faction,
@@ -28,13 +28,12 @@ is read from the game. The README says
 
 ## Where it shows
 
-- **The world map's corner**, for the zone you're viewing: the zone name, a percentage and a row of counts. Click it
-  to fold it down to the name and bar.
 - **Continent maps**: each zone badge's tooltip has the zone's completion, and the continent's line says how many of
-  its zones are complete. Unticking "On the world map" in the map menu hides both the corner and the badges.
-- **The objective tracker**, for the zone you're in, once you tick "In the objective tracker" in the map menu.
-- **Hovering** any of them lists what's left. "What counts" in the same menu adds or leaves out a category, and the
-  percentage follows.
+  its zones are complete. Unticking "On the world map" in the map menu hides the badges.
+- **The objective tracker**, for the zone you're in, once you tick "In the objective tracker" in the map menu: the
+  zone's name, the game's own quest progress bar with the percent centred in it, and a row of counts.
+- **Hovering** the section or a badge lists what's left. "What counts" in the same menu adds or leaves out a
+  category, and the percentage follows.
 - **A toast and a sound** when a zone reaches 100% of what you count. Zones already complete when you log in stay
   quiet.
 

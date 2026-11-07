@@ -41,6 +41,8 @@ L["5th"] = "5th"
 L["6th"] = "6th"
 L["7th"] = "7th"
 L["8th"] = "8th"
+L["A badge on each zone of a continent map, with the zone's completion."] =
+	"A badge on each zone of a continent map, with the zone's completion."
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever routes the quests left in this zone."
 L["All time"] = "All time"
@@ -50,8 +52,6 @@ L["Attach to quest tracker"] = "Attach to quest tracker"
 L["Bug"] = "Bug"
 L["Bug: "] = "Bug: "
 L["Click the zone to see where."] = "Click the zone to see where."
-L["Click to collapse."] = "Click to collapse."
-L["Click to expand."] = "Click to expand."
 L["Click to open the map. Right-click for options."] = "Click to open the map. Right-click for options."
 L["Click to set a waypoint here."] = "Click to set a waypoint here."
 L["Click to track, with live progress."] = "Click to track, with live progress."
@@ -147,14 +147,12 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 	"The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
 	"The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."
-L["The tracker column steps aside for EQ Objective Tracker."] =
-	"The tracker column steps aside for EQ Objective Tracker."
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"The tracker is locked. Turn off Lock the tracker to move it."
+L["The zone progress bar now wears the quest tracker's own bar, and the map corner is gone."] =
+	"The zone progress bar now wears the quest tracker's own bar, and the map corner is gone."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
-L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
-	"The zone you're viewing in the map's corner, and a badge on each zone of a continent map."
 L["This addon"] = "This addon"
 L["This version of Questie isn't supported."] = "This version of Questie isn't supported."
 L["This week"] = "This week"

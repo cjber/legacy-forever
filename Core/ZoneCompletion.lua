@@ -3,13 +3,13 @@ local _, ns = ...
 
 -- Zone completion without a frame: a zone's or continent's result under what the player counts, when a
 -- completion is news, and the one notice that any of it may have changed. The tracker section, the map's
--- corner, the toast and the menu (UI/Completion.lua), the map and LegacyForever.API all read and listen here.
+-- badges, the toast and the menu (UI/Completion.lua), the map and LegacyForever.API all read and listen here.
 ---@class LegacyZoneCompletion
 local ZoneCompletion = {}
 ns.ZoneCompletion = ZoneCompletion
 
--- Whether zone completion is drawn on a surface: the world map (its corner and the continent badges) or the
--- objective tracker.
+-- Whether zone completion is drawn on a surface: the world map (its continent badges) or the objective
+-- tracker.
 ---@param surface LegacySurface
 ---@return boolean
 function ZoneCompletion.IsShown(surface)

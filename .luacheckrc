@@ -5,7 +5,6 @@ ignore = { "212/_.*", "212/self" } -- unused args prefixed with _, and self on m
 
 globals = { "AdventureGuideForeverDB", "ForeverFamily", "ForeverLeaderboards", "ForeverMapMarkers", "ForeverTrackerHost",
 	"LegacyForeverMapButtonMixin",
-	"LegacyForeverZoneOverlayMixin",
 	"LegacyForever",
 	"LegacyForeverDB",
 	"LegacyForever_OnAddonCompartmentClick",

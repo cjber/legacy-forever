@@ -220,10 +220,16 @@ ForeverTrackerHost = nil
 ---@field group LegacyGroup
 ---@field objective LegacyObjective
 
+-- The objective tracker's own progress bar, created from ObjectiveTrackerProgressBarTemplate.
+---@class LegacyZoneProgressBarFill : StatusBar
+---@field Label FontString
+---@class LegacyZoneProgressBar : Frame
+---@field Bar LegacyZoneProgressBarFill
+---@field SetPercent fun(self: LegacyZoneProgressBar, percent: number)
+
 -- Completion adds these fields to its tracker header before layout runs.
 ---@class LegacyTrackerHeader : ObjectiveTrackerModuleHeaderTemplate
----@field Percent FontString
----@field Progress StatusBar
+---@field Progress LegacyZoneProgressBar
 
 -- The tracker template supplies a frame and the manager assigns its numeric block ID.
 ---@class LegacyTrackerBlock : Frame, ObjectiveTrackerBlockMixin

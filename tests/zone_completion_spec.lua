@@ -275,7 +275,6 @@ check(Zones.IsShown("map") and not Zones.IsShown("tracker"), "the surfaces read 
 check(changes == 3, "each surface switch is a change")
 Saved.Set("count_quests", true)
 check(changes == 4, "what counts is a change")
-Saved.Set("mapCollapsed", true)
 Saved.Set("trackerCollapsed", true)
 Saved.Set("showAreas", false)
 check(changes == 4, "a collapse state or another addon switch is not")

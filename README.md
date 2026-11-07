@@ -11,11 +11,11 @@ Your unfinished WoW: Forever Legacy challenges, on the world map, for the zone y
 
 Legacy Forever shows unfinished challenges on the world map and tracks the ones you choose.
 
-<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif" width="640" alt="Ashenvale on the world map as two areas are found, the completion corner folding away, then the Legacy menu"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif" width="640" alt="Ashenvale on the world map as two areas are found, then the Legacy menu"></p>
 
-Discover an area and its shading lifts as the corner's percentage goes up. Click the corner to fold it away.
+Discover an area and its shading lifts. The Legacy menu tracks the challenges behind it.
 
-<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/map.png" width="640" alt="Ashenvale on the world map with undiscovered areas shaded, the zone completion corner and the Legacy menu open"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/map.png" width="640" alt="Ashenvale on the world map with undiscovered areas shaded and the Legacy menu open"></p>
 
 Half of Ashenvale explored: the shield's number is what's left on this map, and its menu lists it by challenge.
 
@@ -37,7 +37,7 @@ Tick a challenge in the menu to track it.
 - **Tracker**: a Legacy section in the objective tracker, under the game's own All Objectives header, lists what you track, with live progress. A zone ticked in the map menu tracks just that zone, such as "0/12 Explore Felwood". Click a challenge to open it in the Legacy panel, or right-click to stop tracking it. [How it lists steps](docs/tracker.md).
 - **Map pins** on dungeon and raid entrances, with the challenge each counts toward and its Legacy points. With AtlasLoot installed, tooltips also show its recommended level range. Left-click a pin to travel there: with [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever) it plans the whole journey, otherwise it sets the game's own waypoint. If another addon already marks entrances, the map menu turns these pins off.
 - **Undiscovered areas** are shaded darker in their real shape on the zone map, so you can see where to go at a glance. Hovering one names it and, when a Legacy challenge counts it, shows the challenge, its points and how many of the zone's areas are left. The map menu turns the shading off.
-- **Zone completion**, Guild Wars 2 style: how much of a zone's areas, dungeons, raids and Legacy objectives you've done, as a percentage in the map's corner, a badge on each zone of a continent map and, if you tick it, the tracker. Flight paths, local reputations and, with Questie, quests can be added under "What counts". A finished zone gets a toast and a sound. [What it counts](docs/zone-completion.md).
+- **Zone completion**, Guild Wars 2 style: how much of a zone's areas, dungeons, raids and Legacy objectives you've done, as a badge on each zone of a continent map and, if you tick it, the tracker. The tracker's section fills the game's own progress bar with the percent inside it and counts each kind with the map's own icons. Flight paths, local reputations and, with Questie, quests can be added under "What counts". A finished zone gets a toast and a sound. [What it counts](docs/zone-completion.md).
 - **No fixed location** lists challenges whose remaining work isn't tied to a place, such as levels, skills and ranks.
 
 Progress comes from the game each time, so it matches the Legacy panel and follows whichever challenge set your character sees.

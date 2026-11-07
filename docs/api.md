@@ -9,7 +9,7 @@ to 1.
 
 ## `ZoneSummary(map) -> LFZoneSummary?, LFReadError?`
 
-The zone's completion, as the map corner and tracker show it: `done`, `total`, `pending` and `complete`, with one
+The zone's completion, as the tracker and the continent badges show it: `done`, `total`, `pending` and `complete`, with one
 entry in `categories` per category the player counts ("What counts" in the Legacy map menu). A category that is
 switched off, or that the zone has none of, is left out. Pending items, whose state the game hasn't reported yet,
 stay outside `total`. A zone with nothing counted is never `complete`.

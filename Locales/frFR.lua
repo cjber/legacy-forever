@@ -35,8 +35,6 @@ L["Attach to quest tracker"] = "Attacher au suivi des quêtes"
 L["Bug"] = "Bug"
 L["Bug: "] = "Bug : "
 L["Click the zone to see where."] = "Cliquez sur la zone pour voir où."
-L["Click to collapse."] = "Cliquez pour réduire."
-L["Click to expand."] = "Cliquez pour développer."
 L["Click to open the map. Right-click for options."] = "Cliquez pour ouvrir la carte. Clic droit pour les options."
 L["Click to set a waypoint here."] = "Cliquez pour placer un point de repère ici."
 L["Click to track, with live progress."] = "Cliquez pour suivre, avec progression en direct."
@@ -121,8 +119,8 @@ L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"Le suivi est verrouillé. Désactivez Verrouiller le suivi pour le déplacer."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"La zone où vous vous trouvez et ce qui reste à y faire. Les défis que vous suivez gardent leur propre section Legacy."
-L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
-	"La zone que vous consultez dans le coin de la carte, et un badge sur chaque zone d'une carte de continent."
+L["A badge on each zone of a continent map, with the zone's completion."] =
+	"Une pastille sur chaque zone d'une carte de continent, avec l'avancement de la zone." -- mt
 L["This addon"] = "Cet addon"
 L["This version of Questie isn't supported."] = "Cette version de Questie n'est pas prise en charge."
 L["Title"] = "Titre"
@@ -148,7 +146,8 @@ L["the objective tracker isn't available, so tracked challenges can't be shown."
 	"le suivi des objectifs n'est pas disponible, les défis suivis ne peuvent donc pas être affichés."
 L["updated to %s. %s"] = "mis à jour vers %s. %s"
 
-L["The tracker column steps aside for EQ Objective Tracker."] = "La colonne du suivi s'ecarte d'EQ Objective Tracker." -- mt
+L["The zone progress bar now wears the quest tracker's own bar, and the map corner is gone."] =
+	"La barre de progression de zone porte désormais celle du suivi des quêtes, et le coin de la carte a disparu." -- mt
 L["Install AtlasLoot for recommended levels."] = "Installez AtlasLoot pour afficher les niveaux recommandés." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Niveaux recommandés : %s (AtlasLoot)" -- mt
 

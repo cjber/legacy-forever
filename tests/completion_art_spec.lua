@@ -1,7 +1,7 @@
 -- Run from the repository root: luajit tests/completion_art_spec.lua
--- UI/Completion.lua draws the zone's completion with the Legacy panel's own progress bar: its nine-slice recess,
--- its fill and its frame, at the sizes and anchors the client's LegacyProgressBarTemplate uses, and the corner
--- keeps no shade texture of its own.
+-- UI/Completion.lua draws the zone's completion in the objective tracker with the tracker's own progress bar
+-- (ObjectiveTrackerProgressBarTemplate's caps, fill, blue and centred percent) and one family of world map icons.
+-- The world map corner overlay is gone; the continent badges keep their tooltip.
 local checks = 0
 local function check(condition, label)
 	checks = checks + 1
@@ -54,18 +54,6 @@ local function Frame(kind, name, parent)
 	function frame:SetHeight(height)
 		self.height = height
 	end
-	function frame:SetStatusBarTexture(texture)
-		self.statusBarTexture = texture
-	end
-	function frame:SetMinMaxValues(low, high)
-		self.low, self.high = low, high
-	end
-	function frame:SetValue(value)
-		self.value = value
-	end
-	function frame:SetStatusBarColor(...)
-		self.color = { ... }
-	end
 	function frame:SetPoint(...)
 		self.points[#self.points + 1] = { ... }
 	end
@@ -88,7 +76,31 @@ local function Frame(kind, name, parent)
 	return frame
 end
 
-CreateFrame = function(kind, name, parent)
+-- The client's ObjectiveTrackerProgressBarTemplate: a frame with the StatusBar and its centred Label, plus the
+-- mixin's SetPercent.
+local function ProgressBarTemplate()
+	local frame = Frame("Frame")
+	frame.Bar = Frame("StatusBar", nil, frame)
+	frame.Bar.Label = FontString(12)
+	function frame.Bar:SetValue(value)
+		self.value = value
+	end
+	function frame:SetPercent(percent)
+		self.percent = percent
+		self.Bar:SetValue(percent)
+		self.Bar.Label:SetText(("%d%%"):format(percent))
+	end
+	return frame
+end
+
+local createdTemplates = {}
+CreateFrame = function(kind, name, parent, template)
+	if template then
+		createdTemplates[#createdTemplates + 1] = template
+		local frame = ProgressBarTemplate()
+		frame.kind, frame.name, frame.parent = kind, name, parent
+		return frame
+	end
 	return Frame(kind, name, parent)
 end
 
@@ -113,7 +125,7 @@ C_Map = {
 }
 EventUtil = {
 	ContinueOnAddOnLoaded = function(_, callback)
-		-- The collapse restore and the map attach wait for their events; the bar is drawn before either runs.
+		-- The collapse restore waits for its event; the bar is drawn before it runs.
 		assert(type(callback) == "function")
 	end,
 }
@@ -160,10 +172,17 @@ local ns = {
 		Set = function() end,
 	},
 	Tracker = {
-		AddModule = function(name)
+		AddModule = function(name, mixin, uiOrder)
 			trackerModule = Frame("Frame", name)
+			for key, value in pairs(mixin) do
+				trackerModule[key] = value
+			end
+			trackerModule.uiOrder = uiOrder
 			trackerModule.Header = Frame("Frame", name .. "Header")
 			trackerModule.Header.MinimizeButton = {}
+			function trackerModule:SetHeader() end
+			function trackerModule:SetCollapsed() end
+			function trackerModule:MarkDirty() end
 			return trackerModule
 		end,
 	},
@@ -181,81 +200,59 @@ AlertFrame = {
 
 assert(loadfile("UI/Completion.lua"))("LegacyForever", ns)
 
-local function Atlas(texture, name)
-	for _, candidate in ipairs(texture.textures) do
-		if candidate.atlas == name then
-			return candidate
-		end
-	end
-end
-
---[[ The tracker section's bar: the Legacy panel's own, under the header band ]]
+--[[ The tracker section's bar: the objective tracker's own, under the header band ]]
 
 check(trackerModule ~= nil, "the zone section is built")
-local bar = trackerModule.Header.Progress
-check(bar ~= nil and bar.kind == "StatusBar", "the section header holds a progress bar")
-check(bar.statusBarTexture == "Legacy-Progressbar-Fill", "the bar fills with the Legacy panel's own fill")
-check(bar.height == 9, "the fill is the Legacy bar's 9 units")
-check(bar.low == 0 and bar.high == 100, "the bar still counts percent")
-local background = Atlas(bar, "Legacy-Progressbar-BG")
-check(background ~= nil, "the bar draws the Legacy recess")
-check(background.points[1][1] == "TOPLEFT", "the recess starts at the bar's top")
-check(background.points[2][1] == "BOTTOMRIGHT" and background.points[2][3] == -3, "the recess keeps its 3-unit lip")
-local frame = Atlas(bar, "Legacy-Progressbar-Frame")
-check(frame ~= nil, "the bar draws the Legacy frame")
+check(trackerModule.uiOrder == -1, "the section sorts above the tracked challenges' blocks")
+local progress = trackerModule.Header.Progress
+check(progress ~= nil, "the section header holds a progress bar")
+check(createdTemplates[1] == "ObjectiveTrackerProgressBarTemplate", "the bar inherits the tracker's own template")
+check(progress.height == 15, "the bar keeps the tracker's 15-unit fill")
+check(progress.Bar.points[1][1] == "TOPLEFT" and progress.Bar.points[1][4] == 3, "the fill starts inside the caps")
+check(progress.Bar.points[2][1] == "BOTTOMRIGHT" and progress.Bar.points[2][4] == -3, "the fill ends inside the caps")
 check(
-	frame.points[1][1] == "TOPLEFT" and frame.points[1][2] == -8 and frame.points[1][3] == 7,
-	"the frame hangs 8 by 7"
+	progress.points[1][1] == "TOPLEFT" and progress.points[1][2] == trackerModule.Header and progress.points[1][5] == -7,
+	"the bar sits 7 under the header band"
 )
-check(
-	frame.points[2][1] == "BOTTOMRIGHT" and frame.points[2][2] == 8 and frame.points[2][3] == -10,
-	"the frame hangs 8 by 10"
-)
-check(
-	bar.points[1][1] == "TOPLEFT" and bar.points[1][2] == trackerModule.Header and bar.points[1][5] == -9,
-	"the bar sits below the header band"
-)
-check(trackerModule.fromHeaderOffsetY == -34, "the section starts its first line below the bar's row")
+check(progress.points[2][1] == "TOPRIGHT" and progress.points[2][4] == 0, "the caps span the section's width")
+check(trackerModule.fromHeaderOffsetY == -(7 + 15 + 3.5 + 6), "the section starts its first line below bar and counts")
 
---[[ The map corner's bar: the same art, in the same place under the title ]]
-
-local map = {}
-function map:GetMapID()
+-- Drawing fills the bar and puts the percent in the tracker bar's own centred Label.
+trackerModule.GetBlock = function()
+	return {
+		SetHeader = function() end,
+		AddObjective = function() end,
+	}
+end
+trackerModule.LayoutBlock = function()
+	return true
+end
+ns.Live.CurrentZone = function()
 	return 5
 end
-local overlay = Frame("Button", "LegacyForeverZoneOverlayTemplate")
-overlay.Title = FontString(17)
-overlay.Counts = FontString(12)
-overlay.GetParent = function()
-	return map
+trackerModule:LayoutContents()
+check(progress.percent == 47 and progress.Bar.value == 47, "the bar fills to the zone's percent")
+check(progress.Bar.Label.text == "47%", "the percent reads centred in the bar")
+zones.result.percent = nil
+trackerModule:LayoutContents()
+check(progress.Bar.value == 0 and progress.Bar.Label.text:find("?", 1, true), "no percent yet reads as a question mark")
+
+--[[ One family of world map icons, at native aspect ]]
+
+local function Atlas(key, size)
+	local markup = ns.Completion.Icon(key, size)
+	return markup:match("|A:([^:]+):")
 end
+check(Atlas("dungeons", 14) == "questlog-questtypeicon-dungeon", "dungeons wear the quest log's dungeon glyph")
+check(Atlas("taxis", 14) == "taxinode_neutral", "flight paths wear the map's neutral flight node")
+check(Atlas("quests", 14) == "QuestNormal", "quests wear the map's quest giver")
+check(Atlas("raids", 14) == "Raid", "raids wear the map's raid entrance pin")
+check(Atlas("legacy", 14) == ns.POINTS_ICON, "Legacy objectives keep the shield, which no pin replaces")
+check(Atlas("areas", 14) == "islands-queue-prop-compass", "areas keep the compass, which no pin replaces")
+local reputation = ns.Completion.Icon("reputations", 14)
+check(reputation:find("Achievement_Reputation_01", 1, true), "reputations keep the handshake icon")
 
-LegacyForeverZoneOverlayMixin.OnLoad(overlay)
-local corner = overlay.Progress
-check(corner ~= nil and corner.statusBarTexture == "Legacy-Progressbar-Fill", "the corner fills with the same fill")
-check(Atlas(corner, "Legacy-Progressbar-BG") ~= nil, "the corner draws the Legacy recess")
-check(Atlas(corner, "Legacy-Progressbar-Frame") ~= nil, "the corner draws the Legacy frame")
-check(
-	overlay.Counts.points[1][1] == "TOPLEFT"
-		and overlay.Counts.points[1][2] == corner
-		and overlay.Counts.points[1][3] == "BOTTOMLEFT"
-		and overlay.Counts.points[1][4] == -8
-		and overlay.Counts.points[1][5] == -16,
-	"the counts read under the frame, lined up with its edge"
-)
-
-LegacyForeverZoneOverlayMixin.Refresh(overlay)
-check(corner.value == 47, "the corner still fills to the zone's percent")
-check(corner.color[1] == 1 and corner.color[2] == 0.82, "an unfinished zone keeps the tracker's gold")
-check(overlay.height == 17 + 4 + 26 + 6 + 12, "the corner leaves room for the bar's own 26")
-check(corner.points[1][4] == 8 and corner.points[1][5] == -(17 + 4 + 7), "the frame spans the corner under the title")
-check(corner.points[2][4] == -8, "the frame spans to the corner's right edge")
-
-zones.result.complete = true
-LegacyForeverZoneOverlayMixin.Refresh(overlay)
-check(corner.color[1] == 0 and corner.color[2] == 1, "a finished zone fills green, as before")
-
---[[ What the corner no longer draws ]]
+--[[ What the corner overlay left behind ]]
 
 local function Read(path)
 	local file = assert(io.open(path, "rb"), path)
@@ -265,15 +262,13 @@ local function Read(path)
 end
 
 local source = Read("UI/Completion.lua")
-check(not source:find("WHITE8X8", 1, true), "the hand-made white bar is gone")
-check(not source:find("Shade", 1, true), "the corner no longer names a shade texture")
-local xml = Read("UI/Completion.xml")
-check(not xml:find("Shade", 1, true), "the corner's XML keeps no shade texture")
-check(not xml:find("media\\", 1, true) and not xml:find("media/", 1, true), "the corner references no shipped media")
-local shade = io.open("media/Shade.tga", "rb")
-if shade then
-	shade:close()
+check(not source:find("LegacyForeverZoneOverlay", 1, true), "the corner overlay mixin is gone")
+check(not source:find("mapCollapsed", 1, true), "its collapse state is gone")
+check(not source:find("Legacy-Progressbar", 1, true), "the Legacy panel's bar is gone")
+local removed = io.open("UI/Completion.xml", "rb")
+if removed then
+	removed:close()
 end
-check(shade == nil, "the shade file is gone")
+check(removed == nil, "the overlay's XML is gone")
 
 print(("completion_art_spec: %d checks passed"):format(checks))

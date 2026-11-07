@@ -95,7 +95,7 @@ end
 -- The bare literals in a call's text arguments, or in `headerText = "..."`.
 local function BareLiterals(tokens)
 	local found = {}
-	-- Only the argument's own literals: one passed to another call ("mapCollapsed") is a key, but a
+	-- Only the argument's own literals: one passed to another call ("trackerCollapsed") is a key, but a
 	-- parenthesised format string, ("%s left"):format(n), is the text.
 	local function Scan(from, to)
 		local depth = 0

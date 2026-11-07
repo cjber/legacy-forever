@@ -4,19 +4,22 @@ local L = ns.L
 
 -- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths, dungeons, raids,
 -- Legacy objectives, local reputations and quests are done, as a section in the objective tracker
--- (the zone you're in) and in the world map's corner (the zone you're viewing). Each is optional and
--- collapsible. The counting, what counts and when a completion is news are Core/ZoneCompletion.lua's; this file
--- draws them.
+-- (the zone you're in) and in each zone badge's tooltip on a continent map. The counting, what counts
+-- and when a completion is news are Core/ZoneCompletion.lua's; this file draws them.
 ---@class LegacyCompletion
 local Completion = {}
 ns.Completion = Completion
 
+-- One family of world map icons where the client has one: the quest log's dungeon glyph, the flight
+-- master's node, the map's quest giver and raid entrance. Areas, reputations and Legacy objectives have no
+-- pin of their own, so they keep the art that reads as those things.
 ---@type table<LegacyCategoryKey, { atlas?: string, file?: string }>
 local ICONS = {
 	areas = { atlas = "islands-queue-prop-compass" },
-	taxis = { atlas = "flightmaster" },
-	dungeons = { atlas = "dungeon" },
-	raids = { atlas = "raid" },
+	taxis = { atlas = "taxinode_neutral" },
+	dungeons = { atlas = "questlog-questtypeicon-dungeon" },
+	-- The map's own raid entrance pin (MapLegendPinDefinitions.Raid).
+	raids = { atlas = "Raid" },
 	legacy = { atlas = ns.POINTS_ICON },
 	-- No atlas reads as reputation, so the classic handshake icon, trimmed of its border.
 	reputations = { file = "Interface\\Icons\\Achievement_Reputation_01" },
@@ -98,7 +101,7 @@ local function CategoryText(category, colored)
 	return color:WrapTextInColorCode(text)
 end
 
--- "[compass] 9/14   [gryphon] 1/1   [door] 0/1", a finished category in green.
+-- "[compass] 9/14   [gryphon] 1/1   [portal] 0/1", a finished category in green.
 ---@param result LegacyZoneResult
 ---@param iconSize number
 ---@return string
@@ -157,36 +160,39 @@ local function AddTooltip(tooltip, name, result)
 	end
 end
 
--- The Legacy panel's own progress bar, at the sizes its reward track gives it: a 12-unit recess, a 9-unit fill and
--- the frame's own 26, which hangs 8 units outside each end and 7 above and 10 below the fill
--- (Blizzard_LegacySystemTemplates.xml's LegacyProgressBarTemplate, as Blizzard_LegacyRewardTrack.xml draws it).
-local BAR_HEIGHT = 9
-local BAR_TOP, BAR_BOTTOM, BAR_SIDE = 7, 10, 8
-local BAR_SPACE = BAR_HEIGHT + BAR_TOP + BAR_BOTTOM
+-- The objective tracker's own progress bar (Blizzard_ObjectiveTrackerShared.xml's
+-- ObjectiveTrackerProgressBarTemplate): the 15-unit fill in its blue, the 9 by 22 UI-Character-Skills-BarBorder
+-- caps hanging 3 units outside each end at their native size, and the percent centred on the fill. The template is
+-- virtual and usable on its own, so the section inherits it and only points its bar across the section.
+local BAR_HEIGHT = 15
+-- The fill's top under the header band, its 3.5-unit cap overhang, and the gap before the counts row.
+local BAR_TOP, BAR_CAP, BAR_GAP = 7, 3.5, 6
+-- The caps sit 3 units outside the fill, which keeps them inside the section's width.
+local BAR_INSET = 3
 
 ---@param parent Frame
----@return StatusBar
+---@return LegacyZoneProgressBar
 local function CreateProgressBar(parent)
-	local bar = CreateFrame("StatusBar", nil, parent)
-	bar:SetHeight(BAR_HEIGHT)
-	bar:SetStatusBarTexture("Legacy-Progressbar-Fill")
-	bar:SetMinMaxValues(0, 100)
-	local background = bar:CreateTexture(nil, "BACKGROUND")
-	background:SetAtlas("Legacy-Progressbar-BG") -- art-ok: the bar's nine-slice recess, at the panel's own height
-	background:SetPoint("TOPLEFT")
-	background:SetPoint("BOTTOMRIGHT", 0, -3)
-	local frame = bar:CreateTexture(nil, "OVERLAY")
-	frame:SetAtlas("Legacy-Progressbar-Frame") -- art-ok: the panel's nine-slice frame, at its own 26
-	frame:SetPoint("TOPLEFT", -BAR_SIDE, BAR_TOP)
-	frame:SetPoint("BOTTOMRIGHT", BAR_SIDE, -BAR_BOTTOM)
-	return bar
+	local progress = CreateFrame("Frame", nil, parent, "ObjectiveTrackerProgressBarTemplate")
+	---@cast progress LegacyZoneProgressBar
+	progress:SetHeight(BAR_HEIGHT)
+	local bar = progress.Bar
+	bar:ClearAllPoints()
+	bar:SetPoint("TOPLEFT", progress, "TOPLEFT", BAR_INSET, 0)
+	bar:SetPoint("BOTTOMRIGHT", progress, "BOTTOMRIGHT", -BAR_INSET, 0)
+	progress:Show()
+	return progress
 end
 
----@param bar StatusBar
+---@param progress LegacyZoneProgressBar
 ---@param result LegacyZoneResult
-local function SetProgress(bar, result)
-	bar:SetValue(result.percent or 0)
-	bar:SetStatusBarColor((result.complete and GREEN_FONT_COLOR or NORMAL_FONT_COLOR):GetRGB())
+local function SetProgress(progress, result)
+	if result.percent then
+		progress:SetPercent(result.percent)
+	else
+		progress.Bar:SetValue(0)
+		progress.Bar.Label:SetText(GRAY_FONT_COLOR:WrapTextInColorCode("?"))
+	end
 end
 
 --[[ Objective tracker: the zone you're in ]]
@@ -201,10 +207,9 @@ function TrackerMixin:LayoutContents()
 		return
 	end
 	self:SetHeader(C_Map.GetMapInfo(uiMapID).name)
-	self.Header.Percent:SetText(PercentText(result))
 	SetProgress(self.Header.Progress, result)
 	local block = self:GetBlock(uiMapID)
-	block:SetHeader(CountsText(result, 14))
+	block:SetHeader(CountsText(result, 16))
 	local shown = 0
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 		local category = result[key]
@@ -256,17 +261,17 @@ function TrackerMixin:OnBlockHeaderClick(block, mouseButton)
 	end)
 end
 
+-- -1 keeps the zone above the tracked challenges' blocks: the shared column orders its sections by uiOrder
+-- (UI/TrackerOrder.lua's Sort), and the Legacy section is 0.
 local trackerModule = ns.Tracker.AddModule("LegacyForeverZoneTracker", TrackerMixin, -1)
 if trackerModule then
 	local header = trackerModule.Header
-	header.Percent = header:CreateFontString(nil, "ARTWORK", "ObjectiveTrackerHeaderFont")
-	header.Percent:SetPoint("RIGHT", header.MinimizeButton, "LEFT", -4, 0)
-	-- The bar's own row under the header band: its frame lines up with the band, 2 below it, and the section's
-	-- first line starts 6 below the frame. The module's own layout then places the first block below the bar.
-	trackerModule.fromHeaderOffsetY = -(2 + BAR_SPACE + 6)
+	-- The bar's own row under the header band, then the counts row; the module's layout places the first block
+	-- below both. The percent sits in the bar's own Label, as the game's tracker draws it.
+	trackerModule.fromHeaderOffsetY = -(BAR_TOP + BAR_HEIGHT + BAR_CAP + BAR_GAP)
 	header.Progress = CreateProgressBar(header)
-	header.Progress:SetPoint("TOPLEFT", header, "BOTTOMLEFT", BAR_SIDE, -(2 + BAR_TOP))
-	header.Progress:SetPoint("TOPRIGHT", header, "BOTTOMRIGHT", -BAR_SIDE, -(2 + BAR_TOP))
+	header.Progress:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -BAR_TOP)
+	header.Progress:SetPoint("TOPRIGHT", header, "BOTTOMRIGHT", 0, -BAR_TOP)
 	-- Deferred so the collapse state is restored even on a client that ignores LoadSavedVariablesFirst.
 	EventUtil.ContinueOnAddOnLoaded(addonName, function()
 		trackerModule:SetCollapsed(ns.Saved.Get("trackerCollapsed"))
@@ -279,115 +284,6 @@ if trackerModule then
 		trackerModule:MarkDirty()
 	end)
 end
-
---[[ World map: the zone you're viewing, in the corner; on a continent, in each zone badge's tooltip ]]
-
----@class LegacyForeverZoneOverlayMixin : Button
----@field GetParent fun(self: LegacyForeverZoneOverlayMixin): WorldMapFrame
----@field Title FontString
----@field Counts FontString
----@field Progress StatusBar
----@field result? LegacyZoneResult
----@field name string
-LegacyForeverZoneOverlayMixin = {}
-
--- Room for the text and the bar, so it never looks boxed.
-local OVERLAY_MIN_WIDTH = 140
--- The bar's gap under the title, and between its frame and the counts' row.
-local OVERLAY_BAR_GAP, OVERLAY_COUNTS_GAP = 4, 6
-
-function LegacyForeverZoneOverlayMixin:OnLoad()
-	self.Progress = CreateProgressBar(self)
-	-- The counts read under the bar, aligned with its frame's left edge.
-	self.Counts:ClearAllPoints()
-	self.Counts:SetPoint("TOPLEFT", self.Progress, "BOTTOMLEFT", -BAR_SIDE, -(BAR_BOTTOM + OVERLAY_COUNTS_GAP))
-end
-
--- Called as the world map opens or changes map.
-function LegacyForeverZoneOverlayMixin:Refresh()
-	---@type WorldMapFrame
-	local map = self:GetParent()
-	local uiMapID = map:GetMapID()
-	self.result = IsShown("map") and Zones.Of(uiMapID) or nil
-	if not self.result then
-		self:Hide()
-		return
-	end
-	local collapsed = ns.Saved.Get("mapCollapsed")
-	self.name = C_Map.GetMapInfo(uiMapID).name
-	self.Title:SetText(("%s  %s"):format(self.name, PercentText(self.result)))
-	SetProgress(self.Progress, self.result)
-	self.Counts:SetText(CountsText(self.result, 16))
-	self.Counts:SetShown(not collapsed)
-	-- The frame spans the corner and the fill sits BAR_SIDE in from each end, under the title.
-	local titleHeight = self.Title:GetStringHeight()
-	local barTop = -(titleHeight + OVERLAY_BAR_GAP + BAR_TOP)
-	self.Progress:ClearAllPoints()
-	self.Progress:SetPoint("TOPLEFT", self, "TOPLEFT", BAR_SIDE, barTop)
-	self.Progress:SetPoint("TOPRIGHT", self, "TOPRIGHT", -BAR_SIDE, barTop)
-	local height = titleHeight + OVERLAY_BAR_GAP + BAR_SPACE
-	if not collapsed then
-		height = height + OVERLAY_COUNTS_GAP + self.Counts:GetStringHeight()
-	end
-	local width = math.max(self.Title:GetStringWidth(), OVERLAY_MIN_WIDTH)
-	if not collapsed then
-		width = math.max(width, self.Counts:GetStringWidth())
-	end
-	self:SetSize(width, height)
-	self:Show()
-end
-
-function LegacyForeverZoneOverlayMixin:OnClick()
-	ns.Saved.Set("mapCollapsed", not ns.Saved.Get("mapCollapsed"))
-	self:Refresh()
-	self:OnEnter()
-end
-
-function LegacyForeverZoneOverlayMixin:OnEnter()
-	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-	AddTooltip(GameTooltip, self.name, self.result)
-	GameTooltip_AddInstructionLine(
-		GameTooltip,
-		ns.Saved.Get("mapCollapsed") and L["Click to expand."] or L["Click to collapse."]
-	)
-	GameTooltip:Show()
-end
-
-function LegacyForeverZoneOverlayMixin:OnLeave()
-	GameTooltip:Hide()
-end
-
--- Closing the map hides the overlay without an OnLeave.
-function LegacyForeverZoneOverlayMixin:OnHide()
-	if GameTooltip:GetOwner() == self then
-		GameTooltip:Hide()
-	end
-end
-
--- A frame of our own in the map's top-left corner, right of the floor dropdown and Camelot's tracking pin button that
--- share it, kept current as the map opens and turns (UI/MapCanvas.lua): never the map's overlay frames or providers.
-local function AttachMap()
-	local map = WorldMapFrame
-	local MapCanvas = ns.MapCanvas
-	local overlay = MapCanvas.FrameUnder("Button", map, "LegacyForeverZoneOverlayTemplate")
-	---@cast overlay LegacyForeverZoneOverlayMixin
-	overlay:SetFrameStrata("HIGH")
-	overlay:SetPoint("TOPLEFT", map:GetCanvasContainer(), "TOPLEFT", 44, -18)
-	MapCanvas.Watch(map, function(_, what)
-		if what == "show" or what == "map" then
-			overlay:Refresh()
-		end
-	end)
-	Zones.OnChange(function()
-		if map:IsShown() then
-			overlay:Refresh()
-		end
-	end)
-end
-
-EventUtil.ContinueOnAddOnLoaded("Blizzard_WorldMap", AttachMap)
-
---[[ A zone reaching 100%: a toast and a sound, GW2 style ]]
 
 -- "Kalimdor: 3 of 20 zones complete (15%)", counting what the player counts.
 ---@param continentID number
@@ -446,6 +342,8 @@ end)
 local function ToggleCounted(category)
 	ns.Saved.Set("count_" .. category, not IsCounted(category))
 end
+
+--[[ World map: on a continent, in each zone badge's tooltip ]]
 
 -- A zone's completion under a continent badge's tooltip: percent, then one row of counts.
 ---@param tooltip GameTooltip
@@ -508,10 +406,7 @@ function Completion.AddMenu(root)
 	local map = root:CreateCheckbox(L["On the world map"], IsShown, Toggle, "map")
 	map:SetTooltip(function(tooltip)
 		GameTooltip_SetTitle(tooltip, L["On the world map"])
-		GameTooltip_AddNormalLine(
-			tooltip,
-			L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."]
-		)
+		GameTooltip_AddNormalLine(tooltip, L["A badge on each zone of a continent map, with the zone's completion."])
 	end)
 	local counts = root:CreateButton(L["What counts"])
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do -- menu-scroll-ok: COMPLETION_CATEGORIES is seven fixed kinds

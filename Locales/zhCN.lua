@@ -28,8 +28,6 @@ L["Already complete"] = "已完成" -- mt
 L["Areas explored"] = "已探索区域"
 L["Attach to quest tracker"] = "附加到任务追踪栏"
 L["Click the zone to see where."] = "点击该地区查看位置。"
-L["Click to collapse."] = "点击收起。"
-L["Click to expand."] = "点击展开。"
 L["Click to open the map. Right-click for options."] = "点击打开地图。右键点击打开选项。"
 L["Click to set a waypoint here."] = "点击在此处放置地图标记。"
 L["Click to track, with live progress."] = "点击追踪，实时显示进度。"
@@ -105,8 +103,8 @@ L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"追踪器已锁定。关闭“锁定追踪器”即可移动它。"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地区以及那里剩余的事项。你追踪的挑战保留在各自的传承区块中。"
-L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
-	"地图角落显示当前查看的地区，大陆地图上的每个地区显示一个徽章。"
+L["A badge on each zone of a continent map, with the zone's completion."] =
+	"在大陆地图的每个区域上显示带有区域完成度的标记。" -- mt
 L["This addon"] = "本插件"
 L["This version of Questie isn't supported."] = "不支持此版本的Questie。"
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
@@ -143,7 +141,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "标题"
 L["What happened, or what you would like"] = "发生了什么，或你希望有什么"
 
-L["The tracker column steps aside for EQ Objective Tracker."] = "追踪栏避开 EQ 目标追踪器。" -- mt
+L["The zone progress bar now wears the quest tracker's own bar, and the map corner is gone."] =
+	"区域进度条现在使用任务追踪器的进度条，地图角落已移除。" -- mt
 L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。" -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "推荐等级：%s（AtlasLoot）" -- mt
 

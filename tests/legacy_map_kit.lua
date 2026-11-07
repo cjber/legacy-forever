@@ -27,11 +27,6 @@ Kit.templates = {
 			frame:OnShow()
 		end
 	end,
-	LegacyForeverZoneOverlayTemplate = function(frame)
-		frame.Title, frame.Counts = Kit.Region(), Kit.Region()
-		Mixin(frame, LegacyForeverZoneOverlayMixin)
-		frame:OnLoad()
-	end,
 }
 
 return Kit

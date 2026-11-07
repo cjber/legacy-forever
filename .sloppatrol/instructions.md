@@ -15,7 +15,7 @@ what the game loads; `tests/*_spec.lua` load them in that order inside a stubbed
 Things reached indirectly: none of them is dead code, even when no file calls it by name.
 
 - `LegacyForever.toc` file list: load order `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Data/Legacy.lua, Core, Saved, ForeverFamily, WhatsNew, Model, Live, Quests, Navigate,
-  ZoneCompletion, TrackerHost, Tracker, UI/Completion.xml, Completion, Settings, MapContents, UI/Map.xml, Map, API`; never reorder as formatting.
+  ZoneCompletion, TrackerHost, Tracker, Completion, Settings, MapContents, UI/Map.xml, Map, API`; never reorder as formatting.
 - `## SavedVariables: LegacyForeverDB`: persisted keys `tracked`, `zoneCompletion`,
   `flightPaths`, `trackerHost`, `showAreas`, `showEntrances`, `whatsNew`, `lastVersion`, named only in `Core/Saved.lua`, and `suggestFamily` (default
   in `Core/Saved.lua`) and `familyDismissed`, which the shared `UI/ForeverFamily.lua` (byte-identical in all five addons; never edit it
@@ -23,8 +23,8 @@ Things reached indirectly: none of them is dead code, even when no file calls it
   migrated to `suggestFamily` once and dropped).
 - `## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick`: global called by the client.
 - `SLASH_LEGACYFOREVER1/2` + `SlashCmdList.LEGACYFOREVER` (Core/Core.lua): `/lf`, `/lf audit`, `/lf criteria`.
-- XML `mixin=` names (`LegacyForeverMapButtonMixin`, `LegacyForeverZoneOverlayMixin`) and `<Scripts>` `method=` handlers (`OnLoad`, `OnShow`, `OnHide`, `OnClick`,
-  `OnEnter`, `OnLeave`).
+- XML `mixin=` names (`LegacyForeverMapButtonMixin`) and `<Scripts>` `method=` handlers (`OnLoad`, `OnShow`, `OnHide`,
+  `OnClick`, `OnEnter`, `OnLeave`).
 - Pin methods `UI/MapCanvas.lua` calls by name (`OnLoad`, `OnAcquired`, `OnReleased`, `OnMouseEnter`,
   `OnMouseLeave`, `OnMouseClickAction`), `ForeverMapMarkers.LegacyForever` (read by Tweaks Forever), tracker-module
   methods (`LayoutContents`, `OnBlockHeaderClick/Enter/Leave`), and

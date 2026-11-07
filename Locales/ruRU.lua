@@ -33,8 +33,6 @@ L["Already complete"] = "Уже завершено" -- mt
 L["Areas explored"] = "Исследованные области"
 L["Attach to quest tracker"] = "Прикрепить к отслеживанию заданий"
 L["Click the zone to see where."] = "Щелкните по зоне, чтобы увидеть где."
-L["Click to collapse."] = "Щелкните, чтобы свернуть."
-L["Click to expand."] = "Щелкните, чтобы развернуть."
 L["Click to open the map. Right-click for options."] =
 	"Щелкните, чтобы открыть карту. Правый щелчок – настройки."
 L["Click to set a waypoint here."] =
@@ -119,8 +117,8 @@ L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"Трекер закреплён. Отключите «Закрепить трекер», чтобы переместить его."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
-L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
-	"Просматриваемая зона в углу карты и значок на каждой зоне карты континента."
+L["A badge on each zone of a continent map, with the zone's completion."] =
+	"Значок на каждой зоне карты континента с прогрессом этой зоны." -- mt
 L["This addon"] = "Эта модификация"
 L["This version of Questie isn't supported."] = "Эта версия Questie не поддерживается."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
@@ -159,8 +157,8 @@ L["Title"] = "Заголовок"
 L["What happened, or what you would like"] =
 	"Что произошло или что вы хотели бы видеть"
 
-L["The tracker column steps aside for EQ Objective Tracker."] =
-	"Колонка трекера уступает место EQ Objective Tracker." -- mt
+L["The zone progress bar now wears the quest tracker's own bar, and the map corner is gone."] =
+	"Полоса прогресса зоны теперь использует полосу отслеживания заданий, а угол карты исчез." -- mt
 L["Install AtlasLoot for recommended levels."] =
 	"Установите AtlasLoot, чтобы увидеть рекомендуемые уровни." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровни: %s (AtlasLoot)" -- mt

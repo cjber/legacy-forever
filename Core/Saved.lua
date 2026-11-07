@@ -22,7 +22,6 @@ ns.Saved = Saved
 ---| 'suggestFamily'
 ---| 'map'
 ---| 'tracker'
----| 'mapCollapsed'
 ---| 'trackerCollapsed'
 ---| 'count_areas'
 ---| 'count_taxis'
@@ -51,7 +50,6 @@ local DEFAULTS = {
 		-- The map is on so the feature is visible; the tracker takes screen space, so it waits to be asked.
 		map = true,
 		tracker = false,
-		mapCollapsed = false,
 		trackerCollapsed = false,
 		-- Only Legacy objectives count: areas (each an "Explore <zone>" step toward Explorer), Spelunker
 		-- dungeons, Conqueror raids and the zone's other Legacy steps. No Legacy challenge asks for flight

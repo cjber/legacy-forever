@@ -2,11 +2,11 @@ Legacy Forever shows unfinished challenges on the world map and tracks the ones 
 
 Free, with nothing locked behind it. If it saves you time, you can [buy me a coffee on Ko-fi](https://ko-fi.com/cjber).
 
-![Ashenvale on the world map as two areas are found, the completion corner folding away, then the Legacy menu](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif)
+![Ashenvale on the world map as two areas are found, then the Legacy menu](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif)
 
-Discover an area and its shading lifts as the corner's percentage goes up. Click the corner to fold it away.
+Discover an area and its shading lifts. The Legacy menu tracks the challenges behind it.
 
-![Ashenvale on the world map with undiscovered areas shaded, the zone completion corner and the Legacy menu open](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/map.png)
+![Ashenvale on the world map with undiscovered areas shaded and the Legacy menu open](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/map.png)
 
 Half of Ashenvale explored: the shield's number is what's left on this map, and its menu lists it by challenge.
 
@@ -28,7 +28,7 @@ Tick a challenge in the menu to track it.
 - **Tracker**: a Legacy section in the objective tracker lists what you track, with live progress. A zone ticked in the map menu tracks just that zone, such as "0/12 Explore Felwood". Click a challenge to open it in the Legacy panel, or right-click to stop tracking it.
 - **Map pins** on dungeon and raid entrances, with the challenge each counts toward and its Legacy points. With AtlasLoot installed, tooltips also show its recommended level range. Click one to travel there with Shortest Path Forever, or the game's own waypoint.
 - **Undiscovered areas** are shaded in their real shape on the zone map. Hover one to see which challenge counts it, its points and how many of the zone's areas are left. The map menu turns the shading off.
-- **Zone completion**, Guild Wars 2 style: how much of a zone's areas, dungeons, raids and Legacy objectives you've done, as a percentage in the map's corner, a badge on each zone of a continent map and, if you tick it, the tracker. Flight paths, local reputations and, with Questie, quests can be added under "What counts". A finished zone gets a toast and a sound.
+- **Zone completion**, Guild Wars 2 style: how much of a zone's areas, dungeons, raids and Legacy objectives you've done, as a badge on each zone of a continent map and, if you tick it, the tracker. The tracker's section fills the game's own progress bar with the percent inside it and counts each kind with the map's own icons. Flight paths, local reputations and, with Questie, quests can be added under "What counts". A finished zone gets a toast and a sound.
 - **No fixed location** lists challenges whose remaining work isn't tied to a place, such as levels, skills and ranks.
 
 Progress comes from the game each time, so it always matches the Legacy panel.

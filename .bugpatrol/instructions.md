@@ -23,10 +23,9 @@ No sign-in.
 
 ## Important flows
 
-- The world map: zone shading for unfinished dungeon Legacy challenges, the per-zone badge, and
-  the corner percentage that folds away when clicked.
+- The world map: zone shading for unfinished dungeon Legacy challenges and the per-zone badge.
 - The map menu with tick boxes per challenge, grouped by type.
-- The objective tracker section listing tracked challenges.
+- The objective tracker: the zone's completion bar and counts, then the section listing tracked challenges.
 
 ## Never do these things
 

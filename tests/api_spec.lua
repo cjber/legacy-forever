@@ -158,7 +158,10 @@ end
 local atlases = {
 	["UI-Legacy-Points-icon-c60"] = { width = 50, height = 73 },
 	["islands-queue-prop-compass"] = { width = 300, height = 297 },
-	flightmaster = { width = 32, height = 32 },
+	["questlog-questtypeicon-dungeon"] = { width = 18, height = 18 },
+	taxinode_neutral = { width = 21, height = 21 },
+	QuestNormal = { width = 32, height = 32 },
+	Raid = { width = 32, height = 32 },
 }
 C_Texture = {
 	GetAtlasInfo = function(atlas)
@@ -256,11 +259,8 @@ for _, file in ipairs({
 }) do
 	assert(loadfile(file))("LegacyForever", ns)
 end
--- The zone's corner on the world map: a frame of ours, never one of the map's overlay frames or data providers.
-check(#onMapLoaded == 1, "the corner overlay waits for the world map to load")
-onMapLoaded[1]()
-local overlay = Kit.Made("LegacyForeverZoneOverlayTemplate")[1]
-check(overlay and overlay:GetParent() == Kit.map, "the corner overlay is a frame of ours on the map")
+-- The world map corner is gone; only the continent badges keep the tooltip.
+check(#onMapLoaded == 0, "the corner overlay no longer waits for the world map")
 local color = {
 	GetRGB = function()
 		return 1, 1, 1
@@ -270,17 +270,6 @@ local color = {
 	end,
 }
 NORMAL_FONT_COLOR, GREEN_FONT_COLOR, HIGHLIGHT_FONT_COLOR, GRAY_FONT_COLOR = color, color, color, color
-overlay:Hide()
-local errorsBefore = #errors
-Kit.Tick()
-check(overlay.shown and overlay.Title.text:find("Elwynn Forest", 1, true), "opening the map fills in its corner")
-Kit.mapID = 200
-Kit.Tick()
-check(not overlay.shown, "turning to a map with nothing to count hides the corner")
-Kit.mapID = 100
-Kit.Tick()
-check(overlay.shown, "turning back shows it again")
-check(#errors == errorsBefore, "the corner draws without an error")
 
 zoneTracker:OnBlockHeaderClick({ id = 100 }, "LeftButton")
 check(openedMap == 100, "a click on the zone's tracker header asks the game to open its map")
@@ -471,11 +460,15 @@ for _, size in ipairs({ 12, 14 }) do
 	check(math.abs(width / height / (50 / 73) - 1) <= 0.025, "the Legacy shield keeps its 50 by 73 shape")
 end
 check(ns.Completion.Icon("areas", 14) == "|A:islands-queue-prop-compass:14:14|a", "a near-square compass")
-check(ns.Completion.Icon("taxis", 12) == "|A:flightmaster:12:12|a", "a square atlas fills the square")
+check(ns.Completion.Icon("taxis", 12) == "|A:taxinode_neutral:12:12|a", "a square atlas fills the square")
+check(
+	ns.Completion.Icon("dungeons", 12) == "|A:questlog-questtypeicon-dungeon:12:12|a",
+	"the quest log's dungeon glyph is square"
+)
 
--- Every draw path on a cold index: the tracker's section, a badge's tooltip (which reads its continent), the map's
--- corner and badges. None builds the index during the draw; quests draw as pending, and one build is
--- scheduled for the next frame.
+-- Every draw path on a cold index: the tracker's section, a badge's tooltip (which reads its continent) and the
+-- map's badges. None builds the index during the draw; quests draw as pending, and one build is scheduled for the
+-- next frame.
 local drawn = {}
 -- A frame, font string, block or tooltip that takes any call and keeps the text it is given.
 local function Stub()
@@ -518,13 +511,18 @@ assert(loadfile("Integrations/Quests.lua"))("LegacyForever", ns)
 local scansCold = scans
 check(ns.Quests.Cold(), "a fresh index is cold")
 local module = Stub()
-module.Header = { Percent = Stub(), Progress = Stub() }
+module.Header = {
+	Progress = {
+		SetPercent = function() end,
+		Bar = { SetValue = function() end, Label = { SetText = function() end } },
+	},
+}
 zoneTracker.LayoutContents(module)
 ns.Completion.AddSummary(Stub(), 100)
 local corner = assert(ns.ZoneCompletion.Of(100))
 local badges = assert(ns.ZoneCompletion.Continent(1))
 check(scans == scansCold and #timers == 1, "no draw builds a cold index; one build is scheduled")
-check(corner.quests.total == 0 and corner.quests.pending == 1, "the corner draws quests as pending")
+check(corner.quests.total == 0 and corner.quests.pending == 1, "the tracker and badge draw quests as pending")
 check(badges.zones == 1 and badges.complete == 0, "the continent counts the zone, not complete while its quests load")
 local text = table.concat(drawn, "\n")
 check(text:find("Elwynn Forest", 1, true) and text:find("?", 1, true), "the tracker and tooltip draw quests as ?")
@@ -555,7 +553,7 @@ GameTooltip = {
 local AGF_LINE = "Adventure Guide Forever routes the quests left in this zone."
 local function ZoneTooltip()
 	drawn = {}
-	LegacyForeverZoneOverlayMixin.OnEnter({ name = "Elwynn Forest", result = assert(ns.ZoneCompletion.Of(100)) })
+	zoneTracker:OnBlockHeaderEnter({ id = 100 })
 	local found = 0
 	for index, line in ipairs(drawn) do
 		if line == AGF_LINE then
