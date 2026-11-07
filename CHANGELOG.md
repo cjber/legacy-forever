@@ -11,6 +11,7 @@ verbatim rather than rewritten as the addon moves. API changes other addons' aut
 optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
+- **The Forever Leaderboards window opens.** `/flb` and `/forever` no longer raise a Lua error on first open: the list's rows now have a fixed height (cjber/forever-core#174).
 
 ## [1.0.25] - 2026-11-07
 - **The flight-path leaderboard is part of the shared Forever Leaderboards window.** `/lf leaderboard` and `/lf stats` open that window on the Legacy tab, where you can switch between this week's progress and the all-time total, see your own row pinned in place and read the player-reported values without a line of chat. `/flb` opens the window too, and the unit tooltip shows the player's overall place across every installed Forever addon. Sharing is on unless you turn it off, through the window's Share my progress box, `/lf share off` or Flight-path records in Settings.
