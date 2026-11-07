@@ -11,6 +11,7 @@ verbatim rather than rewritten as the addon moves. API changes other addons' aut
 optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
+- **Leaderboards show full names.** The Forever Leaderboards rows and tooltips show a player's first name and surname, such as "Dirtyjoke Lovetties", instead of one run-together word or the first name alone. (cjber/forever-core#179)
 
 ## [1.0.27] - 2026-11-07
 - **The zone progress bar now wears the quest tracker's own bar, and the map corner is gone.** The zone's section in the objective tracker fills the game's blue quest bar with the percent centred in it, and its counts use the world map's own pins. The corner of the world map no longer covers the map; continent badges keep their completion in the tooltip.
