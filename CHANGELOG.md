@@ -11,6 +11,10 @@ verbatim rather than rewritten as the addon moves. API changes other addons' aut
 optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
+
+
+## [1.0.30] - 2026-11-07
+
 - **The Forever Leaderboards tab wears a game icon.** The Legacy tab now draws the game's own `Achievement_General` icon instead of the addon's, so it sits beside the other Forever tabs as if it came with the client. Everything else, from the TOC to the minimap button, keeps the addon's icon (cjber/forever-core#180).
 
 ## [1.0.29] - 2026-11-07
