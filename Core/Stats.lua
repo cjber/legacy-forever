@@ -115,7 +115,7 @@ end
 if ns.Leaderboards then
 	ns.Leaderboards:Register("legacy", {
 		title = ns.TITLE,
-		icon = "Interface\\AddOns\\LegacyForever\\media\\Icon",
+		icon = "Interface\\Icons\\Achievement_General",
 		metric = L["Flight paths"],
 		board = Board,
 		revision = function()

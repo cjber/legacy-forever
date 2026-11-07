@@ -171,7 +171,7 @@ check(type(leaderboards) == "table" and type(leaderboards.boards.legacy) == "tab
 local spec = leaderboards.boards.legacy
 check(spec.title == "Legacy Forever", "the tab carries the addon's title")
 check(spec.metric == "Flight paths", "the board names its metric")
-check(spec.icon == "Interface\\AddOns\\LegacyForever\\media\\Icon", "the tab carries the shipped icon")
+check(spec.icon == "Interface\\Icons\\Achievement_General", "the tab wears the game's own icon")
 check(type(spec.revision) == "function" and spec.revision() >= 0, "the board has a revision callback")
 check(spec.sharing(), "sharing reads the saved switch")
 local allRows = spec.board("all")
