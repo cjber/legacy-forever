@@ -152,23 +152,42 @@ L["Install AtlasLoot for recommended levels."] = "Instala AtlasLoot para ver los
 L["Recommended levels: %s (AtlasLoot)"] = "Niveles recomendados: %s (AtlasLoot)" -- mt
 
 -- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
-L["%d. %s: %d (player-reported)"] = "%d. %s: %d (declarado por el jugador)" -- mt
-L["%d. %s: %d (you)"] = "%d. %s: %d (tú)" -- mt
-L["/lf leaderboard - compare observed flight paths with guild and group"] =
-	"/lf leaderboard - comparar rutas de vuelo observadas con la hermandad y el grupo" -- mt
 L["/lf share on|off - share flight-path totals, keeping your history"] =
 	"/lf share on|off - compartir totales de rutas de vuelo conservando tu historial" -- mt
-L["Current client ruleset only. Other players' totals are player-reported."] =
-	"Solo las reglas actuales del cliente. Los totales de otros jugadores son declarados por ellos." -- mt
 L["Flight-path leaderboard"] = "Clasificación de rutas de vuelo" -- mt
 L["Flight-path records"] = "Historial de rutas de vuelo" -- mt
-L["No peer totals received. Open a flight master's map to record your known paths."] =
-	"No se han recibido totales. Abre el mapa de un maestro de vuelo para registrar tus rutas conocidas." -- mt
-L["Observed flight paths: guild and group"] = "Rutas de vuelo observadas: hermandad y grupo" -- mt
-L["Ruleset unavailable. Only your personal record is shown."] =
-	"Reglas no disponibles. Solo se muestra tu historial personal." -- mt
 L["Share flight-path totals with guild and group"] = "Compartir totales de rutas de vuelo con la hermandad y el grupo" -- mt
-L["Sharing is off. Only your personal record is shown."] =
-	"Compartir está desactivado. Solo se muestra tu historial personal." -- mt
-L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."] =
-	"Desactivar detiene los envíos y las comparaciones. Los totales ya recibidos por otros pueden seguir visibles." -- mt
+
+-- Forever Leaderboards (Forever Core's shared window).
+L["Forever Leaderboards"] = "Clasificación Forever" -- mt
+L["Overall"] = "General" -- mt
+L["Forever standing"] = "Posición Forever" -- mt
+L["Your guild and group"] = "Tu hermandad y grupo" -- mt
+L["This week"] = "Esta semana" -- mt
+L["All time"] = "Todo el tiempo" -- mt
+L["Rank"] = "Rango" -- mt
+L["Player"] = "Jugador" -- mt
+L["No one has reported yet."] = "Nadie ha informado todavía." -- mt
+L["Share my progress"] = "Compartir mi progreso" -- mt
+L["Others' values are player-reported."] = "Los valores de otros jugadores son reportados por ellos." -- mt
+L["Points for placing on each addon's board."] = "Puntos por clasificar en la tabla de cada addon." -- mt
+L["(you)"] = "(tú)" -- mt
+L["board"] = "tabla" -- mt
+L["boards"] = "tablas" -- mt
+L["Uses Forever addons"] = "Usa addons Forever" -- mt
+L["Forever: %s overall this week"] = "Forever: %s en total esta semana" -- mt
+L["Forever: %s overall"] = "Forever: %s en total" -- mt
+L["1st"] = "1.º" -- mt
+L["2nd"] = "2.º" -- mt
+L["3rd"] = "3.º" -- mt
+L["4th"] = "4.º" -- mt
+L["5th"] = "5.º" -- mt
+L["6th"] = "6.º" -- mt
+L["7th"] = "7.º" -- mt
+L["8th"] = "8.º" -- mt
+L[", "] = ", " -- mt
+L["total"] = "total" -- mt
+L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
+	"/lf leaderboard - abre Forever Leaderboards en la pestaña de este addon" -- mt
+L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
+	"Activado salvo que lo desactives. Comparte totales de rutas de vuelo y te añade a la clasificación Forever." -- mt

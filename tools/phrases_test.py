@@ -17,6 +17,28 @@ class PhraseRuntimeTest(unittest.TestCase):
 
             self.assertIn("XML-only phrase", phrases(root))
 
+    def test_a_bracket_choice_adds_every_phrase(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "Addon.toc").write_text("UI.lua\n")
+            (root / "UI.lua").write_text('local label = L[count == 1 and "board" or "boards"]')
+
+            found = phrases(root)
+            self.assertIn("board", found)
+            self.assertIn("boards", found)
+
+    def test_a_phrase_from_a_local_list_is_found(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "Addon.toc").write_text("UI.lua\n")
+            (root / "UI.lua").write_text(
+                'local ORDINALS = { "1st", "2nd" }\nlocal phrase = ORDINALS[rank]\nlocal text = L[phrase]\n'
+            )
+
+            found = phrases(root)
+            self.assertIn("1st", found)
+            self.assertIn("2nd", found)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -57,6 +57,8 @@ Open the world map, click the addon's icon in the addon compartment, or type `/l
 | `/lf issue` | Open a ready-made GitHub issue link to report a bug or request a feature |
 | `/lf audit` | Compare the bundled data with what the game reports, and list any objective the game doesn't know |
 | `/lf criteria 684` | List every criterion the game reports for one achievement (useful alongside an audit's unknown IDs) |
+| `/lf leaderboard` | Open Forever Leaderboards on the Legacy tab (also `/lf stats`) |
+| `/lf share on\|off` | Turn sharing of flight-path totals with guild and group on or off |
 
 Translated into French by Brainc3ll, and into German, Spanish, Korean, Brazilian Portuguese, Russian and Chinese by machine. French lines added since, such as the Forever addons page, are machine translated too. Corrections are welcome as a pull request or a [translation issue](https://github.com/cjber/legacy-forever/issues/new?template=translation.yml): [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has the template.
 
@@ -73,7 +75,7 @@ Everything is generated from the Forever client's own data (via [wago.tools](htt
 
 Turn off **Attach to quest tracker** in Settings to drag the shared Forever column. Its position survives `/reload`; turn the setting back on to attach it above your quests.
 
-Use `/lf leaderboard` to compare distinct flight paths observed at flight masters with guild and group members on the same client ruleset. Peer totals are player-reported. Sharing defaults on; `/lf share off` or **Flight-path records** in Settings stops sends and peer comparisons while keeping your history. Totals already received by others can remain in their caches. The map menu offers the board and sharing switch too. Unknown client rulesets show only your personal row. Self-declared challenges such as Ironman are not automatically classified.
+Use `/lf leaderboard` to open Forever Leaderboards on the Legacy tab: distinct flight paths observed at flight masters, ranked against guild and group members on the same client ruleset. Peer totals are player-reported. Sharing is on unless you turn it off; `/lf share off`, the window's **Share my progress** box, or **Flight-path records** in Settings stops sends and peer comparisons while keeping your history. Totals already received by others can remain in their caches. The map menu offers the board and sharing switch too. Unknown client rulesets show only your personal row. Self-declared challenges such as Ironman are not automatically classified.
 
 ## Works alongside
 

@@ -148,21 +148,42 @@ L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐
 L["Recommended levels: %s (AtlasLoot)"] = "推荐等级：%s（AtlasLoot）" -- mt
 
 -- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
-L["%d. %s: %d (player-reported)"] = "%d. %s：%d（玩家提供）" -- mt
-L["%d. %s: %d (you)"] = "%d. %s：%d（你）" -- mt
-L["/lf leaderboard - compare observed flight paths with guild and group"] =
-	"/lf leaderboard - 与公会和队伍比较已观察到的飞行路线" -- mt
 L["/lf share on|off - share flight-path totals, keeping your history"] =
 	"/lf share on|off - 分享飞行路线总数并保留个人记录" -- mt
-L["Current client ruleset only. Other players' totals are player-reported."] =
-	"仅比较当前客户端规则。其他玩家的总数由其自行提供。" -- mt
 L["Flight-path leaderboard"] = "飞行路线排行榜" -- mt
 L["Flight-path records"] = "飞行路线记录" -- mt
-L["No peer totals received. Open a flight master's map to record your known paths."] =
-	"尚未收到其他玩家的总数。打开飞行管理员的地图以记录已知路线。" -- mt
-L["Observed flight paths: guild and group"] = "已观察到的飞行路线：公会和队伍" -- mt
-L["Ruleset unavailable. Only your personal record is shown."] = "无法获取规则。仅显示个人记录。" -- mt
 L["Share flight-path totals with guild and group"] = "与公会和队伍分享飞行路线总数" -- mt
-L["Sharing is off. Only your personal record is shown."] = "分享已关闭。仅显示个人记录。" -- mt
-L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."] =
-	"关闭后将停止发送和比较。其他玩家已经收到的总数可能仍会显示。" -- mt
+
+-- Forever Leaderboards (Forever Core's shared window).
+L["Forever Leaderboards"] = "Forever 排行榜" -- mt
+L["Overall"] = "总览" -- mt
+L["Forever standing"] = "Forever 总排名" -- mt
+L["Your guild and group"] = "你的公会和队伍" -- mt
+L["This week"] = "本周" -- mt
+L["All time"] = "全部时间" -- mt
+L["Rank"] = "排名" -- mt
+L["Player"] = "玩家" -- mt
+L["No one has reported yet."] = "还没有人报告。" -- mt
+L["Share my progress"] = "分享我的进度" -- mt
+L["Others' values are player-reported."] = "其他玩家的数值由玩家自行报告。" -- mt
+L["Points for placing on each addon's board."] = "在每个插件的排行榜上获得名次的分数。" -- mt
+L["(you)"] = "（你）" -- mt
+L["board"] = "个榜单" -- mt
+L["boards"] = "个榜单" -- mt
+L["Uses Forever addons"] = "使用 Forever 插件" -- mt
+L["Forever: %s overall this week"] = "Forever：本周总排名 %s" -- mt
+L["Forever: %s overall"] = "Forever：总排名 %s" -- mt
+L["1st"] = "第 1 名" -- mt
+L["2nd"] = "第 2 名" -- mt
+L["3rd"] = "第 3 名" -- mt
+L["4th"] = "第 4 名" -- mt
+L["5th"] = "第 5 名" -- mt
+L["6th"] = "第 6 名" -- mt
+L["7th"] = "第 7 名" -- mt
+L["8th"] = "第 8 名" -- mt
+L[", "] = ", " -- mt
+L["total"] = "总计" -- mt
+L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
+	"/lf leaderboard - 在此插件的标签页打开 Forever 排行榜" -- mt
+L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
+	"除非关闭，否则开启。分享飞行路线总数，并将你列入 Forever 排行榜。" -- mt

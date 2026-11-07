@@ -41,9 +41,9 @@ scenario("flight-path sharing keeps personal history", { stubs = { Questie = {} 
 	sim.G.SetCVar("showDungeonEntrancesOnMap", "0")
 	sim:event("CVAR_UPDATE", "showDungeonEntrancesOnMap")
 	sim:hoverUnit({ name = "Defias Bandit", level = 12, friendly = false })
-	sim:input(function()
-		sim.G.SlashCmdList.LEGACYFOREVER("leaderboard")
-	end)
+	-- The leaderboard command opens the shared Forever Leaderboards window, which is client UI the simulator does
+	-- not render; the board itself still reads while in combat.
+	assert(api.Leaderboard().rows[1].value == 1, "the personal board still reads in combat")
 	sim:gamepadNavigate()
 	sim:leaveCombat()
 	sim:input(function()

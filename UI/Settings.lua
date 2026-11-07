@@ -169,7 +169,7 @@ AddCheckbox(
 	stats,
 	"statsShare",
 	L["Share flight-path totals with guild and group"],
-	L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."]
+	L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."]
 )
 
 local updates = Section(category, L["Updates"])

@@ -3,7 +3,7 @@ max_line_length = 120
 exclude_files = { "tools/.cache/**", ".release/**", ".types/**", "types/**", ".claude/**", ".bugpatrol/runs/**", ".speedpatrol/runs/**", ".sloppatrol/runs/**" }
 ignore = { "212/_.*", "212/self" } -- unused args prefixed with _, and self on mixin handlers
 
-globals = { "AdventureGuideForeverDB", "ForeverFamily", "ForeverMapMarkers", "ForeverTrackerHost",
+globals = { "AdventureGuideForeverDB", "ForeverFamily", "ForeverLeaderboards", "ForeverMapMarkers", "ForeverTrackerHost",
 	"LegacyForeverMapButtonMixin",
 	"LegacyForeverZoneOverlayMixin",
 	"LegacyForever",
@@ -11,10 +11,13 @@ globals = { "AdventureGuideForeverDB", "ForeverFamily", "ForeverMapMarkers", "Fo
 	"LegacyForever_OnAddonCompartmentClick",
 	"SLASH_LEGACYFOREVER1",
 	"SLASH_LEGACYFOREVER2",
+	"SLASH_FOREVERLEADERBOARDS1",
+	"SLASH_FOREVERLEADERBOARDS2",
 	"SlashCmdList",
 }
 
 read_globals = { "GetCVarBool", "GetQuestDifficultyColor", "RGBTableToColorCode", "FONT_COLOR_CODE_CLOSE", "AtlasLoot", "CreateFramePoolCollection", "C_XMLUtil", "CreateSettingsButtonInitializer", "Settings",
+	"C_DateAndTime", "CreateDataProvider", "CreateScrollBoxListLinearView", "ScrollUtil", "ScrollBoxConstants", "RAID_CLASS_COLORS",
 	"AchievementFrame_SelectAchievement", "AlertFrame", "C_AddOns", "AlertFrame_OnClick", "C_Map", "C_MapExplorationInfo", "C_QuestLog", "C_Reputation", "C_SuperTrack", "C_TaxiMap", "C_Timer", "C_Texture", "C_Traits", "CreateAtlasMarkup",
 	"CreateFrame", "CreateFromMixins", "CreateTexturePool", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameFontNormal", "GameFontNormalSmall", "GameFontNormalTiny", "GameTooltip_AddBlankLineToTooltip", "GameTooltip_AddColoredLine", "GameTooltip_AddDisabledLine", "GetCursorPosition", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR", "HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",
@@ -26,7 +29,7 @@ read_globals = { "GetCVarBool", "GetQuestDifficultyColor", "RGBTableToColorCode"
 	"tContains", "time", "ToggleLegacySystemUI", "UnitClass", "UnitLevel", "debugstack", "UISpecialFrames", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 
-	for _, name in ipairs({ "GetServerTime", "GetNormalizedRealmName", "GetNumGroupMembers", "LE_PARTY_CATEGORY_HOME", "issecretvalue", "C_GameRules", "GetRealmName", "IsInGuild", "IsInGroup", "IsInRaid", "LE_PARTY_CATEGORY_INSTANCE", "C_ChatInfo", "UnitName" }) do
+	for _, name in ipairs({ "GetServerTime", "GetNormalizedRealmName", "GetNumGroupMembers", "GetGuildRosterInfo", "GetNumGuildMembers", "LE_PARTY_CATEGORY_HOME", "issecretvalue", "C_GameRules", "GetRealmName", "IsInGuild", "IsInGroup", "IsInRaid", "LE_PARTY_CATEGORY_INSTANCE", "C_ChatInfo", "UnitName" }) do
 	read_globals[#read_globals + 1] = name
 end
 files["Data/Legacy.lua"] = { max_line_length = false }

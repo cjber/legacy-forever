@@ -3,7 +3,7 @@
 import unittest
 from pathlib import Path
 
-from tools.lint_art import HELPERS, check
+from tools.lint_art import HELPERS, VENDORED, check
 
 
 class ArtTest(unittest.TestCase):
@@ -11,10 +11,10 @@ class ArtTest(unittest.TestCase):
         self.assertTrue(check('icon:SetAtlas("QuestNormal")')[0][1].startswith("art-raw:"))
         self.assertEqual(check('icon:SetAtlas("QuestNormal") -- art-ok: a square atlas on a square pin'), [])
 
-    def test_the_helper_file_exists(self):
+    def test_the_helper_and_vendored_files_exist(self):
         root = Path(__file__).resolve().parent.parent
-        for helper in HELPERS:
-            self.assertTrue((root / helper).is_file(), helper)
+        for path in HELPERS | VENDORED:
+            self.assertTrue((root / path).is_file(), path)
 
 
 if __name__ == "__main__":

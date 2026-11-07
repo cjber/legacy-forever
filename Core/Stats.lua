@@ -5,6 +5,7 @@ local _, ns = ...
 local Stats = {}
 ns.Stats = Stats
 
+local L = ns.L
 local METRIC = "flight_path_known"
 local DEFAULT_LIMIT, MAX_LIMIT = 10, 25
 
@@ -26,8 +27,14 @@ local function Ruleset()
 	return ("%d_%d"):format(mode, hardcore and 1 or 0)
 end
 
+-- The saved switch itself, for the shared window: sharing is opt-out, so only an explicit off reads as false.
+local function Sharing()
+	return ns.Saved.Get("statsShare") ~= false
+end
+
+-- Sending and peer comparisons also need a ruleset the client can name.
 local function Enabled()
-	return ns.Saved.Get("statsShare") and Ruleset() ~= nil
+	return Sharing() and Ruleset() ~= nil
 end
 
 -- The old sharedStats cache has no ruleset information. Keep it for downgrade compatibility,
@@ -63,6 +70,63 @@ local peerStats = ns.PeerStats.New({
 			or {}
 	end,
 })
+
+-- One row per ranked player, in the shared window's shape. All-time keeps the cumulative total in the value
+-- column; the weekly board draws progress since the reset there and the cumulative total in grey.
+---@param scope ForeverLeaderboardsScope
+---@return ForeverLeaderboardsRow[]
+local function Board(scope)
+	local ruleset = Ruleset()
+	local count, observedAt = ns.Live.FlightPathTotal()
+	local subject = ruleset or "unknown"
+	local weekly = scope == "week"
+	local ranked
+	local totals
+	if weekly then
+		ranked = peerStats:WeekBoard(METRIC, subject, count, observedAt)
+		totals = {}
+		for _, row in ipairs(peerStats:Board(METRIC, subject, count, observedAt)) do
+			totals[row.identity] = row.value
+			totals[row.name:lower()] = row.value
+		end
+	else
+		ranked = peerStats:Board(METRIC, subject, count, observedAt)
+	end
+	local rows = {}
+	for _, row in ipairs(ranked) do
+		local total = totals and (totals[row.identity] or totals[row.name:lower()])
+		rows[#rows + 1] = {
+			name = row.name,
+			value = row.value,
+			extra = total and (total .. " " .. L["total"]) or nil,
+			you = row.self == true,
+		}
+	end
+	return rows
+end
+
+--- Open Forever Leaderboards on this addon's tab.
+function Stats.Open()
+	if ns.Leaderboards then
+		ns.Leaderboards:Open("legacy")
+	end
+end
+
+if ns.Leaderboards then
+	ns.Leaderboards:Register("legacy", {
+		title = ns.TITLE,
+		icon = "Interface\\AddOns\\LegacyForever\\media\\Icon",
+		metric = L["Flight paths"],
+		board = Board,
+		revision = function()
+			return peerStats:Revision()
+		end,
+		sharing = Sharing,
+		setSharing = function(shared)
+			ns.Saved.Set("statsShare", shared == true)
+		end,
+	})
+end
 
 function Stats.Sync()
 	peerStats:Sync()
@@ -125,24 +189,6 @@ function Stats.Leaderboard(limit)
 		total = #ranked,
 		rows = rows,
 	}
-end
-
-function Stats.Print()
-	local L = ns.L
-	local board = Stats.Leaderboard() --[[@as LFFlightLeaderboard]]
-	ns.Print(L["Observed flight paths: guild and group"])
-	ns.Print(L["Current client ruleset only. Other players' totals are player-reported."])
-	for _, row in ipairs(board.rows) do
-		local text = row.self and L["%d. %s: %d (you)"] or L["%d. %s: %d (player-reported)"]
-		ns.Print(text:format(row.rank, row.name, row.value))
-	end
-	if not board.ruleset then
-		ns.Print(L["Ruleset unavailable. Only your personal record is shown."])
-	elseif not board.sharing then
-		ns.Print(L["Sharing is off. Only your personal record is shown."])
-	elseif board.total == 1 then
-		ns.Print(L["No peer totals received. Open a flight master's map to record your known paths."])
-	end
 end
 
 ns.Saved.OnChange(function(key, value)

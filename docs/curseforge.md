@@ -42,6 +42,7 @@ Open the world map, or click the addon's icon in the addon compartment: the Lega
 - `/lf issue` opens a ready-made GitHub issue link to report a bug or request a feature.
 - `/lf audit` compares the bundled data with what the game reports.
 - `/lf criteria 684` lists what the game reports for one achievement.
+- `/lf leaderboard` opens Forever Leaderboards on the Legacy tab, comparing distinct flight paths with guild and group members. Peer totals are player-reported, and sharing is on unless you turn it off with `/lf share off` or **Flight-path records** in Settings.
 
 Translated into French by Brainc3ll, and into German, Spanish, Korean, Brazilian Portuguese, Russian and Chinese by machine. French lines added since, such as the Forever addons page, are machine translated too. Corrections are welcome as a pull request or a [translation issue](https://github.com/cjber/legacy-forever/issues/new?template=translation.yml): [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has the template.
 

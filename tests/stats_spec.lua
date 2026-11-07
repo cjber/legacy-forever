@@ -21,6 +21,9 @@ local function boot(saved, mode, hardcore, guid)
 	env.UnitName = function()
 		return "Me"
 	end
+	env.UnitClass = function()
+		return "Me", "WARRIOR"
+	end
 	env.UnitGUID = function()
 		if guid == false then
 			return nil
@@ -77,6 +80,8 @@ local function boot(saved, mode, hardcore, guid)
 		"Core/Core.lua",
 		"Core/Saved.lua",
 		"Core/PeerStats.lua",
+		"Core/LeaderboardsData.lua",
+		"UI/Leaderboards.lua",
 	}) do
 		setfenv(assert(loadfile(path)), env)("LegacyForever", ns)
 	end
@@ -159,6 +164,29 @@ check(
 board.rows[1].value = -1
 check(stats.Leaderboard().rows[1].value == 8, "public results are copies")
 check(stats.Leaderboard(-1) == nil and stats.Leaderboard(0 / 0) == nil, "bad limits rejected")
+
+-- The shared Forever Leaderboards registration.
+local leaderboards = kit.ns.Leaderboards
+check(type(leaderboards) == "table" and type(leaderboards.boards.legacy) == "table", "shares a board")
+local spec = leaderboards.boards.legacy
+check(spec.title == "Legacy Forever", "the tab carries the addon's title")
+check(spec.metric == "Flight paths", "the board names its metric")
+check(spec.icon == "Interface\\AddOns\\LegacyForever\\media\\Icon", "the tab carries the shipped icon")
+check(type(spec.revision) == "function" and spec.revision() >= 0, "the board has a revision callback")
+check(spec.sharing(), "sharing reads the saved switch")
+local allRows = spec.board("all")
+check(allRows[1].name == "Alice" and allRows[1].value == 8, "the all-time board ranks the peers")
+check(allRows[1].class == nil, "a peer's class stays unknown")
+check(allRows[3].you == true and allRows[3].class == nil, "rows leave class to the shared window")
+kit.hear("Bob-Home", "1_0", 12, 1500)
+local weeklyRows = spec.board("week")
+local bobRow
+for _, row in ipairs(weeklyRows) do
+	if row.name == "Bob" then
+		bobRow = row
+	end
+end
+check(bobRow and bobRow.value == 4 and bobRow.extra == "12 total", "the weekly board shows progress and the total")
 kit.observe(5, 1600)
 stats.Sync()
 kit.env.SlashCmdList.LEGACYFOREVER("share off")
@@ -168,6 +196,7 @@ check(
 	#stats.Leaderboard().rows == 1 and not stats.Leaderboard().sharing,
 	"opt-out hides cached peers and preserves the personal row"
 )
+check(not spec.sharing(), "the shared board reads the saved opt-out")
 kit.hear("Ignored-Home", "1_0", 100)
 check(next(stats.Shared()) == nil, "opt-out exposes no peer cache")
 local saved = kit.env.LegacyForeverDB
@@ -181,8 +210,16 @@ check(
 	#reloaded.sent == 1 and reloaded.ns.Stats.Leaderboard().total == 3,
 	"re-enable restores eligible cached peers and sends history"
 )
+local opened
+reloaded.ns.Leaderboards.Open = function(_, key)
+	opened = key
+end
 reloaded.env.SlashCmdList.LEGACYFOREVER("leaderboard")
-check(table.concat(reloaded.lines, "\n"):find("player-reported", 1, true), "player command labels peer provenance")
+check(opened == "legacy", "the leaderboard command opens the shared window on this addon's tab")
+check(#reloaded.lines == 0, "and writes nothing to chat")
+opened = nil
+reloaded.env.SlashCmdList.LEGACYFOREVER("stats")
+check(opened == "legacy", "stats is an alias")
 for _, inputs in ipairs({ { nil, false }, { 1, nil }, { 0, false }, { 1.5, false }, { math.huge, false } }) do
 	local unknown = boot(nil, inputs[1], inputs[2])
 	unknown.fire("PLAYER_LOGIN")

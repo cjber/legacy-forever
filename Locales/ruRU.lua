@@ -166,25 +166,44 @@ L["Install AtlasLoot for recommended levels."] =
 L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровни: %s (AtlasLoot)" -- mt
 
 -- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
-L["%d. %s: %d (player-reported)"] = "%d. %s: %d (со слов игрока)" -- mt
-L["%d. %s: %d (you)"] = "%d. %s: %d (вы)" -- mt
-L["/lf leaderboard - compare observed flight paths with guild and group"] =
-	"/lf leaderboard - сравнить обнаруженные маршруты полётов с гильдией и группой" -- mt
 L["/lf share on|off - share flight-path totals, keeping your history"] =
 	"/lf share on|off - делиться числом маршрутов полётов, сохраняя историю" -- mt
-L["Current client ruleset only. Other players' totals are player-reported."] =
-	"Только текущий набор правил клиента. Результаты других игроков указаны с их слов." -- mt
 L["Flight-path leaderboard"] = "Рейтинг маршрутов полётов" -- mt
 L["Flight-path records"] = "История маршрутов полётов" -- mt
-L["No peer totals received. Open a flight master's map to record your known paths."] =
-	"Результаты других игроков не получены. Откройте карту распорядителя полётов, чтобы записать известные маршруты." -- mt
-L["Observed flight paths: guild and group"] =
-	"Обнаруженные маршруты полётов: гильдия и группа" -- mt
-L["Ruleset unavailable. Only your personal record is shown."] =
-	"Набор правил недоступен. Показана только ваша личная история." -- mt
 L["Share flight-path totals with guild and group"] =
 	"Делиться числом маршрутов полётов с гильдией и группой" -- mt
-L["Sharing is off. Only your personal record is shown."] =
-	"Обмен отключён. Показана только ваша личная история." -- mt
-L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."] =
-	"Отключение прекращает отправку и сравнение. Уже полученные другими игроками результаты могут остаться видимыми." -- mt
+
+-- Forever Leaderboards (Forever Core's shared window).
+L["Forever Leaderboards"] = "Рейтинги Forever" -- mt
+L["Overall"] = "Общий" -- mt
+L["Forever standing"] = "Общий рейтинг Forever" -- mt
+L["Your guild and group"] = "Ваша гильдия и группа" -- mt
+L["This week"] = "На этой неделе" -- mt
+L["All time"] = "За всё время" -- mt
+L["Rank"] = "Место" -- mt
+L["Player"] = "Игрок" -- mt
+L["No one has reported yet."] = "Пока никто не сообщил." -- mt
+L["Share my progress"] = "Делиться прогрессом" -- mt
+L["Others' values are player-reported."] =
+	"Значения других игроков сообщены ими самими." -- mt
+L["Points for placing on each addon's board."] = "Очки за место в списке каждого аддона." -- mt
+L["(you)"] = "(вы)" -- mt
+L["board"] = "список" -- mt
+L["boards"] = "списки" -- mt
+L["Uses Forever addons"] = "Использует аддоны Forever" -- mt
+L["Forever: %s overall this week"] = "Forever: %s на этой неделе" -- mt
+L["Forever: %s overall"] = "Forever: %s за всё время" -- mt
+L["1st"] = "1-е" -- mt
+L["2nd"] = "2-е" -- mt
+L["3rd"] = "3-е" -- mt
+L["4th"] = "4-е" -- mt
+L["5th"] = "5-е" -- mt
+L["6th"] = "6-е" -- mt
+L["7th"] = "7-е" -- mt
+L["8th"] = "8-е" -- mt
+L[", "] = ", " -- mt
+L["total"] = "всего" -- mt
+L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
+	"/lf leaderboard - открывает Forever Leaderboards на вкладке этого аддона" -- mt
+L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
+	"Включено, пока вы не выключите. Делится числом маршрутов полётов и добавляет вас в рейтинги Forever." -- mt

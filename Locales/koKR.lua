@@ -158,23 +158,42 @@ L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 Atl
 L["Recommended levels: %s (AtlasLoot)"] = "권장 레벨: %s (AtlasLoot)" -- mt
 
 -- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
-L["%d. %s: %d (player-reported)"] = "%d. %s: %d (플레이어 제공)" -- mt
-L["%d. %s: %d (you)"] = "%d. %s: %d (나)" -- mt
-L["/lf leaderboard - compare observed flight paths with guild and group"] =
-	"/lf leaderboard - 관찰한 비행 경로를 길드 및 파티와 비교" -- mt
 L["/lf share on|off - share flight-path totals, keeping your history"] =
 	"/lf share on|off - 기록을 유지하며 비행 경로 합계 공유" -- mt
-L["Current client ruleset only. Other players' totals are player-reported."] =
-	"현재 클라이언트 규칙만 적용됩니다. 다른 플레이어의 합계는 해당 플레이어가 제공한 값입니다." -- mt
 L["Flight-path leaderboard"] = "비행 경로 순위" -- mt
 L["Flight-path records"] = "비행 경로 기록" -- mt
-L["No peer totals received. Open a flight master's map to record your known paths."] =
-	"받은 합계가 없습니다. 비행 조련사의 지도를 열어 알고 있는 경로를 기록하세요." -- mt
-L["Observed flight paths: guild and group"] = "관찰한 비행 경로: 길드 및 파티" -- mt
-L["Ruleset unavailable. Only your personal record is shown."] =
-	"규칙을 확인할 수 없습니다. 개인 기록만 표시됩니다." -- mt
 L["Share flight-path totals with guild and group"] = "길드 및 파티와 비행 경로 합계 공유" -- mt
-L["Sharing is off. Only your personal record is shown."] =
-	"공유가 꺼져 있습니다. 개인 기록만 표시됩니다." -- mt
-L["Turning this off stops sends and peer comparisons. Totals already received by others can remain visible."] =
-	"끄면 전송과 비교가 중단됩니다. 다른 플레이어가 이미 받은 합계는 계속 표시될 수 있습니다." -- mt
+
+-- Forever Leaderboards (Forever Core's shared window).
+L["Forever Leaderboards"] = "Forever 순위표" -- mt
+L["Overall"] = "전체" -- mt
+L["Forever standing"] = "Forever 순위" -- mt
+L["Your guild and group"] = "길드 및 그룹" -- mt
+L["This week"] = "이번 주" -- mt
+L["All time"] = "전체 기간" -- mt
+L["Rank"] = "순위" -- mt
+L["Player"] = "플레이어" -- mt
+L["No one has reported yet."] = "아직 보고한 사람이 없습니다." -- mt
+L["Share my progress"] = "내 진행 상황 공유" -- mt
+L["Others' values are player-reported."] = "다른 플레이어의 값은 플레이어가 보고한 것입니다." -- mt
+L["Points for placing on each addon's board."] = "각 애드온 순위표에 오른 점수입니다." -- mt
+L["(you)"] = "(나)" -- mt
+L["board"] = "순위표" -- mt
+L["boards"] = "순위표" -- mt
+L["Uses Forever addons"] = "Forever 애드온 사용 중" -- mt
+L["Forever: %s overall this week"] = "Forever: 이번 주 종합 %s" -- mt
+L["Forever: %s overall"] = "Forever: 종합 %s" -- mt
+L["1st"] = "1위" -- mt
+L["2nd"] = "2위" -- mt
+L["3rd"] = "3위" -- mt
+L["4th"] = "4위" -- mt
+L["5th"] = "5위" -- mt
+L["6th"] = "6위" -- mt
+L["7th"] = "7위" -- mt
+L["8th"] = "8위" -- mt
+L[", "] = ", " -- mt
+L["total"] = "총" -- mt
+L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
+	"/lf leaderboard - 이 애드온 탭에서 Forever Leaderboards를 엽니다" -- mt
+L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
+	"끄지 않는 한 켜져 있습니다. 비행 경로 합계를 공유하고 Forever 순위표에 올립니다." -- mt

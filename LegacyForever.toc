@@ -54,6 +54,8 @@ UI\Map.xml
 UI\Map.lua
 Core\API.lua
 Core\PeerStats.lua
+Core\LeaderboardsData.lua
+UI\Leaderboards.lua
 Core\Stats.lua
 Core\Report.lua
 UI\Report.lua

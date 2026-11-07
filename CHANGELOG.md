@@ -11,6 +11,7 @@ verbatim rather than rewritten as the addon moves. API changes other addons' aut
 optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
+- **The flight-path leaderboard is part of the shared Forever Leaderboards window.** `/lf leaderboard` and `/lf stats` open that window on the Legacy tab, where you can switch between this week's progress and the all-time total, see your own row pinned in place and read the player-reported values without a line of chat. `/flb` opens the window too, and the unit tooltip shows the player's overall place across every installed Forever addon. Sharing is on unless you turn it off, through the window's Share my progress box, `/lf share off` or Flight-path records in Settings.
 
 ## [1.0.24] - 2026-11-06
 - **You appear once on leaderboards with a two-part name.** A Forever name like Hel Io no longer shows twice, once as you and once as a reported player with the same value.
