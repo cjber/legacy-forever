@@ -167,6 +167,7 @@ L["This addon"] = "This addon"
 L["This version of Questie isn't supported."] = "This version of Questie isn't supported."
 L["This week"] = "This week"
 L["Title"] = "Title"
+L["Tracker background"] = "Tracker background"
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"Turn this off if another addon already marks them. The Legacy map menu still lists them."
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
