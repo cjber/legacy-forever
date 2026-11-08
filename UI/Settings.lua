@@ -178,9 +178,9 @@ AddCheckbox(updates, "whatsNew", L["What's new after an update"])
 -- The Forever addons page is shared by all five addons (UI/ForeverFamily.lua), with "Suggest my other Forever
 -- addons" on it. ns.Family is bound to Legacy's L, so the page reads in Legacy's translations whichever addon's
 -- copy of the file is in use. It reads and writes suggestFamily in the saved table itself; the map menu reads it
--- on opening.
+-- on opening. With the gamepad interface on, the page is the client's own rows, so the Options navigation can
+-- enter it (cjber/tweaks-forever#382).
 local familyName = L["Forever addons"]
-local familyPanel = ns.Family.CreatePanel(nil, ns.FamilyDB, addonName)
-IndexButton(category, Settings.RegisterCanvasLayoutSubcategory(category, familyPanel, familyName), familyName)
+IndexButton(category, ns.Family.Register(category, ns.FamilyDB, addonName), familyName)
 
 Settings.RegisterAddOnCategory(category)

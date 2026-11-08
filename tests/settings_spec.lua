@@ -282,10 +282,10 @@ function CreateFrame(kind)
 end
 assert(loadfile("UI/ForeverFamily.lua"))("LegacyForever", ns)
 local panelArgs = {}
-local CreatePanel = ns.Family.CreatePanel
-ns.Family.CreatePanel = function(parent, db, current, locale)
-	panelArgs.db, panelArgs.current, panelArgs.locale = db, current, locale
-	return CreatePanel(parent, db, current, locale)
+local Register = ns.Family.Register
+ns.Family.Register = function(category, db, current, locale)
+	panelArgs.category, panelArgs.db, panelArgs.current, panelArgs.locale = category, db, current, locale
+	return Register(category, db, current, locale)
 end
 assert(loadfile("UI/Settings.lua"))("LegacyForever", ns)
 check(LegacyForeverDB == nil or next(LegacyForeverDB.zoneCompletion or {}) == nil, "building the page saves nothing")
@@ -433,7 +433,10 @@ check(trackerState.locked == false and not byKey.trackerLocked:GetValue(), "unlo
 -- Legacy's own saved table (migrated from the old switch, as ns.FamilyDB returns it), and the map menu reads the
 -- same key. Legacy's own row says "This addon".
 check(byKey.suggestFamily == nil and byKey.companions == nil, "the family switch is the shared page's, not a row")
-check(panelArgs.db == ns.FamilyDB and panelArgs.current == "LegacyForever", "the page gets Legacy's saved table")
+check(
+	panelArgs.category.name == "Legacy Forever" and panelArgs.db == ns.FamilyDB and panelArgs.current == "LegacyForever",
+	"the page is registered with the category and Legacy's saved table"
+)
 -- ns.Family is the shared file's view bound to Legacy's own L, so its translations show on the page whichever
 -- addon's copy is in use (tests/family_locale_spec.lua).
 check(ns.Family == ForeverFamily.For(ns.L) and panelArgs.locale == nil, "the page reads in Legacy's own strings")
