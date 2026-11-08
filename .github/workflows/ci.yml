@@ -10,6 +10,11 @@ on:
 permissions:
   contents: read
 
+# PyPI answers 502/504 under load; pip's own retries cover it.
+env:
+  PIP_RETRIES: 5
+  PIP_DEFAULT_TIMEOUT: 60
+
 jobs:
   deadcode:
     runs-on: ubuntu-24.04
@@ -77,7 +82,7 @@ jobs:
             "luajit=$LUAJIT" "libluajit-5.1-2=$LUAJIT" "libluajit-5.1-common=$LUAJIT"
       - name: Lua types and multi-value argument lint
         run: |
-          curl -fsSL -o "$RUNNER_TEMP/luals.tgz" \
+          curl --retry 8 --retry-delay 5 --retry-all-errors --connect-timeout 20 --max-time 300 -fsSL -o "$RUNNER_TEMP/luals.tgz" \
             https://github.com/LuaLS/lua-language-server/releases/download/3.19.1/lua-language-server-3.19.1-linux-x64.tar.gz
           echo "e9235d2d72ef55bc41cf8c99cda2ed64777682024b4bb81f5dea425060c5cbb8  $RUNNER_TEMP/luals.tgz" | sha256sum -c -
           mkdir -p "$RUNNER_TEMP/luals" && tar -xzf "$RUNNER_TEMP/luals.tgz" -C "$RUNNER_TEMP/luals"
@@ -118,7 +123,7 @@ jobs:
           persist-credentials: false
       - name: Install actionlint 1.7.12
         run: |
-          curl -fsSL -o "$RUNNER_TEMP/actionlint.tgz" \
+          curl --retry 8 --retry-delay 5 --retry-all-errors --connect-timeout 20 --max-time 300 -fsSL -o "$RUNNER_TEMP/actionlint.tgz" \
             https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
           echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  $RUNNER_TEMP/actionlint.tgz" | sha256sum -c -
           tar -xzf "$RUNNER_TEMP/actionlint.tgz" -C "$RUNNER_TEMP" actionlint
@@ -134,7 +139,7 @@ jobs:
           persist-credentials: false
       - name: Install gitleaks 8.30.1
         run: |
-          curl -fsSL -o "$RUNNER_TEMP/gitleaks.tgz" \
+          curl --retry 8 --retry-delay 5 --retry-all-errors --connect-timeout 20 --max-time 300 -fsSL -o "$RUNNER_TEMP/gitleaks.tgz" \
             https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz
           echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  $RUNNER_TEMP/gitleaks.tgz" | sha256sum -c -
           tar -xzf "$RUNNER_TEMP/gitleaks.tgz" -C "$RUNNER_TEMP" gitleaks
