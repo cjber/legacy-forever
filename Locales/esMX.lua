@@ -147,8 +147,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Título"
 L["What happened, or what you would like"] = "Qué pasó o qué te gustaría"
 
-L["Tirisfal Glades counts Undercity as an exploration area."] =
-	"Claros de Tirisfal cuenta Entrañas como zona de exploración." -- mt
+L["The Forever addons page opens with a gamepad."] = "La página de accesorios Forever se abre con un control." -- mt
 L["Install AtlasLoot for recommended levels."] = "Instala AtlasLoot para ver los niveles recomendados." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Niveles recomendados: %s (AtlasLoot)" -- mt
 
