@@ -153,8 +153,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "제목"
 L["What happened, or what you would like"] = "무슨 일이 있었는지 또는 원하시는 내용"
 
-L["Tirisfal Glades counts Undercity as an exploration area."] =
-	"티리스팔 숲에서 언더시티를 탐험 지역으로 셉니다." -- mt
+L["The Forever addons page opens with a gamepad."] =
+	"게임패드로 Forever 애드온 페이지를 열 수 있습니다." -- mt
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "권장 레벨: %s (AtlasLoot)" -- mt
 
