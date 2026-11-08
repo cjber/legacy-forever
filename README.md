@@ -53,7 +53,8 @@ Open the world map, click the addon's icon in the addon compartment, or type `/l
 | Command | What it does |
 |---|---|
 | `/lf` | Open the world map with the Legacy menu showing (`/lf help` lists these commands) |
-| `/lf report` | Show a report to copy into a bug report: versions, the audit lines, recent errors |
+| `/lf report` | Show a report to copy into a bug report: versions, the audit lines, errors from earlier sessions and recent log lines |
+| `/forever debug` | Keep detailed log lines for this session; `pin` keeps them for the character, `off` turns them off, `show` opens the report with them |
 | `/lf issue` | Open a ready-made GitHub issue link to report a bug or request a feature |
 | `/lf audit` | Compare the bundled data with what the game reports, and list any objective the game doesn't know |
 | `/lf criteria 684` | List every criterion the game reports for one achievement (useful alongside an audit's unknown IDs) |

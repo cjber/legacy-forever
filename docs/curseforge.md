@@ -38,7 +38,8 @@ Progress comes from the game each time, so it always matches the Legacy panel.
 Open the world map, or click the addon's icon in the addon compartment: the Legacy button sits below the map's own tracking buttons. Tick a challenge in its menu to track it. Every option also lives under Options > AddOns > Legacy Forever.
 
 - `/lf` opens the world map with the Legacy menu showing; `/lf help` lists the commands.
-- `/lf report` shows a report to copy into a bug report. For a wrong or missing objective, paste it into a [wrong objective issue](https://github.com/cjber/legacy-forever/issues/new?template=wrong_objective.yml).
+- `/lf report` shows a report to copy into a bug report, including errors and log lines from earlier sessions. For a wrong or missing objective, paste it into a [wrong objective issue](https://github.com/cjber/legacy-forever/issues/new?template=wrong_objective.yml).
+- `/forever debug` keeps detailed log lines for this session; `pin` keeps them for the character, `off` turns them off, and `show` opens the report with them.
 - `/lf issue` opens a ready-made GitHub issue link to report a bug or request a feature.
 - `/lf audit` compares the bundled data with what the game reports.
 - `/lf criteria 684` lists what the game reports for one achievement.

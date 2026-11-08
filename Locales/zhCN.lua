@@ -143,8 +143,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "标题"
 L["What happened, or what you would like"] = "发生了什么，或你希望有什么"
 
-L["The zone progress bar now wears the quest tracker's own bar, and the map corner is gone."] =
-	"区域进度条现在使用任务追踪器的进度条，地图角落已移除。" -- mt
+L["The report keeps errors from earlier sessions."] = "报告会保留之前会话中的错误。" -- mt
 L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。" -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "推荐等级：%s（AtlasLoot）" -- mt
 

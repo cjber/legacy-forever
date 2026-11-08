@@ -148,8 +148,7 @@ L["the objective tracker isn't available, so tracked challenges can't be shown."
 	"le suivi des objectifs n'est pas disponible, les défis suivis ne peuvent donc pas être affichés."
 L["updated to %s. %s"] = "mis à jour vers %s. %s"
 
-L["The zone progress bar now wears the quest tracker's own bar, and the map corner is gone."] =
-	"La barre de progression de zone porte désormais celle du suivi des quêtes, et le coin de la carte a disparu." -- mt
+L["The report keeps errors from earlier sessions."] = "Le rapport conserve les erreurs des sessions précédentes." -- mt
 L["Install AtlasLoot for recommended levels."] = "Installez AtlasLoot pour afficher les niveaux recommandés." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Niveaux recommandés : %s (AtlasLoot)" -- mt
 

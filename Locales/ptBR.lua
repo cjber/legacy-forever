@@ -147,8 +147,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Título"
 L["What happened, or what you would like"] = "O que aconteceu, ou o que você gostaria"
 
-L["The zone progress bar now wears the quest tracker's own bar, and the map corner is gone."] =
-	"A barra de progresso da zona agora usa a barra do rastreador de missões, e o canto do mapa sumiu." -- mt
+L["The report keeps errors from earlier sessions."] = "O relatório mantém os erros de sessões anteriores." -- mt
 L["Install AtlasLoot for recommended levels."] = "Instale AtlasLoot para ver os níveis recomendados." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Níveis recomendados: %s (AtlasLoot)" -- mt
 

@@ -152,8 +152,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "제목"
 L["What happened, or what you would like"] = "무슨 일이 있었는지 또는 원하시는 내용"
 
-L["The zone progress bar now wears the quest tracker's own bar, and the map corner is gone."] =
-	"지역 진행 표시줄이 이제 퀘스트 추적기의 표시줄을 사용하며, 지도 모서리는 사라졌습니다." -- mt
+L["The report keeps errors from earlier sessions."] = "보고서가 이전 세션의 오류를 보관합니다." -- mt
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "권장 레벨: %s (AtlasLoot)" -- mt
 
