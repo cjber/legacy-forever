@@ -200,6 +200,7 @@ ns.Data = {
 			{ achievement = 728, criteria = 829, kind = "explore", key = "327:60:256:256", x = 0.407, y = 0.243 },
 			{ achievement = 728, criteria = 830, kind = "explore", key = "427:78:256:256", x = 0.524, y = 0.247 },
 			{ achievement = 728, criteria = 831, kind = "explore", key = "464:33:128:128", x = 0.536, y = 0.120 },
+			{ achievement = 728, criteria = 832, kind = "explore", key = "244:0:512:256", x = 0.469, y = 0.052 },
 		},
 		[1412] = {
 			{ achievement = 736, criteria = 903, kind = "explore", key = "277:448:462:210", x = 0.467, y = 0.829 },
@@ -325,6 +326,7 @@ ns.Data = {
 			{ achievement = 768, criteria = 1042, kind = "explore", key = "474:327:256:128", x = 0.537, y = 0.600 },
 			{ achievement = 768, criteria = 1043, kind = "explore", key = "537:299:128:256", x = 0.596, y = 0.552 },
 			{ achievement = 768, criteria = 1044, kind = "explore", key = "497:145:256:256", x = 0.578, y = 0.382 },
+			{ achievement = 768, criteria = 1045, kind = "explore" },
 			{ achievement = 768, criteria = 1046, kind = "explore", key = "584:139:256:288", x = 0.683, y = 0.421 },
 			{ achievement = 768, criteria = 1047, kind = "explore", key = "630:326:256:256", x = 0.728, y = 0.617 },
 			{ achievement = 768, criteria = 1048, kind = "explore", key = "694:289:256:128", x = 0.779, y = 0.514 },
@@ -455,7 +457,7 @@ ns.Data = {
 			{ achievement = 627, criteria = 516, kind = "explore", key = "792:279:128:128", x = 0.853, y = 0.509 },
 			{ achievement = 627, criteria = 517, kind = "explore", key = "281:167:128:256", x = 0.349, y = 0.385 },
 			{ achievement = 627, criteria = 518, kind = "explore", key = "166:184:256:256", x = 0.242, y = 0.382 },
-			{ achievement = 627, criteria = 519, kind = "explore" },
+			{ achievement = 627, criteria = 519, kind = "explore", key = "397:163:320:256" },
 			{ achievement = 62032, criteria = 18529, kind = "instance", instance = 90, x = 0.177, y = 0.392 },
 			{ achievement = 64017, criteria = 117738, kind = "instance", instance = 90, x = 0.177, y = 0.392 },
 		},
@@ -492,6 +494,7 @@ ns.Data = {
 			{ achievement = 776, criteria = 1146, kind = "explore", key = "381:147:256:256", x = 0.511, y = 0.423 },
 			{ achievement = 776, criteria = 1147, kind = "explore", key = "250:270:256:256", x = 0.412, y = 0.647 },
 			{ achievement = 776, criteria = 1148, kind = "explore", key = "238:428:256:240", x = 0.384, y = 0.842 },
+			{ achievement = 776, criteria = 1149, kind = "explore", key = "0:0:512:512", x = 0.242, y = 0.356 },
 			{ achievement = 776, criteria = 1150, kind = "explore", key = "124:327:256:341", x = 0.250, y = 0.816 },
 			{ achievement = 776, criteria = 1151, kind = "explore", key = "425:431:256:237", x = 0.536, y = 0.831 },
 			{ achievement = 776, criteria = 1152, kind = "explore", key = "551:292:256:256", x = 0.676, y = 0.666 },
@@ -638,6 +641,7 @@ ns.Data = {
 			{ achievement = 842, criteria = 1305, kind = "explore", key = "561:292:256:256", x = 0.656, y = 0.576 },
 			{ achievement = 842, criteria = 1306, kind = "explore", key = "272:127:256:256", x = 0.379, y = 0.363 },
 			{ achievement = 842, criteria = 1307, kind = "explore", key = "377:93:256:256", x = 0.469, y = 0.356 },
+			{ achievement = 842, criteria = 1308, kind = "explore", key = "101:247:320:256", x = 0.274, y = 0.576 },
 			{ achievement = 842, criteria = 1309, kind = "explore", key = "494:548:128:120", x = 0.556, y = 0.909 },
 		},
 		[1439] = {
@@ -741,12 +745,12 @@ ns.Data = {
 			{ achievement = 64018, criteria = 117759, kind = "instance", instance = 429, x = 0.620, y = 0.333 },
 		},
 		[1445] = {
-			{ achievement = 850, criteria = 1361, kind = "explore" },
-			{ achievement = 850, criteria = 1362, kind = "explore" },
-			{ achievement = 850, criteria = 1363, kind = "explore" },
-			{ achievement = 850, criteria = 1364, kind = "explore" },
-			{ achievement = 850, criteria = 1396, kind = "explore" },
-			{ achievement = 850, criteria = 1397, kind = "explore" },
+			{ achievement = 850, criteria = 1361, kind = "explore", key = "534:224:256:256", x = 0.681, y = 0.513 },
+			{ achievement = 850, criteria = 1362, kind = "explore", key = "422:0:256:320", x = 0.539, y = 0.228 },
+			{ achievement = 850, criteria = 1363, kind = "explore", key = "230:0:288:288", x = 0.369, y = 0.228 },
+			{ achievement = 850, criteria = 1364, kind = "explore", key = "239:189:512:256", x = 0.444, y = 0.487 },
+			{ achievement = 850, criteria = 1396, kind = "explore", key = "257:313:256:256", x = 0.369, y = 0.614 },
+			{ achievement = 850, criteria = 1397, kind = "explore", key = "367:381:288:256", x = 0.526, y = 0.752 },
 			{ achievement = 850, criteria = 1398, kind = "explore", key = "660:21:256:256", x = 0.756, y = 0.176 },
 			{
 				achievement = 684,
@@ -836,7 +840,7 @@ ns.Data = {
 			{ achievement = 854, criteria = 1459, kind = "explore", key = "160:6:576:288", x = 0.506, y = 0.206 },
 		},
 		[1450] = {
-			{ achievement = 855, criteria = 1464, kind = "explore" },
+			{ achievement = 855, criteria = 1464, kind = "explore", key = "244:89:576:512" },
 		},
 		[1451] = {
 			{ achievement = 856, criteria = 1460, kind = "explore", key = "103:23:320:288", x = 0.232, y = 0.176 },
@@ -854,26 +858,16 @@ ns.Data = {
 			{ achievement = 857, criteria = 1477, kind = "explore", key = "493:258:256:256", x = 0.584, y = 0.580 },
 			{ achievement = 857, criteria = 1478, kind = "explore", key = "509:107:256:256", x = 0.609, y = 0.378 },
 			{ achievement = 857, criteria = 1479, kind = "explore", key = "523:376:256:256", x = 0.619, y = 0.685 },
-			{ achievement = 857, criteria = 1480, kind = "explore" },
+			{ achievement = 857, criteria = 1480, kind = "explore", key = "447:441:256:227", x = 0.579, y = 0.831 },
 			{ achievement = 857, criteria = 1481, kind = "explore", key = "593:340:256:256", x = 0.654, y = 0.618 },
 			{ achievement = 857, criteria = 1482, kind = "explore", key = "611:242:128:256", x = 0.681, y = 0.457 },
 			{ achievement = 857, criteria = 1483, kind = "explore", key = "617:158:256:128", x = 0.684, y = 0.367 },
 			{ achievement = 857, criteria = 1484, kind = "explore", key = "555:27:256:256", x = 0.646, y = 0.172 },
 			{ achievement = 857, criteria = 1485, kind = "explore", key = "368:7:256:256", x = 0.494, y = 0.127 },
 		},
-		[1453] = {
-			{ achievement = 776, criteria = 1149, kind = "explore" },
-		},
 		[1454] = {
-			{ achievement = 728, criteria = 832, kind = "explore" },
 			{ achievement = 62031, criteria = 19213, kind = "instance", instance = 389, x = 0.530, y = 0.489 },
 			{ achievement = 64016, criteria = 117733, kind = "instance", instance = 389, x = 0.530, y = 0.489 },
-		},
-		[1457] = {
-			{ achievement = 842, criteria = 1308, kind = "explore" },
-		},
-		[1458] = {
-			{ achievement = 768, criteria = 1045, kind = "explore" },
 		},
 		[2482] = {
 			{ achievement = 62356, criteria = 116899, kind = "explore", key = "488:328:502:340", x = 0.706, y = 0.730 },
@@ -1444,6 +1438,7 @@ ns.Data = {
 				{ key = "698:362:256:256", name = "The Bulwark", hit = { 770, 380, 905, 550 }, tiles = { 7958249 } },
 				{ key = "746:125:256:256", name = "Terrace of Repose", tiles = { 7958242 } },
 				{ key = "757:205:245:256", name = "Venomweb Vale", hit = { 777, 240, 970, 408 }, tiles = { 7958262 } },
+				{ name = "Undercity", achievement = 768, criteria = 1045 },
 			},
 			taxis = {
 				{ node = 11, faction = "Horde", name = "Undercity" },
@@ -3449,6 +3444,7 @@ ns.Data = {
 					tiles = { 8073634 },
 				},
 				{ key = "84:229:256:256", name = "Valormok", hit = { 165, 310, 265, 365 }, tiles = { 8073636 } },
+				{ name = "Blackmaw Hold", achievement = 852, criteria = 1434 },
 			},
 			taxis = {
 				{ node = 44, faction = "Horde", name = "Valormok" },

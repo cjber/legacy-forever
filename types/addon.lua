@@ -63,7 +63,9 @@
 
 ---@class LegacyArea
 ---@field name string
----@field key string
+---@field achievement? number
+---@field criteria? number
+---@field key? string
 ---@field hit? number[]
 ---@field tiles? number[]
 

@@ -7,6 +7,7 @@ local areaA = { name = "Area A", key = "0:0:100:100", tiles = { 71 } }
 local areaB = { name = "Area B", key = "50:0:100:100", hit = { 120, 40, 140, 60 }, tiles = { 72 } }
 local wide = { name = "Wide", key = "413:476:549:241", tiles = { 81, 82, 83 } }
 local untiled = { name = "Untiled", key = "300:300:10:10" }
+local undrawn = { name = "Undrawn", achievement = 500, criteria = 6 }
 local ns = {
 	Data = {
 		rewards = { [100] = true },
@@ -26,7 +27,7 @@ local ns = {
 			[PLAIN] = { { achievement = 100, criteria = 10, kind = "kill", x = 0.5, y = 0.5 } },
 		},
 		completion = {
-			[ZONE] = { areas = { areaA, areaB, wide, untiled }, tileWidth = 256, tileHeight = 256 },
+			[ZONE] = { areas = { areaA, areaB, wide, untiled, undrawn }, tileWidth = 256, tileHeight = 256 },
 			[PLAIN] = { areas = { areaA } },
 		},
 	},
@@ -171,6 +172,7 @@ equal(MapContents.AreaAt(shade, 70, 50), shade.areas[1], "nearer the first area'
 equal(MapContents.AreaAt(shade, 95, 50), shade.areas[2], "nearer the second area's hit rectangle")
 equal(MapContents.AreaAt(shade, 200, 50), nil, "outside every texture")
 equal(MapContents.AreaAt(shade, 305, 305), nil, "an area with no tiles is not shaded, so not hovered")
+equal(MapContents.AreaAt(shade, 1000, 1000), nil, "an area without an overlay has no rectangle to hit")
 
 -- Discovering an area takes its shade away, and it no longer lights up its overlapping neighbour.
 explored = { [areaA.key] = true }

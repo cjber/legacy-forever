@@ -227,6 +227,10 @@ local function NoPins()
 end
 local box = { x = 0, y = 0, width = 200, height = 60 }
 check(Zones.Covered(box, { { key = "0:0:100:100" } }, {}, 1000, 700) == 6000, "an area costs its overlap")
+check(
+	Zones.Covered(box, { { name = "Undercity", achievement = 1, criteria = 1 } }, {}, 1000, 700) == 0,
+	"an area without an overlay covers nothing"
+)
 check(Zones.Covered(box, {}, { { x = 0.05, y = 0.05 } }, 1000, 700) == 1600, "a pin costs a 40 by 40 patch")
 
 data.completion[10] = OneArea("0:0:300:100")

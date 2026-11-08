@@ -630,8 +630,16 @@ end
 -- it runs for every zone on every continent badge and progress notice.
 ---@param area LegacyArea
 ---@param snapshot LegacySnapshot
----@return boolean
+---@return boolean?
 local function AreaState(area, snapshot)
+	if not area.key then
+		local steps = area.achievement and area.criteria and snapshot.criteria(area.achievement)
+		local step = steps and steps[area.criteria]
+		if not step then
+			return nil
+		end
+		return step.completed == true
+	end
 	return snapshot.explored[area.key] == true
 end
 

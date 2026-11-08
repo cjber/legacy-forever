@@ -124,7 +124,7 @@ end
 assert(samples["1427:62033:3266"].instance == 230, "Blackrock Depths uses Searing Gorge approach")
 local dalaran = assert(samples["1416:62032:116050"], "City of Dalaran has a verified entrance zone")
 assert(dalaran.instance == 2959 and dalaran.x == nil, "no fabricated corpse coordinates")
-assert(#data.zones[1454] == 3, "Orgrimmar retains exploration and adds both compound variant refs")
+assert(#data.zones[1454] == 2, "Orgrimmar keeps both compound variant refs")
 for _, key in ipairs({ "1454:62031:19213", "1454:64016:117733" }) do
 	local compound = assert(samples[key], "compound objective placed at its verified Ragefire alternative")
 	assert(
@@ -193,31 +193,39 @@ for zone, entry in pairs(data.completion) do
 	local keys = {}
 	for _, area in ipairs(entry.areas) do
 		assert(type(area.name) == "string" and #area.name > 0, "area name")
-		assert(type(area.key) == "string", "texture key string")
-		local x, y, width, height = area.key:match("^(%-?%d+):(%-?%d+):(%-?%d+):(%-?%d+)$")
-		assert(x and y and width and height, "four integer texture components")
-		assert(
-			area.key == string.format("%d:%d:%d:%d", tonumber(x), tonumber(y), tonumber(width), tonumber(height)),
-			"canonical integer-formatted texture key"
-		)
-		assert(not keys[area.key], "unique texture keys within each zone")
-		keys[area.key] = true
-		assert(tonumber(width) > 0 and tonumber(height) > 0, "drawable texture dimensions")
-		local expected = math.ceil(tonumber(width) / entry.tileWidth) * math.ceil(tonumber(height) / entry.tileHeight)
-		if area.tiles == nil then
-			assert(zone == 1434 and area.key == "483:8:256:256", "only overlay 5252 has zero tile rows")
-			totals.tileless = totals.tileless + 1
-		else
-			assert(type(area.tiles) == "table" and #area.tiles == expected, "complete overlay tile grid")
-			local files = {}
-			for _, fileID in ipairs(area.tiles) do
-				assert(positiveInteger(fileID) and not files[fileID], "positive, unique overlay file IDs")
-				files[fileID] = true
-				totals.tiles = totals.tiles + 1
+		if area.key then
+			local x, y, width, height = area.key:match("^(%-?%d+):(%-?%d+):(%-?%d+):(%-?%d+)$")
+			assert(x and y and width and height, "four integer texture components")
+			assert(
+				area.key == string.format("%d:%d:%d:%d", tonumber(x), tonumber(y), tonumber(width), tonumber(height)),
+				"canonical integer-formatted texture key"
+			)
+			assert(not keys[area.key], "unique texture keys within each zone")
+			keys[area.key] = true
+			assert(tonumber(width) > 0 and tonumber(height) > 0, "drawable texture dimensions")
+			local expected = math.ceil(tonumber(width) / entry.tileWidth)
+				* math.ceil(tonumber(height) / entry.tileHeight)
+			if area.tiles == nil then
+				assert(zone == 1434 and area.key == "483:8:256:256", "only overlay 5252 has zero tile rows")
+				totals.tileless = totals.tileless + 1
+			else
+				assert(type(area.tiles) == "table" and #area.tiles == expected, "complete overlay tile grid")
+				local files = {}
+				for _, fileID in ipairs(area.tiles) do
+					assert(positiveInteger(fileID) and not files[fileID], "positive, unique overlay file IDs")
+					files[fileID] = true
+					totals.tiles = totals.tiles + 1
+				end
 			end
+			areaKeys[zone .. ":" .. area.key] = area
+			completionAreas[zone .. ":" .. area.name] = area.key
+		else
+			assert(
+				positiveInteger(area.achievement) and positiveInteger(area.criteria),
+				"an undrawn area is a criterion"
+			)
+			assert(area.hit == nil and area.tiles == nil, "an area without an overlay has no map data")
 		end
-		areaKeys[zone .. ":" .. area.key] = area
-		completionAreas[zone .. ":" .. area.name] = area.key
 		totals.areas = totals.areas + 1
 	end
 	for _, taxi in ipairs(entry.taxis) do
@@ -333,7 +341,7 @@ for zone, entry in pairs(data.completion) do
 		totals.reputations = totals.reputations + 1
 	end
 end
-local matched, unmatched = 0, 0
+local matched, withoutOverlay, unmatched = 0, 0, 0
 for zone, entries in pairs(data.zones) do
 	for _, entry in ipairs(entries) do
 		if entry.kind == "explore" then
@@ -341,7 +349,17 @@ for zone, entries in pairs(data.zones) do
 				assert(areaKeys[zone .. ":" .. entry.key], "Legacy exploration key belongs to its completion zone")
 				matched = matched + 1
 			else
-				unmatched = unmatched + 1
+				local area
+				for _, candidate in ipairs(data.completion[zone].areas) do
+					if candidate.achievement == entry.achievement and candidate.criteria == entry.criteria then
+						area = candidate
+					end
+				end
+				if area and not area.key then
+					withoutOverlay = withoutOverlay + 1
+				else
+					unmatched = unmatched + 1
+				end
 			end
 		else
 			assert(entry.key == nil, "only exploration objectives carry area keys")
@@ -354,8 +372,20 @@ for zone, entries in pairs(data.zones) do
 		end
 	end
 end
-assert(matched == 535 and unmatched == 14, "Legacy exploration current-art area matches")
-assert(totals.zones == 43 and totals.areas == 555, "current-art completion coverage")
+assert(matched == 547 and withoutOverlay == 2 and unmatched == 0, "every exploration criterion has an area")
+assert(totals.zones == 43 and totals.areas == 557, "criteria and overlay completion coverage")
+local tirisfal = assert(data.completion[1420], "Tirisfal Glades completion")
+assert(#tirisfal.areas == 18, "Tirisfal Glades counts all 18 exploration areas")
+local undercity
+for _, area in ipairs(tirisfal.areas) do
+	if area.name == "Undercity" then
+		undercity = area
+	end
+end
+undercity = assert(undercity, "Undercity is listed on Tirisfal Glades")
+assert(undercity.achievement == 768 and undercity.criteria == 1045, "Undercity is the Tirisfal exploration criterion")
+assert(undercity.key == nil and undercity.hit == nil and undercity.tiles == nil, "Undercity has no map overlay")
+assert(#data.completion[1447].areas == 20, "Azshara counts its criterion without a current-art overlay")
 assert(totals.Alliance == 31 and totals.Horde == 30 and totals.Neutral == 4, "65 learnable player taxis")
 assert(totals.tiles == 937, "verified layer-zero overlay file IDs")
 assert(totals.tileless == 1, "exactly one countable area has no shading tiles")

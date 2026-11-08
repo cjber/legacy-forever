@@ -184,6 +184,7 @@ local snapshot = {
 			[1] = { [1] = { completed = false } },
 			[3] = { [3] = { completed = false } },
 			[4] = { [4] = { completed = true } },
+			[10] = { [8] = live[10][8] },
 		})[achievementID]
 	end,
 	reaction = function(factionID)
@@ -217,6 +218,15 @@ snapshot.explored = { ["0:0:10:10"] = true, ["10:0:10:10"] = true }
 local onlyKnown = Model.ZoneCompletion({ areas = zone.areas, taxis = zone.taxis }, snapshot)
 equal(onlyKnown.percent, 99, "everything known done, with flight paths pending, stays under 100%")
 equal(onlyKnown.complete, false, "and isn't complete")
+local exact = Model.ZoneCompletion({ areas = { { name = "Undercity", achievement = 10, criteria = 8 } } }, snapshot)
+equal(exact.areas.total, 1, "an area without an overlay waits for its criterion")
+equal(exact.areas.left[1], "Undercity", "and names what is left")
+live[10][8].completed = true
+local discovered =
+	Model.ZoneCompletion({ areas = { { name = "Undercity", achievement = 10, criteria = 8 } } }, snapshot)
+equal(discovered.areas.done, 1, "the criterion completes an area without an overlay")
+equal(discovered.areas.complete, true, "and the area category is complete")
+live[10][8].completed = false
 -- A raid is done when every boss is; a boss when either of its variants is.
 local raidZone = {
 	raids = {

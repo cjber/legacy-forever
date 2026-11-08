@@ -166,6 +166,7 @@ class Geography:
         self.tiles = defaultdict(list)
         self.current_overlays = defaultdict(list)
         self.zone_art = {}
+        self.overlay_art = {row["UiMapArtID"] for row in tables["WorldMapOverlay"].values()}
         for row in tables["UiMapAssignment"].values():
             if not self.is_zone(row["UiMapID"]):
                 continue
@@ -247,7 +248,23 @@ class Geography:
             key = row["ParentAreaID"]
         return set()
 
-    def explore(self, cid, counts):
+    def zone_candidates(self, cid):
+        """The zones a criterion's overlay geography can identify, before any drawing join."""
+        criterion = self.tables["Criteria"][cid]
+        overlay = self.tables["WorldMapOverlay"].get(criterion["Asset"])
+        if overlay is None:
+            return set()
+        areas = set()
+        for index in range(4):
+            areas.update(self.area_zones(overlay[f"AreaID_{index}"]))
+        return self.by_art[overlay["UiMapArtID"]] or areas
+
+    def completion_zone(self, zone):
+        """Whether the zone has current phase-0 map overlays, so completion can be built for it."""
+        art = self.zone_art.get(zone)
+        return art is not None and art in self.overlay_art
+
+    def explore(self, cid, counts, zone=None):
         criterion = self.tables["Criteria"][cid]
         overlay = self.tables["WorldMapOverlay"].get(criterion["Asset"])
         if overlay is None:
@@ -257,26 +274,29 @@ class Geography:
         for index in range(4):
             areas.update(self.area_zones(overlay[f"AreaID_{index}"]))
         art_zones = self.by_art[overlay["UiMapArtID"]]
-        # Art is authoritative for its coordinate space (e.g. Thunder Bluff's
-        # reveal region on Mulgore). Never put those pixels on the city's map.
-        candidates = art_zones or areas
-        if len(candidates) != 1:
-            counts["ambiguous/missing explore zone"] += 1
-            return None
-        zone = next(iter(candidates))
+        if zone is None:
+            # Art is authoritative for its coordinate space (e.g. Thunder Bluff's
+            # reveal region on Mulgore). Never put those pixels on the city's map.
+            candidates = art_zones or areas
+            if len(candidates) != 1:
+                counts["ambiguous/missing explore zone"] += 1
+                return None
+            zone = next(iter(candidates))
         entry = {"kind": "explore"}
-        if not art_zones:
+        if art_zones != {zone}:
             counts["overlay art not on current zone"] += 1
             old_areas = overlay_areas(overlay)
-            matches = self.current_overlays[old_areas]
+            matches = [
+                row for row in self.current_overlays.get(old_areas, ()) if self.by_art[row["UiMapArtID"]] == {zone}
+            ]
             if not matches:
-                # Old art sometimes drew several subzones as one overlay where current art
-                # draws one each (Silithus): take the single current overlay on this zone
-                # whose subzones the old one covered.
+                # Old art drew subzones differently from current art. A current overlay on this
+                # zone whose subzones the old one covers (Silithus) or that covers the old set
+                # (capital cities, Dustwallow) supplies the drawing data.
                 matches = [
                     row
                     for area_ids, rows in self.current_overlays.items()
-                    if area_ids and area_ids <= old_areas
+                    if area_ids and (area_ids <= old_areas or old_areas <= area_ids)
                     for row in rows
                     if self.by_art[row["UiMapArtID"]] == {zone}
                 ]
@@ -286,13 +306,9 @@ class Geography:
                 counts["current-art remap missing" if not matches else "current-art remap ambiguous"] += 1
                 return zone, entry
             replacement = matches[0]
-            replacement_zones = self.by_art[replacement["UiMapArtID"]]
-            if replacement_zones != areas or replacement_zones != {zone}:
-                counts["current-art remap zone mismatch"] += 1
-                return zone, entry
             # Keep the criterion's identity; only the pin's pixel source changes.
             overlay = replacement
-            art_zones = replacement_zones
+            art_zones = self.by_art[replacement["UiMapArtID"]]
             counts["current-art overlay remaps"] += 1
         if areas and areas != art_zones:
             counts["art overrides area zone"] += 1
@@ -399,40 +415,89 @@ def group_objectives(tables, graph, refs, label):
     return sorted(groups.values(), key=lambda entry: (entry["name"], entry["refs"]))
 
 
-def completion_areas(tables, geography, completion, counts):
+def area_name(tables, overlay, area_id=None):
+    if area_id is None:
+        for index in range(4):
+            if overlay[f"AreaID_{index}"]:
+                area_id = overlay[f"AreaID_{index}"]
+                break
+    if not area_id:
+        raise ValueError(f"WorldMapOverlay {overlay['ID']}: no area name")
+    name = required(tables["AreaTable"], area_id, f"WorldMapOverlay {overlay['ID']}")["AreaName_lang"]
+    if not name.strip():
+        raise ValueError(f"WorldMapOverlay {overlay['ID']}: empty area name")
+    return name
+
+
+def completion_areas(tables, geography, zones, completion, counts):
     keys = defaultdict(set)
+    claimed = defaultdict(set)
+    by_zone_key = {}
+    for overlay in tables["WorldMapOverlay"].values():
+        # A zero-size overlay never draws, so there is nothing on the map to reveal.
+        if not (overlay["TextureWidth"] and overlay["TextureHeight"]):
+            continue
+        key = overlay_key(overlay)
+        for zone in geography.by_art[overlay["UiMapArtID"]] - BATTLEGROUNDS - {2521}:
+            if (zone, key) in by_zone_key:
+                raise ValueError(f"WorldMapOverlay {overlay['ID']}: duplicate completion key {key} in UiMap {zone}")
+            by_zone_key[zone, key] = overlay
+
+    def drawable_area(overlay, zone):
+        key = overlay_key(overlay)
+        if key in keys[zone]:
+            raise ValueError(f"WorldMapOverlay {overlay['ID']}: duplicate completion key {key} in UiMap {zone}")
+        keys[zone].add(key)
+        area = {"key": key, "name": area_name(tables, overlay, overlay["AreaID_0"])}
+        # Blizzard's own hover target for the area (MapExplorationPinMixin's hitRect); absent when zero.
+        hit = tuple(overlay[f"HitRect{side}"] for side in ("Left", "Top", "Right", "Bottom"))
+        if hit[2] > hit[0] and hit[3] > hit[1]:
+            area["hit"] = hit
+        tiles = geography.overlay_tiles(overlay)
+        if tiles is None:
+            counts["completion areas without tiles"] += 1
+            print(
+                f"  Tile-less area: WorldMapOverlay {overlay['ID']}, UiMap {zone}, key {key} "
+                f"({area['name']}; zero tile rows)",
+                file=sys.stderr,
+            )
+        else:
+            area["tiles"] = tiles
+            counts["completion tiles"] += len(tiles)
+        counts["completion areas"] += 1
+        return area
+
+    # The zone's exploration criteria produce its areas and their count. Drawing data is joined
+    # from the current-art overlay the criterion resolved to, when there is one.
+    for zone, entries in sorted(zones.items()):
+        for entry in sorted(entries, key=lambda e: (e["kind"], e["achievement"], e["criteria"])):
+            if entry["kind"] != "explore":
+                continue
+            overlay = by_zone_key.get((zone, entry.get("key")))
+            if overlay is None:
+                criterion = tables["Criteria"][entry["criteria"]]
+                criterion_overlay = required(
+                    tables["WorldMapOverlay"], criterion["Asset"], f"Criteria {entry['criteria']}"
+                )
+                area = {"name": area_name(tables, criterion_overlay)}
+                # No hit box or tiles: there is no current-art overlay to draw for this criterion.
+                area.update(achievement=entry["achievement"], criteria=entry["criteria"])
+                counts["completion areas without overlay"] += 1
+                counts["completion areas"] += 1
+            else:
+                claimed[zone].add(overlay["ID"])
+                area = drawable_area(overlay, zone)
+            completion[zone]["areas"].append(area)
+
+    # A current-art overlay without an exploration criterion still draws and counts, so the map
+    # keeps every area the game reveals there.
     for overlay in sorted(tables["WorldMapOverlay"].values(), key=lambda r: r["ID"]):
         for zone in sorted(geography.by_art[overlay["UiMapArtID"]] - BATTLEGROUNDS - {2521}):
-            # A zero-size overlay never draws, so there is nothing on the map to reveal.
+            if overlay["ID"] in claimed[zone]:
+                continue
             if not (overlay["TextureWidth"] and overlay["TextureHeight"]):
                 continue
-            key = overlay_key(overlay)
-            if key in keys[zone]:
-                raise ValueError(f"WorldMapOverlay {overlay['ID']}: duplicate completion key {key} in UiMap {zone}")
-            keys[zone].add(key)
-            name = required(tables["AreaTable"], overlay["AreaID_0"], f"WorldMapOverlay {overlay['ID']}")[
-                "AreaName_lang"
-            ]
-            if not name.strip():
-                raise ValueError(f"WorldMapOverlay {overlay['ID']}: empty area name")
-            tiles = geography.overlay_tiles(overlay)
-            area = {"key": key, "name": name}
-            # Blizzard's own hover target for the area (MapExplorationPinMixin's hitRect); absent when zero.
-            hit = tuple(overlay[f"HitRect{side}"] for side in ("Left", "Top", "Right", "Bottom"))
-            if hit[2] > hit[0] and hit[3] > hit[1]:
-                area["hit"] = hit
-            if tiles is None:
-                counts["completion areas without tiles"] += 1
-                print(
-                    f"  Tile-less area: WorldMapOverlay {overlay['ID']}, UiMap {zone}, key {key} "
-                    f"({name}; zero tile rows)",
-                    file=sys.stderr,
-                )
-            else:
-                area["tiles"] = tiles
-                counts["completion tiles"] += len(tiles)
-            completion[zone]["areas"].append(area)
-            counts["completion areas"] += 1
+            completion[zone]["areas"].append(drawable_area(overlay, zone))
 
 
 def completion_taxis(tables, geography, curated, completion, counts):
@@ -573,7 +638,7 @@ def completion_instances(tables, geography, graph, zones, completion, counts):
 
 def generate_completion(tables, geography, graph, curated, compounds, zones, counts):
     completion = defaultdict(lambda: {category: [] for category in COMPLETION_CATEGORIES})
-    completion_areas(tables, geography, completion, counts)
+    completion_areas(tables, geography, zones, completion, counts)
     completion_taxis(tables, geography, curated, completion, counts)
     unplaced = completion_wings(tables, graph, curated, compounds, completion, counts)
     completion_instances(tables, geography, graph, zones, completion, counts)
@@ -660,14 +725,39 @@ def curated_location(geography, fact, achievement, cid, location, instance_ids):
     return location
 
 
+def exploration_hints(tables, graph, geography, achievements):
+    """The zone each exploration achievement belongs to.
+
+    An old capital-city criterion resolves through its own city map, which has no phase-0
+    overlays. Its achievement's other criteria identify the zone map that owns the completion.
+    """
+    candidates = defaultdict(set)
+    for achievement in achievements:
+        for cid in graph.leaves(achievement):
+            if CRITERIA_KINDS.get(tables["Criteria"][cid]["Type"]) == "explore":
+                candidates[achievement].update(geography.zone_candidates(cid))
+    hints = {}
+    for achievement, zones in candidates.items():
+        maps = [zone for zone in zones if geography.completion_zone(zone)]
+        if len(maps) == 1:
+            hints[achievement] = maps[0]
+        elif len(zones) == 1:
+            hints[achievement] = next(iter(zones))
+    return hints
+
+
 def match_explore_areas(zones, completion, counts):
     for zone, entries in sorted(zones.items()):
-        keys = {area["key"] for area in completion.get(zone, {}).get("areas", [])}
+        areas = completion.get(zone, {}).get("areas", [])
+        keys = {area["key"] for area in areas if "key" in area}
+        refs = {(area.get("achievement"), area.get("criteria")) for area in areas}
         for entry in entries:
             if entry["kind"] != "explore":
                 continue
             if entry.get("key") in keys:
                 counts["explore area matched"] += 1
+            elif (entry["achievement"], entry["criteria"]) in refs:
+                counts["explore area without overlay"] += 1
             else:
                 entry.pop("key", None)
                 counts["explore area unmatched"] += 1
@@ -711,13 +801,13 @@ def generate(tables):
     feeds = defaultdict(set)
     for reward in sorted(rewards):
         graph.expand(reward, reward, feeds, set())
+    hints = exploration_hints(tables, graph, geography, rewards | feeds.keys())
     zones = defaultdict(list)
     counts = Counter(
         {
             "current-art overlay remaps": 0,
             "current-art remap missing": 0,
             "current-art remap ambiguous": 0,
-            "current-art remap zone mismatch": 0,
         }
     )
     unresolved = Counter()
@@ -739,7 +829,7 @@ def generate(tables):
             )
             if kind == "explore":
                 explore_achievements.add(achievement)
-                location = geography.explore(cid, counts)
+                location = geography.explore(cid, counts, hints.get(achievement))
             elif instance_ids:
                 instance = next(iter(instance_ids))
                 location = geography.instance_location(instance, instance_zones.get(instance))

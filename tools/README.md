@@ -176,12 +176,18 @@ Names come from the pinned
 English client export. Only static content and faction restrictions are emitted;
 runtime supplies progress and applies eligibility filters.
 
-- **Areas:** enumerate WorldMapOverlay on the zone's current phase-0 UiMap art,
-  reusing Geography's art join. The key is exactly
-  `OffsetX:OffsetY:TextureWidth:TextureHeight`, formatted as four decimal integers;
-  the name is AreaTable.AreaName_lang for AreaID_0. Empty hit rectangles still
-  count; zero-size textures do not, since they never draw on the map. Exclude Zephras Isle (2521, colliding zero keys) and battleground maps
+- **Areas:** start from the zone's exploration criteria (Achievement → CriteriaTree → Type 43
+  Criteria), grouping an achievement's criteria under the one zone with current phase-0 map art.
+  Each criterion becomes an area, named from its overlay's AreaID_0, and joins the current-art
+  overlay on that zone whose AreaIDs match it (exact, contained or containing) for drawing.
+  A criterion with no such overlay stays countable and carries `achievement`/`criteria` but no
+  `key`, `hit` or `tiles`, so runtime can read its live progress without drawing it. Current-art
+  overlays without an exploration criterion are still listed and drawn, so every area the game
+  reveals there remains. Exclude Zephras Isle (2521, colliding zero keys) and battleground maps
   1459–1461. Duplicate keys within a zone or duplicate phase-0 art fail generation.
+  A drawn area's key is exactly
+  `OffsetX:OffsetY:TextureWidth:TextureHeight`, formatted as four decimal integers.
+  Empty hit rectangles still count; zero-size textures do not, since they never draw on the map.
   Areas with tile rows have `tiles = {FileDataID, ...}` from WorldMapOverlayTile, layer 0;
   Require exactly
   `ceil(TextureWidth / TileWidth) * ceil(TextureHeight / TileHeight)` cells.
@@ -198,7 +204,7 @@ runtime supplies progress and applies eligibility filters.
   the key's offsets and dimensions remain full-layer pixels.
   Legacy `kind = "explore"` entries carry the same `key` when their current-art
   overlay occurs in their zone's completion areas.
-  Unmatched entries remain in `zones` without a key and are printed individually.
+  Criterion-only entries remain in `zones` without a key and are counted through their area.
 - **Taxis:** take TaxiNodes with `Flags & 3` and a nonzero `CharacterBitNumber`
   (zero marks special services such as the Nighthaven druid flights and Eastern
   Plaguelands tower hops, which no character learns), excluding names beginning `zz`

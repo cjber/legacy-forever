@@ -6,7 +6,7 @@ is read from the game. The README says
 
 ![Felwood on the world map before the character has been there: every area shaded](screenshots/unvisited.png)
 
-- **Areas** are the zone's map overlays, the same ones the game reveals as you explore.
+- **Areas** are the zone's exploration criteria. Each joins the map overlay the game reveals as you explore, where the zone's current map art has one; an area without an overlay is still counted but has no map shape.
 - **Flight paths**, counted only once ticked under "What counts", are the client's flight nodes for your faction,
   placed by the zone in each node's name. The game only says which ones a character knows at a flight master, so
   flight paths count once you've opened one on that continent, and show as "?" until then. Special services with

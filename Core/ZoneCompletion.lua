@@ -132,11 +132,13 @@ function ZoneCompletion.Covered(box, areas, pins, mapWidth, mapHeight)
 	local right, bottom = left + box.width, top + box.height
 	local covered = 0
 	for _, area in ipairs(areas) do
-		local x, y, width, height = Rect(area.key)
-		local overlapX = math.min(right, x + width) - math.max(left, x)
-		local overlapY = math.min(bottom, y + height) - math.max(top, y)
-		if overlapX > 0 and overlapY > 0 then
-			covered = covered + overlapX * overlapY
+		if area.key then
+			local x, y, width, height = Rect(area.key)
+			local overlapX = math.min(right, x + width) - math.max(left, x)
+			local overlapY = math.min(bottom, y + height) - math.max(top, y)
+			if overlapX > 0 and overlapY > 0 then
+				covered = covered + overlapX * overlapY
+			end
 		end
 	end
 	for _, pin in ipairs(pins) do
@@ -383,7 +385,9 @@ function ZoneCompletion.AuditLines(lines)
 
 	local known = {}
 	for _, area in ipairs(zone.areas) do
-		known[area.key] = true
+		if area.key then
+			known[area.key] = true
+		end
 	end
 	for key in pairs(snapshot.explored) do
 		if not known[key] then

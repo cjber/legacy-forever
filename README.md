@@ -67,7 +67,7 @@ Translated into French by Brainc3ll, and into German, Spanish, Korean, Brazilian
 
 Everything is generated from the Forever client's own data (via [wago.tools](https://wago.tools)) by `tools/gen_legacy.py`. Objectives are joined by ID, not by name, and nothing is scraped from a database site; flight paths are the one exception, placed by the zone named in each node's name.
 
-- **Areas:** each exploration criterion names a world map overlay. The zone map shades that overlay on the zone's current map art; exploration is never pinned.
+- **Areas:** each exploration criterion is one area and joins its world map overlay where the zone's current map art has one. The zone map shades that overlay; an area without one is still counted, and exploration is never pinned.
 - **Dungeons and raids:** placed at the client's entrance marker, only where the zone is certain.
 - **Zone completion:** what each category counts, and where quests come from and why rares are left out, is in [docs/zone-completion.md](docs/zone-completion.md).
 - **Kills, quests and reputations:** the client ships no spawn or encounter data for these, so they stay unpinned. The exception is Valthalak, a quest whose Blackrock Spire entrance was reviewed by hand. Track the challenge to follow their progress instead.

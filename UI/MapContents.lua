@@ -220,16 +220,19 @@ end
 function MapContents.AreaAt(shade, x, y)
 	local best, bestDistance
 	for _, area in ipairs(shade.zone.areas) do
-		local offsetX, offsetY, width, height = OverlayRect(area.key)
-		if x >= offsetX and x <= offsetX + width and y >= offsetY and y <= offsetY + height then
-			local left, top, right, bottom = offsetX, offsetY, offsetX + width, offsetY + height
-			if area.hit then
-				left, top, right, bottom = area.hit[1], area.hit[2], area.hit[3], area.hit[4]
-			end
-			local dx, dy = x - (left + right) / 2, y - (top + bottom) / 2
-			local distance = dx * dx + dy * dy
-			if not bestDistance or distance < bestDistance then
-				best, bestDistance = area, distance
+		-- An area without a current-art overlay has no rectangle to hit.
+		if area.key then
+			local offsetX, offsetY, width, height = OverlayRect(area.key)
+			if x >= offsetX and x <= offsetX + width and y >= offsetY and y <= offsetY + height then
+				local left, top, right, bottom = offsetX, offsetY, offsetX + width, offsetY + height
+				if area.hit then
+					left, top, right, bottom = area.hit[1], area.hit[2], area.hit[3], area.hit[4]
+				end
+				local dx, dy = x - (left + right) / 2, y - (top + bottom) / 2
+				local distance = dx * dx + dy * dy
+				if not bestDistance or distance < bestDistance then
+					best, bestDistance = area, distance
+				end
 			end
 		end
 	end

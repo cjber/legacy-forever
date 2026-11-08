@@ -109,8 +109,12 @@ def render(build, source_date, rewards, feeds, zones, completion):
                 lines.append(f"\t\t\t{category} = {{}},")
                 continue
             lines.append(f"\t\t\t{category} = {{")
-            order = {"areas": "key", "taxis": "node"}.get(category, "name")
-            for entry in sorted(entries, key=lambda e: (e[order], e.get("refs", []), e.get("faction", 0))):
+            if category == "areas":
+                ordered = sorted(entries, key=lambda e: (e.get("key") is None, e.get("key") or "", e["name"]))
+            else:
+                order = {"taxis": "node"}.get(category, "name")
+                ordered = sorted(entries, key=lambda e: (e[order], e.get("refs", []), e.get("faction", 0)))
+            for entry in ordered:
                 if category == "raids":
                     lines.extend(
                         ["\t\t\t\t{", f"\t\t\t\t\tname = {lua_string(entry['name'])},", "\t\t\t\t\tbosses = {"]
@@ -120,7 +124,14 @@ def render(build, source_date, rewards, feeds, zones, completion):
                     lines.extend(["\t\t\t\t\t},", "\t\t\t\t},"])
                     continue
                 elif category == "areas":
-                    fields = [f"key = {lua_string(entry['key'])}", f"name = {lua_string(entry['name'])}"]
+                    fields = []
+                    if "key" in entry:
+                        fields.append(f"key = {lua_string(entry['key'])}")
+                    fields.append(f"name = {lua_string(entry['name'])}")
+                    if "achievement" in entry:
+                        fields.append(f"achievement = {entry['achievement']}")
+                    if "criteria" in entry:
+                        fields.append(f"criteria = {entry['criteria']}")
                     if "hit" in entry:
                         fields.append("hit = { " + ", ".join(map(str, entry["hit"])) + " }")
                     if "tiles" in entry:
