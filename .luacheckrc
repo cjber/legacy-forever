@@ -5,6 +5,7 @@ ignore = { "212/_.*", "212/self" } -- unused args prefixed with _, and self on m
 
 globals = { "AdventureGuideForeverDB", "ForeverFamily", "ForeverLeaderboards", "ForeverMapMarkers", "ForeverTrackerHost",
 	"LegacyForeverMapButtonMixin",
+	"LegacyForeverZoneOverlayMixin",
 	"LegacyForever",
 	"LegacyForeverDB",
 	"LegacyForever_OnAddonCompartmentClick",
@@ -80,7 +81,8 @@ files["tests/zone_completion_spec.lua"] = { globals = { "C_Map", "GetTime" } }
 files["tests/completion_art_spec.lua"] = {
 	globals = {
 		"AlertFrame", "C_Map", "CreateFrame", "DUNGEONS", "EventUtil", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR",
-		"HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "QUESTS_LABEL",
+		"HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "QUESTS_LABEL", "GameTooltip", "GameTooltip_SetTitle",
+		"GameTooltip_AddInstructionLine", "GameTooltip_AddDisabledLine", "GameTooltip_AddColoredLine", "WHITE_FONT_COLOR",
 	},
 }
 read_globals[#read_globals + 1] = "EditModeManagerFrame"

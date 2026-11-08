@@ -12,8 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
-- **The Forever addons settings page no longer writes the client's bare `Text` name.** Its check box came from a Blizzard template under an unnamed page, so the label landed on a global another addon or the game could read as its own. The page is named now (cjber/forever-core#208).
+## [1.0.31] - 2026-11-08
 
+- **The zone completion corner is back on the world map.** The zone you're viewing shows its name, percent and counts in a corner of its map again, in the original look: a soft dark wash behind the text, the zone's name, a thin gold line and a row of counts. It sits in whichever corner of each zone's map leaves the zone itself clear, so it no longer covers the ground you're looking at; a click folds it to the name and line, and the fold is remembered. The zone's section in the objective tracker stays as it is, and "In the objective tracker" and "On the world map" are separate switches. Thanks to Lůca on Discord for the report.
+- **The Forever addons settings page no longer writes the client's bare `Text` name.** Its check box came from a Blizzard template under an unnamed page, so the label landed on a global another addon or the game could read as its own. The page is named now (cjber/forever-core#208).
 
 ## [1.0.30] - 2026-11-07
 

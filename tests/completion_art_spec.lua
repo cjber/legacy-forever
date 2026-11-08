@@ -17,6 +17,12 @@ local function Texture()
 	function texture:SetPoint(...)
 		self.points[#self.points + 1] = { ... }
 	end
+	function texture:SetAllPoints()
+		self.allPoints = true
+	end
+	function texture:SetColorTexture(...)
+		self.color = { ... }
+	end
 	return texture
 end
 
@@ -37,7 +43,9 @@ local function FontString(height)
 	function fontString:GetStringWidth()
 		return self.width
 	end
-	function fontString:SetShown() end
+	function fontString:SetShown(shown)
+		self.shown = shown
+	end
 	return fontString
 end
 
@@ -66,12 +74,26 @@ local function Frame(kind, name, parent)
 	function frame:GetParent()
 		return self.parent
 	end
-	function frame:SetShown() end
+	function frame:SetShown(shown)
+		self.shown = shown
+	end
 	function frame:Show()
 		self.shown = true
 	end
 	function frame:Hide()
 		self.shown = false
+	end
+	function frame:SetStatusBarTexture(texture)
+		self.statusBarTexture = texture
+	end
+	function frame:SetMinMaxValues(low, high)
+		self.low, self.high = low, high
+	end
+	function frame:SetValue(value)
+		self.value = value
+	end
+	function frame:SetStatusBarColor(...)
+		self.color = { ... }
 	end
 	return frame
 end
@@ -138,6 +160,40 @@ zones.result = {
 	areas = { done = 3, total = 4, complete = false, pending = 0, left = {} },
 }
 
+-- The map's canvas and the container it is shown in, as the client sizes them: a 1000 by 700 texture drawn into
+-- a 700 by 465 container, so the map opens fitted and centred.
+local canvas, container = { width = 1000, height = 700 }, { width = 700, height = 465 }
+function canvas:GetWidth()
+	return self.width
+end
+function canvas:GetHeight()
+	return self.height
+end
+function container:GetWidth()
+	return self.width
+end
+function container:GetHeight()
+	return self.height
+end
+local map = { mapID = 5 }
+function map:GetMapID()
+	return self.mapID
+end
+function map:GetCanvas()
+	return canvas
+end
+function map:GetCanvasContainer()
+	return container
+end
+
+-- The zone's own completion data: the area rectangles UI/Map.lua shades, keyed "x:y:width:height" in texture units.
+local completion = {
+	[5] = { areas = {} },
+}
+-- A pin per zone, as Model.ZoneObjectives gives them for a placed objective.
+local pins = {}
+local saved = {}
+
 local trackerModule
 local ns = {
 	L = setmetatable({}, {
@@ -146,12 +202,24 @@ local ns = {
 		end,
 	}),
 	POINTS_ICON = "UI-Legacy-Points-icon-c60",
+	Data = { completion = completion },
 	Art = {
 		Markup = function(atlas, size)
 			return ("|A:%s:%d:%d|t"):format(atlas, size, size)
 		end,
 	},
-	Model = { COMPLETION_CATEGORIES = { "areas" } },
+	Model = {
+		COMPLETION_CATEGORIES = { "areas" },
+		ZoneObjectives = function(_, uiMapID)
+			local groups = {}
+			for _, pin in ipairs(pins[uiMapID] or {}) do
+				groups[#groups + 1] = {
+					objectives = { { entry = { kind = "kill", x = pin.x, y = pin.y } } },
+				}
+			end
+			return groups
+		end,
+	},
 	ZoneCompletion = {
 		IsShown = function()
 			return zones.isShown
@@ -162,14 +230,19 @@ local ns = {
 		Of = function()
 			return zones.result
 		end,
+		Corner = function()
+			return { point = "TOPLEFT", x = 44, y = -18 }
+		end,
 		OnChange = function() end,
 		OnComplete = function() end,
 	},
 	Saved = {
-		Get = function()
-			return false
+		Get = function(key)
+			return saved[key] == true
 		end,
-		Set = function() end,
+		Set = function(key, value)
+			saved[key] = value
+		end,
 	},
 	Tracker = {
 		AddModule = function(name, mixin, uiOrder)
@@ -188,7 +261,8 @@ local ns = {
 	},
 }
 ns.Family = { Hint = function() end, FamilyDB = function() end }
-ns.Live = {}
+ns.FamilyDB = function() end
+ns.Live = { Visible = function() end, Criteria = function() end }
 local alerts = {
 	AddAlert = function() end,
 }
@@ -197,6 +271,27 @@ AlertFrame = {
 		return alerts
 	end,
 }
+-- The tooltip the corner's hover shows.
+local tooltip = {}
+GameTooltip = {
+	SetOwner = function(_, owner)
+		tooltip.owner = owner
+	end,
+	GetOwner = function()
+		return tooltip.owner
+	end,
+	AddDoubleLine = function() end,
+	Show = function()
+		tooltip.shown = true
+	end,
+	Hide = function()
+		tooltip.shown, tooltip.owner = false, nil
+	end,
+}
+GameTooltip_SetTitle, GameTooltip_AddInstructionLine, GameTooltip_AddDisabledLine =
+	function() end, function() end, function() end
+GameTooltip_AddColoredLine = function() end
+WHITE_FONT_COLOR = Color(1, 1, 1)
 
 assert(loadfile("UI/Completion.lua"))("LegacyForever", ns)
 
@@ -252,7 +347,70 @@ check(Atlas("areas", 14) == "islands-queue-prop-compass", "areas keep the compas
 local reputation = ns.Completion.Icon("reputations", 14)
 check(reputation:find("Achievement_Reputation_01", 1, true), "reputations keep the handshake icon")
 
---[[ What the corner overlay left behind ]]
+--[[ The map corner: the zone's completion in its original look, at the corner the map gives it ]]
+
+local overlay = Frame("Button", "LegacyForeverZoneOverlayTemplate")
+overlay.Title, overlay.Counts = FontString(17), FontString(12)
+overlay.GetParent = function()
+	return map
+end
+for key, value in pairs(LegacyForeverZoneOverlayMixin) do
+	overlay[key] = value
+end
+
+LegacyForeverZoneOverlayMixin.OnLoad(overlay)
+local cornerBar = overlay.Progress
+check(cornerBar.kind == "StatusBar", "the corner holds a progress bar")
+check(cornerBar.height == 2, "the bar is the original 2-unit line")
+check(cornerBar.statusBarTexture == "Interface\\Buttons\\WHITE8X8", "the line fills with the flat white texture")
+check(cornerBar.low == 0 and cornerBar.high == 100, "the line counts percent")
+local backing = cornerBar.textures[1]
+check(
+	backing.allPoints and backing.color[1] == 0 and backing.color[2] == 0 and backing.color[4] == 0.45,
+	"a 45% black backing sits under the line"
+)
+check(
+	cornerBar.points[1][1] == "TOPLEFT" and cornerBar.points[1][2] == overlay.Title and cornerBar.points[1][5] == -4,
+	"the line sits 4 under the title"
+)
+check(cornerBar.points[2][1] == "RIGHT", "the line spans the corner's width")
+
+zones.result.percent, zones.result.complete = 47, false
+LegacyForeverZoneOverlayMixin.Refresh(overlay)
+check(overlay.Title.text == "Ashenvale  47%", "the title names the zone and its percent")
+check(cornerBar.value == 47, "the line fills to the percent")
+check(cornerBar.color[1] == 1 and cornerBar.color[2] == 0.82, "an unfinished zone keeps the gold")
+check(overlay.Counts.text:find("3/4", 1, true), "the counts row reads under the line")
+check(overlay.width == 140 and overlay.height == 17 + 4 + 2 + 6 + 12, "the corner sizes to its text")
+check(
+	overlay.points[1][1] == "TOPLEFT"
+		and overlay.points[1][2] == container
+		and overlay.points[1][3] == "TOPLEFT"
+		and overlay.points[1][4] == 44
+		and overlay.points[1][5] == -18,
+	"the box sits at the corner the placement gives it"
+)
+check(overlay.shown, "the corner shows with a zone to draw")
+
+LegacyForeverZoneOverlayMixin.OnClick(overlay)
+check(saved.mapCollapsed == true and overlay.Counts.shown == false, "a click collapses it and keeps the counts hidden")
+check(overlay.height == 17 + 4 + 2, "collapsed, the corner is its title and line")
+check(cornerBar.value == 47, "the line stays filled when collapsed")
+check(tooltip.owner == overlay and tooltip.shown, "its hover shows the tooltip")
+LegacyForeverZoneOverlayMixin.OnClick(overlay)
+check(saved.mapCollapsed == false and overlay.Counts.shown ~= false, "a second click expands it again")
+
+zones.result.complete = true
+LegacyForeverZoneOverlayMixin.Refresh(overlay)
+check(cornerBar.color[1] == 0 and cornerBar.color[2] == 1, "a finished zone fills green")
+zones.result.complete = false
+
+-- Closing the map hides the overlay without an OnLeave.
+LegacyForeverZoneOverlayMixin.OnEnter(overlay)
+LegacyForeverZoneOverlayMixin.OnHide(overlay)
+check(tooltip.owner == nil and not tooltip.shown, "closing the map hides the corner's tooltip")
+
+--[[ The look's own pieces: the shade and the corner's template ]]
 
 local function Read(path)
 	local file = assert(io.open(path, "rb"), path)
@@ -262,13 +420,15 @@ local function Read(path)
 end
 
 local source = Read("UI/Completion.lua")
-check(not source:find("LegacyForeverZoneOverlay", 1, true), "the corner overlay mixin is gone")
-check(not source:find("mapCollapsed", 1, true), "its collapse state is gone")
-check(not source:find("Legacy-Progressbar", 1, true), "the Legacy panel's bar is gone")
-local removed = io.open("UI/Completion.xml", "rb")
-if removed then
-	removed:close()
-end
-check(removed == nil, "the overlay's XML is gone")
+check(source:find("LegacyForeverZoneOverlayMixin", 1, true) ~= nil, "the corner overlay is back")
+check(source:find("mapCollapsed", 1, true) ~= nil, "its collapse state is back")
+check(source:find("WHITE8X8", 1, true) ~= nil, "the corner's line is the hand-made bar again")
+local xml = Read("UI/Completion.xml")
+check(xml:find("media\\Shade", 1, true) ~= nil, "the corner's XML paints the shade")
+check(xml:find('alpha="0.6"', 1, true) ~= nil, "the shade keeps its 0.6 alpha")
+check(xml:find('inherits="GameFontNormalLarge"', 1, true) ~= nil, "the title keeps GameFontNormalLarge")
+check(xml:find('inherits="GameFontHighlight"', 1, true) ~= nil, "the counts keep GameFontHighlight")
+local shade = assert(io.open("media/Shade.tga", "rb"))
+shade:close()
 
 print(("completion_art_spec: %d checks passed"):format(checks))

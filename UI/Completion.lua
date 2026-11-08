@@ -4,8 +4,9 @@ local L = ns.L
 
 -- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths, dungeons, raids,
 -- Legacy objectives, local reputations and quests are done, as a section in the objective tracker
--- (the zone you're in) and in each zone badge's tooltip on a continent map. The counting, what counts
--- and when a completion is news are Core/ZoneCompletion.lua's; this file draws them.
+-- (the zone you're in), in a corner of the world map (the zone you're viewing) and in each zone badge's
+-- tooltip on a continent map. The counting, what counts and when a completion is news are
+-- Core/ZoneCompletion.lua's; this file draws them.
 ---@class LegacyCompletion
 local Completion = {}
 ns.Completion = Completion
@@ -285,6 +286,169 @@ if trackerModule then
 	end)
 end
 
+--[[ World map: the zone you're viewing, in the corner that covers least of it; on a continent, in each zone
+     badge's tooltip ]]
+
+-- A thin fill for the percent, black behind it, green once the zone is done.
+local OVERLAY_BAR_HEIGHT = 2
+-- Room for the text and the bar, so it never looks boxed.
+local OVERLAY_MIN_WIDTH = 140
+
+---@param parent Frame
+---@return StatusBar
+local function CreateCornerBar(parent)
+	local bar = CreateFrame("StatusBar", nil, parent)
+	bar:SetHeight(OVERLAY_BAR_HEIGHT)
+	bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+	bar:SetMinMaxValues(0, 100)
+	local background = bar:CreateTexture(nil, "BACKGROUND")
+	background:SetAllPoints()
+	background:SetColorTexture(0, 0, 0, 0.45)
+	return bar
+end
+
+---@param bar StatusBar
+---@param result LegacyZoneResult
+local function SetCornerProgress(bar, result)
+	bar:SetValue(result.percent or 0)
+	bar:SetStatusBarColor((result.complete and GREEN_FONT_COLOR or NORMAL_FONT_COLOR):GetRGB())
+end
+
+-- The Legacy pins a zone's map places: every placed objective, including a cleared entrance drawn faded.
+---@param uiMapID number
+---@return LegacyCornerPin[]
+local function Pins(uiMapID)
+	local pins = {}
+	local groups = ns.Model.ZoneObjectives(ns.Data, uiMapID, ns.Live.Visible(), ns.Live.Criteria, true)
+	for _, group in ipairs(groups) do
+		for _, objective in ipairs(group.objectives) do
+			local entry = objective.entry
+			if entry.kind ~= "explore" and entry.x and entry.y then
+				pins[#pins + 1] = { x = entry.x, y = entry.y }
+			end
+		end
+	end
+	return pins
+end
+
+-- The corner this zone's box sits in, from the map's own geometry (Core/ZoneCompletion.lua judges it).
+---@param uiMapID number
+---@param map WorldMapFrame
+---@param width number
+---@param height number
+---@return { point: string, x: number, y: number }
+local function Corner(uiMapID, map, width, height)
+	local canvas = map:GetCanvas()
+	local container = map:GetCanvasContainer()
+	---@type LegacyCornerGeometry
+	local geometry = {
+		containerWidth = container:GetWidth(),
+		containerHeight = container:GetHeight(),
+		mapWidth = canvas:GetWidth(),
+		mapHeight = canvas:GetHeight(),
+	}
+	return Zones.Corner(uiMapID, width, height, geometry, function()
+		return Pins(uiMapID)
+	end)
+end
+
+---@class LegacyForeverZoneOverlayMixin : Button
+---@field GetParent fun(self: LegacyForeverZoneOverlayMixin): WorldMapFrame
+---@field Title FontString
+---@field Counts FontString
+---@field Progress StatusBar
+---@field result? LegacyZoneResult
+---@field name string
+LegacyForeverZoneOverlayMixin = {}
+
+function LegacyForeverZoneOverlayMixin:OnLoad()
+	self.Progress = CreateCornerBar(self)
+	self.Progress:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT", 0, -4)
+	self.Progress:SetPoint("RIGHT")
+end
+
+-- Called as the world map opens or changes map.
+function LegacyForeverZoneOverlayMixin:Refresh()
+	---@type WorldMapFrame
+	local map = self:GetParent()
+	local uiMapID = map:GetMapID()
+	self.result = IsShown("map") and Zones.Of(uiMapID) or nil
+	if not self.result then
+		self:Hide()
+		return
+	end
+	local collapsed = ns.Saved.Get("mapCollapsed")
+	self.name = C_Map.GetMapInfo(uiMapID).name
+	self.Title:SetText(("%s  %s"):format(self.name, PercentText(self.result)))
+	SetCornerProgress(self.Progress, self.result)
+	self.Counts:SetText(CountsText(self.result, 16))
+	self.Counts:SetShown(not collapsed)
+	local height = self.Title:GetStringHeight() + 4 + OVERLAY_BAR_HEIGHT
+	if not collapsed then
+		height = height + 6 + self.Counts:GetStringHeight()
+	end
+	local width = math.max(self.Title:GetStringWidth(), OVERLAY_MIN_WIDTH)
+	if not collapsed then
+		width = math.max(width, self.Counts:GetStringWidth())
+	end
+	self:SetSize(width, height)
+	local corner = Corner(uiMapID, map, width, height)
+	self:ClearAllPoints()
+	self:SetPoint(corner.point, map:GetCanvasContainer(), corner.point, corner.x, corner.y)
+	self:Show()
+end
+
+function LegacyForeverZoneOverlayMixin:OnClick()
+	ns.Saved.Set("mapCollapsed", not ns.Saved.Get("mapCollapsed"))
+	self:Refresh()
+	self:OnEnter()
+end
+
+function LegacyForeverZoneOverlayMixin:OnEnter()
+	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+	AddTooltip(GameTooltip, self.name, self.result)
+	GameTooltip_AddInstructionLine(
+		GameTooltip,
+		ns.Saved.Get("mapCollapsed") and L["Click to expand."] or L["Click to collapse."]
+	)
+	GameTooltip:Show()
+end
+
+function LegacyForeverZoneOverlayMixin:OnLeave()
+	GameTooltip:Hide()
+end
+
+-- Closing the map hides the overlay without an OnLeave.
+function LegacyForeverZoneOverlayMixin:OnHide()
+	if GameTooltip:GetOwner() == self then
+		GameTooltip:Hide()
+	end
+end
+
+-- A frame of our own over the map, kept current as the map opens and turns (UI/MapCanvas.lua): never the map's
+-- overlay frames or providers.
+local function AttachMap()
+	local map = WorldMapFrame
+	local MapCanvas = ns.MapCanvas
+	local overlay = MapCanvas.FrameUnder("Button", map, "LegacyForeverZoneOverlayTemplate")
+	---@cast overlay LegacyForeverZoneOverlayMixin
+	overlay:SetFrameStrata("HIGH")
+	MapCanvas.Watch(map, function(_, what)
+		if what == "show" or what == "map" then
+			overlay:Refresh()
+		end
+	end)
+	Zones.OnChange(function()
+		if map:IsShown() then
+			overlay:Refresh()
+		end
+	end)
+end
+
+EventUtil.ContinueOnAddOnLoaded("Blizzard_WorldMap", AttachMap)
+
+--[[ A zone reaching 100%: a toast and a sound, GW2 style ]]
+
 -- "Kalimdor: 3 of 20 zones complete (15%)", counting what the player counts.
 ---@param continentID number
 ---@return string?
@@ -406,7 +570,10 @@ function Completion.AddMenu(root)
 	local map = root:CreateCheckbox(L["On the world map"], IsShown, Toggle, "map")
 	map:SetTooltip(function(tooltip)
 		GameTooltip_SetTitle(tooltip, L["On the world map"])
-		GameTooltip_AddNormalLine(tooltip, L["A badge on each zone of a continent map, with the zone's completion."])
+		GameTooltip_AddNormalLine(
+			tooltip,
+			L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."]
+		)
 	end)
 	local counts = root:CreateButton(L["What counts"])
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do -- menu-scroll-ok: COMPLETION_CATEGORIES is seven fixed kinds

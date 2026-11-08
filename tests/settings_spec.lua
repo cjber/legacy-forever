@@ -15,7 +15,7 @@ assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Model.lua"))("LegacyForever", ns)
 local Saved = ns.Saved
-local ZONE_KEYS = { "map", "tracker", "trackerCollapsed" }
+local ZONE_KEYS = { "map", "tracker", "mapCollapsed", "trackerCollapsed" }
 for _, category in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 	ZONE_KEYS[#ZONE_KEYS + 1] = "count_" .. category
 end
@@ -29,7 +29,7 @@ check(
 	"update line and family hints on out of the box"
 )
 check(Saved.Get("map") == true and Saved.Get("tracker") == false, "on the map, not in the tracker")
-check(not Saved.Get("trackerCollapsed"), "expanded out of the box")
+check(not Saved.Get("mapCollapsed") and not Saved.Get("trackerCollapsed"), "expanded out of the box")
 for _, category in ipairs({ "areas", "dungeons", "raids", "legacy" }) do
 	check(Saved.Get("count_" .. category) == true, category .. " count out of the box")
 end
@@ -46,11 +46,11 @@ end
 -- A save file from before the defaults were declared: every saved true or false keeps its meaning.
 LegacyForeverDB = {
 	showAreas = false,
-	zoneCompletion = { map = false, tracker = true, trackerCollapsed = true, count_areas = false, count_quests = true },
+	zoneCompletion = { map = false, tracker = true, mapCollapsed = true, count_areas = false, count_quests = true },
 }
 check(Saved.Get("showAreas") == false, "a saved off stays off")
 check(Saved.Get("map") == false and Saved.Get("tracker") == true, "saved surfaces win")
-check(Saved.Get("trackerCollapsed") == true, "saved collapse wins")
+check(Saved.Get("mapCollapsed") == true and Saved.Get("trackerCollapsed") == false, "saved collapse wins")
 check(Saved.Get("count_areas") == false and Saved.Get("count_quests") == true, "saved categories win")
 check(Saved.Get("count_raids") == true, "a key the old file lacks is its default")
 check(Saved.Default("showAreas") == true and Saved.Default("map") == true, "a saved value leaves the default alone")

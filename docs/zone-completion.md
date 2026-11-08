@@ -29,7 +29,10 @@ is read from the game. The README says
 ## Where it shows
 
 - **Continent maps**: each zone badge's tooltip has the zone's completion, and the continent's line says how many of
-  its zones are complete. Unticking "On the world map" in the map menu hides the badges.
+  its zones are complete. Unticking "On the world map" in the map menu hides the corner and the badges.
+- **A zone map**, for the zone you're viewing: its name, percent and counts in whichever corner of the map covers
+  least of the zone, with a thin line filled to the percent. A click folds it to the name and line. Unticking "On the
+  world map" hides it.
 - **The objective tracker**, for the zone you're in, once you tick "In the objective tracker" in the map menu: the
   zone's name, the game's own quest progress bar with the percent centred in it, and a row of counts.
 - **Hovering** the section or a badge lists what's left. "What counts" in the same menu adds or leaves out a

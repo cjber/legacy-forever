@@ -28,6 +28,10 @@ L["Already complete"] = "已完成" -- mt
 L["Areas explored"] = "已探索區域"
 L["Attach to quest tracker"] = "附加到任務追蹤器"
 L["Click the zone to see where."] = "點擊該地區查看位置。"
+L["Click to collapse."] = "點擊收起。"
+L["Click to expand."] = "點擊展開。"
+L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
+	"地圖角落顯示目前查看的地區，大陸地圖上的每個地區顯示一個徽章。"
 L["Click to open the map. Right-click for options."] = "點擊開啟地圖。右鍵點擊開啟選項。"
 L["Click to set a waypoint here."] = "點擊在此處放置地圖標記。"
 L["Click to track, with live progress."] = "點擊追蹤，即時顯示進度。"
@@ -103,8 +107,6 @@ L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"追蹤器已鎖定。關閉「鎖定追蹤器」即可移動它。"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地區以及那裡剩餘的事項。你追蹤的挑戰保留在各自的傳承區塊中。"
-L["A badge on each zone of a continent map, with the zone's completion."] =
-	"在大陸地圖的每個區域上顯示帶有區域完成度的標記。" -- mt
 L["This addon"] = "本插件"
 L["This version of Questie isn't supported."] = "不支援此版本的Questie。"
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =

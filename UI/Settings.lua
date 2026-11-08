@@ -86,7 +86,7 @@ AddCheckbox(
 	map,
 	"map",
 	L["On the world map"],
-	L["A badge on each zone of a continent map, with the zone's completion."]
+	L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."]
 )
 
 local tracker = Section(category, L["Objective tracker"])
