@@ -144,7 +144,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "標題"
 L["What happened, or what you would like"] = "發生了什麼，或你希望有什麼"
 
-L["The Forever tracker can have a background."] = "Forever 追蹤器可以有背景。" -- mt
+L["Tirisfal Glades counts Undercity as an exploration area."] =
+	"提里斯法林地現在將幽暗城計為探索區域。" -- mt
 L["Install AtlasLoot for recommended levels."] = "安裝AtlasLoot以查看建議等級。" -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "建議等級：%s（AtlasLoot）" -- mt
 

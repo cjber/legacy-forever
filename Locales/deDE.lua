@@ -148,7 +148,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Titel"
 L["What happened, or what you would like"] = "Was passiert ist oder was Ihr Euch wünscht"
 
-L["The Forever tracker can have a background."] = "Die Forever-Verfolgung kann einen Hintergrund haben." -- mt
+L["Tirisfal Glades counts Undercity as an exploration area."] = "Tirisfal zählt Unterstadt jetzt als Erkundungsgebiet." -- mt
 L["Install AtlasLoot for recommended levels."] = "Installiert AtlasLoot für empfohlene Stufen." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Empfohlene Stufen: %s (AtlasLoot)" -- mt
 

@@ -160,7 +160,8 @@ L["Title"] = "Заголовок"
 L["What happened, or what you would like"] =
 	"Что произошло или что вы хотели бы видеть"
 
-L["The Forever tracker can have a background."] = "У отслеживания Forever может быть фон." -- mt
+L["Tirisfal Glades counts Undercity as an exploration area."] =
+	"Тирисфальские леса учитывают Подгород как область исследования." -- mt
 L["Install AtlasLoot for recommended levels."] =
 	"Установите AtlasLoot, чтобы увидеть рекомендуемые уровни." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровни: %s (AtlasLoot)" -- mt

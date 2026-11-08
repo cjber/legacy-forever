@@ -53,7 +53,7 @@ ns.TITLE = "Legacy Forever"
 -- The Legacy shield: map pins, the map button, menu entries and the zone-completion count all wear it.
 ns.POINTS_ICON = "UI-Legacy-Points-icon-c60"
 -- One sentence for the chat line after an update (WhatsNew.lua): the headline of the release this ships in.
-ns.WHATS_NEW = L["The Forever tracker can have a background."]
+ns.WHATS_NEW = L["Tirisfal Glades counts Undercity as an exploration area."]
 
 ---@param msg string
 function ns.Print(msg)

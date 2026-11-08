@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-11-08
+
 - **Tirisfal Glades counts Undercity as an exploration area.** Zone completion and the tracker now list all 18 areas for the zone, including Undercity, so the count matches the Legacy exploration challenge instead of stopping at 17. An area the game requires but has no current map overlay for is still counted, without a map shape. Reported on CurseForge by TheCheat54 (#332).
 
 ## [1.1.0] - 2026-11-08
