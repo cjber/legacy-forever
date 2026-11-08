@@ -79,16 +79,17 @@ request against its base and fails on a regression. Every version needs a
 
 ## Standards
 
-- `wow-forever-addon`: https://github.com/cjber/forever-core/tree/af94fd89610c9128bc11ec07354bd9dabafb5dd0/.agents/skills/wow-forever-addon (UI look,
+- `wow-forever-addon`: https://github.com/cjber/forever-core/tree/main/.agents/skills/wow-forever-addon (UI look,
   icon, README and store page, CI and release requirements shared by every WoW: Forever addon)
-- `wow-retail-ui-style`: https://github.com/cjber/forever-core/tree/af94fd89610c9128bc11ec07354bd9dabafb5dd0/.agents/skills/wow-retail-ui-style (native host integration, compact layout rhythm, and asset blacklist)
+- `wow-retail-ui-style`: https://github.com/cjber/forever-core/tree/main/.agents/skills/wow-retail-ui-style (native host integration, compact layout rhythm, and asset blacklist)
 
 ## Secure UI regression checks
 
 `tools/typecheck.sh` checks the TOC/XML load graph, LuaLS coverage, `tools/lint_taint.py`, `tools/lint_art.py`, `tools/lint_secret.py` (secret values through `ns.Readable`, tooltip hooks behind `ns.Usable`), `tools/check_editorconfig.py` and `tools/check_family.py` (the shared family block between the `forever-family` markers in README.md and docs/curseforge.md).
 `tools/forever_tools/` is the shared tooling (cjber/forever-core, https://github.com/cjber/forever-core/tree/main/.agents/skills/wow-forever-addon/tooling), vendored byte for byte: never edit it here.
 `python3 tools/forever_tools/sync.py check` verifies it offline; `sync.py update --source <checkout>` is the only way to refresh it.
-Do not hook Blizzard object methods: use events, `HookScript` or a supported callback registry.
+Never touch Blizzard's Lua state: WFA-38 in `wow-forever-addon` lists what addon code may do to Blizzard's
+frames, how to restyle one by drawing on top, and when a `taint-ok` exception holds.
 Draw on the world map only through `UI/MapCanvas.lua`: frames of our own, made with no parent and then set on the
 canvas or map, never `AddDataProvider`, `AcquirePin`, `AddOverlayFrame` or a `MapCanvasPinMixin` (the gamepad
 interface walks the map's providers, pins and overlay frames from secure code). `tests/legacy_map_spec.lua` runs the
@@ -97,5 +98,4 @@ Keep addon tracker sections and pools in `UI/TrackerHost.lua`, outside Blizzard'
 Render only after `PLAYER_ENTERING_WORLD` and `VARIABLES_LOADED`, deferred one frame.
 This supersedes WFA-5's native registration guidance. CI exercises the host against checksum-pinned
 Forever tracker source; native manager access is forbidden in the integration harness.
-A `taint-ok` exception must identify an addon-owned object or a verified safe contract; it cannot
-excuse hooking a native frame. Test event ordering and reuse, not just method existence.
+Test event ordering and reuse, not just method existence.
