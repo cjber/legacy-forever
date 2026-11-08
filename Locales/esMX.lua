@@ -147,7 +147,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Título"
 L["What happened, or what you would like"] = "Qué pasó o qué te gustaría"
 
-L["The report keeps errors from earlier sessions."] = "El informe conserva los errores de sesiones anteriores." -- mt
+L["The Forever tracker can have a background."] = "El rastreador de Forever puede tener un fondo." -- mt
 L["Install AtlasLoot for recommended levels."] = "Instala AtlasLoot para ver los niveles recomendados." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Niveles recomendados: %s (AtlasLoot)" -- mt
 

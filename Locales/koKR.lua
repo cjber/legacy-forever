@@ -153,7 +153,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "제목"
 L["What happened, or what you would like"] = "무슨 일이 있었는지 또는 원하시는 내용"
 
-L["The report keeps errors from earlier sessions."] = "보고서가 이전 세션의 오류를 보관합니다." -- mt
+L["The Forever tracker can have a background."] = "Forever 추적기에 배경을 넣을 수 있습니다." -- mt
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "권장 레벨: %s (AtlasLoot)" -- mt
 
