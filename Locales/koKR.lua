@@ -69,6 +69,7 @@ L["Legacy objectives"] = "유산 목표"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"레벨, 숙련, 등급 등 정해진 장소가 없는 모든 것."
 L["Lock the tracker"] = "추적기 잠금"
+L["Tracker background"] = "추적기 배경"
 L["Needs Questie, which lists each zone's quests."] =
 	"각 지역의 퀘스트 목록을 제공하는 Questie가 필요합니다."
 L["No fixed location"] = "정해진 장소 없음"

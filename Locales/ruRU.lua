@@ -73,6 +73,7 @@ L["Legacy objectives"] = "Цели старинных испытаний"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Уровни, навыки, звания и все, что не привязано к месту."
 L["Lock the tracker"] = "Закрепить трекер"
+L["Tracker background"] = "Фон отслеживания"
 L["Needs Questie, which lists each zone's quests."] =
 	"Нужен Questie: он знает задания каждой зоны."
 L["No fixed location"] = "Без точного места"

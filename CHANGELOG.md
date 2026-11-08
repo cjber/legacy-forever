@@ -12,6 +12,7 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **The tracker can have a background.** Right-click any section's title in the Forever tracker and pick *Tracker background*: Off, or the game's tooltip fill at 25, 50, 75 or 100%, so quest text stays readable over bright ground. The choice is shared by every Forever addon in the column (cjber/forever-core#246).
 - **Closing the world map no longer blocks a controller's interact action.** The map layer heard the map close through a script that ran inside the game's own close, before the controller's bindings were cleared, so the addon's taint blocked interacting with the controller afterwards. It now listens for the close the way the game's controller support does. (cjber/adventure-guide-forever#493)
 
 ## [1.0.33] - 2026-11-08

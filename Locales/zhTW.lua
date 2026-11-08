@@ -63,6 +63,7 @@ L["Legacy objectives"] = "傳承目標"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"等級、技能、級別以及其他沒有固定地點的內容。"
 L["Lock the tracker"] = "鎖定追蹤器"
+L["Tracker background"] = "追蹤器背景"
 L["Needs Questie, which lists each zone's quests."] = "需要Questie，它會列出每個地區的任務。"
 L["No fixed location"] = "無固定地點"
 L["No unfinished Legacy objectives with a place on this map."] =

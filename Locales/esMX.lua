@@ -64,6 +64,7 @@ L["Legacy objectives"] = "Objetivos de legado"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Niveles, habilidades, rangos y todo lo que no tiene un lugar fijo."
 L["Lock the tracker"] = "Bloquear el rastreador"
+L["Tracker background"] = "Fondo del rastreador"
 L["Needs Questie, which lists each zone's quests."] = "Necesita Questie, que muestra las misiones de cada zona."
 L["No fixed location"] = "Sin ubicación fija"
 L["No unfinished Legacy objectives with a place on this map."] =
