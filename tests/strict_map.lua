@@ -245,7 +245,6 @@ Kit.canvas = Kit.CreateFrame("Frame")
 Kit.canvas:SetSize(1000, 700)
 Kit.canvas.level = 10
 Kit.container = Kit.CreateFrame("Frame")
-Kit.container:SetSize(700, 465)
 Kit.mask = Kit.Region()
 
 local levels = setmetatable({
