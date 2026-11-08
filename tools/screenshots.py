@@ -464,8 +464,9 @@ def main_menu(ui, live):
 
 
 # UI/Completion.lua's corner candidates, in tie order: the box's own point and its offset from the canvas
-# container's matching point.
-CORNERS = (("TOPLEFT", 44, -18), ("TOPRIGHT", -48, -18), ("BOTTOMLEFT", 44, 18), ("BOTTOMRIGHT", -88, 18))
+# container's matching point. The bottom pair sits 48 up, clear of Tweaks Forever's coordinates bar at the map's
+# bottom (y 6, 16 tall) and the Shade's 22 of padding below the box.
+CORNERS = (("TOPLEFT", 44, -18), ("TOPRIGHT", -48, -18), ("BOTTOMLEFT", 44, 48), ("BOTTOMRIGHT", -88, 48))
 # A pin under the box costs a 40 by 40 patch of the map, as in Core/ZoneCompletion.lua.
 PIN_PATCH = 1600
 

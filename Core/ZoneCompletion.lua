@@ -150,13 +150,14 @@ end
 
 -- The candidates, in tie order, as the box's own point and its offset from the canvas container's matching
 -- point: top left and bottom left clear the floor dropdown, top right the Legacy map button and bottom right the
--- quest-log toggle.
+-- quest-log toggle. The bottom pair sits at 48 rather than 18 because Tweaks Forever draws the map's coordinates in
+-- a 320 by 16 bar at y 6, whose top edge is 22, and the Shade reaches 22 below the box: 48 leaves 4 clear above it.
 ---@type { point: string, x: number, y: number }[]
 local CORNERS = {
 	{ point = "TOPLEFT", x = 44, y = -18 },
 	{ point = "TOPRIGHT", x = -48, y = -18 },
-	{ point = "BOTTOMLEFT", x = 44, y = 18 },
-	{ point = "BOTTOMRIGHT", x = -88, y = 18 },
+	{ point = "BOTTOMLEFT", x = 44, y = 48 },
+	{ point = "BOTTOMRIGHT", x = -88, y = 48 },
 }
 
 -- One corner per zone and box size: every draw of the same zone asks for the same answer.

@@ -262,9 +262,12 @@ function TrackerMixin:OnBlockHeaderClick(block, mouseButton)
 	end)
 end
 
--- -1 keeps the zone above the tracked challenges' blocks: the shared column orders its sections by uiOrder
--- (UI/TrackerOrder.lua's Sort), and the Legacy section is 0.
-local trackerModule = ns.Tracker.AddModule("LegacyForeverZoneTracker", TrackerMixin, -1)
+-- -5 is the next free family tracker slot and puts the zone above every other Forever section. The shared
+-- column lays sections out in uiOrder and gives each the room the ones above it left, and a native module is hidden
+-- whole when its one block does not fit: at -1 this section came after Adventure Guide Forever's story and journey
+-- sections and never drew when they filled the column below the quests. It still sorts above the tracked
+-- challenges' blocks, which are 0.
+local trackerModule = ns.Tracker.AddModule("LegacyForeverZoneTracker", TrackerMixin, -5)
 if trackerModule then
 	local header = trackerModule.Header
 	-- The bar's own row under the header band, then the counts row; the module's layout places the first block

@@ -12,6 +12,9 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **The zone completion block on the world map clears the coordinates line.** When the least covered corner for the zone you were viewing was a bottom one, its counts row sat on Tweaks Forever's player coordinates along the bottom of the map. Both bottom corners now sit higher, so the block and its soft shade stay above that line.
+- **The zone completion section no longer goes missing when the objective tracker is full.** The section was laid out after Adventure Guide Forever's story and journey sections, and when they took all the room below your quests the tracker hid the zone section even though its header had been set. It now takes the first Forever slot in the tracker, above those sections, so it shows and they take whatever room is left.
+
 ## [1.0.31] - 2026-11-08
 
 - **The zone completion corner is back on the world map.** The zone you're viewing shows its name, percent and counts in a corner of its map again, in the original look: a soft dark wash behind the text, the zone's name, a thin gold line and a row of counts. It sits in whichever corner of each zone's map leaves the zone itself clear, so it no longer covers the ground you're looking at; a click folds it to the name and line, and the fold is remembered. The zone's section in the objective tracker stays as it is, and "In the objective tracker" and "On the world map" are separate switches. Thanks to Lůca on Discord for the report.

@@ -298,7 +298,10 @@ assert(loadfile("UI/Completion.lua"))("LegacyForever", ns)
 --[[ The tracker section's bar: the objective tracker's own, under the header band ]]
 
 check(trackerModule ~= nil, "the zone section is built")
-check(trackerModule.uiOrder == -1, "the section sorts above the tracked challenges' blocks")
+check(
+	trackerModule.uiOrder == -5,
+	"the section takes the next free family slot, ahead of Adventure Guide's -4, so a full tracker cannot starve it"
+)
 local progress = trackerModule.Header.Progress
 check(progress ~= nil, "the section header holds a progress bar")
 check(createdTemplates[1] == "ObjectiveTrackerProgressBarTemplate", "the bar inherits the tracker's own template")

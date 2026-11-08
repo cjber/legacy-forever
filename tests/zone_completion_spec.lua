@@ -227,7 +227,19 @@ check(Zones.Corner(13, 140, 23, geometry, NoPins).point == "TOPLEFT", "the empty
 data.completion[13].areas = { { name = "Top", key = "0:0:1002:300" } }
 check(Zones.Corner(13, 140, 23, geometry, NoPins).point == "TOPLEFT", "the same zone and size keep their cached corner")
 check(Zones.Corner(13, 141, 23, geometry, NoPins).point == "BOTTOMLEFT", "a new size is judged afresh")
-for id = 10, 13 do
+-- The bottom candidates sit at 48, clear of Tweaks Forever's coordinates bar (y 6, 16 tall) and the Shade's 22
+-- below the box. Only the box at 48 is clear of this band at y 650; the old box at 18 would be scored against it and
+-- the top left would win instead.
+data.completion[14] = EmptyCompletion()
+data.completion[14].areas = {
+	{ name = "Top edge", key = "0:60:1000:2" },
+	{ name = "Coordinates band", key = "0:650:1000:5" },
+}
+check(
+	Zones.Corner(14, 140, 23, geometry, NoPins).point == "BOTTOMLEFT",
+	"the bottom candidates are lifted clear of the map's coordinates bar"
+)
+for id = 10, 14 do
 	data.completion[id] = nil
 end
 
