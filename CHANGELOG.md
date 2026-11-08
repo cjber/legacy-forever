@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **Closing the world map no longer blocks a controller's interact action.** The map layer heard the map close through a script that ran inside the game's own close, before the controller's bindings were cleared, so the addon's taint blocked interacting with the controller afterwards. It now listens for the close the way the game's controller support does. (cjber/adventure-guide-forever#493)
+
 ## [1.0.33] - 2026-11-08
 
 - **The report keeps errors from earlier sessions.** An error Legacy caught before the last `/reload`, a blocked action or a Lua warning was forgotten when the client reloaded, so it could not be copied into a report once it was gone. The report now lists them under their own heading, with when each was first and last seen and the version, build and locale it happened on, and keeps the 50 most recent. It also carries Legacy's recent log lines, the steps that led up to a bug, and `/forever debug` turns on detailed lines for the session (cjber/forever-core#204, cjber/forever-core#206).

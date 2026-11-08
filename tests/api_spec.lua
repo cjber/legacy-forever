@@ -121,6 +121,8 @@ ns.Tracker = {
 }
 
 -- The client.
+-- The map canvas hears the map close through the panel manager's callbacks.
+EventRegistry = { RegisterCallback = function() end }
 C_Timer = {
 	After = function(_, callback)
 		timers[#timers + 1] = callback

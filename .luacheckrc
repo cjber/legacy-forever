@@ -63,7 +63,7 @@ files["tests/legacy_map_spec.lua"] = {
 }
 files["tests/api_spec.lua"] = {
 	globals = {
-		"AlertFrame", "C_Map", "C_SuperTrack", "C_Texture", "C_Timer", "CreateAtlasMarkup", "DUNGEONS", "EventUtil", "GetTime", "geterrorhandler",
+		"AlertFrame", "C_Map", "C_SuperTrack", "C_Texture", "C_Timer", "CreateAtlasMarkup", "DUNGEONS", "EventRegistry", "EventUtil", "GetTime", "geterrorhandler",
 		"InCombatLockdown", "LibQuestieDB", "QUESTS_LABEL", "RAIDS", "ShortestPathForever", "UiMapPoint", "UnitClass", "UnitFactionGroup", "UnitRace",
 		"GameTooltip_AddBlankLineToTooltip", "GameTooltip_AddHighlightLine", "GameTooltip_AddNormalLine", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR",
 		"HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "C_AddOns", "WHITE_FONT_COLOR", "GameTooltip", "GameTooltip_SetTitle",
