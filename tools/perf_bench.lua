@@ -266,6 +266,7 @@ print(("bench: %d achievements in %d categories"):format(ACHIEVEMENTS, CATEGORIE
 
 for _, path in ipairs({
 	"Core/SafeCall.lua",
+	"Core/Log.lua",
 	"Core/Saved.lua",
 	"Core/Model.lua",
 	"Core/Live.lua",

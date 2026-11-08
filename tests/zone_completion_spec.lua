@@ -136,7 +136,13 @@ seterrorhandler = function() end
 strtrim = function(text)
 	return (text:gsub("^%s+", ""):gsub("%s+$", ""))
 end
-for _, file in ipairs({ "Core/SafeCall.lua", "Core/Log.lua", "Core/Saved.lua", "Core/Model.lua", "Core/ZoneCompletion.lua" }) do
+for _, file in ipairs({
+	"Core/SafeCall.lua",
+	"Core/Log.lua",
+	"Core/Saved.lua",
+	"Core/Model.lua",
+	"Core/ZoneCompletion.lua",
+}) do
 	assert(loadfile(file))("LegacyForever", ns)
 end
 local Zones, Saved = ns.ZoneCompletion, ns.Saved
