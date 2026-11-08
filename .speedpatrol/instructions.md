@@ -11,4 +11,4 @@ benchmarks run the headless harness the specs use, which stubs the client API an
 - Every change must pass the full gate in `AGENTS.md` under "Commands".
 - Generated data and vendored code are never edited by hand.
 - Commit only the files the change needs: no profiler output or scratch files.
-- Never launch the game, Battle.net, Lutris or Wine, and never use the network.
+- Never use the network, and never start the game, Battle.net, Lutris or Wine. The headless client (forever-core's `wow-forever-addon/in-game.md`) tests the build linked into the game, not this checkout, so in-game checks belong to the agent that ships a change.

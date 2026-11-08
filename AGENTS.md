@@ -52,8 +52,7 @@ request against its base and fails on a regression. Every version needs a
 - Lua 5.1 in the game's sandbox: no `require`. The client loads the files `LegacyForever.toc` lists, in
   that order, each receiving `local addonName, ns = ...`; a new file goes in the TOC or never runs.
 - The specs are a headless harness with stubbed client APIs. Anything they cannot reach (frames,
-  menus, tooltips, the tracker) is checked in game: list those checks in the PR as `/reload` tests
-  for the user. Never drive the game client.
+  menus, tooltips, the tracker) is checked in game: check them in the headless client (forever-core's `wow-forever-addon/in-game.md`) and list in the PR what was checked; what waits on the player's own session goes in the PR as `/reload` tests for the user.
 - Runtime globals must be allowed by `.luacheckrc` and typed by the pinned WoW annotations or
   `types/forever.lua` for missing Forever APIs. Addon types belong in `types/addon.lua` or beside
   their definitions; do not restore a LuaLS globals whitelist.
