@@ -2,8 +2,9 @@
 local _, ns = ...
 
 -- Zone completion without a frame: a zone's or continent's result under what the player counts, when a
--- completion is news, and the one notice that any of it may have changed. The tracker section, the map's
--- badges, the toast and the menu (UI/Completion.lua), the map and LegacyForever.API all read and listen here.
+-- completion is news, where the world map's corner sits, and the one notice that any of it may have changed.
+-- The tracker section, the map's corner and badges, the toast and the menu (UI/Completion.lua), the map and
+-- LegacyForever.API all read and listen here.
 ---@class LegacyZoneCompletion
 local ZoneCompletion = {}
 ns.ZoneCompletion = ZoneCompletion
@@ -88,6 +89,169 @@ function ZoneCompletion.Continent(continentID)
 		end
 	end
 	return ns.Model.ContinentCompletion(results)
+end
+
+--[[ Where the world map's corner sits ]]
+
+-- A box on the map, in the map's own texture units: its top-left and size.
+---@class LegacyCornerBox
+---@field x number
+---@field y number
+---@field width number
+---@field height number
+
+-- A placed Legacy objective: where its pin sits, as fractions of the map's width and height.
+---@class LegacyCornerPin
+---@field x number
+---@field y number
+
+-- A pin under the box costs the map's area of a 40 by 40 patch: the zone's own ground still outweighs one pin.
+local PIN_PATCH = 1600
+
+-- An area's "offsetX:offsetY:width:height" rectangle. The generator writes the shape; fail loudly on another.
+---@param key string
+---@return number x
+---@return number y
+---@return number width
+---@return number height
+local function Rect(key)
+	local x, y, width, height = assert(key:match("^(%d+):(%d+):(%d+):(%d+)$"))
+	return assert(tonumber(x)), assert(tonumber(y)), assert(tonumber(width)), assert(tonumber(height))
+end
+
+-- How much of a zone a box covers, in square texture units: the part overlapping the zone's own area rectangles,
+-- the same ones UI/Map.lua shades, plus a patch for every Legacy pin inside it. Ties are the caller's to order.
+---@param box LegacyCornerBox
+---@param areas LegacyArea[]
+---@param pins LegacyCornerPin[]
+---@param mapWidth number the map's width in texture units
+---@param mapHeight number
+---@return number
+function ZoneCompletion.Covered(box, areas, pins, mapWidth, mapHeight)
+	local left, top = box.x, box.y
+	local right, bottom = left + box.width, top + box.height
+	local covered = 0
+	for _, area in ipairs(areas) do
+		local x, y, width, height = Rect(area.key)
+		local overlapX = math.min(right, x + width) - math.max(left, x)
+		local overlapY = math.min(bottom, y + height) - math.max(top, y)
+		if overlapX > 0 and overlapY > 0 then
+			covered = covered + overlapX * overlapY
+		end
+	end
+	for _, pin in ipairs(pins) do
+		local x, y = pin.x * mapWidth, pin.y * mapHeight
+		if x >= left and x <= right and y >= top and y <= bottom then
+			covered = covered + PIN_PATCH
+		end
+	end
+	return covered
+end
+
+-- The candidates, in tie order, as the box's own point and its offset from the canvas container's matching
+-- point: top left and bottom left clear the floor dropdown, top right the Legacy map button and bottom right the
+-- quest-log toggle.
+---@type { point: string, x: number, y: number }[]
+local CORNERS = {
+	{ point = "TOPLEFT", x = 44, y = -18 },
+	{ point = "TOPRIGHT", x = -48, y = -18 },
+	{ point = "BOTTOMLEFT", x = 44, y = 18 },
+	{ point = "BOTTOMRIGHT", x = -88, y = 18 },
+}
+
+-- One corner per zone and box size: every draw of the same zone asks for the same answer.
+---@class LegacyCornerPlacement
+---@field width number
+---@field height number
+---@field containerWidth number
+---@field containerHeight number
+---@field mapWidth number
+---@field mapHeight number
+---@field corner number
+---@type table<number, LegacyCornerPlacement>
+local placements = {}
+
+-- A candidate box's top-left in the canvas container's UI units, y down.
+---@param corner { point: string, x: number, y: number }
+---@param width number
+---@param height number
+---@param containerWidth number
+---@param containerHeight number
+---@return number left
+---@return number top
+local function CornerOrigin(corner, width, height, containerWidth, containerHeight)
+	local left = corner.x >= 0 and corner.x or containerWidth + corner.x - width
+	local top = corner.y <= 0 and -corner.y or containerHeight - corner.y - height
+	return left, top
+end
+
+-- The map's canvas container and its own canvas, in UI and texture units.
+---@class LegacyCornerGeometry
+---@field containerWidth number
+---@field containerHeight number
+---@field mapWidth number
+---@field mapHeight number
+
+-- Which corner the zone's completion sits in: the one whose box covers least of the zone's own areas and pins,
+-- with the earliest candidate on a tie. The map opens with the whole zone fitted and centred, so a texture unit
+-- is `scale` UI units and a box is judged in the map's own texture units. `pins` is read only when the corner has
+-- to be judged, since the zone's pins are the costly part and the answer is kept.
+---@param uiMapID number
+---@param width number
+---@param height number
+---@param geometry LegacyCornerGeometry
+---@param pins fun(): LegacyCornerPin[]
+---@return { point: string, x: number, y: number }
+function ZoneCompletion.Corner(uiMapID, width, height, geometry, pins)
+	local containerWidth, containerHeight = geometry.containerWidth, geometry.containerHeight
+	local mapWidth, mapHeight = geometry.mapWidth, geometry.mapHeight
+	local cached = placements[uiMapID]
+	if
+		cached
+		and cached.width == width
+		and cached.height == height
+		and cached.containerWidth == containerWidth
+		and cached.containerHeight == containerHeight
+		and cached.mapWidth == mapWidth
+		and cached.mapHeight == mapHeight
+	then
+		return CORNERS[cached.corner]
+	end
+	local best = 1
+	if containerWidth > 0 and containerHeight > 0 and mapWidth > 0 and mapHeight > 0 then
+		local scale = math.min(containerWidth / mapWidth, containerHeight / mapHeight)
+		-- The map is centred in the container, letterboxed on whichever side is longer.
+		local offsetX = (containerWidth - mapWidth * scale) / 2
+		local offsetY = (containerHeight - mapHeight * scale) / 2
+		local zone = ns.Data.completion[uiMapID]
+		local areas = zone and zone.areas or {}
+		local placed = pins()
+		local bestScore
+		for index, corner in ipairs(CORNERS) do
+			local left, top = CornerOrigin(corner, width, height, containerWidth, containerHeight)
+			---@type LegacyCornerBox
+			local box = {
+				x = (left - offsetX) / scale,
+				y = (top - offsetY) / scale,
+				width = width / scale,
+				height = height / scale,
+			}
+			local score = ZoneCompletion.Covered(box, areas, placed, mapWidth, mapHeight)
+			if not bestScore or score < bestScore then
+				best, bestScore = index, score
+			end
+		end
+	end
+	placements[uiMapID] = {
+		width = width,
+		height = height,
+		containerWidth = containerWidth,
+		containerHeight = containerHeight,
+		mapWidth = mapWidth,
+		mapHeight = mapHeight,
+		corner = best,
+	}
+	return CORNERS[best]
 end
 
 --[[ The one notice ]]

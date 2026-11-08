@@ -199,6 +199,38 @@ check(Zones.Continent(20).zones == 1, "a zone with nothing to count is not one o
 check(Zones.Continent(40) == nil, "a continent with no zones has no result")
 explored.b = nil
 
+--[[ Where the world map's corner sits ]]
+
+-- A 1000 by 700 zone map drawn into a 700 by 465 container, fitted and centred.
+local geometry = { containerWidth = 700, containerHeight = 465, mapWidth = 1000, mapHeight = 700 }
+local function EmptyCompletion()
+	return { areas = {}, taxis = {}, dungeons = {}, raids = {}, legacy = {}, reputations = {} }
+end
+
+local function NoPins()
+	return {}
+end
+local box = { x = 0, y = 0, width = 200, height = 60 }
+check(Zones.Covered(box, { { key = "0:0:100:100" } }, {}, 1000, 700) == 6000, "an area costs its overlap")
+check(Zones.Covered(box, {}, { { x = 0.05, y = 0.05 } }, 1000, 700) == 1600, "a pin costs a 40 by 40 patch")
+
+data.completion[10] = OneArea("0:0:300:100")
+check(Zones.Corner(10, 140, 23, geometry, NoPins).point == "TOPRIGHT", "an empty corner wins over the zone's ground")
+data.completion[11] = EmptyCompletion()
+check(Zones.Corner(11, 140, 23, geometry, function()
+	return { { x = 0.1, y = 0.05 } }
+end).point == "TOPRIGHT", "a pin inside the top-left corner makes it lose")
+data.completion[12] = EmptyCompletion()
+check(Zones.Corner(12, 140, 23, geometry, NoPins).point == "TOPLEFT", "an empty map ties to the top left")
+data.completion[13] = EmptyCompletion()
+check(Zones.Corner(13, 140, 23, geometry, NoPins).point == "TOPLEFT", "the empty map's answer")
+data.completion[13].areas = { { name = "Top", key = "0:0:1002:300" } }
+check(Zones.Corner(13, 140, 23, geometry, NoPins).point == "TOPLEFT", "the same zone and size keep their cached corner")
+check(Zones.Corner(13, 141, 23, geometry, NoPins).point == "BOTTOMLEFT", "a new size is judged afresh")
+for id = 10, 13 do
+	data.completion[id] = nil
+end
+
 --[[ When a completion is news ]]
 
 -- Complete at login is not news: the first check only notes it, and it never becomes news later.
@@ -275,6 +307,7 @@ check(Zones.IsShown("map") and not Zones.IsShown("tracker"), "the surfaces read 
 check(changes == 3, "each surface switch is a change")
 Saved.Set("count_quests", true)
 check(changes == 4, "what counts is a change")
+Saved.Set("mapCollapsed", true)
 Saved.Set("trackerCollapsed", true)
 Saved.Set("showAreas", false)
 check(changes == 4, "a collapse state or another addon switch is not")

@@ -259,8 +259,11 @@ for _, file in ipairs({
 }) do
 	assert(loadfile(file))("LegacyForever", ns)
 end
--- The world map corner is gone; only the continent badges keep the tooltip.
-check(#onMapLoaded == 0, "the corner overlay no longer waits for the world map")
+-- The zone's corner on the world map: a frame of ours, never one of the map's overlay frames or data providers.
+check(#onMapLoaded == 1, "the corner overlay waits for the world map to load")
+onMapLoaded[1]()
+local overlay = Kit.Made("LegacyForeverZoneOverlayTemplate")[1]
+check(overlay and overlay:GetParent() == Kit.map, "the corner overlay is a frame of ours on the map")
 local color = {
 	GetRGB = function()
 		return 1, 1, 1
@@ -270,6 +273,17 @@ local color = {
 	end,
 }
 NORMAL_FONT_COLOR, GREEN_FONT_COLOR, HIGHLIGHT_FONT_COLOR, GRAY_FONT_COLOR = color, color, color, color
+overlay:Hide()
+local errorsBefore = #errors
+Kit.Tick()
+check(overlay.shown and overlay.Title.text:find("Elwynn Forest", 1, true), "opening the map fills in its corner")
+Kit.mapID = 200
+Kit.Tick()
+check(not overlay.shown, "turning to a map with nothing to count hides the corner")
+Kit.mapID = 100
+Kit.Tick()
+check(overlay.shown, "turning back shows it again")
+check(#errors == errorsBefore, "the corner draws without an error")
 
 zoneTracker:OnBlockHeaderClick({ id = 100 }, "LeftButton")
 check(openedMap == 100, "a click on the zone's tracker header asks the game to open its map")
@@ -466,9 +480,9 @@ check(
 	"the quest log's dungeon glyph is square"
 )
 
--- Every draw path on a cold index: the tracker's section, a badge's tooltip (which reads its continent) and the
--- map's badges. None builds the index during the draw; quests draw as pending, and one build is scheduled for the
--- next frame.
+-- Every draw path on a cold index: the tracker's section, a badge's tooltip (which reads its continent), the map's
+-- corner and badges. None builds the index during the draw; quests draw as pending, and one build is scheduled for
+-- the next frame.
 local drawn = {}
 -- A frame, font string, block or tooltip that takes any call and keeps the text it is given.
 local function Stub()
@@ -551,9 +565,13 @@ GameTooltip = {
 	Show = function() end,
 }
 local AGF_LINE = "Adventure Guide Forever routes the quests left in this zone."
-local function ZoneTooltip()
+local function ZoneTooltip(source)
 	drawn = {}
-	zoneTracker:OnBlockHeaderEnter({ id = 100 })
+	if source == "corner" then
+		LegacyForeverZoneOverlayMixin.OnEnter(overlay)
+	else
+		zoneTracker:OnBlockHeaderEnter({ id = 100 })
+	end
 	local found = 0
 	for index, line in ipairs(drawn) do
 		if line == AGF_LINE then
@@ -563,7 +581,8 @@ local function ZoneTooltip()
 	end
 	return found
 end
-check(ZoneTooltip() == 1, "Adventure Guide missing: one grey line, on by default")
+check(ZoneTooltip("corner") == 1, "the map corner: Adventure Guide missing, one grey line, on by default")
+check(ZoneTooltip() == 1, "the tracker: Adventure Guide missing, one grey line, on by default")
 agf = "off"
 check(ZoneTooltip() == 0, "installed but turned off: no line, the player chose that")
 agf = "on"

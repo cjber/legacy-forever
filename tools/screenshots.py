@@ -463,8 +463,58 @@ def main_menu(ui, live):
 # ------------------------------------------------------------------------------------------ the scenes
 
 
-def world_map(ui, data, live, ui_map=ASHENVALE, entrance=False):
-    """The world map on a Kalimdor zone with the addon's shading, pins and button drawn in."""
+# UI/Completion.lua's corner candidates, in tie order: the box's own point and its offset from the canvas
+# container's matching point.
+CORNERS = (("TOPLEFT", 44, -18), ("TOPRIGHT", -48, -18), ("BOTTOMLEFT", 44, 18), ("BOTTOMRIGHT", -88, 18))
+# A pin under the box costs a 40 by 40 patch of the map, as in Core/ZoneCompletion.lua.
+PIN_PATCH = 1600
+
+
+def covered(box, areas, pins, map_width, map_height):
+    """Core/ZoneCompletion.lua's Covered: the map area a box overlaps, plus a patch per pin inside it."""
+    left, top, width, height = box
+    right, bottom = left + width, top + height
+    total = 0
+    for area in areas:
+        x, y, w, h = (int(n) for n in area["key"].split(":"))
+        overlap_w = min(right, x + w) - max(left, x)
+        overlap_h = min(bottom, y + h) - max(top, y)
+        if overlap_w > 0 and overlap_h > 0:
+            total += overlap_w * overlap_h
+    for pin_x, pin_y in pins:
+        x, y = pin_x * map_width, pin_y * map_height
+        if left <= x <= right and top <= y <= bottom:
+            total += PIN_PATCH
+    return total
+
+
+def corner_origin(rects, art, zone, pins, width, height):
+    """The box's TOPLEFT in canvas UI units: the candidate whose box covers least of the zone, earliest on a tie.
+    The map opens fitted and centred in the container, so one texture unit is `scale` UI units."""
+    cx, cy, container_w, container_h = rects["container"]
+    mx, my, map_w_ui, map_h_ui = rects["map"]
+    scale = map_w_ui / art.width
+    assert abs(map_h_ui / art.height - scale) < 1e-6, "the map's art is not fitted at one scale"
+    offset_x, offset_y = mx - cx, my - cy
+    best, best_score = None, None
+    for _point, dx, dy in CORNERS:
+        left = dx if dx >= 0 else container_w + dx - width
+        top = -dy if dy <= 0 else container_h - dy - height
+        box = (
+            (left - offset_x) / scale,
+            (top - offset_y) / scale,
+            width / scale,
+            height / scale,
+        )
+        score = covered(box, zone["areas"], pins, art.width, art.height)
+        if best_score is None or score < best_score:
+            best, best_score = (left, top), score
+    assert best is not None
+    return best
+
+
+def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False):
+    """The world map on a Kalimdor zone with the addon's shading, pins, corner and button drawn in."""
     zone = data["completion"][ui_map]
     name = ui.table("UiMap")[str(ui_map)]["Name_lang"]
     content = ui.content
@@ -481,12 +531,15 @@ def world_map(ui, data, live, ui_map=ASHENVALE, entrance=False):
     canvas, rects = world_map_frame(ui, art, ("World", "Kalimdor", name), arrows=("Kalimdor", name))
     mx, my, mw, mh = rects["map"]
     groups = live.model.zone_objectives(ui_map)
+    pins = []
     for group in groups:
         for objective in group["objectives"]:
             entry = objective["entry"]
             if entry["kind"] != "explore" and "x" in entry:
+                pins.append((entry["x"], entry["y"]))
                 portal = ("Raid" if entry.get("raid") else "Dungeon") if "instance" in entry else None
                 zone_pin(ui, canvas, mx + entry["x"] * mw, my + entry["y"] * mh, portal)
+    completion_corner(ui, canvas, rects, art, zone, live.model.completion[ui_map], name, pins, collapsed)
     button = map_button(ui, canvas, rects, live.model.count(ui_map))
     if entrance:
         # AtlasLootClassic_DungeonsAndRaids' BFD fixture: entry level 15, recommended levels 24-32.
@@ -522,6 +575,37 @@ def world_map(ui, data, live, ui_map=ASHENVALE, entrance=False):
         entry = objective["entry"]
         canvas.paste(panel, mx + entry["x"] * mw + 16, my + entry["y"] * mh)
     return canvas, button
+
+
+def completion_corner(ui, canvas, rects, art, zone, result, name, pins, collapsed=False):
+    """LegacyForeverZoneOverlayTemplate in the 1.0.22 look, in whichever corner UI/Completion.lua's rule picks."""
+    width, height = corner_size(ui, canvas, result, name, collapsed)
+    left, top = corner_origin(rects, art, zone, pins, width, height)
+    cx, cy, _, _ = rects["container"]
+    x, y = cx + left, cy + top
+    title_font, counts_font = FONTS["GameFontNormalLarge"], FONTS["GameFontHighlight"]
+    title = f"{name}  {result['percent']}%"
+    counts = counts_text(ui, result, 16)
+    shade = Image.open(ROOT / "media" / "Shade.tga").convert("RGBA")
+    canvas.draw(shade, x - 48, y - 22, width + 48 + 64, height + 44, (1, 1, 1, 0.6))
+    canvas.text(x, y, title, title_font)
+    bar_y = y + title_font.height + 4
+    canvas.fill(x, bar_y, width, 2, (0, 0, 0, 0.45))
+    canvas.fill(x, bar_y, (width * (result["percent"] or 0)) / 100, 2, ui.global_color("NORMAL_FONT_COLOR"))
+    if not collapsed:
+        canvas.text(x, y + title_font.height + 12, counts, counts_font)
+
+
+def corner_size(ui, canvas, result, name, collapsed):
+    """UI/Completion.lua's box: the title or 140 wide, the counts too when expanded, and the text's height."""
+    title_font, counts_font = FONTS["GameFontNormalLarge"], FONTS["GameFontHighlight"]
+    title = f"{name}  {result['percent']}%"
+    width = max(canvas.text_width(title, title_font), 140)
+    height = title_font.height + 4 + 2
+    if not collapsed:
+        width = max(width, canvas.text_width(counts_text(ui, result, 16), counts_font))
+        height += 6 + counts_font.height
+    return width, height
 
 
 def tracker_bar(ui, canvas, x, y, width, percent):
@@ -668,7 +752,7 @@ def zone_pin(ui, canvas, x, y, portal=None):
 
 
 def render_unvisited(ui, data, live):
-    """Felwood, where this character has never been: every area shaded."""
+    """Felwood, where this character has never been: every area shaded and the corner at 0%, its bar empty."""
     canvas, _ = world_map(ui, data, live, FELWOOD)
     return scene(ui, [(canvas, 0, 0)])
 

@@ -30,6 +30,10 @@ L["Already complete"] = "Bereits abgeschlossen" -- mt
 L["Areas explored"] = "Erkundete Gebiete"
 L["Attach to quest tracker"] = "An Questverfolgung anheften"
 L["Click the zone to see where."] = "Klickt auf die Zone, um zu sehen, wo."
+L["Click to collapse."] = "Klicken zum Einklappen."
+L["Click to expand."] = "Klicken zum Ausklappen."
+L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
+	"Die angezeigte Zone in der Kartenecke und eine Plakette auf jeder Zone einer Kontinentkarte."
 L["Click to open the map. Right-click for options."] = "Klicken öffnet die Karte. Rechtsklick für Optionen."
 L["Click to set a waypoint here."] = "Klicken setzt hier eine Kartenmarkierung."
 L["Click to track, with live progress."] = "Klicken zum Verfolgen, mit aktuellem Fortschritt."
@@ -107,8 +111,6 @@ L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"Die Verfolgung ist gesperrt. Schaltet Verfolgung sperren aus, um sie zu verschieben."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Eure aktuelle Zone und was dort noch zu tun ist. Verfolgte Herausforderungen behalten ihren eigenen Vermächtnisbereich."
-L["A badge on each zone of a continent map, with the zone's completion."] =
-	"Eine Plakette auf jeder Zone einer Kontinentkarte, mit dem Abschluss der Zone." -- mt
 L["This addon"] = "Dieses Addon"
 L["This version of Questie isn't supported."] = "Diese Version von Questie wird nicht unterstützt."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
