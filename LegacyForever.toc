@@ -27,6 +27,7 @@ Locales\zhCN.lua
 Locales\zhTW.lua
 Data\Legacy.lua
 Core\SafeCall.lua
+Core\Log.lua
 Core\Core.lua
 Core\Art.lua
 Core\Saved.lua

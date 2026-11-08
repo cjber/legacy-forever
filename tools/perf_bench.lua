@@ -196,6 +196,14 @@ local function Environment(data)
 			end,
 		}
 	end
+	-- The journal installs its handler in the game; the bench stubs the client calls it makes and counts none of them.
+	env.geterrorhandler = function()
+		return error
+	end
+	env.seterrorhandler = function() end
+	env.strtrim = function(text)
+		return (text:gsub("^%s+", ""):gsub("%s+$", ""))
+	end
 	env.drainTimers = function()
 		local drained = timers
 		timers = {}

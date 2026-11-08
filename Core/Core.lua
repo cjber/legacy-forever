@@ -31,6 +31,11 @@ local _, addon = ...
 ---@field SafeCall fun(label: string, fn: function, ...: any): boolean, ... run fn as pcall does (Core/SafeCall.lua)
 ---@field RecordError fun(label: string, message: any, stack?: string) keep an error caught another way, for the report
 ---@field CaughtErrors fun(): ForeverCaughtError[] this session's caught errors, oldest first, as copies
+---@field AttachErrorJournal fun(store: table) keep the journal in the saved table, so a /reload keeps it
+---@field Log fun(level: string, topic: string, message: any, ...: any) one line in the shared ring (Core/Log.lua)
+---@field LogLines fun(count?: integer): string[] the newest log lines, oldest first, as copies (Core/Log.lua)
+---@field AttachLog fun(store: table) keep the log ring in the saved table, so a /reload keeps it
+---@field DebugCommand fun(argument?: string): boolean `/forever debug`: toggle, pin, off or show (Core/Log.lua)
 ---@field CutText fun(text: string, limit: integer): string text cut to `limit` bytes on a UTF-8 boundary, ending "..."
 ---@field Report ForeverReportModule the report window (UI/Report.lua)
 ---@field AuditLines fun(): string[] what /lf audit prints (Core/Report.lua)

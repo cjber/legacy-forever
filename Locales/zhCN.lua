@@ -188,3 +188,17 @@ L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
 	"/lf leaderboard - 在此插件的标签页打开 Forever 排行榜" -- mt
 L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
 	"除非关闭，否则开启。分享飞行路线总数，并将你列入 Forever 排行榜。" -- mt
+
+-- Shared debug log (Forever Core's Core/Log.lua).
+L["Debug log is off."] = "调试日志已关闭。" -- mt
+L["Debug log is on for this session."] = "本次会话已开启调试日志。" -- mt
+L["Debug log is on and pinned for this character."] = "该角色的调试日志已开启并固定。" -- mt
+L["Debug log is already on and pinned for this character."] = "该角色的调试日志已经开启并固定。" -- mt
+L["Debug log is off for this session; it is still pinned."] =
+	"本次会话已关闭调试日志，但仍保持固定。" -- mt
+L["Debug log is off and unpinned."] = "调试日志已关闭并取消固定。" -- mt
+L["No addon has attached its log yet."] = "还没有插件附加日志。" -- mt
+L["%s (last %d):"] = "%s（最近 %d 条）：" -- mt
+L["%s: no lines yet."] = "%s：还没有日志行。" -- mt
+L["Usage: /forever debug, /forever debug pin, /forever debug off, /forever debug show"] =
+	"用法：/forever debug、/forever debug pin、/forever debug off、/forever debug show" -- mt

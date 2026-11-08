@@ -72,11 +72,17 @@ local function boot(saved, mode, hardcore, guid)
 	env.strtrim = function(text)
 		return text:match("^%s*(.-)%s*$")
 	end
+	-- The client defines the error handler Core/SafeCall.lua chains through and replaces; strtrim is above.
+	env.geterrorhandler = function()
+		return error
+	end
+	env.seterrorhandler = function() end
 	env.LegacyForeverDB = saved or {}
 	local ns = {}
 	for _, path in ipairs({
 		"Locales/enUS.lua",
 		"Core/SafeCall.lua",
+		"Core/Log.lua",
 		"Core/Core.lua",
 		"Core/Saved.lua",
 		"Core/PeerStats.lua",

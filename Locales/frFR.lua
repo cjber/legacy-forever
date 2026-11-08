@@ -194,3 +194,19 @@ L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
 	"/lf leaderboard - ouvre Forever Leaderboards sur l'onglet de cet addon" -- mt
 L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
 	"Activé sauf si vous le désactivez. Partage les totaux de trajets aériens et vous inscrit aux classements Forever." -- mt
+
+-- Shared debug log (Forever Core's Core/Log.lua).
+L["Debug log is off."] = "Le journal de débogage est désactivé." -- mt
+L["Debug log is on for this session."] = "Le journal de débogage est activé pour cette session." -- mt
+L["Debug log is on and pinned for this character."] =
+	"Le journal de débogage est activé et épinglé pour ce personnage." -- mt
+L["Debug log is already on and pinned for this character."] =
+	"Le journal de débogage est déjà activé et épinglé pour ce personnage." -- mt
+L["Debug log is off for this session; it is still pinned."] =
+	"Le journal de débogage est désactivé pour cette session ; il reste épinglé." -- mt
+L["Debug log is off and unpinned."] = "Le journal de débogage est désactivé et désépinglé." -- mt
+L["No addon has attached its log yet."] = "Aucun addon n'a encore joint son journal." -- mt
+L["%s (last %d):"] = "%s (dernières %d) :" -- mt
+L["%s: no lines yet."] = "%s : aucune ligne pour l'instant." -- mt
+L["Usage: /forever debug, /forever debug pin, /forever debug off, /forever debug show"] =
+	"Utilisation : /forever debug, /forever debug pin, /forever debug off, /forever debug show" -- mt

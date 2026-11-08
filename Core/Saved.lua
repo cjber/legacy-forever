@@ -176,3 +176,19 @@ function Saved.SeenVersion(version)
 	root.lastVersion = version
 	return last
 end
+
+-- The shared error journal (Core/SafeCall.lua) lives in the saved table, so the report lists earlier sessions'
+-- errors after a /reload. A record, not a switch: it is kept here because this is the one file that names
+-- LegacyForeverDB. The saved variables load before this file (LoadSavedVariablesFirst), so nothing recorded before
+-- this line is lost: AttachErrorJournal merges what SafeCall already saw.
+do
+	local root = Root()
+	if type(root.errors) ~= "table" then
+		root.errors = {}
+	end
+	if type(root.log) ~= "table" then
+		root.log = { lines = {}, pinned = false }
+	end
+	ns.AttachErrorJournal(root.errors)
+	ns.AttachLog(root.log)
+end

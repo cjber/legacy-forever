@@ -127,7 +127,16 @@ C_Map = {
 	end,
 }
 
-for _, file in ipairs({ "Core/SafeCall.lua", "Core/Saved.lua", "Core/Model.lua", "Core/ZoneCompletion.lua" }) do
+-- The client defines the error handler and strtrim Core/SafeCall.lua reads; these stand-ins keep every error
+-- reachable, as BugSack's or the default error frame's would be.
+geterrorhandler = function()
+	return error
+end
+seterrorhandler = function() end
+strtrim = function(text)
+	return (text:gsub("^%s+", ""):gsub("%s+$", ""))
+end
+for _, file in ipairs({ "Core/SafeCall.lua", "Core/Log.lua", "Core/Saved.lua", "Core/Model.lua", "Core/ZoneCompletion.lua" }) do
 	assert(loadfile(file))("LegacyForever", ns)
 end
 local Zones, Saved = ns.ZoneCompletion, ns.Saved

@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **The report keeps errors from earlier sessions.** An error Legacy caught before the last `/reload`, a blocked action or a Lua warning was forgotten when the client reloaded, so it could not be copied into a report once it was gone. The report now lists them under their own heading, with when each was first and last seen and the version, build and locale it happened on, and keeps the 50 most recent. It also carries Legacy's recent log lines, the steps that led up to a bug, and `/forever debug` turns on detailed lines for the session (cjber/forever-core#204, cjber/forever-core#206).
+
 ## [1.0.32] - 2026-11-08
 
 - **The zone completion block on the world map clears the coordinates line.** When the least covered corner for the zone you were viewing was a bottom one, its counts row sat on Tweaks Forever's player coordinates along the bottom of the map. Both bottom corners now sit higher, so the block and its soft shade stay above that line.

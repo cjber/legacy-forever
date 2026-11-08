@@ -26,7 +26,7 @@ read_globals = { "GetCVarBool", "GetQuestDifficultyColor", "RGBTableToColorCode"
 	"DUNGEONS", "LegacySystemFrame", "MenuUtil", "OTHER", "QUESTS_LABEL", "RAIDS", "REPUTATION", "Mixin", "OBJECTIVE_DASH_STYLE_HIDE", "ObjectiveTrackerFrame",
 	"ObjectiveTrackerManager", "ShortestPathForever", "LeaMapsDB", "C_InputInterfaceStyle", "Lerp", "Saturate", "SoftCursor", "LibQuestieDB", "Questie", "QuestieLoader", "strtrim",
 	"C_MajorFactions", "Constants", "GameTooltip_AddErrorLine", "LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP", "RED_FONT_COLOR", "UIErrorsFrame",
-	"tContains", "time", "ToggleLegacySystemUI", "UnitClass", "UnitLevel", "debugstack", "UISpecialFrames", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
+	"tContains", "time", "ToggleLegacySystemUI", "UnitClass", "UnitLevel", "debugstack", "date", "UISpecialFrames", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 
 	for _, name in ipairs({ "GetServerTime", "GetNormalizedRealmName", "GetNumGroupMembers", "GetGuildRosterInfo", "GetNumGuildMembers", "LE_PARTY_CATEGORY_HOME", "issecretvalue", "C_GameRules", "GetRealmName", "IsInGuild", "IsInGroup", "IsInRaid", "LE_PARTY_CATEGORY_INSTANCE", "C_ChatInfo", "UnitName" }) do
@@ -40,7 +40,8 @@ files["tests/"] = { std = "+luajit" }
 -- Each spec may write only the client APIs it stubs.
 files["tests/live_spec.lua"] = {
 	globals = { "UnitGUID", "UnitFactionGroup", "Enum", "C_Map", "C_MapExplorationInfo", "C_TaxiMap", "C_QuestLog", "C_Reputation", "C_Timer", "tContains", "CreateFrame",
-		"GetCategoryList", "GetCategoryNumAchievements", "GetAchievementInfo", "GetAchievementNumCriteria", "GetAchievementCriteriaInfo", "GetServerTime" },
+		"GetCategoryList", "GetCategoryNumAchievements", "GetAchievementInfo", "GetAchievementNumCriteria", "GetAchievementCriteriaInfo", "GetServerTime",
+		"ForeverErrorJournal", "geterrorhandler", "seterrorhandler", "strtrim" },
 }
 files["tests/quests_spec.lua"] = {
 	globals = { "LibQuestieDB", "Questie", "QuestieLoader", "UnitClass", "UnitFactionGroup", "UnitRace" },
@@ -50,8 +51,8 @@ files["tests/map_contents_spec.lua"] = { globals = { "C_Map", "Enum", "GetCVarBo
 files["tests/navigate_spec.lua"] = {
 	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "UiMapPoint", "ShortestPathForever" },
 }
-files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame" } }
-files["tests/settings_spec.lua"] = { globals = { "CreateFrame", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "WorldMapFrame" } }
+files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverErrorJournal", "geterrorhandler", "seterrorhandler", "strtrim" } }
+files["tests/settings_spec.lua"] = { globals = { "CreateFrame", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "WorldMapFrame", "geterrorhandler", "seterrorhandler" } }
 files["tests/legacy_map_spec.lua"] = {
 	globals = {
 		"EventUtil", "REPUTATION", "WHITE_FONT_COLOR", "Enum", "GameTooltip", "GameTooltip_SetTitle", "GameTooltip_AddNormalLine",
@@ -68,6 +69,7 @@ files["tests/api_spec.lua"] = {
 		"HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "C_AddOns", "WHITE_FONT_COLOR", "GameTooltip", "GameTooltip_SetTitle",
 		"GameTooltip_AddColoredLine", "GameTooltip_AddInstructionLine", "GameTooltip_AddDisabledLine",
 		"Enum", "WorldMapFrame", "CreateFrame", "Mixin", "CreateFromMixins", "Saturate", "Lerp",
+		"seterrorhandler", "strtrim",
 	},
 }
 for _, name in ipairs({ "UnitGUID", "time" }) do
@@ -77,7 +79,7 @@ files["tests/report_spec.lua"] = {
 	globals = { "C_AddOns", "C_Map", "C_Texture", "CreateFrame", "DEFAULT_CHAT_FRAME", "GetBuildInfo", "GetLocale", "GetTime", "geterrorhandler",
 		"strtrim", "UIParent", "UISpecialFrames", "UnitClass", "UnitFactionGroup", "UnitLevel", "UnitRace" },
 }
-files["tests/zone_completion_spec.lua"] = { globals = { "C_Map", "GetTime" } }
+files["tests/zone_completion_spec.lua"] = { globals = { "C_Map", "GetTime", "geterrorhandler", "seterrorhandler", "strtrim" } }
 files["tests/completion_art_spec.lua"] = {
 	globals = {
 		"AlertFrame", "C_Map", "CreateFrame", "DUNGEONS", "EventUtil", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR",
@@ -86,4 +88,8 @@ files["tests/completion_art_spec.lua"] = {
 	},
 }
 read_globals[#read_globals + 1] = "EditModeManagerFrame"
+-- The journal spec loads the saved-variables file itself, with only the client calls that path makes.
+files["tests/error_journal_spec.lua"] = {
+	globals = { "CreateFrame", "SlashCmdList", "geterrorhandler", "seterrorhandler", "strtrim", "date", "GetTime" },
+}
 files["tests/family_locale_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "GetLocale" } }

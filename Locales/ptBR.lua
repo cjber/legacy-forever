@@ -192,3 +192,19 @@ L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
 	"/lf leaderboard - abre o Forever Leaderboards na aba deste addon" -- mt
 L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
 	"Ativado a menos que você o desative. Compartilha totais de rotas de voo e coloca você nas classificações Forever." -- mt
+
+-- Shared debug log (Forever Core's Core/Log.lua).
+L["Debug log is off."] = "O registro de depuração está desativado." -- mt
+L["Debug log is on for this session."] = "O registro de depuração está ativado para esta sessão." -- mt
+L["Debug log is on and pinned for this character."] =
+	"O registro de depuração está ativado e fixado para este personagem." -- mt
+L["Debug log is already on and pinned for this character."] =
+	"O registro de depuração já está ativado e fixado para este personagem." -- mt
+L["Debug log is off for this session; it is still pinned."] =
+	"O registro de depuração está desativado para esta sessão; ele continua fixado." -- mt
+L["Debug log is off and unpinned."] = "O registro de depuração está desativado e desafixado." -- mt
+L["No addon has attached its log yet."] = "Nenhum addon anexou seu registro ainda." -- mt
+L["%s (last %d):"] = "%s (últimas %d):" -- mt
+L["%s: no lines yet."] = "%s: ainda não há linhas." -- mt
+L["Usage: /forever debug, /forever debug pin, /forever debug off, /forever debug show"] =
+	"Uso: /forever debug, /forever debug pin, /forever debug off, /forever debug show" -- mt

@@ -163,6 +163,8 @@
 ---@field zoneCompletion LegacySettings
 
 ---@class LegacySavedVariables : ForeverFamilyDB
+---@field errors? ForeverCaughtError[] the shared error journal (Core/SafeCall.lua): earlier sessions' errors, for the report
+---@field log? ForeverDebugLogStore the shared debug log ring (Core/Log.lua): recent lines, for the report
 ---@field trackerHost? ForeverTrackerSettings
 ---@field tracked? LegacyTrackingKey[]
 ---@field zoneCompletion? LegacySettings

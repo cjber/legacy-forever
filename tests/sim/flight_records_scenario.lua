@@ -15,6 +15,10 @@ scenario("flight-path sharing keeps personal history", { stubs = { Questie = {} 
 		return {}
 	end
 	sim.gaps["Legacy fixture GetCategoryList"] = true
+	-- The map providers the simulator runs on open read these through C_Map.GetMapInfo.
+	sim.world.maps[947] = { name = "Azeroth", mapType = 1 }
+	sim.world.maps[1415] = { name = "Eastern Kingdoms", parent = 947, mapType = 2 }
+	sim.world.maps[1429] = { name = "Elwynn Forest", parent = 1415, mapType = 3 }
 	local guid = sim.world.player.guid
 	sim:login({
 		savedVariables = {

@@ -768,6 +768,13 @@ function M.build(sim)
 	impl.ScriptRegion.IsMouseMotionFocus = function(self)
 		return sim.mouseFocus == self
 	end
+	-- Gamepad focus (SmartNavigation) runs the region's OnEnter / OnLeave in the caller's taint.
+	impl.ScriptRegion.FocusEnter = function(self)
+		fire(self, "OnEnter")
+	end
+	impl.ScriptRegion.FocusExit = function(self)
+		fire(self, "OnLeave")
+	end
 	impl.ScriptRegion.IsAnchoringSecret = function(self)
 		return anchoringSecret(self)
 	end
@@ -777,8 +784,10 @@ function M.build(sim)
 	impl.ScriptRegion.HasAnySecretAspect = function(self)
 		return next(st(self).aspects) ~= nil
 	end
+	-- The client's SetToDefaults also clears the anchors: Compositor's PoolReset only hides a pooled region.
 	impl.ScriptRegion.SetToDefaults = function(self)
 		local s = st(self)
+		s.points = {}
 		s.aspects = {}
 		s.secretSize = nil
 		s.text = nil
@@ -1659,14 +1668,22 @@ function M.build(sim)
 		return scrollRange(self, "h")
 	end
 	impl.ScrollFrame.SetVerticalScroll = function(self, offset)
-		st(self).vscroll = offset
+		local s = st(self)
+		if (Secret.unwrap(s.vscroll) or 0) == Secret.unwrap(offset) then
+			return
+		end
+		s.vscroll = offset
 		fire(self, "OnVerticalScroll", offset)
 	end
 	impl.ScrollFrame.GetVerticalScroll = function(self)
 		return st(self).vscroll or 0
 	end
 	impl.ScrollFrame.SetHorizontalScroll = function(self, offset)
-		st(self).hscroll = offset
+		local s = st(self)
+		if (Secret.unwrap(s.hscroll) or 0) == Secret.unwrap(offset) then
+			return
+		end
+		s.hscroll = offset
 		fire(self, "OnHorizontalScroll", offset)
 	end
 	impl.ScrollFrame.GetHorizontalScroll = function(self)
