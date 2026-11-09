@@ -1,24 +1,23 @@
--- French by Brainc3ll. Lines ending -- mt were added later and are machine translated (2026-10-16);
--- corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
+-- French by Brainc3ll. Corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
 local _, ns = ...
 if GetLocale() ~= "frFR" then
 	return
 end
 local L = ns.L
 
-L["%d Legacy objective left"] = "%d objectif Legacy restant"
-L["%d Legacy objectives left"] = "%d objectifs Legacy restants"
+L["%d Legacy objective left"] = "%d objectif Héritage restant"
+L["%d Legacy objectives left"] = "%d objectifs Héritage restants"
 L["%d not known yet."] = "%d encore inconnu."
-L["%d unfinished Legacy objective on this map."] = "%d objectif Legacy non terminé sur cette carte."
-L["%d unfinished Legacy objectives on this map."] = "%d objectifs Legacy non terminés sur cette carte."
-L["%s %d Legacy |4point:points;"] = "%s %d |4point Legacy:points Legacy;"
+L["%d unfinished Legacy objective on this map."] = "%d objectif Héritage non terminé sur cette carte."
+L["%d unfinished Legacy objectives on this map."] = "%d objectifs Héritage non terminés sur cette carte."
+L["%s %d Legacy |4point:points;"] = "%s %d |4point Héritage:points Héritage;"
 L["%s complete. %s"] = "%s terminé. %s"
 L["%s is at %s in %s."] = "%s est à %s à %s."
 L["%s is at %s."] = "%s est à %s."
 L["%s: %d left"] = "%s : %d restant"
 L["%s: %d of %d areas left"] = "%s : %d sur %d zones restantes"
 L["%s: %d of %d zones complete (%d%%)"] = "%s : %d sur %d zones terminées (%d%%)"
-L["/lf - open the world map and its Legacy menu"] = "/lf - ouvrir la carte du monde et son menu Legacy"
+L["/lf - open the world map and its Legacy menu"] = "/lf - ouvrir la carte du monde et son menu Héritage"
 L["/lf audit - check the bundled data against the game"] =
 	"/lf audit - vérifier les données intégrées par rapport au jeu"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
@@ -53,7 +52,7 @@ L["Don't suggest this again"] = "Ne plus suggérer ceci"
 L["Drag to move"] = "Faites glisser pour déplacer"
 L["Dungeon or raid"] = "Donjon ou raid"
 L["Dungeons, raids and Legacy objectives count your progress on any character."] =
-	"Les donjons, raids et objectifs Legacy comptent votre progression sur n'importe quel personnage."
+	"Les donjons, raids et objectifs Héritage comptent votre progression sur n'importe quel personnage."
 L["Every quest this character can take in the zone, from Questie."] =
 	"Toutes les quêtes que ce personnage peut prendre dans la zone, depuis Questie."
 L["Feature request"] = "Demande de fonctionnalité"
@@ -68,9 +67,9 @@ L["Install Shortest Path Forever to have the route plotted for you."] =
 L["Installed, turned off"] = "Installé, désactivé"
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"Maintient le suivi partagé Forever là où vous l'avez placé. La poignée en haut ne permet plus de le glisser."
-L["Legacy"] = "Legacy"
+L["Legacy"] = "Héritage"
 L["Legacy Forever report"] = "Rapport Legacy Forever"
-L["Legacy objectives"] = "Objectifs Legacy"
+L["Legacy objectives"] = "Objectifs Héritage"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Niveaux, compétences, rangs et tout ce qui n'a pas d'emplacement fixe."
 L["Lock the tracker"] = "Verrouiller le suivi"
@@ -78,7 +77,7 @@ L["Tracker background"] = "Fond du suivi"
 L["Needs Questie, which lists each zone's quests."] = "Requiert Questie, qui liste les quêtes de chaque zone."
 L["No fixed location"] = "Aucun emplacement fixe"
 L["No unfinished Legacy objectives with a place on this map."] =
-	"Aucun objectif Legacy non terminé avec un emplacement sur cette carte."
+	"Aucun objectif Héritage non terminé avec un emplacement sur cette carte."
 L["Not installed"] = "Non installé"
 L["Nothing left to do here"] = "Plus rien à faire ici"
 L["Objective tracker"] = "Suivi des objectifs"
@@ -87,8 +86,8 @@ L["On the world map"] = "Sur la carte du monde"
 L["Open"] = "Ouvrir"
 L["Open a flight master on this continent to check these."] =
 	"Parlez à un maître de vol sur ce continent pour les vérifier."
-L["Open in the Legacy panel"] = "Ouvrir dans le panneau Legacy"
-L["Open the Legacy panel"] = "Ouvrir le panneau Legacy"
+L["Open in the Legacy panel"] = "Ouvrir dans le panneau Héritage"
+L["Open the Legacy panel"] = "Ouvrir le panneau Héritage"
 L["Open the map"] = "Ouvrir la carte"
 L["Part of %s"] = "Fait partie de %s"
 L["Part of %s: %s for exploring every zone"] = "Fait partie de %s : %s pour avoir exploré chaque zone"
@@ -111,11 +110,11 @@ L["Show a quiet line where one of my other Forever addons would help. Only for a
 L["Show dungeon and raid entrances"] = "Afficher les entrées de donjons et raids"
 L["Show undiscovered areas"] = "Afficher les zones non découvertes"
 L["Shows the Legacy challenges you can advance in each zone."] =
-	"Affiche les défis Legacy que vous pouvez progresser dans chaque zone."
+	"Affiche les défis Héritage que vous pouvez accomplir dans chaque zone."
 L["Stop tracking"] = "Arrêter le suivi"
 L["Suggest my other Forever addons"] = "Suggérer mes autres addons Forever"
 L["The Forever addons are free, with nothing locked behind them. If they help, you can buy me a coffee."] =
-	"Les addons Forever sont gratuits et rien n'est réservé aux donateurs. S'ils vous aident, vous pouvez m'offrir un café." -- mt
+	"Les addons Forever sont gratuits et rien n'est réservé aux donateurs. S'ils vous aident, vous pouvez m'offrir un café."
 L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
 	"Le lien est sélectionné. Appuyez sur Ctrl+C (Cmd+C sur Mac), puis collez-le dans un navigateur ; GitHub ouvrira une issue pré-remplie."
 L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
@@ -123,13 +122,13 @@ L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it
 L["The tracker is locked. Turn off Lock the tracker to move it."] =
 	"Le suivi est verrouillé. Désactivez Verrouiller le suivi pour le déplacer."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
-	"La zone où vous vous trouvez et ce qui reste à y faire. Les défis que vous suivez gardent leur propre section Legacy."
+	"La zone où vous vous trouvez et ce qui reste à y faire. Les défis que vous suivez gardent leur propre section Héritage."
 L["This addon"] = "Cet addon"
-L["This menu needs mouse and keyboard."] = "Ce menu nécessite une souris et un clavier." -- mt
+L["This menu needs mouse and keyboard."] = "Ce menu nécessite une souris et un clavier."
 L["This version of Questie isn't supported."] = "Cette version de Questie n'est pas prise en charge."
 L["Title"] = "Titre"
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
-	"Désactivez ceci si un autre addon les marque déjà. Le menu de la carte Legacy les liste toujours."
+	"Désactivez ceci si un autre addon les marque déjà. Le menu de la carte Héritage les liste toujours."
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"Désactivez ceci pour glisser le suivi partagé Forever n'importe où sur l'écran."
 L["Undiscovered area"] = "Zone non découverte"
@@ -151,65 +150,64 @@ L["the objective tracker isn't available, so tracked challenges can't be shown."
 L["updated to %s. %s"] = "mis à jour vers %s. %s"
 
 L["With a gamepad, Legacy's menus no longer cause a blocked-action error."] =
-	"Avec une manette, les menus de Legacy ne provoquent plus d'erreur d'action bloquée." -- mt
-L["Install AtlasLoot for recommended levels."] = "Installez AtlasLoot pour afficher les niveaux recommandés." -- mt
-L["Recommended levels: %s (AtlasLoot)"] = "Niveaux recommandés : %s (AtlasLoot)" -- mt
+	"Avec une manette, les menus Héritage ne provoquent plus d'erreur d'action bloquée."
+L["Install AtlasLoot for recommended levels."] = "Installez AtlasLoot pour afficher les niveaux recommandés."
+L["Recommended levels: %s (AtlasLoot)"] = "Niveaux recommandés : %s (AtlasLoot)"
 
--- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
 L["/lf share on|off - share flight-path totals, keeping your history"] =
-	"/lf share on|off - partager les totaux de trajets aériens en conservant votre historique" -- mt
-L["Flight-path leaderboard"] = "Classement des trajets aériens" -- mt
-L["Flight-path records"] = "Historique des trajets aériens" -- mt
+	"/lf share on|off - partager les totaux de trajets aériens en conservant votre historique"
+L["Flight-path leaderboard"] = "Classement des trajets aériens"
+L["Flight-path records"] = "Records de trajets aériens"
 L["Share flight-path totals with guild and group"] =
-	"Partager les totaux de trajets aériens avec la guilde et le groupe" -- mt
+	"Partager les totaux de trajets aériens avec la guilde et le groupe"
 
 -- Forever Leaderboards (Forever Core's shared window).
-L["Forever Leaderboards"] = "Classements Forever" -- mt
-L["Overall"] = "Général" -- mt
-L["Forever standing"] = "Classement Forever" -- mt
-L["Your guild and group"] = "Votre guilde et votre groupe" -- mt
-L["Players you've met"] = "Joueurs rencontrés" -- mt
-L["This week"] = "Cette semaine" -- mt
-L["All time"] = "Depuis toujours" -- mt
-L["Rank"] = "Rang" -- mt
-L["Player"] = "Joueur" -- mt
-L["No one has reported yet."] = "Personne n'a encore signalé." -- mt
-L["Share my progress"] = "Partager ma progression" -- mt
-L["Others' values are player-reported."] = "Les valeurs des autres joueurs sont déclarées par eux." -- mt
-L["Points for placing on each addon's board."] = "Points pour chaque place dans le classement de chaque addon." -- mt
-L["(you)"] = "(vous)" -- mt
-L["board"] = "classement" -- mt
-L["boards"] = "classements" -- mt
-L["Uses Forever addons"] = "Utilise des addons Forever" -- mt
-L["Forever: %s overall this week"] = "Forever : %s au total cette semaine" -- mt
-L["Forever: %s overall"] = "Forever : %s au total" -- mt
-L["1st"] = "1er" -- mt
-L["2nd"] = "2e" -- mt
-L["3rd"] = "3e" -- mt
-L["4th"] = "4e" -- mt
-L["5th"] = "5e" -- mt
-L["6th"] = "6e" -- mt
-L["7th"] = "7e" -- mt
-L["8th"] = "8e" -- mt
-L[", "] = ", " -- mt
-L["total"] = "total" -- mt
+L["Forever Leaderboards"] = "Classements Forever"
+L["Overall"] = "Général"
+L["Forever standing"] = "Position Forever"
+L["Your guild and group"] = "Votre guilde et votre groupe"
+L["Players you've met"] = "Joueurs rencontrés"
+L["This week"] = "Cette semaine"
+L["All time"] = "Depuis le début"
+L["Rank"] = "Rang"
+L["Player"] = "Joueur"
+L["No one has reported yet."] = "Personne n'a encore partagé ses résultats."
+L["Share my progress"] = "Partager ma progression"
+L["Others' values are player-reported."] = "Les valeurs des autres joueurs sont déclarées par eux."
+L["Points for placing on each addon's board."] = "Des points selon votre place dans le classement de chaque addon."
+L["(you)"] = "(vous)"
+L["board"] = "classement"
+L["boards"] = "classements"
+L["Uses Forever addons"] = "Utilise des addons Forever"
+L["Forever: %s overall this week"] = "Forever : %s au général cette semaine"
+L["Forever: %s overall"] = "Forever : %s au général"
+L["1st"] = "1er"
+L["2nd"] = "2e"
+L["3rd"] = "3e"
+L["4th"] = "4e"
+L["5th"] = "5e"
+L["6th"] = "6e"
+L["7th"] = "7e"
+L["8th"] = "8e"
+L[", "] = ", "
+L["total"] = "total"
 L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
-	"/lf leaderboard - ouvre Forever Leaderboards sur l'onglet de cet addon" -- mt
+	"/lf leaderboard - ouvrir les Classements Forever sur l'onglet de cet addon"
 L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
-	"Activé sauf si vous le désactivez. Partage les totaux de trajets aériens et vous inscrit aux classements Forever." -- mt
+	"Activé par défaut. Partage vos totaux de trajets aériens et vous fait apparaître dans les Classements Forever."
 
 -- Shared debug log (Forever Core's Core/Log.lua).
-L["Debug log is off."] = "Le journal de débogage est désactivé." -- mt
-L["Debug log is on for this session."] = "Le journal de débogage est activé pour cette session." -- mt
+L["Debug log is off."] = "Le journal de débogage est désactivé."
+L["Debug log is on for this session."] = "Le journal de débogage est activé pour cette session."
 L["Debug log is on and pinned for this character."] =
-	"Le journal de débogage est activé et épinglé pour ce personnage." -- mt
+	"Le journal de débogage est activé et épinglé pour ce personnage."
 L["Debug log is already on and pinned for this character."] =
-	"Le journal de débogage est déjà activé et épinglé pour ce personnage." -- mt
+	"Le journal de débogage est déjà activé et épinglé pour ce personnage."
 L["Debug log is off for this session; it is still pinned."] =
-	"Le journal de débogage est désactivé pour cette session ; il reste épinglé." -- mt
-L["Debug log is off and unpinned."] = "Le journal de débogage est désactivé et désépinglé." -- mt
-L["No addon has attached its log yet."] = "Aucun addon n'a encore joint son journal." -- mt
-L["%s (last %d):"] = "%s (dernières %d) :" -- mt
-L["%s: no lines yet."] = "%s : aucune ligne pour l'instant." -- mt
+	"Le journal de débogage est désactivé pour cette session ; il reste épinglé."
+L["Debug log is off and unpinned."] = "Le journal de débogage est désactivé et désépinglé."
+L["No addon has attached its log yet."] = "Aucun addon n'a encore joint son journal."
+L["%s (last %d):"] = "%s (%d dernières lignes) :"
+L["%s: no lines yet."] = "%s : aucune ligne pour l'instant."
 L["Usage: /forever debug, /forever debug pin, /forever debug off, /forever debug show"] =
-	"Utilisation : /forever debug, /forever debug pin, /forever debug off, /forever debug show" -- mt
+	"Utilisation : /forever debug, /forever debug pin, /forever debug off, /forever debug show"
