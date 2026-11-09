@@ -6,7 +6,7 @@
 Your unfinished WoW: Forever Legacy challenges, on the world map, for the zone you're looking at.<br>
 <a href="https://github.com/cjber/legacy-forever/actions/workflows/ci.yml"><img src="https://github.com/cjber/legacy-forever/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 <a href="https://github.com/cjber/legacy-forever/releases/latest"><img src="https://img.shields.io/github/v/release/cjber/legacy-forever" alt="Latest release"></a>
-<a href="https://ko-fi.com/cjber"><img src="https://img.shields.io/badge/Ko--fi-tip-ff5e5b?logo=ko-fi&logoColor=white" alt="Ko-fi"></a>
+<br><br><a href="https://github.com/sponsors/cjber"><img src="docs/github-sponsors-button.png" width="223" alt="Sponsor me on GitHub"></a> <a href="https://ko-fi.com/cjber"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi"></a>
 </p>
 
 Legacy Forever shows unfinished challenges on the world map and tracks the ones you choose.
@@ -139,7 +139,7 @@ CI runs these checks on main pushes and pull requests. Each day a scheduled job 
 
 ## Support
 
-The addon is free and stays GPL-3.0. If it saves you time, you can [buy me a coffee on Ko-fi](https://ko-fi.com/cjber); nothing is locked behind it and there is no paid version.
+The addon is free and stays GPL-3.0. If it saves you time, you can [sponsor me on GitHub](https://github.com/sponsors/cjber), which takes no fees, or [buy me a coffee on Ko-fi](https://ko-fi.com/cjber); nothing is locked behind it and there is no paid version.
 
 ## Credits
 
