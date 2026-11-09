@@ -161,8 +161,8 @@ L["Title"] = "Заголовок"
 L["What happened, or what you would like"] =
 	"Что произошло или что вы хотели бы видеть"
 
-L["The Forever addons page opens with a gamepad."] =
-	"Страница модификаций Forever открывается с геймпада." -- mt
+L["With a gamepad, Legacy's menus no longer cause a blocked-action error."] =
+	"С геймпадом меню Legacy больше не вызывают ошибку заблокированного действия." -- mt
 L["Install AtlasLoot for recommended levels."] =
 	"Установите AtlasLoot, чтобы увидеть рекомендуемые уровни." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровни: %s (AtlasLoot)" -- mt

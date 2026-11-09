@@ -145,7 +145,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "标题"
 L["What happened, or what you would like"] = "发生了什么，或你希望有什么"
 
-L["The Forever addons page opens with a gamepad."] = "Forever 插件页面现在可以用手柄打开。" -- mt
+L["With a gamepad, Legacy's menus no longer cause a blocked-action error."] =
+	"使用手柄时，Legacy 的菜单不再引发操作被阻止的错误。" -- mt
 L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。" -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "推荐等级：%s（AtlasLoot）" -- mt
 

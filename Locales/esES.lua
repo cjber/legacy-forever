@@ -148,7 +148,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Título"
 L["What happened, or what you would like"] = "Qué ha pasado o qué te gustaría"
 
-L["The Forever addons page opens with a gamepad."] = "La página de accesorios Forever se abre con un mando." -- mt
+L["With a gamepad, Legacy's menus no longer cause a blocked-action error."] =
+	"Con un mando, los menús de Legacy ya no provocan un error de acción bloqueada." -- mt
 L["Install AtlasLoot for recommended levels."] = "Instala AtlasLoot para ver los niveles recomendados." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Niveles recomendados: %s (AtlasLoot)" -- mt
 
