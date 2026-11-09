@@ -28,10 +28,14 @@ local function LoadLegacy()
 	return legacy
 end
 
--- An older family copy loads first; Legacy replaces it and binds its own locale.
-ForeverFamily = { VERSION = 2 }
+-- An older family copy loads first; Legacy replaces it and binds its own locale. The stub is unversioned, so it is
+-- older than any copy the shared file ships and a family sync that raises the bundled version keeps passing.
+local older = {}
+ForeverFamily = older
 local legacy = LoadLegacy()
-check(ForeverFamily.VERSION == 7 and legacy.Family == ForeverFamily.For(legacy.L), "a newer copy takes over")
+check(ForeverFamily ~= older, "a newer copy takes over")
+check((tonumber(ForeverFamily.VERSION) or 0) > (tonumber(older.VERSION) or 0), "the copy in use is the newer one")
+check(legacy.Family == ForeverFamily.For(legacy.L), "the newer copy binds Legacy's own locale")
 
 -- A current copy of an English-only addon loaded first, as Shortest Path Forever does (Legacy's OptionalDeps):
 -- it stays in use, and each addon's view keeps its own L.
