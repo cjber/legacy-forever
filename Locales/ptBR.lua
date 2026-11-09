@@ -211,3 +211,4 @@ L["%s (last %d):"] = "%s (últimas %d):" -- mt
 L["%s: no lines yet."] = "%s: ainda não há linhas." -- mt
 L["Usage: /forever debug, /forever debug pin, /forever debug off, /forever debug show"] =
 	"Uso: /forever debug, /forever debug pin, /forever debug off, /forever debug show" -- mt
+L["Hide this section"] = "Ocultar esta seção" -- mt

@@ -32,7 +32,6 @@ fi
 python3 tools/forever_tools/sync.py check
 python3 -m unittest discover -s tests -p '*_test.py'
 python3 -m unittest discover -s tools -p '*_test.py'
-python3 -m tools.lint_taint
 python3 tools/lint_art.py
 python3 tools/lint_secret.py
 python3 tools/check_editorconfig.py

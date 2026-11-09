@@ -89,6 +89,7 @@ L["Forever tracker"] = "Forever tracker"
 L["Forever: %s overall"] = "Forever: %s overall"
 L["Forever: %s overall this week"] = "Forever: %s overall this week"
 L["Hide from the tracker"] = "Hide from the tracker"
+L["Hide this section"] = "Hide this section"
 L["In the objective tracker"] = "In the objective tracker"
 L["Install AtlasLoot for recommended levels."] = "Install AtlasLoot for recommended levels."
 L["Install Shortest Path Forever to have the route plotted for you."] =
