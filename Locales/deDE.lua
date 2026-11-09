@@ -149,8 +149,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "Titel"
 L["What happened, or what you would like"] = "Was passiert ist oder was Ihr Euch wünscht"
 
-L["With a gamepad, Legacy's menus no longer cause a blocked-action error."] =
-	"Mit einem Controller lösen Legacys Menüs keinen Fehler wegen blockierter Aktion mehr aus." -- mt
+L["The French translation now uses the game's own words."] =
+	"Die französische Übersetzung verwendet jetzt die Begriffe des Spiels." -- mt
 L["Install AtlasLoot for recommended levels."] = "Installiert AtlasLoot für empfohlene Stufen." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Empfohlene Stufen: %s (AtlasLoot)" -- mt
 

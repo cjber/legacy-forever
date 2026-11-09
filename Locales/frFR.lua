@@ -149,8 +149,8 @@ L["the objective tracker isn't available, so tracked challenges can't be shown."
 	"le suivi des objectifs n'est pas disponible, les défis suivis ne peuvent donc pas être affichés."
 L["updated to %s. %s"] = "mis à jour vers %s. %s"
 
-L["With a gamepad, Legacy's menus no longer cause a blocked-action error."] =
-	"Avec une manette, les menus Héritage ne provoquent plus d'erreur d'action bloquée."
+L["The French translation now uses the game's own words."] =
+	"La traduction française reprend désormais les termes du jeu." -- mt
 L["Install AtlasLoot for recommended levels."] = "Installez AtlasLoot pour afficher les niveaux recommandés."
 L["Recommended levels: %s (AtlasLoot)"] = "Niveaux recommandés : %s (AtlasLoot)"
 
