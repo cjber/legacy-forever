@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-11-09
+
 - **French reads as the French client does.** Legacy is now Héritage in every French line, as the game calls it, and Brainc3ll checked every line that was machine translated (#353).
 
 ## [1.1.3] - 2026-11-09

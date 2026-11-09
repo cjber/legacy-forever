@@ -145,8 +145,7 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "標題"
 L["What happened, or what you would like"] = "發生了什麼，或你希望有什麼"
 
-L["With a gamepad, Legacy's menus no longer cause a blocked-action error."] =
-	"使用手把時，Legacy 的選單不再引發動作被封鎖的錯誤。" -- mt
+L["The French translation now uses the game's own words."] = "法語翻譯現在使用遊戲本身的用語。" -- mt
 L["Install AtlasLoot for recommended levels."] = "安裝AtlasLoot以查看建議等級。" -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "建議等級：%s（AtlasLoot）" -- mt
 
