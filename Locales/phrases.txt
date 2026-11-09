@@ -131,6 +131,7 @@ L["Plans the cheapest route to your next profession rank."] = "Plans the cheapes
 L["Plans the quickest way anywhere and guides you there, with live boat and zeppelin times."] =
 	"Plans the quickest way anywhere and guides you there, with live boat and zeppelin times."
 L["Player"] = "Player"
+L["Players you've met"] = "Players you've met"
 L["Points for placing on each addon's board."] = "Points for placing on each addon's board."
 L["Quest"] = "Quest"
 L["Quest automation, rare alerts and merchant handling for the default UI."] =
