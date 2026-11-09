@@ -212,8 +212,19 @@ reloaded.flush()
 check(#reloaded.sent == 0 and not reloaded.ns.Stats.Leaderboard().sharing, "saved opt-out survives reload")
 reloaded.env.SlashCmdList.LEGACYFOREVER("share on")
 reloaded.flush()
+-- Core's PeerStats relays the stored peer rows (2| payloads) on Sync beside the
+-- addon's own snapshot (1|), so count only the snapshots this addon sent.
+local function own(list)
+	local n = 0
+	for _, row in ipairs(list) do
+		if tostring(row.payload):match("^1|") then
+			n = n + 1
+		end
+	end
+	return n
+end
 check(
-	#reloaded.sent == 1 and reloaded.ns.Stats.Leaderboard().total == 3,
+	own(reloaded.sent) == 1 and reloaded.ns.Stats.Leaderboard().total == 3,
 	"re-enable restores eligible cached peers and sends history"
 )
 local opened
