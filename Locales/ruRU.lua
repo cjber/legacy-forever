@@ -123,6 +123,7 @@ L["The tracker is locked. Turn off Lock the tracker to move it."] =
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
 L["This addon"] = "Эта модификация"
+L["This menu needs mouse and keyboard."] = "Для этого меню нужны мышь и клавиатура." -- mt
 L["This version of Questie isn't supported."] = "Эта версия Questie не поддерживается."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"Отключите, если их уже отмечает другая модификация. Меню старинных испытаний на карте по-прежнему их показывает."

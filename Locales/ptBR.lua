@@ -113,6 +113,7 @@ L["The tracker is locked. Turn off Lock the tracker to move it."] =
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"A zona em que você está e o que falta fazer nela. Desafios rastreados mantêm sua própria seção de Legado."
 L["This addon"] = "Este AddOn"
+L["This menu needs mouse and keyboard."] = "Este menu precisa de mouse e teclado." -- mt
 L["This version of Questie isn't supported."] = "Esta versão do Questie não é compatível."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"Desative se outro addon já as marca. O menu de Legado do mapa continua listando-as."

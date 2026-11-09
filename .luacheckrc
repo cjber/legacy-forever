@@ -22,7 +22,7 @@ read_globals = { "GetCVarBool", "GetQuestDifficultyColor", "RGBTableToColorCode"
 	"CreateFrame", "CreateFromMixins", "CreateTexturePool", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameFontNormal", "GameFontNormalSmall", "GameFontNormalTiny", "GameTooltip_AddBlankLineToTooltip", "GameTooltip_AddColoredLine", "GameTooltip_AddDisabledLine", "GetCursorPosition", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR", "HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",
 	"GameTooltip_AddNormalLine", "GameTooltip_SetTitle", "GetAchievementCategory", "GetAchievementCriteriaInfo", "GetAchievementInfo",
-	"GetAchievementNumCriteria", "GetBuildInfo", "GetLocale", "geterrorhandler", "InCombatLockdown", "GetTime", "PlaySound", "SOUNDKIT", "GetCategoryInfo", "GetCategoryList", "GetCategoryNumAchievements", "hooksecurefunc",
+	"GetAchievementNumCriteria", "GetBuildInfo", "GetLocale", "geterrorhandler", "InCombatLockdown", "InputUtil", "GetTime", "PlaySound", "SOUNDKIT", "GetCategoryInfo", "GetCategoryList", "GetCategoryNumAchievements", "hooksecurefunc",
 	"DUNGEONS", "LegacySystemFrame", "MenuUtil", "OTHER", "QUESTS_LABEL", "RAIDS", "REPUTATION", "Mixin", "OBJECTIVE_DASH_STYLE_HIDE", "ObjectiveTrackerFrame",
 	"ObjectiveTrackerManager", "ShortestPathForever", "LeaMapsDB", "C_InputInterfaceStyle", "Lerp", "Saturate", "SoftCursor", "LibQuestieDB", "Questie", "QuestieLoader", "strtrim",
 	"C_MajorFactions", "Constants", "GameTooltip_AddErrorLine", "LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP", "RED_FONT_COLOR", "UIErrorsFrame",

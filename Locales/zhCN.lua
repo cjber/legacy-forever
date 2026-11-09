@@ -109,6 +109,7 @@ L["The tracker is locked. Turn off Lock the tracker to move it."] =
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地区以及那里剩余的事项。你追踪的挑战保留在各自的传承区块中。"
 L["This addon"] = "本插件"
+L["This menu needs mouse and keyboard."] = "此菜单需要鼠标和键盘。" -- mt
 L["This version of Questie isn't supported."] = "不支持此版本的Questie。"
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"如果其他插件已经标记了入口，请关闭此项。地图的传承菜单仍会列出它们。"

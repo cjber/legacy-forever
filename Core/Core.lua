@@ -24,6 +24,8 @@ local _, addon = ...
 ---@field MapCanvas ForeverMapCanvas the views of our own on the world map (UI/MapCanvas.lua)
 ---@field RefreshMap fun()
 ---@field OpenMapMenu fun()
+---@field GamepadUI fun(): boolean whether the gamepad interface is on
+---@field ContextMenu fun(owner: Frame, generator: function): any a menu, or a line under the gamepad interface
 ---@field Navigate fun(uiMapID: number, x: number, y: number, title: string)
 ---@field NavigateHint fun(): string
 ---@field DungeonLevelRange fun(instance: number): number?, number?, string? recommended range from installed AtlasLoot
@@ -58,6 +60,29 @@ ns.WHATS_NEW = L["The Forever addons page opens with a gamepad."]
 ---@param msg string
 function ns.Print(msg)
 	DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99" .. ns.TITLE .. "|r " .. msg)
+end
+
+-- With the gamepad interface on, Blizzard's gamepad frame manager takes every menu that shows into its focus in the
+-- same call, writing its state under the taint of whoever opened the menu. The next secure reader then has its
+-- protected SetPreferredGamepadInteractTarget call refused and blames Legacy Forever. No addon code can open a
+-- Blizzard menu untainted, so under the gamepad interface Legacy opens none (#339).
+---@return boolean
+function ns.GamepadUI()
+	local enabled = InputUtil and InputUtil.IsGamepadUIEnabled
+	return enabled ~= nil and enabled() == true
+end
+
+-- A Blizzard context menu from our own code: under the gamepad interface it would taint the gamepad focus, so the
+-- player gets a line instead and no menu opens.
+---@param owner Frame
+---@param generator fun(owner: Frame, root: any)
+---@return any
+function ns.ContextMenu(owner, generator)
+	if ns.GamepadUI() then
+		UIErrorsFrame:AddMessage(L["This menu needs mouse and keyboard."], 1, 1, 0)
+		return nil
+	end
+	return MenuUtil.CreateContextMenu(owner, generator)
 end
 
 -- /lf audit: the same lines /lf report shows (Core/Report.lua), in chat.

@@ -72,6 +72,9 @@ local ns = {
 	SafeCall = function(_, fn, ...)
 		return true, fn(...)
 	end,
+	GamepadUI = function()
+		return false
+	end,
 	Live = {
 		Name = function()
 			return "Defender of Elwynn"

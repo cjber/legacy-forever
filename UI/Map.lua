@@ -302,6 +302,17 @@ function LegacyForeverMapButtonMixin:OnLoad()
 			BuildMenu(root, map:GetMapID())
 		end
 	end)
+	-- Under the gamepad interface a menu opened from our own code takes the gamepad focus under our taint (see
+	-- ns.GamepadUI). Every switch in this menu is also on the addon's Settings page (UI/Settings.lua), so a gamepad
+	-- player loses nothing by a press showing a line instead.
+	local open = self.OpenMenu
+	self.OpenMenu = function(button)
+		if ns.GamepadUI() then
+			UIErrorsFrame:AddMessage(L["This menu needs mouse and keyboard."], 1, 1, 0)
+			return
+		end
+		return open(button)
+	end
 end
 
 -- Below whichever other top-right buttons are actually showing there: rulesets disable Blizzard's

@@ -118,6 +118,7 @@ L["The tracker is locked. Turn off Lock the tracker to move it."] =
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
 L["This addon"] = "이 애드온"
+L["This menu needs mouse and keyboard."] = "이 메뉴는 마우스와 키보드가 필요합니다." -- mt
 L["This version of Questie isn't supported."] = "이 버전의 Questie는 지원하지 않습니다."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"다른 애드온이 이미 표시한다면 끄세요. 지도의 유산 메뉴에는 계속 표시됩니다."

@@ -164,6 +164,7 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"The zone you're viewing in the map's corner, and a badge on each zone of a continent map."
 L["This addon"] = "This addon"
+L["This menu needs mouse and keyboard."] = "This menu needs mouse and keyboard."
 L["This version of Questie isn't supported."] = "This version of Questie isn't supported."
 L["This week"] = "This week"
 L["Title"] = "Title"

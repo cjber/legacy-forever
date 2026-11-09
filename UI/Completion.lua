@@ -250,7 +250,7 @@ function TrackerMixin:OnBlockHeaderClick(block, mouseButton)
 		C_Map.OpenWorldMap(block.id)
 		return
 	end
-	MenuUtil.CreateContextMenu(self:GetContextMenuParent(), function(_, root)
+	ns.ContextMenu(self:GetContextMenuParent(), function(_, root)
 		root:SetTag("MENU_LEGACY_HERE_ZONE_TRACKER", block)
 		root:CreateTitle(C_Map.GetMapInfo(block.id).name)
 		root:CreateButton(L["Open the map"], function()

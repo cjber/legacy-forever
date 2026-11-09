@@ -78,7 +78,7 @@ function ModuleMixin:OnBlockHeaderClick(block, mouseButton)
 		ns.Live.ShowInLegacyPanel(block.id)
 		return
 	end
-	MenuUtil.CreateContextMenu(self:GetContextMenuParent(), function(_, root)
+	ns.ContextMenu(self:GetContextMenuParent(), function(_, root)
 		root:SetTag("MENU_LEGACY_HERE_TRACKER", block)
 		root:CreateTitle(ns.Live.Name(block.id))
 		ns.Live.LockPanelEntry(root:CreateButton(L["Open in the Legacy panel"], function()

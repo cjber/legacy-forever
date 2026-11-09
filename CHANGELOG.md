@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **With the gamepad interface on, the map's Legacy menu no longer trips the client's protected `SetPreferredGamepadInteractTarget()`.** Legacy's menus were opened from its own code, so the gamepad frame manager took them into its focus under Legacy's taint, and closing them had the client's protected call refused. Under the gamepad interface the map button, `/lf` and the tracker's right-click menus now show "This menu needs mouse and keyboard." instead of opening; the map menu's switches are all in the addon's settings. Reported in game (#339).
+
 ## [1.1.2] - 2026-11-08
 
 - **The Forever addons page opens with a gamepad.** With the gamepad interface on, the Forever addons settings page can be entered from the Options list (cjber/tweaks-forever#382).

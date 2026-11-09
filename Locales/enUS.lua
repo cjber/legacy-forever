@@ -7,3 +7,4 @@ ns.L = setmetatable({}, {
 		return key
 	end,
 })
+ns.L["This menu needs mouse and keyboard."] = "This menu needs mouse and keyboard."
