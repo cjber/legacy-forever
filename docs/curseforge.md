@@ -2,6 +2,8 @@ Legacy Forever shows unfinished challenges on the world map and tracks the ones 
 
 Free, with nothing locked behind it. If it saves you time, you can [buy me a coffee on Ko-fi](https://ko-fi.com/cjber).
 
+[![Support me on Ko-fi](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/kofi-button.png)](https://ko-fi.com/cjber)
+
 ![Ashenvale on the world map as two areas are found, then the Legacy menu](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif)
 
 Discover an area and its shading lifts. The Legacy menu tracks the challenges behind it.
