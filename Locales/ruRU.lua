@@ -227,3 +227,4 @@ L["%s (last %d):"] = "%s (последние %d):" -- mt
 L["%s: no lines yet."] = "%s: строк пока нет." -- mt
 L["Usage: /forever debug, /forever debug pin, /forever debug off, /forever debug show"] =
 	"Использование: /forever debug, /forever debug pin, /forever debug off, /forever debug show" -- mt
+L["Hide this section"] = "Скрыть этот раздел" -- mt

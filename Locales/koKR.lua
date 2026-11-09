@@ -216,3 +216,4 @@ L["%s (last %d):"] = "%s (최근 %d개):" -- mt
 L["%s: no lines yet."] = "%s: 아직 줄이 없습니다." -- mt
 L["Usage: /forever debug, /forever debug pin, /forever debug off, /forever debug show"] =
 	"사용법: /forever debug, /forever debug pin, /forever debug off, /forever debug show" -- mt
+L["Hide this section"] = "이 섹션 숨기기" -- mt

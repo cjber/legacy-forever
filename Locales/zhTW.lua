@@ -204,3 +204,4 @@ L["%s (last %d):"] = "%s（最近 %d 筆）：" -- mt
 L["%s: no lines yet."] = "%s：還沒有記錄行。" -- mt
 L["Usage: /forever debug, /forever debug pin, /forever debug off, /forever debug show"] =
 	"用法：/forever debug、/forever debug pin、/forever debug off、/forever debug show" -- mt
+L["Hide this section"] = "隱藏此一段" -- mt

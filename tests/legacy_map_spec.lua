@@ -186,8 +186,8 @@ check(pin.level == 30 and Areas()[1].level == 20, "pins take the map's frame lev
 check(pin.point[2] == Kit.canvas and pin.point[4] == 250 and pin.point[5] == -350, "the pin sits at its map fraction")
 check(math.abs(pin.scale - 1) < 1e-9, "zoomed out, the pin is at its start scale")
 check(
-	pin.mouse and pin.mouseClicks and #pin.passThrough == 1 and pin.passThrough[1] == "RightButton",
-	"right-click zooms out"
+	pin.mouse and pin.mouseClicks and pin.passThrough == nil,
+	"right-click zooms out, and the pin never calls the restricted SetPassThroughButtons"
 )
 local areaFrame = Areas()[1]
 check(areaFrame.mouse == false, "the shading never takes the mouse, so the map keeps its clicks and drags")
