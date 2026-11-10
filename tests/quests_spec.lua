@@ -121,7 +121,28 @@ local function FakeQuestie(ready)
 end
 
 local invalidated = 0
+-- The client's clock and timers: the build is sliced by debugprofilestop and the ready wait is a timer.
+local clock = 0
+debugprofilestop = function()
+	clock = clock + 1
+	return clock
+end
+local timers = {}
+C_Timer = {
+	After = function(_, callback)
+		timers[#timers + 1] = callback
+	end,
+}
+local function RunTimers()
+	local due = timers
+	timers = {}
+	for _, callback in ipairs(due) do
+		callback()
+	end
+end
 local function Load()
+	-- A fresh file starts with none of an earlier load's timers pending.
+	timers = {}
 	local ns = {
 		Data = { completion = { [1429] = {}, [1411] = {} } },
 		Live = {
@@ -299,5 +320,39 @@ equal(ns.Quests.Zone(1429), nil, "a QuestieDB error leaves no quests")
 equal(ns.Quests.Failure():find("bad data", 1, true) ~= nil, true, "with its message")
 onReady()
 equal(ns.Quests.Zone(1429), nil, "a failed index isn't retried")
+
+-- Questie that loads and never reports ready: past its wait the database is read as it stands rather than
+-- leaving the category on its loading line for the session.
+FakeQuestieDB()
+FakeQuestie(false)
+ns = Load()
+equal(ns.Quests.Status(), "loading", "Questie still starting")
+equal(#timers, 1, "one ready wait is armed")
+invalidated = 0
+timers[1]()
+equal(ns.Quests.Status(), "ready", "past the wait QuestieDB is read as it stands")
+equal(invalidated, 1, "and the surfaces are told to redraw")
+equal(type(onReady), "function", "Questie can still report ready later")
+Questie.API.isReady = true
+onReady()
+equal(invalidated, 2, "and its index is read again with Questie's blacklist")
+
+-- The index is built a slice a frame: a deferred read starts it and reads as pending, no one frame walks
+-- the whole database, and the frame it lands on announces the change.
+FakeQuestieDB()
+FakeQuestie(true)
+ns = Load()
+invalidated = 0
+equal(ns.Quests.Zone(1429, true), false, "a cold index reads as pending")
+equal(#timers, 1, "one build is scheduled for the next frame")
+local frames = 0
+while ns.Quests.Cold() and frames < 500 do
+	frames = frames + 1
+	RunTimers()
+end
+equal(ns.Quests.Cold(), false, "the build lands")
+equal(frames > 1, true, "over several frames (" .. frames .. "), not one")
+equal(invalidated, 1, "and the frame it lands on announces it")
+equal(Names(ns.Quests.Zone(1429)), Names(Load().Quests.Zone(1429)), "with the same quests as a whole build")
 
 print("quests_spec: " .. checks .. " checks passed")

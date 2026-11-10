@@ -25,7 +25,7 @@ read_globals = { "ForeverCore", "GetCVarBool", "GetQuestDifficultyColor", "RGBTa
 	"DUNGEONS", "LegacySystemFrame", "MenuUtil", "OTHER", "QUESTS_LABEL", "RAIDS", "REPUTATION", "Mixin", "OBJECTIVE_DASH_STYLE_HIDE", "ObjectiveTrackerFrame",
 	"ObjectiveTrackerManager", "ShortestPathForever", "LeaMapsDB", "C_InputInterfaceStyle", "Lerp", "Saturate", "SoftCursor", "LibQuestieDB", "Questie", "QuestieLoader", "strtrim",
 	"C_MajorFactions", "Constants", "GameTooltip_AddErrorLine", "LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP", "RED_FONT_COLOR", "UIErrorsFrame",
-	"tContains", "time", "ToggleLegacySystemUI", "UnitClass", "UnitLevel", "debugstack", "date", "UISpecialFrames", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
+	"tContains", "time", "ToggleLegacySystemUI", "UnitClass", "UnitLevel", "debugstack", "debugprofilestop", "date", "UISpecialFrames", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 
 	for _, name in ipairs({ "GetServerTime", "GetNormalizedRealmName", "GetNumGroupMembers", "GetGuildRosterInfo", "GetNumGuildMembers", "LE_PARTY_CATEGORY_HOME", "issecretvalue", "C_GameRules", "GetRealmName", "IsInGuild", "IsInGroup", "IsInRaid", "LE_PARTY_CATEGORY_INSTANCE", "C_ChatInfo", "UnitName" }) do
@@ -43,9 +43,18 @@ files["tests/live_spec.lua"] = {
 		"geterrorhandler", "seterrorhandler", "strtrim" },
 }
 files["tests/quests_spec.lua"] = {
-	globals = { "LibQuestieDB", "Questie", "QuestieLoader", "UnitClass", "UnitFactionGroup", "UnitRace" },
+	globals = {
+		"LibQuestieDB",
+		"Questie",
+		"QuestieLoader",
+		"UnitClass",
+		"UnitFactionGroup",
+		"UnitRace",
+		"C_Timer",
+		"debugprofilestop",
+	},
 }
-files["tests/dungeon_levels_spec.lua"] = { globals = { "AtlasLoot", "InCombatLockdown" } }
+files["tests/dungeon_levels_spec.lua"] = { globals = { "AtlasLoot", "InCombatLockdown", "C_Timer" } }
 files["tests/map_contents_spec.lua"] = { globals = { "C_Map", "Enum", "GetCVarBool" } }
 files["tests/navigate_spec.lua"] = {
 	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "ForeverCore", "UiMapPoint", "ShortestPathForever" },
@@ -70,7 +79,7 @@ files["tests/api_spec.lua"] = {
 		"HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "C_AddOns", "WHITE_FONT_COLOR", "GameTooltip", "GameTooltip_SetTitle",
 		"GameTooltip_AddColoredLine", "GameTooltip_AddInstructionLine", "GameTooltip_AddDisabledLine",
 		"Enum", "WorldMapFrame", "CreateFrame", "Mixin", "CreateFromMixins", "Saturate", "Lerp",
-		"seterrorhandler", "strtrim", "CreateSecureDelegate",
+		"seterrorhandler", "strtrim", "CreateSecureDelegate", "debugprofilestop",
 	},
 }
 for _, name in ipairs({ "UnitGUID", "time" }) do

@@ -384,10 +384,13 @@ end
 -- holiday) rather than a zone, quests Questie hides (never in the game, or a holiday's), quests with
 -- no giver or object to start them, gated ones (QUEST_GATES), and quests after a choice this
 -- character could make the other way. Mutually exclusive quests in a zone count once, done when any is.
+-- `yield` runs between quests, so a caller can build the index a slice a frame: it is a database-wide read.
 ---@param source LegacyQuestSource
 ---@param zones table<number, any>
+---@param yield? fun()
 ---@return table<number, LegacyQuestItem[]>
-function Model.QuestIndex(source, zones)
+function Model.QuestIndex(source, zones, yield)
+	local advance = yield or function() end
 	---@type table<number, boolean>
 	local reachable = {}
 	local Reachable
@@ -451,6 +454,7 @@ function Model.QuestIndex(source, zones)
 		end
 		ok = ok and Follows(questID)
 		reachable[questID] = ok
+		advance()
 		return ok
 	end
 
@@ -490,6 +494,7 @@ function Model.QuestIndex(source, zones)
 		if zoneOf[questID] then
 			root[questID] = questID
 		end
+		advance()
 	end
 	for questID in pairs(root) do
 		for _, partner in ipairs(source.get(questID, "exclusiveTo") or {}) do
@@ -498,6 +503,7 @@ function Model.QuestIndex(source, zones)
 				root[math.max(a, b)] = math.min(a, b)
 			end
 		end
+		advance()
 	end
 
 	---@type table<number, LegacyQuestItem>
@@ -521,6 +527,7 @@ function Model.QuestIndex(source, zones)
 				end
 			end
 		end
+		advance()
 	end
 	---@type table<number, LegacyQuestItem[]>
 	local index = {}

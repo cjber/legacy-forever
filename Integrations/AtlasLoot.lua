@@ -6,7 +6,10 @@ if ns.broken then
 end
 
 local MODULE = "AtlasLootClassic_DungeonsAndRaids"
+-- The AtlasLoot this read asked to load the module, so a missing module is asked for once.
 local attemptedSource
+-- The AtlasLoot whose module load is waiting for the next frame.
+local loadingSource
 
 -- AtlasLoot owns the recommended ranges. Read its public database at runtime, never copy its data.
 ---@param instance number
@@ -18,17 +21,36 @@ function ns.DungeonLevelRange(instance)
 	if type(instance) ~= "number" then
 		return nil
 	end
-	if not atlas or not atlas.ItemDB then
+	local itemDB = type(atlas) == "table" and atlas.ItemDB or nil
+	if type(itemDB) ~= "table" or type(itemDB.Get) ~= "function" then
 		return nil, nil, ns.L["Install AtlasLoot for recommended levels."]
 	end
-	local database = atlas.ItemDB:Get(MODULE)
-	if not database and atlas.Loader and attemptedSource ~= atlas and not InCombatLockdown() then
-		attemptedSource = atlas
-		atlas.Loader:LoadModule(MODULE)
-		database = atlas.ItemDB:Get(MODULE)
+	local database = itemDB:Get(MODULE)
+	-- The module AtlasLoot keeps its Dungeons & Raids data in loads on demand. Ask for it after this frame,
+	-- never inside it: the map's pin tooltips read this while the map is drawing.
+	local loader = type(atlas) == "table" and atlas.Loader or nil
+	if type(loader) ~= "table" or type(loader.LoadModule) ~= "function" then
+		loader = nil
+	end
+	if not database and loader and attemptedSource ~= atlas and loadingSource ~= atlas and not InCombatLockdown() then
+		local load = loader
+		loadingSource = atlas
+		C_Timer.After(0, function()
+			loadingSource = nil
+			-- Combat can start between the hover and this frame; the next hover asks again once it ends.
+			if InCombatLockdown() then
+				return
+			end
+			attemptedSource = atlas
+			load.LoadModule(load, MODULE)
+		end)
 	end
 	if type(database) ~= "table" then
-		return nil
+		if loader and attemptedSource ~= atlas then
+			-- The module is on its way, or combat holds it off: no line yet.
+			return nil
+		end
+		return nil, nil, ns.L["Install AtlasLoot for recommended levels."]
 	end
 	local minimum, maximum
 	for _, content in pairs(database) do

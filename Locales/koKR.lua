@@ -71,8 +71,8 @@ L["Legacy's options and map now open without a blocked-action error."] =
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"레벨, 숙련, 등급 등 정해진 장소가 없는 모든 것."
 L["Lock the tracker"] = "추적기 잠금"
-L["Needs Questie, which lists each zone's quests."] =
-	"각 지역의 퀘스트 목록을 제공하는 Questie가 필요합니다."
+L["Needs QuestieDB, which lists each zone's quests."] =
+	"각 지역의 퀘스트 목록을 제공하는 QuestieDB가 필요합니다."
 L["No fixed location"] = "정해진 장소 없음"
 L["No unfinished Legacy objectives with a place on this map."] =
 	"이 지도에 위치가 있는 미완료 유산 목표가 없습니다."
@@ -107,7 +107,7 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"지도 모서리에 보고 있는 지역을, 대륙 지도에는 각 지역에 배지를 표시합니다."
 L["This menu needs mouse and keyboard."] = "이 메뉴는 마우스와 키보드가 필요합니다."
-L["This version of Questie isn't supported."] = "이 버전의 Questie는 지원하지 않습니다."
+L["This version of QuestieDB isn't supported."] = "이 버전의 QuestieDB는 지원하지 않습니다."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"다른 애드온이 이미 표시한다면 끄세요. 지도의 유산 메뉴에는 계속 표시됩니다."
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
