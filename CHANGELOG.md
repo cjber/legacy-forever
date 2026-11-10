@@ -12,7 +12,13 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+
+
+## [2.0.0] - 2026-11-10
+<!-- discord-image: docs/screenshots/tracker.png -->
+
 - **Needs Forever Core.** The shared tracker column, bug report and leaderboards now come from one Forever Core addon that installs with it, so every Forever addon's tracker scale, lock and position stay in step. Your tracker settings carry over.
+- **The support buttons sit side by side.** The GitHub Sponsors and Ko-fi buttons in the store description are half size, so they take one line under the support sentence instead of two.
 
 ## [1.1.5] - 2026-11-10
 
