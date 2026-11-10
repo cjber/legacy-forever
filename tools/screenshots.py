@@ -364,7 +364,7 @@ class Model:
 ICONS = {
     "areas": "islands-queue-prop-compass",
     "taxis": "taxinode_neutral",
-    "dungeons": "questlog-questtypeicon-dungeon",
+    "dungeons": "Dungeon",
     "raids": "Raid",
     "legacy": "UI-Legacy-Points-icon-c60",
     "reputations": "Interface\\Icons\\Achievement_Reputation_01",

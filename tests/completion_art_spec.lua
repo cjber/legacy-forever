@@ -346,7 +346,7 @@ local function Atlas(key, size)
 	local markup = ns.Completion.Icon(key, size)
 	return markup:match("|A:([^:]+):")
 end
-check(Atlas("dungeons", 14) == "questlog-questtypeicon-dungeon", "dungeons wear the quest log's dungeon glyph")
+check(Atlas("dungeons", 14) == "Dungeon", "dungeons wear the map's dungeon entrance pin")
 check(Atlas("taxis", 14) == "taxinode_neutral", "flight paths wear the map's neutral flight node")
 check(Atlas("quests", 14) == "QuestNormal", "quests wear the map's quest giver")
 check(Atlas("raids", 14) == "Raid", "raids wear the map's raid entrance pin")

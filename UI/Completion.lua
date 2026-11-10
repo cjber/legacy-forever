@@ -15,14 +15,15 @@ end
 local Completion = {}
 ns.Completion = Completion
 
--- One family of world map icons where the client has one: the quest log's dungeon glyph, the flight
--- master's node, the map's quest giver and raid entrance. Areas, reputations and Legacy objectives have no
--- pin of their own, so they keep the art that reads as those things.
+-- One family of world map icons where the client has one: the flight master's node, the map's quest giver
+-- and dungeon and raid entrances. Areas, reputations and Legacy objectives have no pin of their own, so
+-- they keep the art that reads as those things.
 ---@type table<LegacyCategoryKey, { atlas?: string, file?: string }>
 local ICONS = {
 	areas = { atlas = "islands-queue-prop-compass" },
 	taxis = { atlas = "taxinode_neutral" },
-	dungeons = { atlas = "questlog-questtypeicon-dungeon" },
+	-- The map's own dungeon entrance pin (MapLegendPinDefinitions.Dungeon).
+	dungeons = { atlas = "Dungeon" },
 	-- The map's own raid entrance pin (MapLegendPinDefinitions.Raid).
 	raids = { atlas = "Raid" },
 	legacy = { atlas = ns.POINTS_ICON },
