@@ -24,12 +24,12 @@ python3 tools/phrases.py > Locales/phrases.txt   # regenerate the translation te
 python3 tools/changelog.py --check
 python3 tools/check_screenshots.py   # an image older than its sources; --record after tools/screenshots.py
 python3 tools/check_menu_scroll.py # menus built from a list scroll (WFA-36); CI runs it in core-shared
+python3 tools/check_api_docs.py   # docs/api.md names every published API function and its minor
 python3 tools/repo_rules.py   # rules no linter covers; CI runs it in project-rules
 ```
 
 `FOREVER_CORE` names the cjber/forever-core checkout the specs load, defaulting to the sibling `../forever-core`.
-`tools/forever-core.txt` holds the git ref CI checks out for them; it is a branch while this addon adopts the
-dependency and becomes `v1.0.0` at release.
+`tools/forever-core.txt` holds the git ref CI checks out for them: `v1.1.0`, the release that adds the shared API kit.
 
 CI's `package` job builds the zip with the release's packager without uploading (`-d -z`) and runs
 `python3 tools/check_package.py` on its output: every loaded file ships, no development folder does, a licence file and

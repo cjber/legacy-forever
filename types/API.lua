@@ -1,10 +1,14 @@
 ---@meta
 
--- LegacyForever.API, version 1: the contract other addons read (docs/api.md). API.lua implements it.
+-- LegacyForever.API, version 1, minor 2: the contract other addons read (docs/api.md). API.lua implements it.
 
 ---@alias LFCategory "areas"|"taxis"|"dungeons"|"raids"|"legacy"|"reputations"|"quests"
+-- `"loading"` is ForeverCore.APIKit's not-ready reason; the other two are wrong arguments or an unsupported map.
 ---@alias LFReadError "invalid"|"loading"|"unsupported"
 ---@alias LFNavError "invalid"|"stale"|"unlocated"|"combat"|"unavailable"
+-- The names Subscribe's changes table sets, as docs/api.md lists them.
+---@alias LFAPIChange "zone"|"summary"|"targets"
+---@alias LFAPIChanges table<LFAPIChange, true>
 
 ---@class LFCounts
 ---@field done integer
@@ -39,12 +43,12 @@
 
 ---@class LFAPI
 ---@field version 1
----@field minor 1
+---@field minor 2
 ---@field Leaderboard fun(limit?: integer): LFFlightLeaderboard?, LFReadError?
 ---@field ZoneSummary fun(map: integer): LFZoneSummary?, LFReadError?
 ---@field Targets fun(map: integer, limit: integer): LFTarget[]?, LFReadError?
 ---@field Navigate fun(map: integer, key: string): boolean, LFNavError?
----@field Subscribe fun(callback: fun()): fun()
+---@field Subscribe fun(callback: fun(changes: LFAPIChanges)): fun() unsubscribes, safe to call twice
 ---@field Stats fun(): LFActivityRecord[] Character flight paths observed from opened flight-master maps.
 
 ---@class LFActivityRecord
