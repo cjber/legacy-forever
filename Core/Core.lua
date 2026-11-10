@@ -23,6 +23,8 @@ local _, addon = ...
 ---@field MapContents LegacyMapContents
 ---@field MapCanvas ForeverMapCanvas the views of our own on the world map (UI/MapCanvas.lua)
 ---@field RefreshMap fun()
+---@field OpenMap fun(mapID?: integer): boolean the world map, through the client's secure opener (Core/OpenMap.lua)
+---@field OpenSettingsPanel fun(categoryID?: integer, element?: string): boolean Blizzard's settings, opened securely
 ---@field OpenMapMenu fun()
 ---@field GamepadUI fun(): boolean whether the gamepad interface is on
 ---@field ContextMenu fun(owner: Frame, generator: function): any a menu, or a line under the gamepad interface
@@ -115,10 +117,12 @@ local function Criteria(achievementID)
 	end
 end
 
--- The options live in the map's Legacy menu, so the slash command and the compartment entry both open it.
+-- The options live in the map's Legacy menu, so the slash command and the compartment entry both open it. The map
+-- opens through the shared secure opener: the client refuses its own C_Map.OpenWorldMap from addon code, so a map
+-- that did not open leaves the menu closed with it (cjber/forever-core#333).
 local function OpenMenu()
-	if not (WorldMapFrame and WorldMapFrame:IsShown()) then
-		C_Map.OpenWorldMap()
+	if not (WorldMapFrame and WorldMapFrame:IsShown()) and not ns.OpenMap() then
+		return
 	end
 	ns.OpenMapMenu()
 end

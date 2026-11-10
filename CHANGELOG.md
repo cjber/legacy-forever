@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **Opening Legacy's options or its map no longer ends in a blocked-action error naming the addon.** The client refuses its own map and settings open requests when an addon makes them, so pressing Open on a section of Legacy's options page, `/lf`, the compartment button, the tracker's zone header or a zone-complete toast could leave you with an error instead of the page you asked for. All of them now open the way the client expects (cjber/forever-core#333).
+
 ## [1.1.4] - 2026-11-09
 
 - **French reads as the French client does.** Legacy is now Héritage in every French line, as the game calls it, and Brainc3ll checked every line that was machine translated (#353).

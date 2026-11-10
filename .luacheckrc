@@ -52,7 +52,7 @@ files["tests/navigate_spec.lua"] = {
 	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "UiMapPoint", "ShortestPathForever" },
 }
 files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverErrorJournal", "geterrorhandler", "seterrorhandler", "strtrim" } }
-files["tests/settings_spec.lua"] = { globals = { "CreateFrame", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "WorldMapFrame", "geterrorhandler", "seterrorhandler" } }
+files["tests/settings_spec.lua"] = { globals = { "CreateFrame", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "C_SettingsUtil", "CreateSecureDelegate", "WorldMapFrame", "InCombatLockdown", "geterrorhandler", "seterrorhandler" } }
 files["tests/legacy_map_spec.lua"] = {
 	globals = {
 		"EventUtil", "REPUTATION", "WHITE_FONT_COLOR", "Enum", "GameTooltip", "GameTooltip_SetTitle", "GameTooltip_AddNormalLine",
@@ -69,7 +69,7 @@ files["tests/api_spec.lua"] = {
 		"HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "C_AddOns", "WHITE_FONT_COLOR", "GameTooltip", "GameTooltip_SetTitle",
 		"GameTooltip_AddColoredLine", "GameTooltip_AddInstructionLine", "GameTooltip_AddDisabledLine",
 		"Enum", "WorldMapFrame", "CreateFrame", "Mixin", "CreateFromMixins", "Saturate", "Lerp",
-		"seterrorhandler", "strtrim",
+		"seterrorhandler", "strtrim", "CreateSecureDelegate",
 	},
 }
 for _, name in ipairs({ "UnitGUID", "time" }) do
@@ -93,3 +93,7 @@ files["tests/error_journal_spec.lua"] = {
 	globals = { "CreateFrame", "SlashCmdList", "geterrorhandler", "seterrorhandler", "strtrim", "date", "GetTime" },
 }
 files["tests/family_locale_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "GetLocale" } }
+-- Core/OpenMap.lua: the client's secure world map opener.
+read_globals[#read_globals + 1] = "CreateSecureDelegate"
+-- Core/OpenSettings.lua: the client's secure settings panel opener.
+read_globals[#read_globals + 1] = "C_SettingsUtil"

@@ -204,10 +204,28 @@ AlertFrame = {
 }
 local canSet = true
 local openedMap
+-- C_Map.OpenWorldMap is a restricted client function: asked from addon code, the client refuses it and blames the
+-- addon (cjber/adventure-guide-forever#411, cjber/forever-core#333). This stub does the same, so a call site that
+-- went back to it fails here; the secure delegate is how the game lets addon code ask.
+local addonTaint = true
+local function RawOpenWorldMap(uiMapID)
+	assert(not addonTaint, "C_Map.OpenWorldMap called straight from addon code")
+	openedMap = uiMapID
+end
+CreateSecureDelegate = function(open)
+	return function(...)
+		local outer = addonTaint
+		addonTaint = false
+		local ok, err = pcall(open, ...)
+		addonTaint = outer
+		if not ok then
+			error(err, 0)
+		end
+	end
+end
+assert(loadfile("Core/OpenMap.lua"))("LegacyForever", ns)
 C_Map = {
-	OpenWorldMap = function(uiMapID)
-		openedMap = uiMapID
-	end,
+	OpenWorldMap = RawOpenWorldMap,
 	GetMapInfo = function(uiMapID)
 		return uiMapID == 100 and { name = "Elwynn Forest" } or nil
 	end,
