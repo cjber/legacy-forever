@@ -2,8 +2,6 @@ Legacy Forever shows unfinished challenges on the world map and tracks the ones 
 
 Free, with nothing locked behind it. If it saves you time, you can [sponsor me on GitHub](https://github.com/sponsors/cjber), which takes no fees, or [buy me a coffee on Ko-fi](https://ko-fi.com/cjber).
 
-[![Sponsor me on GitHub](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/github-sponsors-button.png)](https://github.com/sponsors/cjber) [![Support me on Ko-fi](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/kofi-button.png)](https://ko-fi.com/cjber)
-
 ![Ashenvale on the world map as two areas are found, then the Legacy menu](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif)
 
 Discover an area and its shading lifts. The Legacy menu tracks the challenges behind it.
@@ -81,3 +79,5 @@ Tracked challenges share one tracker column with the other addons' tracker secti
 Source code: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.
 
 Built with AI assistance.
+
+[![Sponsor me on GitHub](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/github-sponsors-button.png)](https://github.com/sponsors/cjber) [![Support me on Ko-fi](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/kofi-button.png)](https://ko-fi.com/cjber)
