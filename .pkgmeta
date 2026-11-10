@@ -19,3 +19,10 @@ ignore:
   - ruff.toml
   - .agents
   - .claude
+
+# CurseForge relations: the CurseForge slug of every OptionalDeps folder in the root .toc (WFA-28).
+optional-dependencies:
+  - shortest-path-forever
+  - questiedb
+  - questie
+  - atlasloot-forever
