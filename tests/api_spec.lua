@@ -44,6 +44,9 @@ local criteria = {
 	},
 	[20] = { [5] = { text = "Slay ogres", completed = false, quantity = 3, required = 10, index = 1 } },
 }
+-- The achievement names and Legacy points the client reports; achievement 20 has no points.
+local achievementNames = { [10] = "Exploration", [20] = "Slaying" }
+local achievementPoints = { [10] = 5 }
 local settings = {}
 local timers, errors, printed, waypoints, journeys = {}, {}, {}, {}, {}
 
@@ -103,6 +106,12 @@ ns.Live = {
 	end,
 	Criteria = function(achievementID)
 		return criteria[achievementID]
+	end,
+	Name = function(achievementID)
+		return achievementNames[achievementID]
+	end,
+	Points = function(achievementID)
+		return achievementPoints[achievementID]
 	end,
 	ZoneSnapshot = function(uiMapID)
 		return {
@@ -314,10 +323,16 @@ for _, file in ipairs({
 	"Integrations/Navigate.lua",
 	"Core/ZoneCompletion.lua",
 	"UI/Completion.lua",
+	-- The real tracker, list and revision, without its frames: UI/Completion.lua has taken the AddModule stub
+	-- above, and this file replaces ns.Tracker with the one the API reads and writes.
+	"UI/Tracker.lua",
 	"Core/API.lua",
 }) do
 	assert(loadfile(file))("LegacyForever", ns)
 end
+-- With no objective tracker in this harness, UI/Tracker.lua prints that its section cannot attach. That line is
+-- not this spec's subject, so the record starts empty for the checks below.
+printed = {}
 -- The zone's corner on the world map: a frame of ours, never one of the map's overlay frames or data providers.
 check(#onMapLoaded == 1, "the corner overlay waits for the world map to load")
 onMapLoaded[1]()
@@ -347,7 +362,7 @@ check(#errors == errorsBefore, "the corner draws without an error")
 zoneTracker:OnBlockHeaderClick({ id = 100 }, "LeftButton")
 check(openedMap == 100, "a click on the zone's tracker header asks the game to open its map")
 local API = LegacyForever.API
-check(API.version == 1 and API.minor == 2, "version 1 retains existing methods and adds a minor capability")
+check(API.version == 1 and API.minor == 3, "version 1 retains existing methods and adds a minor capability")
 check(type(ForeverCore.APIKit.Hub) == "function", "the API is built on the shared API kit")
 local forwardedLimit
 local leaderboard = { metric = "flight_path_known", rows = {} }
@@ -403,9 +418,22 @@ check(select(2, API.ZoneSummary(0 / 0)) == "invalid", "NaN is invalid")
 check(select(2, API.ZoneSummary(999)) == "unsupported", "a map without data is unsupported")
 faction = nil
 check(select(2, API.ZoneSummary(100)) == "loading", "no faction yet is loading")
+check(select(2, API.ZoneSummary(nil)) == "loading", "the current zone is loading too")
 local noTargets, noTargetsReason = API.Targets(100, 5)
 check(noTargets == nil and noTargetsReason == "loading", "targets are loading before the player exists")
 faction = "Alliance"
+
+-- No map: the zone the player is in, or nothing to answer on a continent.
+local here = assert(API.ZoneSummary(nil))
+check(here.map == 100 and here.name == "Elwynn Forest", "a summary with no map reads the player's zone")
+check(#assert(API.Targets(nil)) == 2, "and its targets, with the limit left out as well")
+check(select(2, API.Targets(nil, "5")) == "invalid", "an explicit bad limit is still invalid")
+currentZone = nil
+local noZone, noZoneReason = API.ZoneSummary(nil)
+check(noZone == nil and noZoneReason == "none", "a continent has no summary to answer")
+local noZoneTargets, noZoneTargetsReason = API.Targets(nil)
+check(noZoneTargets == nil and noZoneTargetsReason == "none", "and no targets either")
+currentZone = 100
 
 -- What counts: areas off leaves them out; with nothing counted, nothing is complete.
 settings.count_areas = false
@@ -543,11 +571,56 @@ ns.Live.Invalidate()
 RunTimers()
 check(#bursts == 7, "an unsubscribed callback takes no part in the next burst")
 
+-- Tracked: a target's key reaches the tracker's own key, and a change of that list names tracked on the next frame.
+local tracking = assert(API.Targets(100, 5))
+check(API.IsTracked(tracking[1].key) == false, "no target is tracked at first")
+check(API.SetTracked("999:999", true) == false, "an unknown key is refused")
+check(API.SetTracked(tracking[1].key, "yes") == false, "a non-boolean tracked is refused")
+check(API.SetTracked(tracking[1].key, true) == true, "a target's key starts tracking its challenge")
+check(LegacyForeverDB.tracked[1] == "10:100", "the API converts its key to the tracker's zone share")
+check(API.IsTracked(tracking[1].key) == true, "IsTracked answers the same key")
+check(API.IsTracked(tracking[2].key) == false, "another challenge is its own entry")
+check(API.SetTracked(tracking[1].key, true) == false, "asking for the state the list holds changes nothing")
+check(API.SetTracked(tracking[1].key, false) == true, "untracking changes the list")
+check(API.IsTracked(tracking[1].key) == false, "and IsTracked follows")
+local unknownTracked, unknownReason = API.IsTracked("nonsense")
+check(unknownTracked == nil and unknownReason == "invalid", "a key no target has is invalid")
+faction = nil
+local loadingTracked, loadingReason = API.IsTracked(tracking[1].key)
+check(loadingTracked == nil and loadingReason == "loading", "tracked reads wait for the player")
+local loadingSet, loadingSetReason = API.SetTracked(tracking[1].key, true)
+check(loadingSet == nil and loadingSetReason == "loading", "and so do writes")
+faction = "Alliance"
+
+-- A tracking change from the API and from the player's own map menu both reach subscribers, once, on the next frame.
+local trackingBursts = {}
+local stopHearing = API.Subscribe(function(changes)
+	trackingBursts[#trackingBursts + 1] = changes
+end)
+RunTimers()
+check(#trackingBursts == 0, "the tracking subscriber starts from what the list answers now")
+check(API.SetTracked(tracking[1].key, true) == true, "the API tracks a target")
+check(#trackingBursts == 0, "the change waits for the next frame")
+RunTimers()
+check(#trackingBursts == 1 and trackingBursts[1].tracked == true, "the next frame names tracked once")
+check(trackingBursts[1].progress == nil and trackingBursts[1].targets == nil, "and only what changed")
+ns.Tracker.Toggle("20:100")
+RunTimers()
+check(#trackingBursts == 2 and trackingBursts[2].tracked == true, "the player's own toggle is named too")
+stopHearing()
+check(API.SetTracked(tracking[1].key, false) == true, "the list keeps changing after the subscriber leaves")
+RunTimers()
+check(#trackingBursts == 2, "and an unsubscribed callback hears nothing")
+ns.Tracker.Toggle("20:100")
+
 -- Targets: unfinished, known to the game and visible only; done, unknown and finished challenges are left out.
 local targets = assert(API.Targets(100, 5))
 check(#targets == 2, "two unfinished objectives")
 check(targets[1].text == "Explore North" and targets[1].kind == "explore", "in the data's order")
 check(targets[1].achievementID == 10 and targets[1].criteriaID == 1, "a target names its criterion")
+check(targets[1].achievementName == "Exploration", "a target names its achievement")
+check(targets[1].points == 5, "and carries the points it awards")
+check(targets[2].achievementName == "Slaying" and targets[2].points == nil, "points the game has none of are left out")
 check(targets[1].place.map == 100 and targets[1].place.x == 0.1 and targets[1].place.y == 0.2, "a located place")
 check(targets[1].quantity == nil, "a one-step criterion has no quantity")
 check(targets[2].place == nil, "no place without coordinates")

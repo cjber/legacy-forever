@@ -39,6 +39,31 @@ function Tracker.IsTracked(key)
 	return IndexOf(Tracked(), key) ~= nil
 end
 
+-- The tracked list's revision, raised only where the list itself changes, so a listener can tell a tracking
+-- change from the redraw that follows it.
+local revision = 0
+---@type (fun())[]
+local listeners = {}
+
+-- Called after every change to the tracked list, in the order registered, whoever asked: the player ticking the
+-- map menu or another addon through LegacyForever.API.
+---@param callback fun()
+function Tracker.OnChange(callback)
+	listeners[#listeners + 1] = callback
+end
+
+---@return number
+function Tracker.Revision()
+	return revision
+end
+
+local function Changed()
+	revision = revision + 1
+	for _, callback in ipairs(listeners) do
+		ns.core.SafeCall("tracker listener", callback)
+	end
+end
+
 ---@type LegacyTrackerModule?
 local module
 
@@ -48,28 +73,46 @@ function Tracker.Refresh()
 	end
 end
 
+-- Put `key` in the list or take it out as asked. Returns whether the list changed: a request that matches what is
+-- already there leaves it alone, so nothing redraws and no listener hears a change that did not happen.
 ---@param key LegacyTrackingKey
-function Tracker.Toggle(key)
-	local tracked = Tracked()
-	local index = IndexOf(tracked, key)
-	if index then
-		table.remove(tracked, index)
+---@param tracked boolean
+---@return boolean changed
+function Tracker.SetTracked(key, tracked)
+	local list = Tracked()
+	local index = IndexOf(list, key)
+	if tracked and not index then
+		list[#list + 1] = key
+	elseif not tracked and index then
+		table.remove(list, index)
 	else
-		tracked[#tracked + 1] = key
+		return false
 	end
 	Tracker.Refresh()
+	Changed()
+	return true
+end
+
+---@param key LegacyTrackingKey
+function Tracker.Toggle(key)
+	Tracker.SetTracked(key, not Tracker.IsTracked(key))
 end
 
 -- Everything tracked under a challenge: the whole challenge and every zone share of it.
 ---@param challenge number
 local function StopTracking(challenge)
 	local tracked, visible = Tracked(), ns.Live.Visible()
+	local stopped = false
 	for index = #tracked, 1, -1 do
 		if ns.Model.TrackedChallenge(ns.Data, tracked[index], visible) == challenge then
 			table.remove(tracked, index)
+			stopped = true
 		end
 	end
-	Tracker.Refresh()
+	if stopped then
+		Tracker.Refresh()
+		Changed()
+	end
 end
 
 ---@class LegacyChallengeTracker : LegacyTrackerModule

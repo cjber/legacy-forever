@@ -9,10 +9,11 @@ end
 -- the same computations the map and tracker draw. Every call returns fresh tables. docs/api.md has the contract.
 -- Areas, flight paths, reputations and quests are this character's; dungeon wings, raids and Legacy
 -- objectives are account-wide Legacy steps. `minor` rises with each addition within version 1 (1: Leaderboard,
--- 2: Subscribe's changes table and the reads' not-ready answers); a caller checks a member before using it.
+-- 2: Subscribe's changes table and the reads' not-ready answers, 3: IsTracked/SetTracked and the tracked channel,
+-- a nil map's current zone, achievementName and points on targets); a caller checks a member before using it.
 local API = {
 	version = 1,
-	minor = 2,
+	minor = 3,
 }
 
 -- The shared shape every Forever addon's API follows: the hub that tells callers a frame after a change, and the
@@ -65,10 +66,17 @@ local function QuestsStatus()
 	return ns.Quests.Status()
 end
 
----@param map integer
+---@param map? integer
 ---@return LFZoneSummary?
 ---@return LFReadError?
 function API.ZoneSummary(map)
+	if map == nil then
+		-- No map asks for the zone the player is in, the one the addon's map corner and tracker read.
+		map = ns.Live.CurrentZone()
+		if map == nil then
+			return nil, "none"
+		end
+	end
 	if not IsInteger(map) then
 		return nil, "invalid"
 	end
@@ -135,12 +143,19 @@ local function KnownMap(map)
 	return ns.Data.zones[map] ~= nil or ns.Data.completion[map] ~= nil
 end
 
----@param map integer
----@param limit integer
+---@param map? integer
+---@param limit? number
 ---@return LFTarget[]?
 ---@return LFReadError?
 function API.Targets(map, limit)
-	if not IsInteger(map) or type(limit) ~= "number" or limit ~= limit then
+	if map == nil then
+		-- As the addon's own tracker reads it: the zone the player is in.
+		map = ns.Live.CurrentZone()
+		if map == nil then
+			return nil, "none"
+		end
+	end
+	if not IsInteger(map) or (limit ~= nil and (type(limit) ~= "number" or limit ~= limit)) then
 		return nil, "invalid"
 	end
 	if not KnownMap(map) then
@@ -150,22 +165,35 @@ function API.Targets(map, limit)
 	if not Ready() then
 		return NotReady("loading")
 	end
-	limit = math.max(1, math.min(MAX_TARGETS, math.floor(limit)))
+	limit = math.max(1, math.min(MAX_TARGETS, math.floor(limit or MAX_TARGETS)))
 	---@type LFTarget[]
 	local targets = {}
+	-- A zone's rows usually share an achievement, so its name and points are asked once per call rather than once
+	-- per row. Nothing outlives the call, so the values cannot go stale and no timer is added.
+	---@type table<number, { name: string, points: number? }>
+	local achievements = {}
 	for _, objective in ipairs(Objectives(map)) do
 		if #targets == limit then
 			break
 		end
 		local entry = objective.entry
+		local known = achievements[entry.achievement]
+		if not known then
+			known = { name = ns.Live.Name(entry.achievement), points = ns.Live.Points(entry.achievement) }
+			achievements[entry.achievement] = known
+		end
 		---@type LFTarget
 		local target = {
 			key = Key(entry),
 			text = objective.text,
 			kind = entry.kind,
 			achievementID = entry.achievement,
+			achievementName = known.name,
 			criteriaID = entry.criteria,
 		}
+		if known.points ~= nil then
+			target.points = known.points
+		end
 		local progress = (ns.Live.Criteria(entry.achievement) or {})[entry.criteria]
 		if progress and progress.required and progress.required > 1 then
 			target.quantity = progress.quantity
@@ -177,6 +205,91 @@ function API.Targets(map, limit)
 		targets[#targets + 1] = target
 	end
 	return targets
+end
+
+--[[ Tracked: whether the tracker shows a target's challenge ]]
+
+-- The tracker's own key for each criterion: the group holding it, which is a challenge's share of one zone
+-- ("<challenge>:<uiMapID>") or the feeding achievement tracked whole ("<achievement>"). A criterion appears in at
+-- most one zone's data, so an API key names one group.
+---@type table<string, integer>?
+local placement
+
+---@return table<string, integer>
+local function Placement()
+	if not placement then
+		placement = {}
+		for uiMapID, entries in pairs(ns.Data.zones) do
+			for _, entry in ipairs(entries) do
+				placement[Key(entry)] = uiMapID
+			end
+		end
+	end
+	return placement
+end
+
+-- An API target key as the tracker's LegacyTrackingKey, or nil when no zone places it or the game lists no
+-- challenge for it. The two keys differ (a target is one criterion, the tracker holds a zone share or a feeding
+-- achievement), so the conversion stays here, at the API's edge, rather than in either side's own key.
+---@param key string
+---@return LegacyTrackingKey?
+local function TrackingKey(key)
+	local achievement = key:match("^(%d+):%d+$")
+	if not achievement then
+		return nil
+	end
+	local uiMapID = Placement()[key]
+	if not uiMapID then
+		return nil
+	end
+	local achievementID = assert(tonumber(achievement))
+	local challenge = ns.Model.OwningChallenge(ns.Data, achievementID, ns.Live.Visible())
+	if not challenge then
+		return nil
+	end
+	return ns.Model.ZoneKey({
+		achievement = achievementID,
+		challenge = challenge,
+		uiMapID = uiMapID,
+		objectives = {},
+	})
+end
+
+---@param key string
+---@return boolean?
+---@return LFReadError?
+function API.IsTracked(key)
+	if type(key) ~= "string" or not key:find("^%d+:%d+$") then
+		return nil, "invalid"
+	end
+	if not Ready() then
+		return NotReady("loading")
+	end
+	local trackingKey = TrackingKey(key)
+	if trackingKey == nil then
+		return nil, "invalid"
+	end
+	return ns.Tracker.IsTracked(trackingKey)
+end
+
+-- Tracking writes the tracker's own list, so it answers whether that list changed, or that the player is still
+-- loading; IsTracked is the read that tells a caller why nothing changed.
+---@param key string
+---@param tracked boolean
+---@return boolean?
+---@return LFReadError?
+function API.SetTracked(key, tracked)
+	if type(key) ~= "string" or type(tracked) ~= "boolean" then
+		return false
+	end
+	if not Ready() then
+		return NotReady("loading")
+	end
+	local trackingKey = TrackingKey(key)
+	if trackingKey == nil then
+		return false
+	end
+	return ns.Tracker.SetTracked(trackingKey, tracked)
 end
 
 ---@param value number?
@@ -275,7 +388,8 @@ local function SummaryKey(uiMapID)
 	return table.concat(parts, "|")
 end
 
--- The published targets as one comparable key: each target's identity, text and counted progress.
+-- The published targets as one comparable key: each target's identity, text, achievement name and points, and
+-- counted progress.
 ---@param uiMapID integer?
 ---@return string|false
 local function TargetsKey(uiMapID)
@@ -285,7 +399,7 @@ local function TargetsKey(uiMapID)
 	end
 	local parts = {}
 	for _, target in ipairs(targets) do
-		local part = ("%s:%s"):format(target.key, target.text)
+		local part = ("%s:%s:%s:%s"):format(target.key, target.text, target.achievementName, tostring(target.points))
 		if target.quantity ~= nil then
 			part = part .. (":%d/%d"):format(target.quantity, target.required or 0)
 		end
@@ -299,7 +413,8 @@ end
 -- zone the player is in all reach Legacy through ZoneCompletion's one notice.
 -- Raised on every notice from ZoneCompletion, so a change in any zone (an account-wide wing done elsewhere, "What
 -- counts" switched) still reaches callers, as Subscribe always did; the other names say what changed in the zone the
--- player is in.
+-- player is in. `tracked` is the tracker's list revision, raised where the list itself changes, so the player's own
+-- map menu tick reaches callers as surely as SetTracked does.
 local notices = 0
 local hub = APIKit.Hub("LegacyForever", {
 	progress = function()
@@ -314,11 +429,15 @@ local hub = APIKit.Hub("LegacyForever", {
 	targets = function()
 		return TargetsKey(ns.Live.CurrentZone())
 	end,
+	tracked = function()
+		return ns.Tracker.Revision()
+	end,
 }, Ready)
 API.Subscribe = hub.Subscribe
 ns.ZoneCompletion.OnChange(function()
 	notices = notices + 1
 	hub.Queue()
 end)
+ns.Tracker.OnChange(hub.Queue)
 
 LegacyForever = { API = API }
