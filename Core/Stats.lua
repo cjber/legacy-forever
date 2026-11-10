@@ -117,7 +117,7 @@ end
 
 ForeverCore.Leaderboards:Register("legacy", {
 	title = ns.TITLE,
-	icon = "Interface\\Icons\\Achievement_General",
+	icon = ns.icon,
 	metric = L["Flight paths"],
 	board = Board,
 	revision = function()

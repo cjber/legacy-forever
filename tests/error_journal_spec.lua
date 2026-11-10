@@ -27,6 +27,12 @@ GetTime = function()
 	return 1.5
 end
 
+local TOC = dofile("tests/toc_fields.lua").read("LegacyForever.toc")
+C_AddOns = {
+	GetAddOnMetadata = function(name, field)
+		return name == "LegacyForever" and TOC[field] or nil
+	end,
+}
 local ns = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 ForeverCore = dofile("tests/forever_core.lua").install(_G, {

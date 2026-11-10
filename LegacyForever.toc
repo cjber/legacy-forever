@@ -10,6 +10,7 @@
 ## X-Curse-Project-ID: 1705879
 ## X-Wago-ID: b6mzA7KP
 ## IconTexture: Interface\AddOns\LegacyForever\media\Icon
+## X-Forever-Icon: Interface\Icons\Achievement_General
 ## Dependencies: ForeverCore
 ## OptionalDeps: ShortestPathForever, QuestieDB, Questie, AtlasLootClassic
 ## SavedVariables: LegacyForeverDB

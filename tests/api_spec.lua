@@ -48,6 +48,12 @@ local settings = {}
 local timers, errors, printed, waypoints, journeys = {}, {}, {}, {}, {}
 
 local ns = { Data = data }
+local TOC = dofile("tests/toc_fields.lua").read("LegacyForever.toc")
+C_AddOns = {
+	GetAddOnMetadata = function(name, field)
+		return name == "LegacyForever" and TOC[field] or nil
+	end,
+}
 SlashCmdList = {}
 -- The GlobalStrings UI/Completion.lua labels its categories with.
 DUNGEONS, RAIDS, QUESTS_LABEL = "Dungeons", "Raids", "Quests"
