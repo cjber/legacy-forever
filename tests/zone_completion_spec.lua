@@ -127,8 +127,8 @@ C_Map = {
 	end,
 }
 
--- The client defines the error handler and strtrim Core/SafeCall.lua reads; these stand-ins keep every error
--- reachable, as BugSack's or the default error frame's would be.
+-- The client defines the error handler and strtrim ForeverCore reads; these stand-ins keep every error reachable, as
+-- BugSack's or the default error frame's would be.
 geterrorhandler = function()
 	return error
 end
@@ -136,9 +136,20 @@ seterrorhandler = function() end
 strtrim = function(text)
 	return (text:gsub("^%s+", ""):gsub("%s+$", ""))
 end
-for _, file in ipairs({
+local coreEnv = setmetatable({
+	CreateFrame = function()
+		return { RegisterEvent = function() end, SetScript = function() end }
+	end,
+}, { __index = _G })
+ForeverCore = dofile("tests/forever_core.lua").install(coreEnv, {
 	"Core/SafeCall.lua",
 	"Core/Log.lua",
+	"UI/Report.lua",
+	"UI/MapCanvas.lua",
+	"Expose.lua",
+})
+ns.core = ForeverCore.Register("LegacyForever", {})
+for _, file in ipairs({
 	"Core/Saved.lua",
 	"Core/Model.lua",
 	"Core/ZoneCompletion.lua",

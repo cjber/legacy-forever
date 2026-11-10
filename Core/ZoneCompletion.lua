@@ -1,6 +1,10 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
 
+if ns.broken then
+	return
+end
+
 -- Zone completion without a frame: a zone's or continent's result under what the player counts, when a
 -- completion is news, where the world map's corner sits, and the one notice that any of it may have changed.
 -- The tracker section, the map's corner and badges, the toast and the menu (UI/Completion.lua), the map and
@@ -271,7 +275,7 @@ end
 
 local function Changed()
 	for _, callback in ipairs(listeners) do
-		ns.SafeCall("zone completion listener", callback)
+		ns.core.SafeCall("zone completion listener", callback)
 	end
 end
 
@@ -329,7 +333,7 @@ local function CheckNews(silent)
 			-- Someone who has switched zone completion off entirely doesn't want its toasts.
 			if not quiet and (ZoneCompletion.IsShown("map") or ZoneCompletion.IsShown("tracker")) then
 				for _, callback in ipairs(completeListeners) do
-					ns.SafeCall("zone complete listener", callback, uiMapID)
+					ns.core.SafeCall("zone complete listener", callback, uiMapID)
 				end
 			end
 		end

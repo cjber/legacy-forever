@@ -1,6 +1,10 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
 
+if ns.broken then
+	return
+end
+
 -- A zone's quests come from QuestieDB, the database addon that ships with Questie
 -- (github.com/Questie/QuestieDB), read through its public contract: its quest fields with the
 -- Forever corrections applied, and its zone tables. Legacy Forever ships no quest data. When

@@ -2,6 +2,7 @@ tools/.cache/
 __pycache__/
 *.zip
 .release/
+forever-core/
 .release-notes.md
 .sloppatrol/runs/
 .types/

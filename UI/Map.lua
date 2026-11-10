@@ -2,6 +2,10 @@
 local _, ns = ...
 local L = ns.L
 
+if ns.broken then
+	return
+end
+
 local PIN_TEMPLATE = "LegacyForeverPinTemplate"
 -- Unseen ground reads darker, the fog-of-war convention (a warm tint vanished on the
 -- parchment); darker still under the mouse.
@@ -391,7 +395,7 @@ function LegacyForeverMapButtonMixin:OnHide()
 	end
 end
 
---[[ Pins: one per unfinished objective the data can place on this map, on frames of our own (UI/MapCanvas.lua) ]]
+--[[ Pins: one per unfinished objective the data can place on this map, on frames of our own (ForeverCore's canvas) ]]
 
 ---@class LegacyObjectivePin : ForeverCanvasPin
 ---@field Icon Texture
@@ -401,7 +405,7 @@ end
 ---@field objective? LegacyObjective
 ---@field zone? LegacyContinentZone
 ---@field done boolean a cleared dungeon or raid entrance, drawn faded
-local ObjectivePin = CreateFromMixins(ns.MapCanvas.PinMixin)
+local ObjectivePin = CreateFromMixins(ns.core.MapCanvas.PinMixin)
 
 function ObjectivePin:OnLoad()
 	self.takesMouse = true
@@ -509,7 +513,7 @@ end
 ---@field cursorY? number
 ---@field drawn table<string, Texture[]>
 ---@field shadeAlpha number
-local AreaPin = CreateFromMixins(ns.MapCanvas.PinMixin)
+local AreaPin = CreateFromMixins(ns.core.MapCanvas.PinMixin)
 
 function AreaPin:OnLoad()
 	self:SetIgnoreGlobalPinScale(true)
@@ -645,7 +649,7 @@ end
 
 local function Attach()
 	local map = WorldMapFrame
-	local MapCanvas = ns.MapCanvas
+	local MapCanvas = ns.core.MapCanvas
 	local pins = MapCanvas.Pool(map, ObjectivePin, { template = PIN_TEMPLATE, marker = "legacy" })
 	local areas = MapCanvas.Pool(map, AreaPin)
 	local refreshPending = false

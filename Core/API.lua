@@ -1,6 +1,10 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
 
+if ns.broken then
+	return
+end
+
 -- LegacyForever.API: zone completion and the zone's unfinished Legacy objectives for other addons, read from
 -- the same computations the map and tracker draw. Every call returns fresh tables. docs/api.md has the contract.
 -- Areas, flight paths, reputations and quests are this character's; dungeon wings, raids and Legacy

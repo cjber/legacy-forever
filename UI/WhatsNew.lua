@@ -2,6 +2,10 @@
 local addonName, ns = ...
 local L = ns.L
 
+if ns.broken then
+	return
+end
+
 -- One chat line after an update: the new version and ns.WHATS_NEW. A first install stays quiet (there is no
 -- version to compare with), and so does a checkout, whose version the packager never filled in.
 function ns.WhatsNew()

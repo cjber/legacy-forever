@@ -4,6 +4,10 @@ local _, addon = ...
 ---@class LegacyForeverNamespace
 local ns = addon
 
+if ns.broken then
+	return
+end
+
 -- What the addon keeps between sessions, and the only file that names LegacyForeverDB. Switches are read and
 -- written by their saved key alone; where a key sits in the saved table, what it defaults to and who hears
 -- about a change stay in here. The toc loads the saved variables before any file runs
@@ -45,7 +49,7 @@ local DEFAULTS = {
 	-- Share small activity rows over guild/group channels; local records stay either way (Core/Stats.lua).
 	statsShare = true,
 	-- A grey line where one of the other Forever addons, not installed, would do more for you. The shared
-	-- Forever addons page (UI/ForeverFamily.lua) reads it from the saved table by this name.
+	-- Forever addons page (ForeverCore's UI/ForeverFamily.lua) reads it from the saved table by this name.
 	suggestFamily = true,
 	zoneCompletion = {
 		-- The map is on so the feature is visible; the tracker takes screen space, so it waits to be asked.
@@ -100,17 +104,15 @@ function ns.SavedTable(key)
 	return root[key]
 end
 
----@return ForeverTrackerSettings
-function ns.TrackerHostSettings()
-	local root = Root()
-	if type(root.trackerHost) ~= "table" then
-		root.trackerHost = { attached = true, locked = false }
-	end
-	-- Lock defaults off, and a trackerHost saved before it existed simply gains the key.
-	if type(root.trackerHost.locked) ~= "boolean" then
-		root.trackerHost.locked = false
-	end
-	return root.trackerHost
+-- The old tracker table this addon kept before ForeverCore owned the column, once, while it attaches as a section.
+-- The host copies what it can into ForeverCoreDB, then the key goes so a later version never offers it again.
+---@return ForeverTrackerLegacySettings?
+function Saved.LegacyTrackerSettings()
+	return Root().trackerHost
+end
+
+function Saved.ClearLegacyTrackerSettings()
+	Root().trackerHost = nil
 end
 
 -- Where a switch is saved and where its default is declared: the top-level switches beside the data,
@@ -163,7 +165,7 @@ end
 function Saved.Set(key, value)
 	Home(key)[key] = value
 	for _, callback in ipairs(listeners) do
-		ns.SafeCall("settings listener", callback, key, value)
+		ns.core.SafeCall("settings listener", callback, key, value)
 	end
 end
 
@@ -177,18 +179,9 @@ function Saved.SeenVersion(version)
 	return last
 end
 
--- The shared error journal (Core/SafeCall.lua) lives in the saved table, so the report lists earlier sessions'
--- errors after a /reload. A record, not a switch: it is kept here because this is the one file that names
--- LegacyForeverDB. The saved variables load before this file (LoadSavedVariablesFirst), so nothing recorded before
--- this line is lost: AttachErrorJournal merges what SafeCall already saw.
+-- ForeverCore keeps the shared error journal under `errors` and the debug log under `log` in this addon's saved
+-- table, so the report lists earlier sessions' errors and the lines that led to them after a /reload. Attach also
+-- merges what the shared files saw before the saved variables arrived.
 do
-	local root = Root()
-	if type(root.errors) ~= "table" then
-		root.errors = {}
-	end
-	if type(root.log) ~= "table" then
-		root.log = { lines = {}, pinned = false }
-	end
-	ns.AttachErrorJournal(root.errors)
-	ns.AttachLog(root.log)
+	ns.core.Attach(Root())
 end

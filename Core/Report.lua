@@ -1,6 +1,10 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
 
+if ns.broken then
+	return
+end
+
 -- Legacy Forever's own lines in /lf report, which are the /lf audit lines: the bundled data against what the game
 -- reports, so a data problem shows up as a count and a list of IDs rather than as a silently missing pin, then the
 -- tracker and the current zone's completion. English throughout, so a report reads the same in every locale.
@@ -59,7 +63,7 @@ function ns.AuditLines()
 	return lines
 end
 
--- The report's Legacy Forever lines: the audit's. UI/Report.lua caps them, so they never crowd out the errors.
+-- The report's Legacy Forever lines: the audit's. ForeverCore's report caps them, so they never crowd out the errors.
 ---@return string[]
 function ns.ReportLines()
 	return ns.AuditLines()

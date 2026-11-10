@@ -29,9 +29,29 @@ local env = setmetatable({
 		error("native methods must stay unhooked")
 	end,
 }, { __index = _G })
+env.ForeverCore = {
+	TrackerHost = {
+		Attach = noop,
+		IsAttached = function()
+			return true
+		end,
+	},
+	ContextMenu = noop,
+}
 
 local lines = {}
 local ns = {
+	Saved = {
+		LegacyTrackerSettings = function()
+			return nil
+		end,
+		ClearLegacyTrackerSettings = noop,
+	},
+	core = {
+		SafeCall = function(_, fn, ...)
+			return true, fn(...)
+		end,
+	},
 	L = setmetatable({}, {
 		__index = function(_, key)
 			return key

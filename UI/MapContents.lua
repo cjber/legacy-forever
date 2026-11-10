@@ -1,6 +1,10 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
 
+if ns.broken then
+	return
+end
+
 -- What the world map shows for a map ID, as plain tables: the objectives its button counts and its
 -- menu lists, and what the map draws. UI/Map.lua turns the answer into pins, textures and
 -- tooltips; tests/map_contents_spec.lua drives this file with stubbed client globals.

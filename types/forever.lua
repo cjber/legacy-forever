@@ -46,11 +46,6 @@ C_InputInterfaceStyle = nil
 ---@type Frame
 SoftCursor = nil
 
--- The Forever addons' world map markers, for each other (UI/MapCanvas.lua): each addon's function gives its shown
--- markers on a map, as map fractions.
----@type table<string, fun(map: WorldMapFrame): {x: number, y: number, kind: string}[]>
-ForeverMapMarkers = nil
-
 -- Client surfaces Core/Stats.lua reads that the pinned annotations omit.
 ---@type number
 LE_PARTY_CATEGORY_INSTANCE = nil
@@ -69,27 +64,3 @@ UnitName = nil
 -- ChatFrame.lua: sending an addon message and registering its prefix.
 ---@type {SendAddonMessage: fun(prefix: string, text: string, channel: string, target?: string): number?, RegisterAddonMessagePrefix: fun(prefix: string): boolean?}
 C_ChatInfo = nil
-
--- Core/LeaderboardsData.lua reads the client's weekly reset countdown when it has one.
----@type {GetSecondsUntilWeeklyReset: fun(): number?}
-C_DateAndTime = nil
-
--- UI/Leaderboards.lua publishes the one window every Forever addon registers into.
----@type ForeverLeaderboardsAPI?
-ForeverLeaderboards = nil
-
--- UI/Leaderboards.lua: the client's scroll-box list and its class colour table.
----@type fun(entries?: any[]): any
-CreateDataProvider = nil
----@type fun(top?: number, bottom?: number, left?: number, right?: number, spacing?: number): any
-CreateScrollBoxListLinearView = nil
----@type {InitScrollBoxListWithScrollBar: fun(scrollBox: Frame, scrollBar: Frame, view: any)}
-ScrollUtil = nil
----@class LegacyScrollBoxConstants
----@field RetainScrollPosition integer
----@type LegacyScrollBoxConstants
-ScrollBoxConstants = nil
----@class LegacyClassColor
----@field GetRGB fun(self: LegacyClassColor): number, number, number
----@type table<string, LegacyClassColor>?
-RAID_CLASS_COLORS = nil

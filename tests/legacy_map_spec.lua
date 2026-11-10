@@ -1,7 +1,8 @@
 -- Run from the repository root: luajit tests/legacy_map_spec.lua
--- UI/MapCanvas.lua and UI/Map.lua on a world map that fails on any write (tests/strict_map.lua): Legacy draws its pins,
--- undiscovered areas and map button on frames of its own, adds no data provider, acquires no pin and adds no overlay
--- frame, and keeps every pin's behaviour: placing, scaling, tooltips, clicks, and waiting out combat.
+-- UI/Map.lua on ForeverCore's shared map canvas on a world map that fails on any write (core's tests/strict_map.lua):
+-- Legacy draws its pins, undiscovered areas and map button on frames of its own, adds no data provider, acquires no
+-- pin and adds no overlay frame, and keeps every pin's behaviour: placing, scaling, tooltips, clicks, and waiting out
+-- combat.
 local checks = 0
 local function check(condition, label)
 	checks = checks + 1
@@ -69,9 +70,6 @@ local ns = {
 	}),
 	POINTS_ICON = "UI-Legacy-Points-icon-c60",
 	Art = { Fit = function() end },
-	SafeCall = function(_, fn, ...)
-		return true, fn(...)
-	end,
 	GamepadUI = function()
 		return false
 	end,
@@ -119,7 +117,14 @@ local ns = {
 	},
 }
 
-assert(loadfile("UI/MapCanvas.lua"))("LegacyForever", ns)
+ForeverCore = dofile("tests/forever_core.lua").install(_G, {
+	"Core/SafeCall.lua",
+	"Core/Log.lua",
+	"UI/Report.lua",
+	"UI/MapCanvas.lua",
+	"Expose.lua",
+})
+ns.core = ForeverCore.Register("LegacyForever", {})
 assert(loadfile("UI/Map.lua"))("LegacyForever", ns)
 check(attach, "UI/Map.lua waits for the world map to load")
 attach()
@@ -314,13 +319,13 @@ check(drawCalls == beforeFilter, "unrelated native filters leave Legacy pins alo
 Kit.Fire("CVAR_UPDATE", "showDungeonEntrancesOnMap")
 check(drawCalls == beforeFilter + 1, "the native entrance filter redraws an open map")
 
--- Other addons find the shown pins through ForeverMapMarkers.
-local markers = ForeverMapMarkers.LegacyForever(Kit.map)
+-- Other addons find the shown pins through ForeverCore's canvas markers.
+local markers = ns.core.MapCanvas.Markers(Kit.map)
 check(#markers == 1 and markers[1].x == 0.25 and markers[1].kind == "legacy", "the pins are listed for other addons")
 
 -- On a continent: the zone badge passes every click through to the map, which opens the zone.
 Kit.mapID = 1415
-check(#ForeverMapMarkers.LegacyForever(Kit.map) == 0, "a map just turned to lists nothing until it is drawn")
+check(#ns.core.MapCanvas.Markers(Kit.map) == 0, "a map just turned to lists nothing until it is drawn")
 Kit.Tick()
 pins = Pins()
 check(#pins == 1 and #Areas() == 0, "turning the map redraws: the continent shows its zone badge")
@@ -338,7 +343,7 @@ Kit.mapID = 1429
 Kit.combat = true
 Kit.Tick()
 check(not pin:GetParent().shown, "a redraw in combat hides our pins and acquires none")
-check(#ForeverMapMarkers.LegacyForever(Kit.map) == 0, "hidden pins are not listed for other addons")
+check(#ns.core.MapCanvas.Markers(Kit.map) == 0, "hidden pins are not listed for other addons")
 ns.RefreshMap()
 Kit.combat = false
 Kit.Fire("PLAYER_REGEN_ENABLED")

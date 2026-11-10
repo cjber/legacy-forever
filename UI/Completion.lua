@@ -2,6 +2,10 @@
 local addonName, ns = ...
 local L = ns.L
 
+if ns.broken then
+	return
+end
+
 -- Zone completion, Guild Wars 2 style: how much of a zone's areas, flight paths, dungeons, raids,
 -- Legacy objectives, local reputations and quests are done, as a section in the objective tracker
 -- (the zone you're in), in a corner of the world map (the zone you're viewing) and in each zone badge's
@@ -156,7 +160,10 @@ local function AddTooltip(tooltip, name, result)
 	end
 	-- Zone completion counts what is left in a zone; Adventure Guide Forever plans its quests. A quiet line on a
 	-- zone not yet done, while it is not installed, behind the shared "Suggest my other Forever addons" switch.
-	if not result.complete and ns.Family.Hint(ns.FamilyDB(), "LegacyForever.zoneAdventureGuide", ADVENTURE_GUIDE) then
+	if
+		not result.complete
+		and ForeverCore.Family.Hint(ns.FamilyDB(), "LegacyForever.zoneAdventureGuide", ADVENTURE_GUIDE)
+	then
 		GameTooltip_AddDisabledLine(tooltip, L["Adventure Guide Forever routes the quests left in this zone."])
 	end
 end
@@ -248,14 +255,13 @@ end
 function TrackerMixin:OnBlockHeaderClick(block, mouseButton)
 	if mouseButton ~= "RightButton" then
 		-- Through the shared opener: the client refuses its own map opener from addon code (cjber/forever-core#333).
-		ns.OpenMap(block.id)
+		ForeverCore.OpenMap(block.id)
 		return
 	end
-	ns.ContextMenu(self:GetContextMenuParent(), function(_, root)
-		root:SetTag("MENU_LEGACY_HERE_ZONE_TRACKER", block)
+	ForeverCore.ContextMenu(self:GetContextMenuParent(), function(_, root)
 		root:CreateTitle(C_Map.GetMapInfo(block.id).name)
 		root:CreateButton(L["Open the map"], function()
-			ns.OpenMap(block.id)
+			ForeverCore.OpenMap(block.id)
 		end)
 		root:CreateButton(L["Hide from the tracker"], function()
 			Toggle("tracker")
@@ -362,7 +368,7 @@ end
 ---@field Counts FontString
 ---@field Progress StatusBar
 ---@field result? LegacyZoneResult
----@field name string
+---@field mapName string
 LegacyForeverZoneOverlayMixin = {}
 
 function LegacyForeverZoneOverlayMixin:OnLoad()
@@ -376,14 +382,18 @@ function LegacyForeverZoneOverlayMixin:Refresh()
 	---@type WorldMapFrame
 	local map = self:GetParent()
 	local uiMapID = map:GetMapID()
+	if not uiMapID then
+		self:Hide()
+		return
+	end
 	self.result = IsShown("map") and Zones.Of(uiMapID) or nil
 	if not self.result then
 		self:Hide()
 		return
 	end
 	local collapsed = ns.Saved.Get("mapCollapsed")
-	self.name = C_Map.GetMapInfo(uiMapID).name
-	self.Title:SetText(("%s  %s"):format(self.name, PercentText(self.result)))
+	self.mapName = C_Map.GetMapInfo(uiMapID).name
+	self.Title:SetText(("%s  %s"):format(self.mapName, PercentText(self.result)))
 	SetCornerProgress(self.Progress, self.result)
 	self.Counts:SetText(CountsText(self.result, 16))
 	self.Counts:SetShown(not collapsed)
@@ -410,7 +420,7 @@ end
 
 function LegacyForeverZoneOverlayMixin:OnEnter()
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-	AddTooltip(GameTooltip, self.name, self.result)
+	AddTooltip(GameTooltip, self.mapName, self.result)
 	GameTooltip_AddInstructionLine(
 		GameTooltip,
 		ns.Saved.Get("mapCollapsed") and L["Click to expand."] or L["Click to collapse."]
@@ -429,11 +439,11 @@ function LegacyForeverZoneOverlayMixin:OnHide()
 	end
 end
 
--- A frame of our own over the map, kept current as the map opens and turns (UI/MapCanvas.lua): never the map's
+-- A frame of our own over the map, kept current as the map opens and turns (ForeverCore's map canvas): never the map's
 -- overlay frames or providers.
 local function AttachMap()
 	local map = WorldMapFrame
-	local MapCanvas = ns.MapCanvas
+	local MapCanvas = ns.core.MapCanvas
 	local overlay = MapCanvas.FrameUnder("Button", map, "LegacyForeverZoneOverlayTemplate")
 	---@cast overlay LegacyForeverZoneOverlayMixin
 	overlay:SetFrameStrata("HIGH")
@@ -476,7 +486,7 @@ end
 local function OnToastClick(frame, button, down)
 	if not AlertFrame_OnClick(frame, button, down) then
 		-- Through the shared opener: the client refuses its own map opener from addon code (cjber/forever-core#333).
-		ns.OpenMap(frame.uiMapID)
+		ForeverCore.OpenMap(frame.uiMapID)
 	end
 end
 

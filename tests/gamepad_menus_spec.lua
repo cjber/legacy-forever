@@ -48,35 +48,50 @@ local function OneErrorLine(text)
 	check(errors[1] and errors[1].r == 1 and errors[1].g == 1 and errors[1].b == 0, "in the client's error colour")
 end
 
---[[ Core/Core.lua: the wrapper every menu of ours goes through ]]
+--[[ Core/Core.lua: the gamepad check the map button still needs ]]
 
 _G.SlashCmdList = {}
+CreateFrame = function()
+	return { SetScript = noop, RegisterEvent = noop }
+end
+ForeverCore = dofile("tests/forever_core.lua").install(_G, {
+	"Core/SafeCall.lua",
+	"Core/Log.lua",
+	"UI/Report.lua",
+	"UI/ContextMenu.lua",
+	"UI/MapCanvas.lua",
+	"Expose.lua",
+})
+ForeverCore.ContextMenu = function(owner, generator)
+	local menu = { owner = owner, generator = generator }
+	menus[#menus + 1] = menu
+	return menu
+end
+ForeverCore.TrackerHost = {
+	Attach = noop,
+	IsAttached = function()
+		return true
+	end,
+}
+ForeverCore.Family = {
+	Hint = function()
+		return false
+	end,
+}
+ForeverCore.OpenMap = function()
+	return true
+end
 local ns = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 local line = ns.L["This menu needs mouse and keyboard."]
 check(line ~= "", "the line has an English phrase")
+check(ns.ContextMenu == nil, "Legacy defines no context menu of its own")
 
 local input = _G.InputUtil
 _G.InputUtil = nil
 check(ns.GamepadUI() == false, "a client without InputUtil reports the gamepad interface off")
 _G.InputUtil = input
-
-gamepad = true
-Reset()
-local owner, generator = {}, noop
-check(ns.ContextMenu(owner, generator) == nil, "the wrapper opens no menu under the gamepad interface")
-check(#menus == 0, "and gives the client's menu call nothing")
-OneErrorLine(line)
-
-gamepad = false
-Reset()
-local menu = ns.ContextMenu(owner, generator)
-check(
-	#menus == 1 and menus[1].owner == owner and menus[1].generator == generator,
-	"the menu opens with its owner and generator"
-)
-check(menu == menus[1] and #errors == 0, "the wrapper returns the client's menu and says nothing")
 
 --[[ The map button and /lf: their own OpenMenu, on the shared map harness ]]
 
@@ -130,7 +145,6 @@ ns.Saved = {
 	OnChange = noop,
 }
 
-assert(loadfile("UI/MapCanvas.lua"))("LegacyForever", ns)
 assert(loadfile("UI/Map.lua"))("LegacyForever", ns)
 check(attach ~= nil, "UI/Map.lua waits for the world map to load")
 attach()
@@ -163,7 +177,15 @@ OneErrorLine(line)
 --[[ The Legacy tracker and the zone tracker: their block header right-clicks ]]
 
 local function BaseNamespace()
-	return { L = ns.L, GamepadUI = ns.GamepadUI, ContextMenu = ns.ContextMenu }
+	return {
+		L = ns.L,
+		GamepadUI = ns.GamepadUI,
+		core = {
+			SafeCall = function(_, fn, ...)
+				return true, fn(...)
+			end,
+		},
+	}
 end
 
 local function Frame(kind, name)
@@ -199,6 +221,12 @@ local trackerEnv = setmetatable({
 trackerEnv._G = trackerEnv
 
 local trackerNs = BaseNamespace()
+trackerNs.Saved = {
+	LegacyTrackerSettings = function()
+		return nil
+	end,
+	ClearLegacyTrackerSettings = noop,
+}
 trackerNs.SavedTable = function()
 	return {}
 end
@@ -220,15 +248,12 @@ local legacyTracker = trackerModules[1]
 check(legacyTracker ~= nil, "the Legacy tracker section is made")
 
 local block = { id = 10 }
-gamepad = true
 Reset()
 legacyTracker:OnBlockHeaderClick(block, "RightButton")
-check(#menus == 0, "the Legacy tracker opens no menu under the gamepad interface")
-OneErrorLine(line)
-gamepad = false
-Reset()
-legacyTracker:OnBlockHeaderClick(block, "RightButton")
-check(#menus == 1 and menus[1].owner == legacyTracker, "the Legacy tracker opens its menu on the tracker")
+check(
+	#menus == 1 and menus[1].owner == legacyTracker,
+	"the Legacy tracker opens its menu through ForeverCore on the tracker"
+)
 check(#errors == 0, "and says nothing")
 
 local completionModule
@@ -300,11 +325,6 @@ completionNs.Live = {
 	CurrentZone = noop,
 	ContinentOf = noop,
 }
-completionNs.Family = {
-	Hint = function()
-		return false
-	end,
-}
 completionNs.FamilyDB = function()
 	return {}
 end
@@ -331,18 +351,15 @@ completionNs.Tracker = {
 setfenv(assert(loadfile("UI/Completion.lua")), completionEnv)("LegacyForever", completionNs)
 check(completionModule ~= nil, "the zone tracker section is made")
 
-gamepad = true
 Reset()
 completionModule:OnBlockHeaderClick(block, "RightButton")
-check(#menus == 0, "the zone tracker opens no menu under the gamepad interface")
-OneErrorLine(line)
-gamepad = false
-Reset()
-completionModule:OnBlockHeaderClick(block, "RightButton")
-check(#menus == 1 and menus[1].owner == completionModule, "the zone tracker opens its menu on the tracker")
+check(
+	#menus == 1 and menus[1].owner == completionModule,
+	"the zone tracker opens its menu through ForeverCore on the tracker"
+)
 check(#errors == 0, "and says nothing")
 
---[[ The source guard: the wrapper is the only door to a context menu, and the map button wraps its own OpenMenu ]]
+--[[ The source guard: no addon file opens a Blizzard menu directly, and the map button wraps its own OpenMenu ]]
 
 local function AddonFiles()
 	local files = {}
@@ -362,20 +379,13 @@ end
 
 local menusOutsideCore = {}
 for _, path in ipairs(AddonFiles()) do
-	if
-		path ~= "Core/Core.lua"
-		and path ~= "UI/TrackerHost.lua"
-		and Code(Read(path)):find("MenuUtil.CreateContextMenu", 1, true)
-	then
+	if Code(Read(path)):find("MenuUtil.CreateContextMenu", 1, true) then
 		menusOutsideCore[#menusOutsideCore + 1] = path
 	end
 end
-check(
-	#menusOutsideCore == 0,
-	"only Core/Core.lua opens a context menu directly: " .. table.concat(menusOutsideCore, ", ")
-)
+check(#menusOutsideCore == 0, "no addon file opens a context menu directly: " .. table.concat(menusOutsideCore, ", "))
 for _, path in ipairs({ "UI/Completion.lua", "UI/Tracker.lua" }) do
-	check(Code(Read(path)):find("ns.ContextMenu(", 1, true) ~= nil, path .. " goes through ns.ContextMenu")
+	check(Code(Read(path)):find("ForeverCore.ContextMenu(", 1, true) ~= nil, path .. " uses ForeverCore's menu")
 end
 local mapSource = Code(Read("UI/Map.lua"))
 check(mapSource:find("local open = self.OpenMenu", 1, true) ~= nil, "the map button captures the client's OpenMenu")

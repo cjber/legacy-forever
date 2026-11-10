@@ -25,18 +25,22 @@ L["/lf audit - check the bundled data against the game"] =
 	"/lf audit - сверить встроенные данные с игрой"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - показать, что игра сообщает об одном достижении"
+L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
+	"/lf issue - создает ссылку на issue GitHub для сообщения об ошибке или предложения улучшения"
+L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
+	"/lf leaderboard - открывает Forever Leaderboards на вкладке этого аддона"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - показать отчет для сообщения об ошибке"
+L["/lf share on|off - share flight-path totals, keeping your history"] =
+	"/lf share on|off - делиться числом маршрутов полётов, сохраняя историю"
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever проложит маршрут по оставшимся заданиям этой зоны."
-L["Already complete"] = "Уже завершено" -- mt
+L["Already complete"] = "Уже завершено"
 L["Areas explored"] = "Исследованные области"
 L["Attach to quest tracker"] = "Прикрепить к отслеживанию заданий"
 L["Click the zone to see where."] = "Щелкните по зоне, чтобы увидеть где."
 L["Click to collapse."] = "Щелкните, чтобы свернуть."
 L["Click to expand."] = "Щелкните, чтобы развернуть."
-L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
-	"Просматриваемая зона в углу карты и значок на каждой зоне карты континента."
 L["Click to open the map. Right-click for options."] =
 	"Щелкните, чтобы открыть карту. Правый щелчок – настройки."
 L["Click to set a waypoint here."] =
@@ -45,45 +49,42 @@ L["Click to track, with live progress."] =
 	"Щелкните, чтобы отслеживать прогресс в реальном времени."
 L["Click to travel here with Shortest Path Forever."] =
 	"Щелкните, чтобы отправиться сюда с Shortest Path Forever."
-L["Close"] = "Закрыть"
-L["Copy link"] = "Копировать ссылку"
-L["Copy the address, then open it in your browser."] =
-	"Скопируйте адрес и откройте его в браузере."
 L["Defeat"] = "Победить"
-L["Don't suggest this again"] = "Больше не предлагать"
-L["Drag to move"] = "Перетащите, чтобы переместить"
 L["Dungeon or raid"] = "Подземелье или рейд"
 L["Dungeons, raids and Legacy objectives count your progress on any character."] =
 	"Подземелья, рейды и цели старинных испытаний учитывают прогресс любого персонажа."
 L["Every quest this character can take in the zone, from Questie."] =
 	"Все задания зоны, доступные этому персонажу, по данным Questie."
 L["Flight paths"] = "Маршруты полетов"
+L["Flight-path leaderboard"] = "Рейтинг маршрутов полётов"
+L["Flight-path records"] = "История маршрутов полётов"
 L["Forever addons"] = "Модификации Forever"
-L["Forever tracker"] = "Отслеживание Forever"
 L["Hide from the tracker"] = "Скрыть из отслеживания"
 L["In the objective tracker"] = "В отслеживании целей"
+L["Install AtlasLoot for recommended levels."] =
+	"Установите AtlasLoot, чтобы увидеть рекомендуемые уровни."
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"Установите Shortest Path Forever, чтобы маршрут прокладывался за вас."
-L["Installed, turned off"] = "Установлено, отключено"
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"Оставляет общий трекер Forever там, где вы его поставили. Ручка сверху больше его не перетаскивает."
 L["Legacy"] = "Старинные испытания"
 L["Legacy Forever report"] = "Отчет Legacy Forever"
 L["Legacy objectives"] = "Цели старинных испытаний"
+L["Legacy's options and map now open without a blocked-action error."] =
+	"Настройки и карта Legacy теперь открываются без ошибки заблокированного действия."
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Уровни, навыки, звания и все, что не привязано к месту."
 L["Lock the tracker"] = "Закрепить трекер"
-L["Tracker background"] = "Фон отслеживания"
 L["Needs Questie, which lists each zone's quests."] =
 	"Нужен Questie: он знает задания каждой зоны."
 L["No fixed location"] = "Без точного места"
 L["No unfinished Legacy objectives with a place on this map."] =
 	"На этой карте нет невыполненных целей старинных испытаний с точным местом."
-L["Not installed"] = "Не установлено"
 L["Nothing left to do here"] = "Здесь больше нечего делать"
 L["Objective tracker"] = "Отслеживание целей"
-L["On"] = "Вкл."
 L["On the world map"] = "На карте мира"
+L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
+	"Включено, пока вы не выключите. Делится числом маршрутов полётов и добавляет вас в рейтинги Forever."
 L["Open"] = "Открыть"
 L["Open a flight master on this continent to check these."] =
 	"Поговорите с распорядителем полетов на этом континенте, чтобы проверить их."
@@ -94,36 +95,24 @@ L["Part of %s"] = "Часть испытания «%s»"
 L["Part of %s: %s for exploring every zone"] =
 	"Часть испытания «%s»: %s за исследование всех зон"
 L["Part of %s: %s for the whole challenge"] = "Часть испытания «%s»: %s за все испытание"
-L["Picks quests for your level and plans them into one journey."] =
-	"Подбирает задания по вашему уровню и объединяет их в один маршрут."
-L["Plans the cheapest route to your next profession rank."] =
-	"Прокладывает самый дешевый путь к следующему рангу профессии."
-L["Plans the quickest way anywhere and guides you there, with live boat and zeppelin times."] =
-	"Прокладывает самый быстрый путь куда угодно и ведет вас туда, с расписанием кораблей и дирижаблей в реальном времени."
 L["Quest"] = "Задание"
-L["Quest automation, rare alerts and merchant handling for the default UI."] =
-	"Автоматизация заданий, оповещения о редких противниках и работа с торговцами для стандартного интерфейса."
+L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровни: %s (AtlasLoot)"
 L["Repeatable, holiday and profession quests are left out."] =
 	"Повторяемые, праздничные задания и задания профессий не учитываются."
 L["Reputations (Friendly)"] = "Репутация (Дружелюбие)"
+L["Share flight-path totals with guild and group"] =
+	"Делиться числом маршрутов полётов с гильдией и группой"
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
 	"Показывать неприметную строку там, где помогла бы другая моя модификация Forever. Только для тех, что у вас не установлены."
 L["Show dungeon and raid entrances"] = "Показывать входы в подземелья и рейды"
 L["Show undiscovered areas"] = "Показывать неоткрытые области"
-L["Shows the Legacy challenges you can advance in each zone."] =
-	"Показывает старинные испытания, которые можно продвинуть в каждой зоне."
 L["Stop tracking"] = "Не отслеживать"
 L["Suggest my other Forever addons"] = "Предлагать другие мои модификации Forever"
-L["The Forever addons are free, with nothing locked behind them. If they help, you can buy me a coffee."] =
-	"Аддоны Forever бесплатны, и ничего в них не закрыто за оплатой. Если они вам помогают, можете угостить меня кофе." -- mt
-L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
-	"Текст выделен. Нажмите Ctrl+C (Cmd+C на Mac), чтобы скопировать его, и вставьте в сообщение об ошибке."
-L["The tracker is locked. Turn off Lock the tracker to move it."] =
-	"Трекер закреплён. Отключите «Закрепить трекер», чтобы переместить его."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
-L["This addon"] = "Эта модификация"
-L["This menu needs mouse and keyboard."] = "Для этого меню нужны мышь и клавиатура." -- mt
+L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
+	"Просматриваемая зона в углу карты и значок на каждой зоне карты континента."
+L["This menu needs mouse and keyboard."] = "Для этого меню нужны мышь и клавиатура."
 L["This version of Questie isn't supported."] = "Эта версия Questie не поддерживается."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"Отключите, если их уже отмечает другая модификация. Меню старинных испытаний на карте по-прежнему их показывает."
@@ -144,87 +133,5 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"не удалось добавить раздел в отслеживание целей; сообщите результат /lf audit."
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"отслеживание целей недоступно, поэтому отслеживаемые испытания не показываются."
+L["total"] = "всего"
 L["updated to %s. %s"] = "обновлено до версии %s. %s"
-L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
-	"/lf issue - создает ссылку на issue GitHub для сообщения об ошибке или предложения улучшения"
-L["Bug"] = "Ошибка"
-L["Bug: "] = "Ошибка: "
-L["Copy issue link"] = "Копировать ссылку на issue"
-L["Copy report"] = "Копировать отчет"
-L["Feature request"] = "Предложение"
-L["Feature request: "] = "Предложение: "
-L["Report a bug or request a feature"] =
-	"Сообщить об ошибке или предложить улучшение"
-L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
-	"Ссылка выделена. Нажмите Ctrl+C (Cmd+C на Mac), чтобы скопировать ее, и вставьте в браузер: GitHub откроет заполненное issue."
-L["Title"] = "Заголовок"
-L["What happened, or what you would like"] =
-	"Что произошло или что вы хотели бы видеть"
-
-L["Legacy's options and map now open without a blocked-action error."] =
-	"Настройки и карта Legacy теперь открываются без ошибки заблокированного действия." -- mt
-L["Install AtlasLoot for recommended levels."] =
-	"Установите AtlasLoot, чтобы увидеть рекомендуемые уровни." -- mt
-L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровни: %s (AtlasLoot)" -- mt
-
--- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
-L["/lf share on|off - share flight-path totals, keeping your history"] =
-	"/lf share on|off - делиться числом маршрутов полётов, сохраняя историю" -- mt
-L["Flight-path leaderboard"] = "Рейтинг маршрутов полётов" -- mt
-L["Flight-path records"] = "История маршрутов полётов" -- mt
-L["Share flight-path totals with guild and group"] =
-	"Делиться числом маршрутов полётов с гильдией и группой" -- mt
-
--- Forever Leaderboards (Forever Core's shared window).
-L["Forever Leaderboards"] = "Рейтинги Forever" -- mt
-L["Overall"] = "Общий" -- mt
-L["Forever standing"] = "Общий рейтинг Forever" -- mt
-L["Your guild and group"] = "Ваша гильдия и группа" -- mt
-L["Players you've met"] = "Встреченные игроки" -- mt
-L["This week"] = "На этой неделе" -- mt
-L["All time"] = "За всё время" -- mt
-L["Rank"] = "Место" -- mt
-L["Player"] = "Игрок" -- mt
-L["No one has reported yet."] = "Пока никто не сообщил." -- mt
-L["Share my progress"] = "Делиться прогрессом" -- mt
-L["Others' values are player-reported."] =
-	"Значения других игроков сообщены ими самими." -- mt
-L["Points for placing on each addon's board."] = "Очки за место в списке каждого аддона." -- mt
-L["(you)"] = "(вы)" -- mt
-L["board"] = "список" -- mt
-L["boards"] = "списки" -- mt
-L["Uses Forever addons"] = "Использует аддоны Forever" -- mt
-L["Forever: %s overall this week"] = "Forever: %s на этой неделе" -- mt
-L["Forever: %s overall"] = "Forever: %s за всё время" -- mt
-L["1st"] = "1-е" -- mt
-L["2nd"] = "2-е" -- mt
-L["3rd"] = "3-е" -- mt
-L["4th"] = "4-е" -- mt
-L["5th"] = "5-е" -- mt
-L["6th"] = "6-е" -- mt
-L["7th"] = "7-е" -- mt
-L["8th"] = "8-е" -- mt
-L[", "] = ", " -- mt
-L["total"] = "всего" -- mt
-L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
-	"/lf leaderboard - открывает Forever Leaderboards на вкладке этого аддона" -- mt
-L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
-	"Включено, пока вы не выключите. Делится числом маршрутов полётов и добавляет вас в рейтинги Forever." -- mt
-
--- Shared debug log (Forever Core's Core/Log.lua).
-L["Debug log is off."] = "Журнал отладки выключен." -- mt
-L["Debug log is on for this session."] = "Журнал отладки включён для этого сеанса." -- mt
-L["Debug log is on and pinned for this character."] =
-	"Журнал отладки включён и закреплён для этого персонажа." -- mt
-L["Debug log is already on and pinned for this character."] =
-	"Журнал отладки уже включён и закреплён для этого персонажа." -- mt
-L["Debug log is off for this session; it is still pinned."] =
-	"Журнал отладки выключен для этого сеанса; закрепление сохранено." -- mt
-L["Debug log is off and unpinned."] = "Журнал отладки выключен, закрепление снято." -- mt
-L["No addon has attached its log yet."] =
-	"Ни один аддон ещё не подключил свой журнал." -- mt
-L["%s (last %d):"] = "%s (последние %d):" -- mt
-L["%s: no lines yet."] = "%s: строк пока нет." -- mt
-L["Usage: /forever debug, /forever debug pin, /forever debug off, /forever debug show"] =
-	"Использование: /forever debug, /forever debug pin, /forever debug off, /forever debug show" -- mt
-L["Hide this section"] = "Скрыть этот раздел" -- mt

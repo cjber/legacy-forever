@@ -11,6 +11,7 @@ scenario("a full tracker column still shows the zone completion section", functi
 	sim.world.player.map = 1439
 	sim.world.maps[1439] = { name = "Darkshore", parent = 1414, mapType = 3 }
 	sim.world.maps[1414] = { name = "Kalimdor", parent = 947, mapType = 2 }
+	dofile("tests/sim/forever_core.lua").install(sim)
 	-- The sim sizes a font string with two anchor points from its rect, which can come out negative; the client
 	-- answers the text's own height, which is what the tracker's layout arithmetic needs.
 	sim.widgets.metas.FontString.__index.GetHeight = function(self)
@@ -36,7 +37,7 @@ scenario("a full tracker column still shows the zone completion section", functi
 	function earlier:IsTruncated()
 		return (self.used or 0) < 300
 	end
-	G.ForeverTrackerHost.Attach(earlier)
+	G.ForeverCore.TrackerHost.Attach(earlier)
 	sim:advance(2)
 	local zone = G.LegacyForeverZoneTracker
 	assert(zone:IsShown(), "the zone completion section draws with the column full")

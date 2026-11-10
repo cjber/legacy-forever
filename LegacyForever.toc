@@ -10,11 +10,13 @@
 ## X-Curse-Project-ID: 1705879
 ## X-Wago-ID: b6mzA7KP
 ## IconTexture: Interface\AddOns\LegacyForever\media\Icon
+## Dependencies: ForeverCore
 ## OptionalDeps: ShortestPathForever, QuestieDB, Questie, AtlasLootClassic
 ## SavedVariables: LegacyForeverDB
 ## LoadSavedVariablesFirst: 1
 ## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick
 
+Core\Require.lua
 Locales\enUS.lua
 Locales\deDE.lua
 Locales\esES.lua
@@ -26,14 +28,9 @@ Locales\ruRU.lua
 Locales\zhCN.lua
 Locales\zhTW.lua
 Data\Legacy.lua
-Core\SafeCall.lua
-Core\OpenSettings.lua
-Core\OpenMap.lua
-Core\Log.lua
 Core\Core.lua
 Core\Art.lua
 Core\Saved.lua
-UI\ForeverFamily.lua
 UI\WhatsNew.lua
 Core\Model.lua
 Core\Live.lua
@@ -41,24 +38,13 @@ Integrations\Quests.lua
 Integrations\Navigate.lua
 Integrations\AtlasLoot.lua
 Core\ZoneCompletion.lua
-UI\TrackerQuestie.lua
-UI\TrackerEqot.lua
-UI\TrackerLock.lua
-UI\TrackerOrder.lua
-UI\TrackerHost.lua
 UI\Tracker.lua
-UI\MapCanvas.lua
 UI\Completion.xml
 UI\Completion.lua
 UI\Settings.lua
-UI\SettingsPage.lua
 UI\MapContents.lua
 UI\Map.xml
 UI\Map.lua
 Core\API.lua
-Core\PeerStats.lua
-Core\LeaderboardsData.lua
-UI\Leaderboards.lua
 Core\Stats.lua
 Core\Report.lua
-UI\Report.lua

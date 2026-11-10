@@ -3,6 +3,11 @@
 Legacy Forever is a WoW: Forever addon (Interface 16001) that puts unfinished Legacy challenges on the
 world map and in the objective tracker. Players install the zip the BigWigs packager builds on a `v*` tag.
 
+It requires ForeverCore (`## Dependencies: ForeverCore`), the standalone addon that owns the shared tracker column,
+report window, error journal and debug log, Forever Leaderboards, the minimap button, the quest log side tabs, the
+settings-page chrome, the family page and the map canvas. CurseForge and Wago install ForeverCore with it through
+`.pkgmeta`'s `required-dependencies`; nothing shared is vendored here.
+
 ## Commands
 
 ```sh
@@ -10,9 +15,9 @@ python3 tools/doctor.py   # first on a new machine: every tool pin below, with a
 stylua --check .
 ruff format --check . && ruff check .
 luacheck .
-tools/typecheck.sh           # LuaLS 3.19.1 + multi-value lint (Python self-tests included)
-for s in tests/*_spec.lua; do luajit "$s" || exit 1; done
-luajit tools/perf_bench.lua   # load and redraw cost over the headless harness
+FOREVER_CORE=../forever-core tools/typecheck.sh   # LuaLS 3.19.1 + multi-value lint (Python self-tests included)
+for s in tests/*_spec.lua; do FOREVER_CORE=../forever-core luajit "$s" || exit 1; done
+FOREVER_CORE=../forever-core luajit tools/perf_bench.lua   # load and redraw cost over the headless harness
 python3 tools/gen_legacy.py   # regenerate Data/Legacy.lua after a data change
 python3 tools/check_generated.py   # regenerate in a disposable tree; require fresh, byte-stable Data/Legacy.lua
 python3 tools/phrases.py > Locales/phrases.txt   # regenerate the translation template after a string change
@@ -21,6 +26,10 @@ python3 tools/check_screenshots.py   # an image older than its sources; --record
 python3 tools/check_menu_scroll.py # menus built from a list scroll (WFA-36); CI runs it in core-shared
 python3 tools/repo_rules.py   # rules no linter covers; CI runs it in project-rules
 ```
+
+`FOREVER_CORE` names the cjber/forever-core checkout the specs load, defaulting to the sibling `../forever-core`.
+`tools/forever-core.txt` holds the git ref CI checks out for them; it is a branch while this addon adopts the
+dependency and becomes `v1.0.0` at release.
 
 CI's `package` job builds the zip with the release's packager without uploading (`-d -z`) and runs
 `python3 tools/check_package.py` on its output: every loaded file ships, no development folder does, a licence file and
@@ -41,7 +50,7 @@ request against its base and fails on a regression. Every version needs a
   failed" issue; `tools/README.md` has the detail.
 - `Core/`: lifecycle, public API, pure challenge logic and live-state reads.
 - `Integrations/`: quest-state reads and navigation through companion addons.
-- `UI/`: map pins, completion panel, settings and the private tracker host.
+- `UI/`: map pins, completion panel, settings and the Legacy tracker section.
 - `Locales/`: `enUS.lua` sets `ns.L`, keyed by the English phrase; a translation is `Locales/<locale>.lua`, listed in
   the TOC after it (`Locales/README.md` has the steps). `Locales/phrases.txt` is `tools/phrases.py`'s template for one. No packager localization keyword: CurseForge's export is gone.
 - `types/`: editor/checker declarations, never loaded by the TOC or shipped.
@@ -89,12 +98,12 @@ request against its base and fails on a regression. Every version needs a
 `python3 tools/forever_tools/sync.py check` verifies it offline; `sync.py update --source <checkout>` is the only way to refresh it.
 Never touch Blizzard's Lua state: WFA-38 in `wow-forever-addon` lists what addon code may do to Blizzard's
 frames, how to restyle one by drawing on top, and when a `taint-ok` exception holds.
-Draw on the world map only through `UI/MapCanvas.lua`: frames of our own, made with no parent and then set on the
-canvas or map, never `AddDataProvider`, `AcquirePin`, `AddOverlayFrame` or a `MapCanvasPinMixin` (the gamepad
-interface walks the map's providers, pins and overlay frames from secure code). `tests/legacy_map_spec.lua` runs the
-map files against a map that fails on any write.
-Keep addon tracker sections and pools in `UI/TrackerHost.lua`, outside Blizzard's registry.
+Draw on the world map only through the core map canvas (`ns.core.MapCanvas`, `ForeverCore.MapCanvas`): frames of our
+own, made with no parent and then set on the canvas or map, never `AddDataProvider`, `AcquirePin`, `AddOverlayFrame`
+or a `MapCanvasPinMixin` (the gamepad interface walks the map's providers, pins and overlay frames from secure code).
+`tests/legacy_map_spec.lua` runs the map files against a map that fails on any write.
+Keep addon tracker sections and pools in the Legacy tracker section (`UI/Tracker.lua`), outside Blizzard's registry;
+attach them through `ForeverCore.TrackerHost`.
 Render only after `PLAYER_ENTERING_WORLD` and `VARIABLES_LOADED`, deferred one frame.
-This supersedes WFA-5's native registration guidance. CI exercises the host against checksum-pinned
-Forever tracker source; native manager access is forbidden in the integration harness.
+This supersedes WFA-5's native registration guidance. The native manager is forbidden in the integration harness.
 Test event ordering and reuse, not just method existence.

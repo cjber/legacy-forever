@@ -1,7 +1,7 @@
 -- Run from the repository root: luajit tests/error_journal_spec.lua
--- The shared error journal (Core/SafeCall.lua) and debug log (Core/Log.lua) live in LegacyForeverDB, attached by
--- Core/Saved.lua once the saved variables are in, so the report lists earlier sessions' errors and the lines that led
--- to them after a /reload.
+-- The shared error journal (ForeverCore's Core/SafeCall.lua) and debug log (ForeverCore's Core/Log.lua) live in
+-- LegacyForeverDB, attached by Core/Saved.lua once the saved variables are in, so the report lists earlier sessions'
+-- errors and the lines that led to them after a /reload.
 local checks = 0
 local function check(condition, label)
 	checks = checks + 1
@@ -12,7 +12,7 @@ CreateFrame = function()
 	return { RegisterEvent = function() end, SetScript = function() end }
 end
 SlashCmdList = {}
--- The client defines the error handler, strtrim and date Core/SafeCall.lua and Core/Log.lua read.
+-- The client defines the error handler, strtrim and date ForeverCore's journal and log read.
 geterrorhandler = function()
 	return error
 end
@@ -29,8 +29,13 @@ end
 
 local ns = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
-assert(loadfile("Core/SafeCall.lua"))("LegacyForever", ns)
-assert(loadfile("Core/Log.lua"))("LegacyForever", ns)
+ForeverCore = dofile("tests/forever_core.lua").install(_G, {
+	"Core/SafeCall.lua",
+	"Core/Log.lua",
+	"UI/Report.lua",
+	"UI/MapCanvas.lua",
+	"Expose.lua",
+})
 assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 
 -- A first install, with no saved table at all: Saved makes the journal and the log in LegacyForeverDB and attaches
@@ -40,8 +45,8 @@ assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
 check(type(LegacyForeverDB.errors) == "table", "the saved table has no error journal")
 check(type(LegacyForeverDB.log) == "table", "the saved table has no debug log")
 
--- An error caught by ns.SafeCall is recorded in the saved journal, which is where the next session reads it.
-local ok = ns.SafeCall("error journal spec", function()
+-- An error caught by ns.core.SafeCall is recorded in the saved journal, which is where the next session reads it.
+local ok = ns.core.SafeCall("error journal spec", function()
 	error("error journal spec failure")
 end)
 check(ok == false, "the failure was not caught")
@@ -56,7 +61,7 @@ check(entry and entry.kind == "error" and entry.count == 1, "the journal entry i
 check(entry and type(entry.firstSeen) == "number" and type(entry.lastSeen) == "number", "no times kept")
 
 -- The log rides in the same saved table, so the lines that led to a bug survive a /reload too.
-ns.Log("info", "error journal spec", "a line before the reload")
+ns.core.Log("info", "error journal spec", "a line before the reload")
 local logged
 for _, line in ipairs(LegacyForeverDB.log.lines or {}) do
 	if line:find("a line before the reload", 1, true) then
@@ -88,14 +93,12 @@ local saved = {
 LegacyForeverDB = saved
 local reloaded = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", reloaded)
-assert(loadfile("Core/SafeCall.lua"))("LegacyForever", reloaded)
-assert(loadfile("Core/Log.lua"))("LegacyForever", reloaded)
 assert(loadfile("Core/Core.lua"))("LegacyForever", reloaded)
 assert(loadfile("Core/Saved.lua"))("LegacyForever", reloaded)
 check(LegacyForeverDB.errors == saved.errors, "the journal is not the saved errors table")
 check(LegacyForeverDB.log == saved.log, "the log is not the saved log table")
 local earlier
-for _, candidate in ipairs(reloaded.CaughtErrors()) do
+for _, candidate in ipairs(reloaded.core.CaughtErrors()) do
 	if candidate.message == "error from an earlier session" then
 		earlier = candidate
 	end
@@ -103,7 +106,7 @@ end
 check(earlier ~= nil and earlier.fromSession == false, "an earlier session's error is missing from the report")
 check(earlier and earlier.count == 2, "the earlier session's count was lost")
 local kept
-for _, line in ipairs(reloaded.LogLines(10)) do
+for _, line in ipairs(reloaded.core.LogLines(10)) do
 	if line:find("line from an earlier session", 1, true) then
 		kept = line
 	end

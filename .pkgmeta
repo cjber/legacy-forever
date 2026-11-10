@@ -1,5 +1,8 @@
 package-as: LegacyForever
 
+required-dependencies:
+  - forevercore
+
 manual-changelog:
   filename: .release-notes.md
   markup-type: markdown
@@ -7,6 +10,7 @@ manual-changelog:
 # The packager already drops every dot-prefixed path (release.sh), so only the rest is listed.
 ignore:
   - AGENTS.md
+  - forever-core
   - tools
   - types
   - tests
