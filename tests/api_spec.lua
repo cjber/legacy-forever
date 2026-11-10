@@ -193,7 +193,7 @@ end
 local atlases = {
 	["UI-Legacy-Points-icon-c60"] = { width = 50, height = 73 },
 	["islands-queue-prop-compass"] = { width = 300, height = 297 },
-	["questlog-questtypeicon-dungeon"] = { width = 18, height = 18 },
+	["Dungeon"] = { width = 32, height = 32 },
 	taxinode_neutral = { width = 21, height = 21 },
 	QuestNormal = { width = 32, height = 32 },
 	Raid = { width = 32, height = 32 },
@@ -536,10 +536,7 @@ for _, size in ipairs({ 12, 14 }) do
 end
 check(ns.Completion.Icon("areas", 14) == "|A:islands-queue-prop-compass:14:14|a", "a near-square compass")
 check(ns.Completion.Icon("taxis", 12) == "|A:taxinode_neutral:12:12|a", "a square atlas fills the square")
-check(
-	ns.Completion.Icon("dungeons", 12) == "|A:questlog-questtypeicon-dungeon:12:12|a",
-	"the quest log's dungeon glyph is square"
-)
+check(ns.Completion.Icon("dungeons", 12) == "|A:Dungeon:12:12|a", "the map's dungeon entrance pin is square")
 
 -- Every draw path on a cold index: the tracker's section, a badge's tooltip (which reads its continent), the map's
 -- corner and badges. None builds the index during the draw; quests draw as pending, and one build is scheduled for
