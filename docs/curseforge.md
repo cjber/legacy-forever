@@ -1,4 +1,6 @@
-Legacy Forever shows unfinished challenges on the world map and tracks the ones you choose.
+Legacy Forever shows unfinished Legacy challenges on the world map and tracks the ones you choose in the objective tracker.
+
+Legacy Forever needs [Forever Core](https://www.curseforge.com/wow/addons/forever-core), which CurseForge and Wago install with it.
 
 Free, with nothing locked behind it. If it saves you time, you can [sponsor me on GitHub](https://github.com/sponsors/cjber), which takes no fees, or [buy me a coffee on Ko-fi](https://ko-fi.com/cjber). For help and each day's release notes, [join me on Discord](https://discord.gg/FpHugGxRJY).
 
@@ -24,36 +26,33 @@ Challenges you track sit in the objective tracker under the game's own header, w
 
 Tick a challenge in the menu to track it.
 
+These images are generated previews of the Legacy UI.
+
 ## Features
 
-- **Map button** in the world map's button column: a Legacy shield with a number inside, the unfinished objectives on the map you're viewing. Its menu lists them by challenge, with a tick box to track each one.
-- **Tracker**: a Legacy section in the objective tracker lists what you track, with live progress. A zone ticked in the map menu tracks just that zone, such as "0/12 Explore Felwood". Click a challenge to open it in the Legacy panel, or right-click to stop tracking it.
-- **Map pins** on dungeon and raid entrances, with the challenge each counts toward and its Legacy points. With AtlasLoot installed, tooltips also show its recommended level range. Click one to travel there with Shortest Path Forever, or the game's own waypoint.
-- **Undiscovered areas** are shaded in their real shape on the zone map. Hover one to see which challenge counts it, its points and how many of the zone's areas are left. The map menu turns the shading off.
-- **Zone completion**, Guild Wars 2 style: how much of a zone's areas, dungeons, raids and Legacy objectives you've done, in whichever corner of the zone's map covers least of it, as a badge on each zone of a continent map and, if you tick it, the tracker. The tracker's section fills the game's own progress bar with the percent inside it and counts each kind with the map's own icons. Flight paths, local reputations and, with Questie, quests can be added under "What counts". A finished zone gets a toast and a sound.
-- **No fixed location** lists challenges whose remaining work isn't tied to a place, such as levels, skills and ranks.
+- **Map button.** A Legacy shield in the world map's button column, with the number of unfinished objectives on the map you're viewing inside it. Its menu lists them by challenge, with a tick box to track each one.
+- **Tracker.** A Legacy section in the objective tracker lists what you track, with live progress, and a zone ticked in the map menu tracks just that zone, such as "0/12 Explore Felwood". Click a challenge to open it in the Legacy panel, or right-click to stop tracking it.
+- **Map pins.** Dungeon and raid entrances show the challenge each counts toward and its Legacy points, plus the recommended level range in tooltips with AtlasLoot installed. Click one to travel there with Shortest Path Forever, or the game's own waypoint.
+- **Undiscovered areas.** They are shaded in their real shape on the zone map, and hovering one shows which challenge counts it, its points and how many of the zone's areas are left. The map menu turns the shading off.
+- **Zone completion.** Guild Wars 2 style, it shows how much of a zone's areas, dungeons, raids and Legacy objectives you've done: in whichever corner of the zone's map covers least of it, as a badge on each zone of a continent map and, if you tick it, in the tracker, where the game's own progress bar fills with the percent inside it and the map's own icons count each kind. Flight paths, local reputations and, with Questie, quests can be added under "What counts", and a finished zone gets a toast and a sound.
+- **No fixed location.** Challenges whose remaining work isn't tied to a place, such as levels, skills and ranks, get a list of their own.
 
-Progress comes from the game each time, so it always matches the Legacy panel.
-
-Legacy Forever needs [Forever Core](https://www.curseforge.com/wow/addons/forever-core), which CurseForge and Wago install with it.
+Progress comes from the game each time, so it always matches the Legacy panel. It only shows what the game already tracks; it doesn't add challenges or change how they count. Locations are generated from the Forever client's own data and joined by ID (flight paths by the zone in their name); nothing is scraped from a database site.
 
 ## Usage
 
 Open the world map, or click the addon's icon in the addon compartment: the Legacy button sits below the map's own tracking buttons. Tick a challenge in its menu to track it. Every option also lives under Options > AddOns > Legacy Forever.
 
 - `/lf` opens the world map with the Legacy menu showing; `/lf help` lists the commands.
-- `/lf report` shows a report to copy into a bug report, including errors and log lines from earlier sessions. For a wrong or missing objective, paste it into a [wrong objective issue](https://github.com/cjber/legacy-forever/issues/new?template=wrong_objective.yml).
 - `/forever debug` keeps detailed log lines for this session; `pin` keeps them for the character, `off` turns them off, and `show` opens the report with them.
 - `/lf issue` opens a ready-made GitHub issue link to report a bug or request a feature.
 - `/lf audit` compares the bundled data with what the game reports.
 - `/lf criteria 684` lists what the game reports for one achievement.
 - `/lf leaderboard` opens Forever Leaderboards on the Legacy tab, comparing distinct flight paths with guild and group members. Peer totals are player-reported, and sharing is on unless you turn it off with `/lf share off` or **Flight-path records** in Settings.
 
-Translated into French by Brainc3ll, and into German, Spanish, Korean, Brazilian Portuguese, Russian and Chinese by machine. French lines added since, such as the Forever addons page, are machine translated too. Corrections are welcome as a pull request or a [translation issue](https://github.com/cjber/legacy-forever/issues/new?template=translation.yml): [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has the template.
+For a bug report, paste `/lf report`. The report includes errors and log lines from earlier sessions; for a wrong or missing objective, paste it into a [wrong objective issue](https://github.com/cjber/legacy-forever/issues/new?template=wrong_objective.yml).
 
-Locations are generated from the Forever client's own data and joined by ID (flight paths by the zone in their name); nothing is scraped from a database site.
-
-It only shows what the game already tracks; it doesn't add challenges or change how they count.
+Translated into French by Brainc3ll, and into German, Spanish, Korean, Brazilian Portuguese, Russian and Chinese by machine; French lines added since, such as the Forever addons page, are machine translated too. Corrections are welcome as a pull request or through the [translation form](https://github.com/cjber/legacy-forever/issues/new?template=translation.yml), and [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has the template.
 
 <!-- forever-family:start -->
 
@@ -78,10 +77,8 @@ For help, ideas and each day's release notes, join [cjber's Workshop on Discord]
 
 <!-- forever-family:end -->
 
-With Shortest Path Forever, clicking a dungeon or raid pin plans the trip there. Adventure Guide Forever shows your zone completion in its guide. Tweaks Forever's dungeon entrance icons and unexplored-area tint step aside where Legacy already marks the map.
+With Shortest Path Forever, clicking a dungeon or raid pin plans the trip there. Adventure Guide Forever shows your zone completion in its guide. Tweaks Forever's dungeon entrance icons and unexplored-area tint step aside where Legacy already marks the map. Tracked challenges share one tracker column with the other addons' tracker sections, above your quests.
 
-Tracked challenges share one tracker column with the other addons' tracker sections, above your quests.
-
-Source code: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.
+Source code and issues: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.
 
 Built with AI assistance.
