@@ -147,18 +147,43 @@ WorldMapFrame = {
 		return calls.map ~= nil
 	end,
 }
-C_Map = {
-	OpenWorldMap = function(uiMapID)
-		assert(uiMapID == nil, "the menu opens the map where the player is")
-		calls.map = (calls.map or 0) + 1
-	end,
-}
+-- C_Map.OpenWorldMap is restricted: asked from addon code, the client refuses it and blames the addon
+-- (cjber/adventure-guide-forever#411, cjber/forever-core#333). This stub does the same, so a /lf that went back to
+-- it fails here; the secure delegate is how the game lets addon code ask.
+local addonTaint = true
+local function RawOpenWorldMap(uiMapID)
+	assert(not addonTaint, "C_Map.OpenWorldMap called straight from addon code")
+	assert(uiMapID == nil, "the menu opens the map where the player is")
+	calls.map = (calls.map or 0) + 1
+end
+C_Map = { OpenWorldMap = RawOpenWorldMap }
+CreateSecureDelegate = function(open)
+	return function(...)
+		local outer = addonTaint
+		addonTaint = false
+		local ok, err = pcall(open, ...)
+		addonTaint = outer
+		if not ok then
+			error(err, 0)
+		end
+	end
+end
+InCombatLockdown = function()
+	return false
+end
+assert(loadfile("Core/OpenMap.lua"))("LegacyForever", ns)
 function ns.OpenMapMenu()
 	calls.menu = (calls.menu or 0) + 1
 end
 function ns.Print(text)
 	printed[#printed + 1] = text
 end
+-- A build without the client's secure delegate opens nothing, so the menu that lives on the map stays closed too.
+local delegate = CreateSecureDelegate
+CreateSecureDelegate = nil
+SlashCmdList.LEGACYFOREVER("")
+check(calls.map == nil and calls.menu == nil and #printed == 0, "a map that cannot open leaves its menu closed")
+CreateSecureDelegate = delegate
 SlashCmdList.LEGACYFOREVER("")
 check(calls.map == 1 and calls.menu == 1 and #printed == 0, "a bare /lf opens the map and its menu")
 LegacyForever_OnAddonCompartmentClick()
@@ -255,10 +280,21 @@ Settings = {
 	RegisterAddOnCategory = function(category)
 		check(category.name == "Legacy Forever", "the category is registered")
 	end,
-	OpenToCategory = function(id)
-		opened[#opened + 1] = id
+	-- Blizzard's own opener is Lua around a restricted client call, which the client refuses from addon code
+	-- (cjber/forever-core#333): the index buttons go through the shared secure opener instead.
+	OpenToCategory = function()
+		error("Settings.OpenToCategory called straight from addon code")
 	end,
 }
+-- The client's own settings opener, as the secure delegate runs it: refused from addon code, so C_SettingsUtil is
+-- reachable only through ns.OpenSettingsPanel.
+C_SettingsUtil = {
+	OpenSettingsPanel = function(categoryID)
+		assert(not addonTaint, "C_SettingsUtil.OpenSettingsPanel called straight from addon code")
+		opened[#opened + 1] = categoryID
+	end,
+}
+assert(loadfile("Core/OpenSettings.lua"))("LegacyForever", ns)
 function CreateSettingsButtonInitializer(name, text, click, _tooltip, addSearchTags)
 	check(text == "Open" and addSearchTags == false, "index buttons stay out of search")
 	return { button = true, name = name, click = click }

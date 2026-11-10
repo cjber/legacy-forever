@@ -49,7 +49,8 @@ ns.Saved.OnChange(function(key)
 end)
 
 -- A subpage's button on the index, which opens it. The index stays out of search: the search finds the
--- settings themselves.
+-- settings themselves. The page opens through the shared secure opener: Settings.OpenToCategory is Blizzard's own
+-- Lua around a restricted client call, which the client refuses from addon code (cjber/forever-core#333).
 ---@param category SettingsCategoryMixin
 ---@param subcategory SettingsCategoryMixin
 ---@param name string
@@ -58,7 +59,7 @@ local function IndexButton(category, subcategory, name)
 	Settings.RegisterInitializer(
 		category,
 		CreateSettingsButtonInitializer(name, L["Open"], function()
-			Settings.OpenToCategory(subcategory:GetID())
+			ns.OpenSettingsPanel(subcategory:GetID())
 		end, nil, false)
 	)
 	return subcategory
