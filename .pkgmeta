@@ -1,7 +1,9 @@
 package-as: LegacyForever
 
-# ForeverCore has no CurseForge project (it ships from GitHub and Wago), so it cannot be a
-# CurseForge relation; the TOC's `## Dependencies: ForeverCore` is what the client reads.
+# CurseForge installs ForeverCore (slug forevercore, project 1796337) with the addon; the TOC's
+# `## Dependencies: ForeverCore` is what the client reads.
+required-dependencies:
+  - forevercore
 
 manual-changelog:
   filename: .release-notes.md
