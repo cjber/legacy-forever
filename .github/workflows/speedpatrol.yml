@@ -13,9 +13,9 @@ jobs:
   compare:
     runs-on: ubuntu-24.04
     env:
-      # The bench runs from a checkout under .speedpatrol/runs, so the core checkout
-      # (path: forever-core, beside the workspace) is named by its absolute path.
-      FOREVER_CORE: ${{ github.workspace }}/forever-core
+      # Read relative to each checkout: the PR side finds the core checked out below, and the base checkout under
+      # .speedpatrol/runs finds the copy its own prepare step clones from its own pin (cjber/skillup-forever#550).
+      FOREVER_CORE: forever-core
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
