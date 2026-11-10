@@ -60,7 +60,7 @@ jobs:
       - run: python3 -m tools.forever_tools.assets
       - run: pipx run ruff==0.16.8 format --check .
       - run: pipx run ruff==0.16.8 check .
-      - run: for spec in tests/*_spec.lua; do luajit "$spec" || exit 1; done
+      - run: python3 -m tools.forever_tools.specs
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: tools/.cache/forever_sim
