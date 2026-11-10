@@ -60,7 +60,7 @@ files["tests/navigate_spec.lua"] = {
 	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "ForeverCore", "UiMapPoint", "ShortestPathForever" },
 }
 files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore", "geterrorhandler", "seterrorhandler", "strtrim" } }
-files["tests/settings_spec.lua"] = { globals = { "CreateFrame", "ForeverCore", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "C_SettingsUtil", "CreateSecureDelegate", "WorldMapFrame", "InCombatLockdown", "geterrorhandler", "seterrorhandler" } }
+files["tests/settings_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "C_SettingsUtil", "CreateSecureDelegate", "WorldMapFrame", "InCombatLockdown", "geterrorhandler", "seterrorhandler" } }
 files["tests/gamepad_menus_spec.lua"] = { globals = { "CreateFrame", "ForeverCore" } }
 files["tests/stats_spec.lua"] = { globals = { "ForeverCore" } }
 files["tests/legacy_map_spec.lua"] = {
@@ -96,8 +96,9 @@ files["tests/completion_art_spec.lua"] = {
 read_globals[#read_globals + 1] = "EditModeManagerFrame"
 -- The journal spec loads the saved-variables file itself, with only the client calls that path makes.
 files["tests/error_journal_spec.lua"] = {
-	globals = { "CreateFrame", "ForeverCore", "SlashCmdList", "geterrorhandler", "seterrorhandler", "strtrim", "date", "GetTime" },
+	globals = { "C_AddOns", "CreateFrame", "ForeverCore", "SlashCmdList", "geterrorhandler", "seterrorhandler", "strtrim", "date", "GetTime" },
 }
+files["tests/identity_icon_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore" } }
 -- ForeverCore's openers: the client's secure world map and settings panel openers.
 read_globals[#read_globals + 1] = "CreateSecureDelegate"
 read_globals[#read_globals + 1] = "C_SettingsUtil"

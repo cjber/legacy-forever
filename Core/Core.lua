@@ -10,6 +10,7 @@ end
 ---@field ReportTitle string the localized title shown by the shared report window
 ---@field TITLE string
 ---@field POINTS_ICON string
+---@field icon string the addon's client icon in game, read from ## X-Forever-Icon
 ---@field WHATS_NEW string
 ---@field CompanionHint fun(): string?
 ---@field WhatsNew fun()
@@ -50,6 +51,9 @@ ns.core = ForeverCore.Register(addonName, {
 })
 
 ns.TITLE = "Legacy Forever"
+-- The client icon the addon draws for itself in game, on its leaderboard tab, declared once in the TOC. The drawn
+-- media/Icon stays the addon's TOC, compartment, report and store identity; the shield below stands for Legacy points.
+ns.icon = C_AddOns.GetAddOnMetadata(addonName, "X-Forever-Icon") or ""
 -- The Legacy shield: map pins, the map button, menu entries and the zone-completion count all wear it.
 ns.POINTS_ICON = "UI-Legacy-Points-icon-c60"
 -- One sentence for the chat line after an update (WhatsNew.lua): the headline of the release this ships in.

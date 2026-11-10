@@ -37,6 +37,12 @@ _G.InputUtil = {
 		return gamepad
 	end,
 }
+local TOC = dofile("tests/toc_fields.lua").read("LegacyForever.toc")
+_G.C_AddOns = {
+	GetAddOnMetadata = function(name, field)
+		return name == "LegacyForever" and TOC[field] or nil
+	end,
+}
 
 local function Reset()
 	menus, errors = {}, {}
@@ -105,7 +111,12 @@ _G.EventUtil = {
 	end,
 }
 _G.REPUTATION, _G.WHITE_FONT_COLOR, _G.Enum = "Reputation", {}, {}
-ns.Art = { Fit = noop }
+ns.Art = {
+	Fit = noop,
+	Icon = function(texture, file, size)
+		texture.file, texture.size = file, size
+	end,
+}
 ns.Live = {
 	Name = function()
 		return "Defender of Elwynn"

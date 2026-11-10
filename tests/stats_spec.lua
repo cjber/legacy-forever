@@ -1,4 +1,5 @@
 -- Legacy's adapter: actual saved switch, transport and slash handler, with taxi observations supplied by Live.
+local TOC = dofile("tests/toc_fields.lua").read("LegacyForever.toc")
 local checks = 0
 local function check(value, label)
 	checks = checks + 1
@@ -39,6 +40,11 @@ local function boot(saved, mode, hardcore, guid)
 	env.IsInRaid = function()
 		return false
 	end
+	env.C_AddOns = {
+		GetAddOnMetadata = function(name, field)
+			return name == "LegacyForever" and TOC[field] or nil
+		end,
+	}
 	env.C_GameRules = {
 		GetCurrentGameModeRecordID = function()
 			return mode
@@ -183,7 +189,8 @@ check(type(leaderboards) == "table" and type(leaderboards.boards.legacy) == "tab
 local spec = leaderboards.boards.legacy
 check(spec.title == "Legacy Forever", "the tab carries the addon's title")
 check(spec.metric == "Flight paths", "the board names its metric")
-check(spec.icon == "Interface\\Icons\\Achievement_General", "the tab wears the game's own icon")
+check(TOC["X-Forever-Icon"] ~= nil, "the TOC declares the addon's identity icon")
+check(spec.icon == TOC["X-Forever-Icon"], "the tab wears the TOC's identity icon")
 check(type(spec.revision) == "function" and spec.revision() >= 0, "the board has a revision callback")
 check(spec.sharing(), "sharing reads the saved switch")
 local allRows = spec.board("all")

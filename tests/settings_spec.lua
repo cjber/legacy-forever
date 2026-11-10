@@ -8,6 +8,12 @@ local function check(condition, label)
 end
 
 SlashCmdList = {}
+local TOC = dofile("tests/toc_fields.lua").read("LegacyForever.toc")
+C_AddOns = {
+	GetAddOnMetadata = function(name, field)
+		return name == "LegacyForever" and TOC[field] or nil
+	end,
+}
 local ns = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 -- The client defines the error handler and strtrim ForeverCore reads; these stand-ins keep every error reachable, as

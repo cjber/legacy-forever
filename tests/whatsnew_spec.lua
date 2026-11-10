@@ -8,10 +8,14 @@ end
 
 local version, onLogin
 local printed = {}
+local TOC = dofile("tests/toc_fields.lua").read("LegacyForever.toc")
 C_AddOns = {
 	GetAddOnMetadata = function(name, field)
-		assert(name == "LegacyForever" and field == "Version", "reads its own version")
-		return version
+		assert(name == "LegacyForever", "reads its own metadata")
+		if field == "Version" then
+			return version
+		end
+		return TOC[field]
 	end,
 }
 CreateFrame = function()
