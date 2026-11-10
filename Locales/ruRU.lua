@@ -161,8 +161,8 @@ L["Title"] = "Заголовок"
 L["What happened, or what you would like"] =
 	"Что произошло или что вы хотели бы видеть"
 
-L["The French translation now uses the game's own words."] =
-	"Французский перевод теперь использует термины самой игры." -- mt
+L["Legacy's options and map now open without a blocked-action error."] =
+	"Настройки и карта Legacy теперь открываются без ошибки заблокированного действия." -- mt
 L["Install AtlasLoot for recommended levels."] =
 	"Установите AtlasLoot, чтобы увидеть рекомендуемые уровни." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровни: %s (AtlasLoot)" -- mt

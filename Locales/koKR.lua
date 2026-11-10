@@ -154,8 +154,8 @@ L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browse
 L["Title"] = "제목"
 L["What happened, or what you would like"] = "무슨 일이 있었는지 또는 원하시는 내용"
 
-L["The French translation now uses the game's own words."] =
-	"프랑스어 번역이 이제 게임 자체의 용어를 사용합니다." -- mt
+L["Legacy's options and map now open without a blocked-action error."] =
+	"Legacy의 설정과 지도가 이제 차단된 작업 오류 없이 열립니다." -- mt
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요." -- mt
 L["Recommended levels: %s (AtlasLoot)"] = "권장 레벨: %s (AtlasLoot)" -- mt
 
