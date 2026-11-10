@@ -9,9 +9,14 @@ permissions:
   contents: read
   pull-requests: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   compare:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     env:
       # Read relative to each checkout: the PR side finds the core checked out below, and the base checkout under
       # .speedpatrol/runs finds the copy its own prepare step clones from its own pin (cjber/skillup-forever#550).
