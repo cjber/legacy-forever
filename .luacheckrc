@@ -93,3 +93,7 @@ files["tests/error_journal_spec.lua"] = {
 	globals = { "CreateFrame", "SlashCmdList", "geterrorhandler", "seterrorhandler", "strtrim", "date", "GetTime" },
 }
 files["tests/family_locale_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "GetLocale" } }
+-- Core/OpenMap.lua: the client's secure world map opener.
+read_globals[#read_globals + 1] = "CreateSecureDelegate"
+-- Core/OpenSettings.lua: the client's secure settings panel opener.
+read_globals[#read_globals + 1] = "C_SettingsUtil"
