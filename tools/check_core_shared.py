@@ -6,7 +6,6 @@ repository is inferred from its Git origin:
 
     python3 tools/check_core_shared.py             every file this repo vendors must match core main
     python3 tools/check_core_shared.py --base REF  only the vendored files that REF...HEAD changes
-    python3 tools/check_core_shared.py --source DIR  compare against a local forever-core checkout instead of main
 
 A consumer whose addon lives below its repo root, beside a non-addon project, keeps every vendored file under the
 folder CONSUMER_ROOT names for it. Kiln Forever's CI therefore runs this script from the repository root with
@@ -129,10 +128,6 @@ def core_main(path):
         return response.read()
 
 
-def core_checkout(root, path):
-    return (root / source(path)).read_bytes()
-
-
 def compare(root, repo, paths, fetch=core_main):
     failures = []
     for path in paths:
@@ -159,7 +154,6 @@ def main(argv=None, fetch=core_main):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--base", help="check only the vendored files that BASE...HEAD changes")
     parser.add_argument("--repo", help="this consumer's repo name (default: infer it from Git origin)")
-    parser.add_argument("--source", help="a forever-core checkout to compare against instead of core main")
     arguments = parser.parse_args(argv)
 
     root = Path.cwd()
@@ -168,15 +162,7 @@ def main(argv=None, fetch=core_main):
     repo = arguments.repo or repo_from_git()
     if repo is None:
         raise SystemExit("Cannot identify a known cjber consumer from git remote; pass --repo explicitly.")
-    fetch = core_main
-    if arguments.source:
-        checkout = Path(arguments.source).expanduser().resolve()
-        fetch = lambda path: core_checkout(checkout, path)  # noqa: E731
     paths = paths_for(repo)
-    if arguments.source:
-        # The checker running here may be the newer one that a sync is about to carry to core; the scheduled drift
-        # check still compares it with core main, so a local comparison leaves it out of its own comparison.
-        paths = [path for path in paths if path != "tools/check_core_shared.py"]
     if arguments.base:
         touched = changed_since(arguments.base)
         paths = [path for path in paths if consumer_path(repo, path) in touched]
@@ -188,8 +174,7 @@ def main(argv=None, fetch=core_main):
         print("Vendored files differ from forever-core main:\n  " + "\n  ".join(failures))
         print("Change the file in cjber/forever-core, then copy it here with its tools/sync_consumers.py.")
         return 1
-    where = f" forever-core at {arguments.source}" if arguments.source else " forever-core main"
-    print(f"{len(paths)} vendored files match{where}.")
+    print(f"{len(paths)} vendored files match forever-core main.")
     return 0
 
 
