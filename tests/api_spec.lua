@@ -147,6 +147,10 @@ C_Timer = {
 		timers[#timers + 1] = callback
 	end,
 }
+-- A build is sliced by debugprofilestop; a clock that never advances builds it in one step.
+debugprofilestop = function()
+	return 0
+end
 local function RunTimers()
 	local due = timers
 	timers = {}
@@ -409,6 +413,17 @@ settings.count_areas, settings.count_dungeons, criteria[900] = nil, nil, nil
 settings.count_quests = true
 summary = assert(API.ZoneSummary(100))
 check(summary.questsStatus == "missing" and not Category(summary, "quests"), "no QuestieDB, no quests")
+check(
+	ns.Completion.QuestsStatusText():find("QuestieDB", 1, true) ~= nil,
+	"the missing line names QuestieDB, where the quests come from"
+)
+LibQuestieDB = { RequireContract = function() end }
+check(assert(API.ZoneSummary(100)).questsStatus == "unsupported", "an unfit QuestieDB is unsupported")
+check(
+	ns.Completion.QuestsStatusText():find("QuestieDB", 1, true) ~= nil,
+	"and the unsupported line names QuestieDB too"
+)
+LibQuestieDB = nil
 InstallQuestieDB()
 local fired = 0
 local unsubscribe = API.Subscribe(function()

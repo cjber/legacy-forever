@@ -65,7 +65,7 @@ L["Legacy's options and map now open without a blocked-action error."] =
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"等级、技能、级别以及其他没有固定地点的内容。"
 L["Lock the tracker"] = "锁定追踪器"
-L["Needs Questie, which lists each zone's quests."] = "需要Questie，它会列出每个地区的任务。"
+L["Needs QuestieDB, which lists each zone's quests."] = "需要QuestieDB，它会列出每个地区的任务。"
 L["No fixed location"] = "无固定地点"
 L["No unfinished Legacy objectives with a place on this map."] =
 	"此地图上没有带地点的未完成传承目标。"
@@ -99,7 +99,7 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"地图角落显示当前查看的地区，大陆地图上的每个地区显示一个徽章。"
 L["This menu needs mouse and keyboard."] = "此菜单需要鼠标和键盘。"
-L["This version of Questie isn't supported."] = "不支持此版本的Questie。"
+L["This version of QuestieDB isn't supported."] = "不支持此版本的QuestieDB。"
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"如果其他插件已经标记了入口，请关闭此项。地图的传承菜单仍会列出它们。"
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
