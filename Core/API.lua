@@ -8,7 +8,17 @@ end
 -- LegacyForever.API: zone completion and the zone's unfinished Legacy objectives for other addons, read from
 -- the same computations the map and tracker draw. Every call returns fresh tables. docs/api.md has the contract.
 -- Areas, flight paths, reputations and quests are this character's; dungeon wings, raids and Legacy
--- objectives are account-wide Legacy steps.
+-- objectives are account-wide Legacy steps. `minor` rises with each addition within version 1 (1: Leaderboard,
+-- 2: Subscribe's changes table and the reads' not-ready answers); a caller checks a member before using it.
+local API = {
+	version = 1,
+	minor = 2,
+}
+
+-- The shared shape every Forever addon's API follows: the hub that tells callers a frame after a change, and the
+-- not-ready answer a read gives while there is nothing to answer (ForeverCore's docs/api-conventions.md).
+local APIKit = assert(ForeverCore.APIKit)
+
 ---@type table<LegacyCategoryKey, "character"|"account">
 local SCOPES = {
 	areas = "character",
@@ -28,6 +38,22 @@ local function IsInteger(value)
 	return type(value) == "number" and value % 1 == 0
 end
 
+-- The game reports the player's faction, and this character's progress with it, once the player exists. Every read
+-- that needs it answers "loading" until then, and the hub reads no key while it is false.
+---@return boolean
+local function Ready()
+	return UnitFactionGroup("player") ~= nil
+end
+
+-- A read with nothing to answer, in this API's own read errors: the kit answers `nil, reason` and docs/api.md lists
+-- which reasons each read can return.
+---@param reason "loading"
+---@return nil, LFReadError
+local function NotReady(reason)
+	local _, answer = APIKit.NotReady(reason)
+	return nil, answer --[[@as LFReadError]]
+end
+
 ---@return "disabled"|"ready"|"loading"|"missing"|"unsupported"
 local function QuestsStatus()
 	if not ns.ZoneCompletion.IsCounted("quests") then
@@ -42,7 +68,7 @@ end
 ---@param map integer
 ---@return LFZoneSummary?
 ---@return LFReadError?
-local function ZoneSummary(map)
+function API.ZoneSummary(map)
 	if not IsInteger(map) then
 		return nil, "invalid"
 	end
@@ -50,8 +76,8 @@ local function ZoneSummary(map)
 		return nil, "unsupported"
 	end
 	-- Flight paths and reputations are filtered by side, which the game reports once the player exists.
-	if not UnitFactionGroup("player") then
-		return nil, "loading"
+	if not Ready() then
+		return NotReady("loading")
 	end
 	local result = assert(ns.ZoneCompletion.Result(map))
 	---@type LFCategorySummary[]
@@ -113,12 +139,16 @@ end
 ---@param limit integer
 ---@return LFTarget[]?
 ---@return LFReadError?
-local function Targets(map, limit)
+function API.Targets(map, limit)
 	if not IsInteger(map) or type(limit) ~= "number" or limit ~= limit then
 		return nil, "invalid"
 	end
 	if not KnownMap(map) then
 		return nil, "unsupported"
+	end
+	-- Before the player exists the game lists no challenge for this character, so an empty answer would be a guess.
+	if not Ready() then
+		return NotReady("loading")
 	end
 	limit = math.max(1, math.min(MAX_TARGETS, math.floor(limit)))
 	---@type LFTarget[]
@@ -159,7 +189,7 @@ end
 ---@param key string
 ---@return boolean
 ---@return LFNavError?
-local function Navigate(map, key)
+function API.Navigate(map, key)
 	if not IsInteger(map) or type(key) ~= "string" or not KnownMap(map) or not key:find("^%d+:%d+$") then
 		return false, "invalid"
 	end
@@ -177,37 +207,10 @@ local function Navigate(map, key)
 	return false, "stale"
 end
 
----@class LegacySubscription
----@field callback fun()
----@field active boolean
-
----@type LegacySubscription[]
-local subscriptions = {}
-
----@param callback fun()
----@return fun()
-local function Subscribe(callback)
-	if type(callback) ~= "function" then
-		error("LegacyForever.API.Subscribe: callback must be a function", 2)
-	end
-	---@type LegacySubscription
-	local subscription = { callback = callback, active = true }
-	subscriptions[#subscriptions + 1] = subscription
-	return function()
-		subscription.active = false
-		for index, other in ipairs(subscriptions) do
-			if other == subscription then
-				table.remove(subscriptions, index)
-				return
-			end
-		end
-	end
-end
-
 -- A flight path is counted only after the player opens a flight master's map, the one source that reliably tells
 -- this client which nodes the character knows. Zone exploration overlays are not used as a proxy on Forever.
 ---@return LFActivityRecord[]
-local function Stats()
+function API.Stats()
 	local guid = UnitGUID("player")
 	local record = guid and ns.SavedTable("flightPaths")[guid]
 	local rows = {}
@@ -227,33 +230,95 @@ local function Stats()
 	end)
 	return rows
 end
-ns.ActivityStats = Stats
+ns.ActivityStats = API.Stats
 
--- Progress, a quest source or "What counts" changed. A copy, so a callback may unsubscribe; errors go to the
--- game's error handler without stopping the other subscribers.
-ns.ZoneCompletion.OnChange(function()
-	local current = {}
-	for index, subscription in ipairs(subscriptions) do
-		current[index] = subscription
+-- Cumulative flight paths observed, as Forever Leaderboards ranks them for this addon's tab. A read-through, so the
+-- caller gets the board's own fresh rows.
+---@param limit? integer
+---@return LFFlightLeaderboard?
+---@return LFReadError?
+function API.Leaderboard(limit)
+	return ns.Stats.Leaderboard(limit)
+end
+
+--[[ Subscribe: the frame after the zone, its summary or its targets changes ]]
+
+-- The API answers for the zone the player is in, so that is what each change name stands for. docs/api.md lists
+-- every name, and a caller showing another map reads it again when `zone` changes.
+
+-- The published summary as one comparable key: its counts, whether it is complete and its quest state.
+---@param uiMapID integer?
+---@return string|false
+local function SummaryKey(uiMapID)
+	local summary = uiMapID ~= nil and API.ZoneSummary(uiMapID) or nil
+	if not summary then
+		return false
 	end
-	for _, subscription in ipairs(current) do
-		if subscription.active then
-			xpcall(subscription.callback, geterrorhandler())
+	local parts = {
+		("%d:%d:%d:%s:%s"):format(
+			summary.done,
+			summary.total,
+			summary.pending,
+			tostring(summary.complete),
+			summary.questsStatus
+		),
+	}
+	for _, category in ipairs(summary.categories) do
+		parts[#parts + 1] = ("%s:%d:%d:%d:%s"):format(
+			category.key,
+			category.done,
+			category.total,
+			category.pending,
+			tostring(category.complete)
+		)
+	end
+	return table.concat(parts, "|")
+end
+
+-- The published targets as one comparable key: each target's identity, text and counted progress.
+---@param uiMapID integer?
+---@return string|false
+local function TargetsKey(uiMapID)
+	local targets = uiMapID ~= nil and API.Targets(uiMapID, MAX_TARGETS) or nil
+	if not targets then
+		return false
+	end
+	local parts = {}
+	for _, target in ipairs(targets) do
+		local part = ("%s:%s"):format(target.key, target.text)
+		if target.quantity ~= nil then
+			part = part .. (":%d/%d"):format(target.quantity, target.required or 0)
 		end
+		parts[#parts + 1] = part
 	end
+	return table.concat(parts, "|")
+end
+
+-- One dispatch on the next frame per burst of changes, a fresh table naming only the names that changed, and each
+-- callback under this addon's SafeCall (ForeverCore.APIKit.Hub). Progress, a quest source, "What counts" and the
+-- zone the player is in all reach Legacy through ZoneCompletion's one notice.
+-- Raised on every notice from ZoneCompletion, so a change in any zone (an account-wide wing done elsewhere, "What
+-- counts" switched) still reaches callers, as Subscribe always did; the other names say what changed in the zone the
+-- player is in.
+local notices = 0
+local hub = APIKit.Hub("LegacyForever", {
+	progress = function()
+		return notices
+	end,
+	zone = function()
+		return ns.Live.CurrentZone() or false
+	end,
+	summary = function()
+		return SummaryKey(ns.Live.CurrentZone())
+	end,
+	targets = function()
+		return TargetsKey(ns.Live.CurrentZone())
+	end,
+}, Ready)
+API.Subscribe = hub.Subscribe
+ns.ZoneCompletion.OnChange(function()
+	notices = notices + 1
+	hub.Queue()
 end)
 
-LegacyForever = {
-	API = {
-		version = 1,
-		minor = 1,
-		ZoneSummary = ZoneSummary,
-		Targets = Targets,
-		Navigate = Navigate,
-		Subscribe = Subscribe,
-		Stats = Stats,
-		Leaderboard = function(limit)
-			return ns.Stats.Leaderboard(limit)
-		end,
-	},
-}
+LegacyForever = { API = API }

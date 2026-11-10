@@ -74,6 +74,7 @@ CreateFrame = function()
 end
 ForeverCore = dofile("tests/forever_core.lua").install(_G, {
 	"Core/SafeCall.lua",
+	"Core/APIKit.lua",
 	"Core/OpenMap.lua",
 	"Core/Log.lua",
 	"UI/Report.lua",
@@ -87,6 +88,8 @@ assert(loadfile("Core/Art.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
 -- The save file: the specs below edit what counts in it directly, as a hand-edited file would.
 LegacyForeverDB = { zoneCompletion = settings }
+-- The zone the player stands in; a test below moves it, as walking to another zone does.
+local currentZone = 100
 local live = {}
 ns.Live = {
 	Visible = function()
@@ -113,7 +116,7 @@ ns.Live = {
 		}
 	end,
 	CurrentZone = function()
-		return 100
+		return currentZone
 	end,
 	ContinentOf = function(uiMapID)
 		return uiMapID == 100 and 1 or nil
@@ -338,7 +341,8 @@ check(#errors == errorsBefore, "the corner draws without an error")
 zoneTracker:OnBlockHeaderClick({ id = 100 }, "LeftButton")
 check(openedMap == 100, "a click on the zone's tracker header asks the game to open its map")
 local API = LegacyForever.API
-check(API.version == 1 and API.minor == 1, "version 1 retains existing methods and adds a minor capability")
+check(API.version == 1 and API.minor == 2, "version 1 retains existing methods and adds a minor capability")
+check(type(ForeverCore.APIKit.Hub) == "function", "the API is built on the shared API kit")
 local forwardedLimit
 local leaderboard = { metric = "flight_path_known", rows = {} }
 ns.Stats = {
@@ -393,6 +397,8 @@ check(select(2, API.ZoneSummary(0 / 0)) == "invalid", "NaN is invalid")
 check(select(2, API.ZoneSummary(999)) == "unsupported", "a map without data is unsupported")
 faction = nil
 check(select(2, API.ZoneSummary(100)) == "loading", "no faction yet is loading")
+local noTargets, noTargetsReason = API.Targets(100, 5)
+check(noTargets == nil and noTargetsReason == "loading", "targets are loading before the player exists")
 faction = "Alliance"
 
 -- What counts: areas off leaves them out; with nothing counted, nothing is complete.
@@ -436,19 +442,22 @@ check(quests and quests.total == 0 and quests.pending == 1 and not quests.comple
 API.ZoneSummary(100)
 check(#timers == 1, "one build is scheduled however often the API reads")
 RunTimers()
-check(scans == 1 and fired == 1, "the build runs on the next frame and notifies subscribers")
+check(scans == 1 and fired == 0, "the build runs on the next frame; the callback waits one more")
+RunTimers()
+check(scans == 1 and fired == 1, "the next frame sends the change to subscribers")
 summary = assert(API.ZoneSummary(100))
 quests = Category(summary, "quests")
 check(summary.questsStatus == "ready", "quests are ready once built")
 check(quests.scope == "character" and quests.done == 1 and quests.total == 2, "quests count this character's")
--- A synchronous reader (the typed audit) building the index first still leaves the waiter notified.
+-- A synchronous reader (the typed audit) building the index first still queues a dispatch; the kit only calls back
+-- when what the API answers changed, and this rebuild answers exactly as the one before it.
 local scansBefore = scans
 assert(loadfile("Integrations/Quests.lua"))("LegacyForever", ns)
 check(assert(API.ZoneSummary(100)).questsStatus == "loading" and #timers == 1, "a fresh index is cold again")
 ns.Quests.Zone(100)
 check(scans == scansBefore + 1 and assert(API.ZoneSummary(100)).questsStatus == "ready", "another reader built it")
 RunTimers()
-check(fired == 2 and scans == scansBefore + 1, "the waiter still hears, and nothing is scanned twice")
+check(fired == 1 and scans == scansBefore + 1, "the waiter hears nothing when the rebuilt answer is the same")
 settings.count_quests = nil
 
 -- Subscribe: a settings change notifies; an erroring subscriber doesn't stop the rest; unsubscribe stops it.
@@ -467,14 +476,66 @@ local unsubscribeFailing = API.Subscribe(function()
 	error("subscriber bug")
 end)
 toggles.areas("areas")
-check(settings.count_areas == false and fired == 3 and #errors == 1, "a settings change notifies every subscriber")
+check(settings.count_areas == false and fired == 1, "a settings change queues a dispatch, not a call in the event")
+RunTimers()
+check(fired == 2 and #errors == 1, "every subscriber hears it, and an error does not stop the rest")
 unsubscribe()
 unsubscribe()
 unsubscribeFailing()
 ns.Live.Invalidate()
 toggles.areas("areas")
-check(fired == 3 and #errors == 1, "unsubscribing, even twice, stops the callbacks")
-check(not pcall(API.Subscribe, "nope"), "a non-function subscriber is refused")
+RunTimers()
+check(fired == 2 and #errors == 1, "unsubscribing, even twice, stops the callbacks")
+local subscribed, subscribeError = pcall(API.Subscribe, "nope")
+check(
+	not subscribed and subscribeError == "LegacyForever.API.Subscribe: callback must be a function",
+	"the kit's own message"
+)
+
+-- Subscribe through ForeverCore.APIKit: what changed is named on the next frame, once per burst, and only the
+-- subscribers there when the dispatch began hear it.
+local bursts, lateCalls, late = {}, 0, nil
+local first = API.Subscribe(function(changes)
+	bursts[#bursts + 1] = changes
+	if not late then
+		late = API.Subscribe(function(nextChanges)
+			lateCalls = lateCalls + 1
+			bursts[#bursts + 1] = nextChanges
+		end)
+	end
+end)
+RunTimers()
+check(#bursts == 0, "the first subscriber starts from what the API answers now, so it hears nothing yet")
+criteria[10][1].completed = true
+ns.Live.Invalidate()
+ns.Live.Invalidate()
+check(#timers == 1 and #bursts == 0, "two changes in one frame arm one timer and send nothing yet")
+RunTimers()
+check(#bursts == 1 and bursts[1].targets == true, "the frame after the burst sends one call, naming the targets")
+check(bursts[1].progress == true, "every notice names progress")
+check(bursts[1].summary == nil and bursts[1].zone == nil, "and not the channels that did not change")
+check(lateCalls == 0, "a subscriber added by the callback waits for the next burst")
+toggles.areas("areas")
+RunTimers()
+check(bursts[#bursts].summary == true and bursts[#bursts].zone == nil, "the next burst names the summary")
+check(lateCalls == 1, "and reaches the subscriber added during the last one")
+-- A notice that changes nothing in the player's zone (progress elsewhere) still reaches callers, as progress alone.
+ns.Live.Invalidate()
+RunTimers()
+check(lateCalls == 2 and bursts[#bursts].progress == true, "a change outside the player's zone still notifies")
+check(bursts[#bursts].summary == nil and bursts[#bursts].targets == nil, "naming progress alone")
+currentZone = 200
+ns.Live.Invalidate()
+RunTimers()
+check(lateCalls == 3 and bursts[#bursts].zone == true, "walking to another zone names every channel it moved")
+check(bursts[#bursts].summary == true and bursts[#bursts].targets == true, "the summary and targets of the new zone")
+first()
+first()
+late()
+currentZone, criteria[10][1].completed, settings.count_areas = 100, false, nil
+ns.Live.Invalidate()
+RunTimers()
+check(#bursts == 7, "an unsubscribed callback takes no part in the next burst")
 
 -- Targets: unfinished, known to the game and visible only; done, unknown and finished challenges are left out.
 local targets = assert(API.Targets(100, 5))

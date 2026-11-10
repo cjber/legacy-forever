@@ -1,16 +1,45 @@
 # LegacyForever.API
 
 Other addons can read Legacy Forever's zone completion and a zone's unfinished Legacy objectives, and send the
-player to one, through the global `LegacyForever.API`. It is version 1, minor 1; check `version == 1` and that each function
-exists before calling it. The full types are in [`types/API.lua`](../types/API.lua).
+player to one, through the global `LegacyForever.API`. It is version 1, minor 2; check `version == 1` and that each
+function exists before calling it. The full types are in [`types/API.lua`](../types/API.lua).
 
 Every call returns fresh tables that you may keep or change. `map` is always a UiMapID and coordinates run from 0
 to 1.
 
+## Published functions
+
+`ZoneSummary(map)`, `Targets(map, limit)`, `Navigate(map, key)`, `Subscribe(callback)`, `Stats()` and
+`Leaderboard(limit?)`, each described below.
+
+## Minor history
+
+- `minor` 0: version 1's first members, `ZoneSummary(map)`, `Targets(map, limit)`, `Navigate(map, key)`,
+  `Subscribe(callback)` and `Stats()`, which shipped before minors were counted.
+- `minor` 1: `Leaderboard(limit)`.
+- `minor` 2: `Subscribe`'s `changes` table, delivered on the frame after a change, and `Targets`' not-ready answer
+  before the game has reported the player.
+
+## Not ready
+
+A read that has nothing to answer returns `nil, reason`, as `ForeverCore.APIKit.NotReady` builds it. The reason says
+whether to ask again.
+
+| reason | meaning |
+|---|---|
+| `"loading"` | Legacy Forever is still reading the game, so ask again later |
+| `"disabled"` | the player turned the feature off |
+| `"none"` | there is nothing to answer |
+
+`ZoneSummary` and `Targets` answer `nil, "loading"` until the game has reported the player, which is when this
+character's progress exists. Neither answers `"disabled"` or `"none"`: a category the player turned off is left out
+of `categories`, and a zone with nothing counted still answers with zeroes. `Navigate` and `Stats` have no not-ready
+answer, and `Leaderboard`'s only nil is `nil, "invalid"` for a bad limit.
+
 ## `ZoneSummary(map) -> LFZoneSummary?, LFReadError?`
 
-The zone's completion, as the tracker and the continent badges show it: `done`, `total`, `pending` and `complete`, with one
-entry in `categories` per category the player counts ("What counts" in the Legacy map menu). A category that is
+The zone's completion, as the tracker and the continent badges show it: `done`, `total`, `pending` and `complete`, with
+one entry in `categories` per category the player counts ("What counts" in the Legacy map menu). A category that is
 switched off, or that the zone has none of, is left out. Pending items, whose state the game hasn't reported yet,
 stay outside `total`. A zone with nothing counted is never `complete`.
 
@@ -23,7 +52,7 @@ Questie starts or before its quests have been indexed. The index is never built 
 it cold schedules the build, which runs a slice a frame, and subscribers hear when it is done.
 
 Errors: `"invalid"` for a map that isn't an integer, `"unsupported"` for a map Legacy Forever has no completion
-data for, `"loading"` before the game has reported the player's faction.
+data for. Before the game has reported the player it answers `nil, "loading"` (see Not ready).
 
 ## `Targets(map, limit) -> LFTarget[]?, LFReadError?`
 
@@ -33,7 +62,9 @@ nothing unfinished is known there. `key` is opaque and stays the same for the sa
 when the bundled data has the objective's coordinates; `quantity` and `required` only for counted criteria such as
 "3/10".
 
-Errors: `"invalid"` for a non-integer map or non-number limit, `"unsupported"` for a map with no Legacy data.
+Errors: `"invalid"` for a non-integer map or non-number limit, `"unsupported"` for a map with no Legacy data. Before
+the game has reported the player, whose challenge list is empty until it does, it answers `nil, "loading"` (see Not
+ready).
 
 ## `Navigate(map, key) -> boolean, LFNavError?`
 
@@ -45,9 +76,29 @@ coordinates), `"combat"` (Shortest Path declined in combat and the map takes no 
 
 ## `Subscribe(callback) -> unsubscribe`
 
-Calls `callback` with no arguments after progress, a quest source or "What counts" changes; reread what you show.
-Calls come at most once per burst of game events. The returned function unsubscribes and is safe to call twice. An
-error in a callback goes to the game's error handler without stopping the others.
+Calls `callback(changes)` on the frame after what the API answers for the zone the player is in changes. `changes` is
+a fresh table naming only what changed. Calls come at most once per burst of game events, however many changes the
+burst held, and never in the same call as the change. Only the subscribers there when the burst is dispatched are
+called; one added by a callback waits for the next burst. An error in a callback goes to Legacy Forever's error
+handler without stopping the others. The returned function unsubscribes and is safe to call twice.
+
+`changes` has only the names that changed, each set to `true`:
+
+| name | what changed |
+|---|---|
+| `progress` | any progress, quest source or "What counts" change, in any zone: what every earlier `Subscribe` call heard |
+| `zone` | the zone the player is in |
+| `summary` | what `ZoneSummary(zone)` answers: progress, a quest source or "What counts" |
+| `targets` | what `Targets(zone, limit)` answers: the first five objectives' identities, text and progress |
+
+`zone`, `summary` and `targets` read the zone the player is in; a caller showing another map reads it again when `progress` is set.
+The first subscriber starts from what the channels answer then, so it hears only later changes. Legacy Forever's own
+map and tracker display switches change nothing the API answers and are not named. Read the API again rather than
+replaying the change.
+
+Earlier minors called `callback()` synchronously, within the event that changed something, and called a callback
+added by another callback in the same burst. Code that relied on either now needs the next frame and the `changes`
+table; `changes` is there on every minor 2 call.
 
 ## `Stats() -> LFActivityRecord[]`
 
