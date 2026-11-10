@@ -48,12 +48,15 @@ for _, readyAtLoad in ipairs({ false, true }) do
 		end,
 	}, { __index = _G })
 	local ns = {
-		TrackerHost = {
-			Attach = function(module)
-				owners[module] = native
+		Saved = {
+			LegacyTrackerSettings = function()
+				return nil
 			end,
-			IsAttached = function(module)
-				return owners[module] == native
+			ClearLegacyTrackerSettings = noop,
+		},
+		core = {
+			SafeCall = function(_, fn, ...)
+				return true, fn(...)
 			end,
 		},
 		L = setmetatable({}, {
@@ -63,7 +66,16 @@ for _, readyAtLoad in ipairs({ false, true }) do
 		}),
 		Live = { OnChange = noop },
 	}
-	env.ForeverTrackerHost = ns.TrackerHost
+	env.ForeverCore = {
+		TrackerHost = {
+			Attach = function(module)
+				owners[module] = native
+			end,
+			IsAttached = function(module)
+				return owners[module] == native
+			end,
+		},
+	}
 	setfenv(assert(loadfile("UI/Tracker.lua")), env)("Addon", ns)
 	if not readyAtLoad then
 		assert(owners[modules[1]] == native, "private host attachment is independent of Blizzard")

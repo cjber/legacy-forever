@@ -1,6 +1,10 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
 
+if ns.broken then
+	return
+end
+
 -- Art at its native aspect (AGENTS.md: never stretch art): every atlas is sized from C_Texture.GetAtlasInfo, on a
 -- texture or inline in text. tools/lint_art.py refuses a raw art setter in any other file unless its line says why
 -- its shape is right.

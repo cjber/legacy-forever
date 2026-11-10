@@ -262,11 +262,17 @@ print(("  %-46s %9.4f ms"):format("load Data/Legacy.lua", (os.clock() - start) *
 
 local data = ns.Data
 local env = Environment(data)
+local ForeverCore = dofile("tests/forever_core.lua").install(env, {
+	"Core/SafeCall.lua",
+	"Core/Log.lua",
+	"UI/Report.lua",
+	"UI/MapCanvas.lua",
+	"Expose.lua",
+})
+ns.core = ForeverCore.Register("LegacyForever", {})
 print(("bench: %d achievements in %d categories"):format(ACHIEVEMENTS, CATEGORIES))
 
 for _, path in ipairs({
-	"Core/SafeCall.lua",
-	"Core/Log.lua",
 	"Core/Saved.lua",
 	"Core/Model.lua",
 	"Core/Live.lua",

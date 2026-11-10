@@ -1,5 +1,6 @@
 -- Legacy XML templates for the shared read-only world-map harness.
-local Kit = dofile("tests/strict_map.lua")
+local core = os.getenv("FOREVER_CORE") or "../forever-core"
+local Kit = dofile(core .. "/tests/strict_map.lua")
 
 Kit.templates = {
 	LegacyForeverPinTemplate = function(frame)

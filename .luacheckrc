@@ -1,9 +1,9 @@
 std = "lua51"
 max_line_length = 120
-exclude_files = { "tools/.cache/**", ".release/**", ".types/**", "types/**", ".claude/**", ".bugpatrol/runs/**", ".speedpatrol/runs/**", ".sloppatrol/runs/**" }
+exclude_files = { "forever-core/**", "tools/.cache/**", ".release/**", ".types/**", "types/**", ".claude/**", ".bugpatrol/runs/**", ".speedpatrol/runs/**", ".sloppatrol/runs/**" }
 ignore = { "212/_.*", "212/self" } -- unused args prefixed with _, and self on mixin handlers
 
-globals = { "AdventureGuideForeverDB", "ForeverFamily", "ForeverLeaderboards", "ForeverMapMarkers", "ForeverTrackerHost",
+globals = { "AdventureGuideForeverDB",
 	"LegacyForeverMapButtonMixin",
 	"LegacyForeverZoneOverlayMixin",
 	"LegacyForever",
@@ -16,8 +16,7 @@ globals = { "AdventureGuideForeverDB", "ForeverFamily", "ForeverLeaderboards", "
 	"SlashCmdList",
 }
 
-read_globals = { "GetCVarBool", "GetQuestDifficultyColor", "RGBTableToColorCode", "FONT_COLOR_CODE_CLOSE", "AtlasLoot", "CreateFramePoolCollection", "C_XMLUtil", "CreateSettingsButtonInitializer", "Settings",
-	"C_DateAndTime", "CreateDataProvider", "CreateScrollBoxListLinearView", "ScrollUtil", "ScrollBoxConstants", "RAID_CLASS_COLORS",
+read_globals = { "ForeverCore", "GetCVarBool", "GetQuestDifficultyColor", "RGBTableToColorCode", "FONT_COLOR_CODE_CLOSE", "AtlasLoot", "C_XMLUtil", "CreateSettingsButtonInitializer", "Settings",
 	"AchievementFrame_SelectAchievement", "AlertFrame", "C_AddOns", "AlertFrame_OnClick", "C_Map", "C_MapExplorationInfo", "C_QuestLog", "C_Reputation", "C_SuperTrack", "C_TaxiMap", "C_Timer", "C_Texture", "C_Traits", "CreateAtlasMarkup",
 	"CreateFrame", "CreateFromMixins", "CreateTexturePool", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameFontNormal", "GameFontNormalSmall", "GameFontNormalTiny", "GameTooltip_AddBlankLineToTooltip", "GameTooltip_AddColoredLine", "GameTooltip_AddDisabledLine", "GetCursorPosition", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR", "HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",
@@ -41,7 +40,7 @@ files["tests/"] = { std = "+luajit" }
 files["tests/live_spec.lua"] = {
 	globals = { "UnitGUID", "UnitFactionGroup", "Enum", "C_Map", "C_MapExplorationInfo", "C_TaxiMap", "C_QuestLog", "C_Reputation", "C_Timer", "tContains", "CreateFrame",
 		"GetCategoryList", "GetCategoryNumAchievements", "GetAchievementInfo", "GetAchievementNumCriteria", "GetAchievementCriteriaInfo", "GetServerTime",
-		"ForeverErrorJournal", "geterrorhandler", "seterrorhandler", "strtrim" },
+		"geterrorhandler", "seterrorhandler", "strtrim" },
 }
 files["tests/quests_spec.lua"] = {
 	globals = { "LibQuestieDB", "Questie", "QuestieLoader", "UnitClass", "UnitFactionGroup", "UnitRace" },
@@ -49,13 +48,15 @@ files["tests/quests_spec.lua"] = {
 files["tests/dungeon_levels_spec.lua"] = { globals = { "AtlasLoot", "InCombatLockdown" } }
 files["tests/map_contents_spec.lua"] = { globals = { "C_Map", "Enum", "GetCVarBool" } }
 files["tests/navigate_spec.lua"] = {
-	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "UiMapPoint", "ShortestPathForever" },
+	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "ForeverCore", "UiMapPoint", "ShortestPathForever" },
 }
-files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverErrorJournal", "geterrorhandler", "seterrorhandler", "strtrim" } }
-files["tests/settings_spec.lua"] = { globals = { "CreateFrame", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "C_SettingsUtil", "CreateSecureDelegate", "WorldMapFrame", "InCombatLockdown", "geterrorhandler", "seterrorhandler" } }
+files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore", "geterrorhandler", "seterrorhandler", "strtrim" } }
+files["tests/settings_spec.lua"] = { globals = { "CreateFrame", "ForeverCore", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "C_SettingsUtil", "CreateSecureDelegate", "WorldMapFrame", "InCombatLockdown", "geterrorhandler", "seterrorhandler" } }
+files["tests/gamepad_menus_spec.lua"] = { globals = { "CreateFrame", "ForeverCore" } }
+files["tests/stats_spec.lua"] = { globals = { "ForeverCore" } }
 files["tests/legacy_map_spec.lua"] = {
 	globals = {
-		"EventUtil", "REPUTATION", "WHITE_FONT_COLOR", "Enum", "GameTooltip", "GameTooltip_SetTitle", "GameTooltip_AddNormalLine",
+		"ForeverCore", "EventUtil", "REPUTATION", "WHITE_FONT_COLOR", "Enum", "GameTooltip", "GameTooltip_SetTitle", "GameTooltip_AddNormalLine",
 		"GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine", "GameTooltip_AddDisabledLine",
 		"GameTooltip_AddColoredLine", "C_InputInterfaceStyle", "SoftCursor",
         "GetQuestDifficultyColor", "RGBTableToColorCode", "FONT_COLOR_CODE_CLOSE",
@@ -63,7 +64,7 @@ files["tests/legacy_map_spec.lua"] = {
 }
 files["tests/api_spec.lua"] = {
 	globals = {
-		"AlertFrame", "C_Map", "C_SuperTrack", "C_Texture", "C_Timer", "CreateAtlasMarkup", "DUNGEONS", "EventRegistry", "EventUtil", "GetTime", "geterrorhandler",
+		"AlertFrame", "C_Map", "C_SuperTrack", "C_Texture", "C_Timer", "CreateAtlasMarkup", "DUNGEONS", "EventRegistry", "EventUtil", "ForeverCore", "GetTime", "geterrorhandler",
 		"InCombatLockdown", "LibQuestieDB", "QUESTS_LABEL", "RAIDS", "ShortestPathForever", "UiMapPoint", "UnitClass", "UnitFactionGroup", "UnitRace",
 		"GameTooltip_AddBlankLineToTooltip", "GameTooltip_AddHighlightLine", "GameTooltip_AddNormalLine", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR",
 		"HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "C_AddOns", "WHITE_FONT_COLOR", "GameTooltip", "GameTooltip_SetTitle",
@@ -75,14 +76,10 @@ files["tests/api_spec.lua"] = {
 for _, name in ipairs({ "UnitGUID", "time" }) do
 	files["tests/api_spec.lua"].globals[#files["tests/api_spec.lua"].globals + 1] = name
 end
-files["tests/report_spec.lua"] = {
-	globals = { "C_AddOns", "C_Map", "C_Texture", "CreateFrame", "DEFAULT_CHAT_FRAME", "GetBuildInfo", "GetLocale", "GetTime", "geterrorhandler",
-		"strtrim", "UIParent", "UISpecialFrames", "UnitClass", "UnitFactionGroup", "UnitLevel", "UnitRace" },
-}
-files["tests/zone_completion_spec.lua"] = { globals = { "C_Map", "GetTime", "geterrorhandler", "seterrorhandler", "strtrim" } }
+files["tests/zone_completion_spec.lua"] = { globals = { "C_Map", "ForeverCore", "GetTime", "geterrorhandler", "seterrorhandler", "strtrim" } }
 files["tests/completion_art_spec.lua"] = {
 	globals = {
-		"AlertFrame", "C_Map", "CreateFrame", "DUNGEONS", "EventUtil", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR",
+		"AlertFrame", "C_Map", "CreateFrame", "DUNGEONS", "EventUtil", "ForeverCore", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR",
 		"HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "QUESTS_LABEL", "GameTooltip", "GameTooltip_SetTitle",
 		"GameTooltip_AddInstructionLine", "GameTooltip_AddDisabledLine", "GameTooltip_AddColoredLine", "WHITE_FONT_COLOR",
 	},
@@ -90,10 +87,8 @@ files["tests/completion_art_spec.lua"] = {
 read_globals[#read_globals + 1] = "EditModeManagerFrame"
 -- The journal spec loads the saved-variables file itself, with only the client calls that path makes.
 files["tests/error_journal_spec.lua"] = {
-	globals = { "CreateFrame", "SlashCmdList", "geterrorhandler", "seterrorhandler", "strtrim", "date", "GetTime" },
+	globals = { "CreateFrame", "ForeverCore", "SlashCmdList", "geterrorhandler", "seterrorhandler", "strtrim", "date", "GetTime" },
 }
-files["tests/family_locale_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "GetLocale" } }
--- Core/OpenMap.lua: the client's secure world map opener.
+-- ForeverCore's openers: the client's secure world map and settings panel openers.
 read_globals[#read_globals + 1] = "CreateSecureDelegate"
--- Core/OpenSettings.lua: the client's secure settings panel opener.
 read_globals[#read_globals + 1] = "C_SettingsUtil"

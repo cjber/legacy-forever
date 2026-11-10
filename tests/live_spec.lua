@@ -132,12 +132,10 @@ CreateFrame = function()
 		end,
 	}
 end
--- Core/SafeCall.lua installs its error handler and event frame once per addon, and this spec counts the events Live
--- registers; the stand-in client already counts this copy as installed, so the journal registers nothing here.
-ForeverErrorJournal = { installed = { LegacyForever = true } }
-
--- The client defines the error handler and strtrim Core/SafeCall.lua reads; these stand-ins keep every error
--- reachable, as BugSack's or the default error frame's would be.
+-- ForeverCore's journal installs its one error handler and event frame; the stand-in client counts the events Live
+-- registers afterwards, so those are cleared once core has loaded.
+-- The client defines the error handler and strtrim ForeverCore reads; these stand-ins keep every error reachable, as
+-- BugSack's or the default error frame's would be.
 geterrorhandler = function()
 	return error
 end
@@ -145,7 +143,18 @@ seterrorhandler = function() end
 strtrim = function(text)
 	return (text:gsub("^%s+", ""):gsub("%s+$", ""))
 end
-assert(loadfile("Core/SafeCall.lua"))("LegacyForever", ns)
+local ForeverCore = dofile("tests/forever_core.lua").install(_G, {
+	"Core/SafeCall.lua",
+	"Core/Log.lua",
+	"UI/Report.lua",
+	"UI/MapCanvas.lua",
+	"Expose.lua",
+})
+ns.core = ForeverCore.Register("LegacyForever", {})
+
+for event in pairs(registered) do
+	registered[event] = nil
+end
 assert(loadfile("Core/Live.lua"))("LegacyForever", ns)
 local Live = ns.Live
 

@@ -1,5 +1,10 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
+
+if ns.broken then
+	return
+end
+
 local MODULE = "AtlasLootClassic_DungeonsAndRaids"
 local attemptedSource
 

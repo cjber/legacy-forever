@@ -72,22 +72,28 @@ local function boot(saved, mode, hardcore, guid)
 	env.strtrim = function(text)
 		return text:match("^%s*(.-)%s*$")
 	end
-	-- The client defines the error handler Core/SafeCall.lua chains through and replaces; strtrim is above.
+	-- The client defines the error handler ForeverCore's journal chains through and replaces; strtrim is above.
 	env.geterrorhandler = function()
 		return error
 	end
 	env.seterrorhandler = function() end
 	env.LegacyForeverDB = saved or {}
 	local ns = {}
-	for _, path in ipairs({
-		"Locales/enUS.lua",
+	local core = dofile("tests/forever_core.lua")
+	core.install(env, {
 		"Core/SafeCall.lua",
 		"Core/Log.lua",
-		"Core/Core.lua",
-		"Core/Saved.lua",
+		"UI/Report.lua",
+		"UI/MapCanvas.lua",
 		"Core/PeerStats.lua",
 		"Core/LeaderboardsData.lua",
 		"UI/Leaderboards.lua",
+		"Expose.lua",
+	})
+	for _, path in ipairs({
+		"Locales/enUS.lua",
+		"Core/Core.lua",
+		"Core/Saved.lua",
 	}) do
 		setfenv(assert(loadfile(path)), env)("LegacyForever", ns)
 	end
@@ -172,7 +178,7 @@ check(stats.Leaderboard().rows[1].value == 8, "public results are copies")
 check(stats.Leaderboard(-1) == nil and stats.Leaderboard(0 / 0) == nil, "bad limits rejected")
 
 -- The shared Forever Leaderboards registration.
-local leaderboards = kit.ns.Leaderboards
+local leaderboards = kit.env.ForeverCore.Leaderboards
 check(type(leaderboards) == "table" and type(leaderboards.boards.legacy) == "table", "shares a board")
 local spec = leaderboards.boards.legacy
 check(spec.title == "Legacy Forever", "the tab carries the addon's title")
@@ -228,7 +234,7 @@ check(
 	"re-enable restores eligible cached peers and sends history"
 )
 local opened
-reloaded.ns.Leaderboards.Open = function(_, key)
+reloaded.env.ForeverCore.Leaderboards.Open = function(_, key)
 	opened = key
 end
 reloaded.env.SlashCmdList.LEGACYFOREVER("leaderboard")

@@ -165,9 +165,9 @@
 ---@field zoneCompletion LegacySettings
 
 ---@class LegacySavedVariables : ForeverFamilyDB
----@field errors? ForeverCaughtError[] the shared error journal (Core/SafeCall.lua): earlier sessions' errors, for the report
----@field log? ForeverDebugLogStore the shared debug log ring (Core/Log.lua): recent lines, for the report
----@field trackerHost? ForeverTrackerSettings
+---@field errors? ForeverCaughtError[] the shared error journal, kept by ForeverCore
+---@field log? ForeverDebugLogStore the shared debug log ring, kept by ForeverCore
+---@field trackerHost? ForeverTrackerLegacySettings the old tracker table, offered once to ForeverCore
 ---@field tracked? LegacyTrackingKey[]
 ---@field zoneCompletion? LegacySettings
 ---@field flightPaths? table<string, LegacyFlightRecord>
@@ -234,7 +234,3 @@ LegacyForever = nil
 ---@class LegacyTexturePool
 ---@field Acquire fun(self: LegacyTexturePool): Texture, boolean
 ---@field ReleaseAll fun(self: LegacyTexturePool)
-
----@class ForeverTrackerNamespace
----@field MapCanvas? ForeverMapCanvas
----@field SafeCall fun(label: string, fn: function, ...: any): boolean, ...any

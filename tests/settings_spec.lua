@@ -10,8 +10,8 @@ end
 SlashCmdList = {}
 local ns = {}
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
--- The client defines the error handler and strtrim Core/SafeCall.lua reads; these stand-ins keep every error
--- reachable, as BugSack's or the default error frame's would be.
+-- The client defines the error handler and strtrim ForeverCore reads; these stand-ins keep every error reachable, as
+-- BugSack's or the default error frame's would be.
 geterrorhandler = function()
 	return error
 end
@@ -19,8 +19,20 @@ seterrorhandler = function() end
 strtrim = function(text)
 	return (text:gsub("^%s+", ""):gsub("%s+$", ""))
 end
-assert(loadfile("Core/SafeCall.lua"))("LegacyForever", ns)
-assert(loadfile("Core/Log.lua"))("LegacyForever", ns)
+local coreEnv = setmetatable({
+	CreateFrame = function()
+		return { RegisterEvent = function() end, SetScript = function() end }
+	end,
+}, { __index = _G })
+ForeverCore = dofile("tests/forever_core.lua").install(coreEnv, {
+	"Core/SafeCall.lua",
+	"Core/Log.lua",
+	"Core/OpenMap.lua",
+	"Core/OpenSettings.lua",
+	"UI/Report.lua",
+	"UI/MapCanvas.lua",
+	"Expose.lua",
+})
 assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Model.lua"))("LegacyForever", ns)
@@ -111,9 +123,12 @@ check(LegacyForeverDB.zoneCompletion.tracker == true, "a write on an empty save 
 LegacyForeverDB = nil
 check(Saved.SeenVersion("0.7.0") == nil and LegacyForeverDB.lastVersion == "0.7.0", "a first install has no version")
 check(next(ns.SavedTable("flightPaths")) == nil and LegacyForeverDB.flightPaths, "a data table is made on first use")
-check(ns.TrackerHostSettings().attached == true, "the shared tracker starts attached")
-LegacyForeverDB.trackerHost = "broken"
-check(ns.TrackerHostSettings().attached == true, "a malformed tracker record is replaced")
+check(Saved.LegacyTrackerSettings() == nil, "there is no old tracker table to migrate")
+LegacyForeverDB.trackerHost = { attached = false, scale = 1.25 }
+local legacyTracker = Saved.LegacyTrackerSettings()
+check(legacyTracker.attached == false and legacyTracker.scale == 1.25, "the old tracker table is offered as saved")
+Saved.ClearLegacyTrackerSettings()
+check(Saved.LegacyTrackerSettings() == nil and LegacyForeverDB.trackerHost == nil, "it is offered only once")
 
 -- The change notice: every write tells every listener the key and its new value, after the value is saved,
 -- in the order they registered.
@@ -171,7 +186,6 @@ end
 InCombatLockdown = function()
 	return false
 end
-assert(loadfile("Core/OpenMap.lua"))("LegacyForever", ns)
 function ns.OpenMapMenu()
 	calls.menu = (calls.menu or 0) + 1
 end
@@ -211,7 +225,7 @@ end
 local trackerState = { attached = true, locked = false }
 local attachmentChanged
 local notified = {}
-ns.TrackerHost = {
+ForeverCore.TrackerHost = {
 	GetSettings = function()
 		return trackerState
 	end,
@@ -287,14 +301,13 @@ Settings = {
 	end,
 }
 -- The client's own settings opener, as the secure delegate runs it: refused from addon code, so C_SettingsUtil is
--- reachable only through ns.OpenSettingsPanel.
+-- reachable only through ForeverCore.OpenSettingsPanel.
 C_SettingsUtil = {
 	OpenSettingsPanel = function(categoryID)
 		assert(not addonTaint, "C_SettingsUtil.OpenSettingsPanel called straight from addon code")
 		opened[#opened + 1] = categoryID
 	end,
 }
-assert(loadfile("Core/OpenSettings.lua"))("LegacyForever", ns)
 function CreateSettingsButtonInitializer(name, text, click, _tooltip, addSearchTags)
 	check(text == "Open" and addSearchTags == false, "index buttons stay out of search")
 	return { button = true, name = name, click = click }
@@ -316,13 +329,13 @@ function CreateFrame(kind)
 	check(kind == "Frame", "the page is built when it first shows")
 	return { SetScript = function() end, Hide = function() end }
 end
-assert(loadfile("UI/ForeverFamily.lua"))("LegacyForever", ns)
 local panelArgs = {}
-local Register = ns.Family.Register
-ns.Family.Register = function(category, db, current, locale)
-	panelArgs.category, panelArgs.db, panelArgs.current, panelArgs.locale = category, db, current, locale
-	return Register(category, db, current, locale)
-end
+ForeverCore.Family = {
+	Register = function(category, db, current, safeCall)
+		panelArgs.category, panelArgs.db, panelArgs.current, panelArgs.safeCall = category, db, current, safeCall
+		return Settings.RegisterVerticalLayoutSubcategory(category, "Forever addons")
+	end,
+}
 assert(loadfile("UI/Settings.lua"))("LegacyForever", ns)
 check(LegacyForeverDB == nil or next(LegacyForeverDB.zoneCompletion or {}) == nil, "building the page saves nothing")
 
@@ -473,9 +486,7 @@ check(
 	panelArgs.category.name == "Legacy Forever" and panelArgs.db == ns.FamilyDB and panelArgs.current == "LegacyForever",
 	"the page is registered with the category and Legacy's saved table"
 )
--- ns.Family is the shared file's view bound to Legacy's own L, so its translations show on the page whichever
--- addon's copy is in use (tests/family_locale_spec.lua).
-check(ns.Family == ForeverFamily.For(ns.L) and panelArgs.locale == nil, "the page reads in Legacy's own strings")
+check(panelArgs.safeCall == ns.core.SafeCall, "the page runs in Legacy's own SafeCall")
 LegacyForeverDB = { companions = false }
 check(panelArgs.db().suggestFamily == false and LegacyForeverDB.companions == nil, "read through the migration")
 

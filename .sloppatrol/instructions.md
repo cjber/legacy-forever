@@ -14,19 +14,19 @@ what the game loads; `tests/*_spec.lua` load them in that order inside a stubbed
 
 Things reached indirectly: none of them is dead code, even when no file calls it by name.
 
-- `LegacyForever.toc` file list: load order `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Data/Legacy.lua, Core, Saved, ForeverFamily, WhatsNew, Model, Live, Quests, Navigate,
-  ZoneCompletion, TrackerHost, Tracker, Completion, Settings, MapContents, UI/Map.xml, Map, API`; never reorder as formatting.
+- `LegacyForever.toc` file list: load order `Core/Require.lua`, `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Data/Legacy.lua, Core, Art, Saved, WhatsNew, Model, Live, Quests, Navigate,
+  ZoneCompletion, Tracker, Completion, Settings, MapContents, UI/Map.xml, Map, API, Stats, Report`; never reorder as formatting.
 - `## SavedVariables: LegacyForeverDB`: persisted keys `tracked`, `zoneCompletion`,
-  `flightPaths`, `trackerHost`, `showAreas`, `showEntrances`, `whatsNew`, `lastVersion`, named only in `Core/Saved.lua`, and `suggestFamily` (default
-  in `Core/Saved.lua`) and `familyDismissed`, which the shared `UI/ForeverFamily.lua` (byte-identical in all five addons; never edit it
-  here) also reads and writes through `ns.FamilyDB()`; old keys in players' saved data are compatibility obligations (`companions`, pre-0.8, is
-  migrated to `suggestFamily` once and dropped).
+  `flightPaths`, `showAreas`, `showEntrances`, `whatsNew`, `lastVersion`, named only in `Core/Saved.lua`, and `suggestFamily` (default
+  in `Core/Saved.lua`) and `familyDismissed`, which ForeverCore's family page also reads and writes through `ns.FamilyDB()`;
+  old keys in players' saved data are compatibility obligations (`companions`, pre-0.8, is migrated to `suggestFamily` once
+  and dropped, and `trackerHost` is offered once to ForeverCore's tracker host and then dropped).
 - `## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick`: global called by the client.
 - `SLASH_LEGACYFOREVER1/2` + `SlashCmdList.LEGACYFOREVER` (Core/Core.lua): `/lf`, `/lf audit`, `/lf criteria`.
 - XML `mixin=` names (`LegacyForeverMapButtonMixin`) and `<Scripts>` `method=` handlers (`OnLoad`, `OnShow`, `OnHide`,
   `OnClick`, `OnEnter`, `OnLeave`).
-- Pin methods `UI/MapCanvas.lua` calls by name (`OnLoad`, `OnAcquired`, `OnReleased`, `OnMouseEnter`,
-  `OnMouseLeave`, `OnMouseClickAction`), `ForeverMapMarkers.LegacyForever` (read by Tweaks Forever), tracker-module
+- Pin methods ForeverCore's map canvas calls by name (`OnLoad`, `OnAcquired`, `OnReleased`, `OnMouseEnter`,
+  `OnMouseLeave`, `OnMouseClickAction`), the canvas markers read by other Forever addons, tracker-module
   methods (`LayoutContents`, `OnBlockHeaderClick/Enter/Leave`), and
   addon-owned callback targets (tracker `SetCollapsed`); native manager hooks are forbidden.
 - Event names registered in `Core/Live.lua` and callbacks via `EventRegistry`/`EventUtil`.
@@ -53,10 +53,6 @@ dismissed for the same reason.
   `---@cast`, e.g. `Core/Model.lua`
 - Tracker `uiOrder` `0` (defensive-noise): Legacy Forever's registered slot in WFA-5, not a missing
   negative, e.g. `UI/Tracker.lua`
-- sibling names in the shared tracker host (comment-narration, dead-code): `UI/TrackerHost.lua`,
-  `tests/tracker_host_spec.lua` and `tests/tracker_geometry_spec.lua` are kept byte-identical with the copies
-  in the sibling addon repositories, so `/agf tracker`, `AGF_TRACKER_HOSTS` and `lint_copy` refer to those
-  copies; an edit to any of the three is the owner's decision across all copies, e.g. `UI/TrackerHost.lua`
 
 ## Open questions for reviewers
 

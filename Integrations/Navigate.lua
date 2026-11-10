@@ -2,6 +2,10 @@
 local _, ns = ...
 local L = ns.L
 
+if ns.broken then
+	return
+end
+
 -- Passed to Shortest Path Forever so it can tell our journeys apart from the player's own.
 local OWNER = "LegacyForever"
 
@@ -20,11 +24,11 @@ local SHORTEST_PATH = "ShortestPathForever"
 
 -- A grey suggestion under a pin's click hint: Shortest Path Forever plots the whole route, flights and boats
 -- included, where the game's waypoint is a straight line. Only while it isn't installed and the shared
--- "Suggest my other Forever addons" switch is on (UI/ForeverFamily.lua); one installed but turned off was the
+-- "Suggest my other Forever addons" switch is on (ForeverCore's family page); one installed but turned off was the
 -- player's choice.
 ---@return string?
 function ns.CompanionHint()
-	if ns.Family.Hint(ns.FamilyDB(), "LegacyForever.pinShortestPath", SHORTEST_PATH) then
+	if ForeverCore.Family.Hint(ns.FamilyDB(), "LegacyForever.pinShortestPath", SHORTEST_PATH) then
 		return L["Install Shortest Path Forever to have the route plotted for you."]
 	end
 	return nil

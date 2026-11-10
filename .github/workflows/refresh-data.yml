@@ -59,6 +59,19 @@ jobs:
           sudo apt-get install -y --no-install-recommends --allow-downgrades \
             "luajit=$LUAJIT" "libluajit-5.1-2=$LUAJIT" "libluajit-5.1-common=$LUAJIT" "lua-check=$LUACHECK"
       - if: steps.build.outputs.new == 'true'
+        name: Read the Forever Core ref
+        id: forever-core
+        run: echo "ref=$(cat tools/forever-core.txt)" >> "$GITHUB_OUTPUT"
+      - if: steps.build.outputs.new == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: cjber/forever-core
+          ref: ${{ steps.forever-core.outputs.ref }}
+          path: forever-core
+          persist-credentials: false
+      - if: steps.build.outputs.new == 'true'
+        env:
+          FOREVER_CORE: forever-core
         run: |
           luacheck .
           for spec in tests/*_spec.lua; do luajit "$spec" || exit 1; done

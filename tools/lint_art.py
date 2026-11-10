@@ -13,9 +13,8 @@ except ModuleNotFoundError:
 
 # The one file that may set art: every helper in it is under spec (tests/art_spec.lua).
 HELPERS = frozenset({"Core/Art.lua"})
-# Vendored byte for byte from forever-core (tools/check_core_shared.py), so an art-ok line cannot be added here. Its
-# setters draw the client's own row highlight, medals, class icons and the addon's tab icon at native sizes.
-VENDORED = frozenset({"UI/Leaderboards.lua"})
+# Vendored byte for byte from forever-core (tools/check_core_shared.py), so an art-ok line cannot be added here.
+VENDORED = frozenset()
 check = art.check
 __all__ = ["HELPERS", "VENDORED", "check", "main"]
 

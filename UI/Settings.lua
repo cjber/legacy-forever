@@ -2,6 +2,10 @@
 local addonName, ns = ...
 local L = ns.L
 
+if ns.broken then
+	return
+end
+
 -- Options -> AddOns -> Legacy Forever: a short index page, then a stock subpage per group so no page grows
 -- tall. Every row goes in through Settings.RegisterInitializer, which inserts it from Blizzard's secure
 -- delegate: Settings.CreateCheckbox inserts from our code instead, and the settings search reads every layout,
@@ -59,7 +63,7 @@ local function IndexButton(category, subcategory, name)
 	Settings.RegisterInitializer(
 		category,
 		CreateSettingsButtonInitializer(name, L["Open"], function()
-			ns.OpenSettingsPanel(subcategory:GetID())
+			ForeverCore.OpenSettingsPanel(subcategory:GetID())
 		end, nil, false)
 	)
 	return subcategory
@@ -91,7 +95,7 @@ AddCheckbox(
 )
 
 local tracker = Section(category, L["Objective tracker"])
-local host = ns.TrackerHost
+local host = ForeverCore.TrackerHost
 if host and host.GetSettings and host.SetAttached and host.OnAttachmentChanged then
 	local variable = PREFIX .. "trackerAttached"
 	local attachment = Settings.RegisterProxySetting(
@@ -176,12 +180,12 @@ AddCheckbox(
 local updates = Section(category, L["Updates"])
 AddCheckbox(updates, "whatsNew", L["What's new after an update"])
 
--- The Forever addons page is shared by all five addons (UI/ForeverFamily.lua), with "Suggest my other Forever
--- addons" on it. ns.Family is bound to Legacy's L, so the page reads in Legacy's translations whichever addon's
--- copy of the file is in use. It reads and writes suggestFamily in the saved table itself; the map menu reads it
--- on opening. With the gamepad interface on, the page is the client's own rows, so the Options navigation can
+-- The Forever addons page is shared by every Forever addon (ForeverCore's UI/ForeverFamily.lua), with "Suggest my
+-- other Forever addons" on it. ForeverCore draws it in Legacy's own L, so the page reads in Legacy's translations
+-- whichever Forever addon is installed. It reads and writes suggestFamily in the saved table itself; the map menu
+-- reads it on opening. With the gamepad interface on, the page is the client's own rows, so the Options navigation can
 -- enter it (cjber/tweaks-forever#382).
 local familyName = L["Forever addons"]
-IndexButton(category, ns.Family.Register(category, ns.FamilyDB, addonName), familyName)
+IndexButton(category, ForeverCore.Family.Register(category, ns.FamilyDB, addonName, ns.core.SafeCall), familyName)
 
 Settings.RegisterAddOnCategory(category)

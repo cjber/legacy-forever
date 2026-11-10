@@ -35,6 +35,8 @@ Tick a challenge in the menu to track it.
 
 Progress comes from the game each time, so it always matches the Legacy panel.
 
+Legacy Forever needs [Forever Core](https://www.curseforge.com/wow/addons/forever-core), which CurseForge and Wago install with it.
+
 ## Usage
 
 Open the world map, or click the addon's icon in the addon compartment: the Legacy button sits below the map's own tracking buttons. Tick a challenge in its menu to track it. Every option also lives under Options > AddOns > Legacy Forever.

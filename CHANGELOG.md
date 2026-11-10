@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **Needs Forever Core.** The shared tracker column, bug report and leaderboards now come from one Forever Core addon that installs with it, so every Forever addon's tracker scale, lock and position stay in step. Your tracker settings carry over.
+
 ## [1.1.5] - 2026-11-10
 
 - **Opening Legacy's options or its map no longer ends in a blocked-action error naming the addon.** The client refuses its own map and settings open requests when an addon makes them, so pressing Open on a section of Legacy's options page, `/lf`, the compartment button, the tracker's zone header or a zone-complete toast could leave you with an error instead of the page you asked for. All of them now open the way the client expects (cjber/forever-core#333).

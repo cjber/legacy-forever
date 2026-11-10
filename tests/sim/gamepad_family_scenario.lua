@@ -13,6 +13,7 @@ scenario("the Forever addons settings page can be entered with a gamepad", funct
 	end
 	sim.gaps["Legacy fixture GetCategoryList"] = true
 	sim:setGamepad(true)
+	dofile("tests/sim/forever_core.lua").install(sim)
 	sim:login()
 	local ns
 	for _, entry in ipairs(sim.loader.addons) do

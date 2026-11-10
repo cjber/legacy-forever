@@ -6,7 +6,7 @@ function ns.Print(msg)
 end
 
 -- Shortest Path Forever's install state as the addon list reports it ("on", "off" or "missing"), and the saved
--- table the shared family suggestions (UI/ForeverFamily.lua) read.
+-- table the shared family suggestions (ForeverCore.Family) read.
 local state = "missing"
 C_AddOns = {
 	IsAddOnLoaded = function(name)
@@ -58,7 +58,20 @@ local function Install()
 end
 
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
-assert(loadfile("UI/ForeverFamily.lua"))("LegacyForever", ns)
+local coreEnv = setmetatable({
+	CreateFrame = function()
+		return { RegisterEvent = function() end, SetScript = function() end }
+	end,
+}, { __index = _G })
+local core = dofile("tests/forever_core.lua")
+ForeverCore = core.install(coreEnv, {
+	"Core/SafeCall.lua",
+	"Core/Log.lua",
+	"UI/Report.lua",
+	"UI/ForeverFamily.lua",
+	"UI/MapCanvas.lua",
+	"Expose.lua",
+})
 assert(loadfile("Integrations/Navigate.lua"))("LegacyForever", ns)
 local checks = 0
 local function check(condition, label)

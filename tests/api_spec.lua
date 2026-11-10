@@ -52,8 +52,8 @@ SlashCmdList = {}
 -- The GlobalStrings UI/Completion.lua labels its categories with.
 DUNGEONS, RAIDS, QUESTS_LABEL = "Dungeons", "Raids", "Quests"
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
--- The client defines the error handler and strtrim Core/SafeCall.lua reads; these stand-ins keep every error
--- reachable, as BugSack's or the default error frame's would be.
+-- The client defines the error handler and strtrim ForeverCore reads; these stand-ins keep every error reachable,
+-- as BugSack's or the default error frame's would be.
 geterrorhandler = function()
 	return error
 end
@@ -61,8 +61,27 @@ seterrorhandler = function() end
 strtrim = function(text)
 	return (text:gsub("^%s+", ""):gsub("%s+$", ""))
 end
-assert(loadfile("Core/SafeCall.lua"))("LegacyForever", ns)
-assert(loadfile("Core/Log.lua"))("LegacyForever", ns)
+-- ForeverCore's files make a few frames while they load; the map kit below replaces this stub once the map exists.
+CreateFrame = function()
+	return {
+		SetScript = function() end,
+		RegisterEvent = function() end,
+		SetPoint = function() end,
+		CreateTexture = function()
+			return { SetAllPoints = function() end }
+		end,
+	}
+end
+ForeverCore = dofile("tests/forever_core.lua").install(_G, {
+	"Core/SafeCall.lua",
+	"Core/OpenMap.lua",
+	"Core/Log.lua",
+	"UI/Report.lua",
+	"UI/ForeverFamily.lua",
+	"UI/ContextMenu.lua",
+	"UI/MapCanvas.lua",
+	"Expose.lua",
+})
 assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Art.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
@@ -223,7 +242,6 @@ CreateSecureDelegate = function(open)
 		end
 	end
 end
-assert(loadfile("Core/OpenMap.lua"))("LegacyForever", ns)
 C_Map = {
 	OpenWorldMap = RawOpenWorldMap,
 	GetMapInfo = function(uiMapID)
@@ -282,8 +300,6 @@ for _, file in ipairs({
 	"Integrations/Quests.lua",
 	"Integrations/Navigate.lua",
 	"Core/ZoneCompletion.lua",
-	"UI/ForeverFamily.lua",
-	"UI/MapCanvas.lua",
 	"UI/Completion.lua",
 	"Core/API.lua",
 }) do

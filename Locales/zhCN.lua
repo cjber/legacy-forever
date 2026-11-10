@@ -21,58 +21,59 @@ L["/lf - open the world map and its Legacy menu"] = "/lf - 打开世界地图及
 L["/lf audit - check the bundled data against the game"] = "/lf audit - 将内置数据与游戏核对"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 列出游戏对某个成就报告的内容"
+L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
+	"/lf issue - 生成可直接使用的 GitHub issue 链接，用于报告错误或提出功能建议"
+L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
+	"/lf leaderboard - 在此插件的标签页打开 Forever 排行榜"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 显示可复制到错误报告中的报告"
+L["/lf share on|off - share flight-path totals, keeping your history"] =
+	"/lf share on|off - 分享飞行路线总数并保留个人记录"
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever会为此地区剩余的任务规划路线。"
-L["Already complete"] = "已完成" -- mt
+L["Already complete"] = "已完成"
 L["Areas explored"] = "已探索区域"
 L["Attach to quest tracker"] = "附加到任务追踪栏"
 L["Click the zone to see where."] = "点击该地区查看位置。"
 L["Click to collapse."] = "点击收起。"
 L["Click to expand."] = "点击展开。"
-L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
-	"地图角落显示当前查看的地区，大陆地图上的每个地区显示一个徽章。"
 L["Click to open the map. Right-click for options."] = "点击打开地图。右键点击打开选项。"
 L["Click to set a waypoint here."] = "点击在此处放置地图标记。"
 L["Click to track, with live progress."] = "点击追踪，实时显示进度。"
 L["Click to travel here with Shortest Path Forever."] = "点击使用Shortest Path Forever前往此处。"
-L["Close"] = "关闭"
-L["Copy link"] = "复制链接"
-L["Copy the address, then open it in your browser."] = "复制该地址，然后在浏览器中打开。"
 L["Defeat"] = "击败"
-L["Don't suggest this again"] = "不再推荐"
-L["Drag to move"] = "拖动以移动"
 L["Dungeon or raid"] = "地下城或团队副本"
 L["Dungeons, raids and Legacy objectives count your progress on any character."] =
 	"地下城、团队副本和传承目标会计入你任何角色的进度。"
 L["Every quest this character can take in the zone, from Questie."] =
 	"此角色在该地区可接的所有任务，数据来自Questie。"
 L["Flight paths"] = "飞行路线"
+L["Flight-path leaderboard"] = "飞行路线排行榜"
+L["Flight-path records"] = "飞行路线记录"
 L["Forever addons"] = "Forever插件"
-L["Forever tracker"] = "Forever追踪栏"
 L["Hide from the tracker"] = "从追踪栏中隐藏"
 L["In the objective tracker"] = "在目标追踪栏中"
+L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。"
 L["Install Shortest Path Forever to have the route plotted for you."] =
 	"安装Shortest Path Forever即可为你规划路线。"
-L["Installed, turned off"] = "已安装，已禁用"
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"将共享的 Forever 追踪器保持在您放置的位置。顶部的拖拽手柄不再移动它。"
 L["Legacy"] = "传承"
 L["Legacy Forever report"] = "Legacy Forever报告"
 L["Legacy objectives"] = "传承目标"
+L["Legacy's options and map now open without a blocked-action error."] =
+	"Legacy 的选项和地图现在打开时不再出现操作被阻止的错误。"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"等级、技能、级别以及其他没有固定地点的内容。"
 L["Lock the tracker"] = "锁定追踪器"
-L["Tracker background"] = "追踪器背景"
 L["Needs Questie, which lists each zone's quests."] = "需要Questie，它会列出每个地区的任务。"
 L["No fixed location"] = "无固定地点"
 L["No unfinished Legacy objectives with a place on this map."] =
 	"此地图上没有带地点的未完成传承目标。"
-L["Not installed"] = "未安装"
 L["Nothing left to do here"] = "这里已无事可做"
 L["Objective tracker"] = "目标追踪栏"
-L["On"] = "开启"
 L["On the world map"] = "在世界地图上"
+L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
+	"除非关闭，否则开启。分享飞行路线总数，并将你列入 Forever 排行榜。"
 L["Open"] = "打开"
 L["Open a flight master on this continent to check these."] =
 	"与此大陆上的飞行管理员对话以检查这些路线。"
@@ -82,34 +83,22 @@ L["Open the map"] = "打开地图"
 L["Part of %s"] = "%s的一部分"
 L["Part of %s: %s for exploring every zone"] = "%s的一部分：探索所有地区可获得%s"
 L["Part of %s: %s for the whole challenge"] = "%s的一部分：完成整个挑战可获得%s"
-L["Picks quests for your level and plans them into one journey."] =
-	"挑选适合你等级的任务，并规划成一段旅程。"
-L["Plans the cheapest route to your next profession rank."] = "规划升到下一专业等级最省钱的路线。"
-L["Plans the quickest way anywhere and guides you there, with live boat and zeppelin times."] =
-	"规划前往任何地点的最快路线并为你引路，附带船只和飞艇的实时时刻。"
 L["Quest"] = "任务"
-L["Quest automation, rare alerts and merchant handling for the default UI."] =
-	"为默认界面提供任务自动化、稀有怪提醒和商人处理。"
+L["Recommended levels: %s (AtlasLoot)"] = "推荐等级：%s（AtlasLoot）"
 L["Repeatable, holiday and profession quests are left out."] = "不计入可重复、节日和专业任务。"
 L["Reputations (Friendly)"] = "声望（友善）"
+L["Share flight-path totals with guild and group"] = "与公会和队伍分享飞行路线总数"
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
 	"在我的其他Forever插件能帮上忙的地方显示一行不显眼的提示。仅限你尚未安装的插件。"
 L["Show dungeon and raid entrances"] = "显示地下城和团队副本入口"
 L["Show undiscovered areas"] = "显示未发现的区域"
-L["Shows the Legacy challenges you can advance in each zone."] =
-	"显示每个地区中你可以推进的传承挑战。"
 L["Stop tracking"] = "取消追踪"
 L["Suggest my other Forever addons"] = "推荐我的其他Forever插件"
-L["The Forever addons are free, with nothing locked behind them. If they help, you can buy me a coffee."] =
-	"Forever 插件全部免费，没有任何付费才能使用的内容。如果它们对你有帮助，可以请我喝杯咖啡。" -- mt
-L["The text is selected. Press Ctrl+C (Cmd+C on a Mac) to copy it, then paste it into your bug report."] =
-	"文本已选中。按Ctrl+C（Mac上为Cmd+C）复制，然后粘贴到你的错误报告中。"
-L["The tracker is locked. Turn off Lock the tracker to move it."] =
-	"追踪器已锁定。关闭“锁定追踪器”即可移动它。"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地区以及那里剩余的事项。你追踪的挑战保留在各自的传承区块中。"
-L["This addon"] = "本插件"
-L["This menu needs mouse and keyboard."] = "此菜单需要鼠标和键盘。" -- mt
+L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
+	"地图角落显示当前查看的地区，大陆地图上的每个地区显示一个徽章。"
+L["This menu needs mouse and keyboard."] = "此菜单需要鼠标和键盘。"
 L["This version of Questie isn't supported."] = "不支持此版本的Questie。"
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"如果其他插件已经标记了入口，请关闭此项。地图的传承菜单仍会列出它们。"
@@ -130,79 +119,5 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"无法向目标追踪栏添加区块；请报告/lf audit的结果。"
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"目标追踪栏不可用，因此无法显示追踪的挑战。"
+L["total"] = "总计"
 L["updated to %s. %s"] = "已更新至%s。%s"
-L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
-	"/lf issue - 生成可直接使用的 GitHub issue 链接，用于报告错误或提出功能建议"
-L["Bug"] = "错误"
-L["Bug: "] = "错误："
-L["Copy issue link"] = "复制 issue 链接"
-L["Copy report"] = "复制报告"
-L["Feature request"] = "功能建议"
-L["Feature request: "] = "功能建议："
-L["Report a bug or request a feature"] = "报告错误或提出功能建议"
-L["The link is selected. Press Ctrl+C (Cmd+C on a Mac), then paste into a browser; GitHub opens a filled-in issue."] =
-	"链接已选中。按 Ctrl+C（Mac 上为 Cmd+C），然后粘贴到浏览器中；GitHub 会打开已填好的 issue。"
-L["Title"] = "标题"
-L["What happened, or what you would like"] = "发生了什么，或你希望有什么"
-
-L["Legacy's options and map now open without a blocked-action error."] =
-	"Legacy 的选项和地图现在打开时不再出现操作被阻止的错误。" -- mt
-L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。" -- mt
-L["Recommended levels: %s (AtlasLoot)"] = "推荐等级：%s（AtlasLoot）" -- mt
-
--- Machine translated (2026-11-03); corrections welcome: https://github.com/cjber/legacy-forever/issues/new?template=translation.yml
-L["/lf share on|off - share flight-path totals, keeping your history"] =
-	"/lf share on|off - 分享飞行路线总数并保留个人记录" -- mt
-L["Flight-path leaderboard"] = "飞行路线排行榜" -- mt
-L["Flight-path records"] = "飞行路线记录" -- mt
-L["Share flight-path totals with guild and group"] = "与公会和队伍分享飞行路线总数" -- mt
-
--- Forever Leaderboards (Forever Core's shared window).
-L["Forever Leaderboards"] = "Forever 排行榜" -- mt
-L["Overall"] = "总览" -- mt
-L["Forever standing"] = "Forever 总排名" -- mt
-L["Your guild and group"] = "你的公会和队伍" -- mt
-L["Players you've met"] = "遇到过的玩家" -- mt
-L["This week"] = "本周" -- mt
-L["All time"] = "全部时间" -- mt
-L["Rank"] = "排名" -- mt
-L["Player"] = "玩家" -- mt
-L["No one has reported yet."] = "还没有人报告。" -- mt
-L["Share my progress"] = "分享我的进度" -- mt
-L["Others' values are player-reported."] = "其他玩家的数值由玩家自行报告。" -- mt
-L["Points for placing on each addon's board."] = "在每个插件的排行榜上获得名次的分数。" -- mt
-L["(you)"] = "（你）" -- mt
-L["board"] = "个榜单" -- mt
-L["boards"] = "个榜单" -- mt
-L["Uses Forever addons"] = "使用 Forever 插件" -- mt
-L["Forever: %s overall this week"] = "Forever：本周总排名 %s" -- mt
-L["Forever: %s overall"] = "Forever：总排名 %s" -- mt
-L["1st"] = "第 1 名" -- mt
-L["2nd"] = "第 2 名" -- mt
-L["3rd"] = "第 3 名" -- mt
-L["4th"] = "第 4 名" -- mt
-L["5th"] = "第 5 名" -- mt
-L["6th"] = "第 6 名" -- mt
-L["7th"] = "第 7 名" -- mt
-L["8th"] = "第 8 名" -- mt
-L[", "] = ", " -- mt
-L["total"] = "总计" -- mt
-L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
-	"/lf leaderboard - 在此插件的标签页打开 Forever 排行榜" -- mt
-L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
-	"除非关闭，否则开启。分享飞行路线总数，并将你列入 Forever 排行榜。" -- mt
-
--- Shared debug log (Forever Core's Core/Log.lua).
-L["Debug log is off."] = "调试日志已关闭。" -- mt
-L["Debug log is on for this session."] = "本次会话已开启调试日志。" -- mt
-L["Debug log is on and pinned for this character."] = "该角色的调试日志已开启并固定。" -- mt
-L["Debug log is already on and pinned for this character."] = "该角色的调试日志已经开启并固定。" -- mt
-L["Debug log is off for this session; it is still pinned."] =
-	"本次会话已关闭调试日志，但仍保持固定。" -- mt
-L["Debug log is off and unpinned."] = "调试日志已关闭并取消固定。" -- mt
-L["No addon has attached its log yet."] = "还没有插件附加日志。" -- mt
-L["%s (last %d):"] = "%s（最近 %d 条）：" -- mt
-L["%s: no lines yet."] = "%s：还没有日志行。" -- mt
-L["Usage: /forever debug, /forever debug pin, /forever debug off, /forever debug show"] =
-	"用法：/forever debug、/forever debug pin、/forever debug off、/forever debug show" -- mt
-L["Hide this section"] = "隐藏此部分" -- mt

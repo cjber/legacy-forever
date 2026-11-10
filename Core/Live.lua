@@ -1,6 +1,10 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
 
+if ns.broken then
+	return
+end
+
 -- Reads progress from the game, rebuilt from live APIs each session. The one thing the
 -- game won't say is which flight paths a character knows, so that is recorded (FlightRecord).
 ---@class LegacyLive
@@ -137,7 +141,7 @@ function Live.PanelLocked()
 end
 
 -- A menu entry that opens the panel: greyed out with the game's own reason while it is locked.
----@param button ElementMenuDescriptionProxy
+---@param button ForeverMenuDescription|ElementMenuDescriptionProxy
 function Live.LockPanelEntry(button)
 	if Live.PanelLocked() then
 		button:SetEnabled(false)
@@ -174,7 +178,7 @@ local pending = false
 local function Notify()
 	pending = false
 	for _, callback in ipairs(listeners) do
-		ns.SafeCall("progress listener", callback)
+		ns.core.SafeCall("progress listener", callback)
 	end
 end
 

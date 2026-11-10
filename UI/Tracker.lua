@@ -2,6 +2,10 @@
 local _, ns = ...
 local L = ns.L
 
+if ns.broken then
+	return
+end
+
 -- Forever's ruleset refuses achievement tracking (C_ContentTracking reports
 -- Untrackable), so tracked challenges get their own section in Blizzard's
 -- objective tracker, laid out like its achievement section. Entries are whole
@@ -78,8 +82,7 @@ function ModuleMixin:OnBlockHeaderClick(block, mouseButton)
 		ns.Live.ShowInLegacyPanel(block.id)
 		return
 	end
-	ns.ContextMenu(self:GetContextMenuParent(), function(_, root)
-		root:SetTag("MENU_LEGACY_HERE_TRACKER", block)
+	ForeverCore.ContextMenu(self:GetContextMenuParent(), function(_, root)
 		root:CreateTitle(ns.Live.Name(block.id))
 		ns.Live.LockPanelEntry(root:CreateButton(L["Open in the Legacy panel"], function()
 			ns.Live.ShowInLegacyPanel(block.id)
@@ -121,11 +124,10 @@ local modules = {}
 
 ---@param trackerModule LegacyTrackerModule
 local function Attach(trackerModule)
-	if ForeverTrackerHost then
-		ForeverTrackerHost.Attach(trackerModule)
-		return
-	end
-	-- The shared private host is optional; standalone companions stay inert until it loads.
+	trackerModule.legacySettings = ns.Saved.LegacyTrackerSettings()
+	trackerModule.safeCall = ns.core.SafeCall
+	ForeverCore.TrackerHost.Attach(trackerModule)
+	ns.Saved.ClearLegacyTrackerSettings()
 end
 
 local function AttachAll()
@@ -137,10 +139,7 @@ end
 ---@param trackerModule LegacyTrackerModule
 ---@return boolean
 local function IsAttached(trackerModule)
-	if ForeverTrackerHost then
-		return ForeverTrackerHost.IsAttached(trackerModule)
-	end
-	return false
+	return ForeverCore.TrackerHost.IsAttached(trackerModule)
 end
 
 ---@return boolean
@@ -167,7 +166,7 @@ function Tracker.AddModule(name, mixin, uiOrder)
 	if not Available() then
 		return nil
 	end
-	---@class LegacyTrackerModule : ObjectiveTrackerModuleTemplate
+	---@class LegacyTrackerModule : ObjectiveTrackerModuleTemplate, ForeverTrackerModule
 	---@field Header LegacyTrackerHeader
 	---@field headerText? string
 	---@field uiOrder number

@@ -260,7 +260,12 @@ local ns = {
 		end,
 	},
 }
-ns.Family = { Hint = function() end, FamilyDB = function() end }
+ForeverCore = {
+	Family = { Hint = function() end },
+	OpenMap = function() end,
+	ContextMenu = function() end,
+}
+ns.core = { MapCanvas = {} }
 ns.FamilyDB = function() end
 ns.Live = { Visible = function() end, Criteria = function() end }
 local alerts = {

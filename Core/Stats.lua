@@ -1,6 +1,10 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
 
+if ns.broken then
+	return
+end
+
 ---@class LFStats
 local Stats = {}
 ns.Stats = Stats
@@ -54,11 +58,12 @@ local function Peers()
 	return db.peerStats[guid]
 end
 
-local peerStats = ns.PeerStats.New({
+local peerStats = ForeverCore.PeerStats.New({
 	addon = "legacy",
 	enabled = Enabled,
 	db = Peers,
 	metrics = { [METRIC] = { subject = "numeric_pair" } },
+	safeCall = ns.core.SafeCall,
 	snapshot = function()
 		local ruleset = Ruleset()
 		local count, observedAt = ns.Live.FlightPathTotal()
@@ -107,26 +112,23 @@ end
 
 --- Open Forever Leaderboards on this addon's tab.
 function Stats.Open()
-	if ns.Leaderboards then
-		ns.Leaderboards:Open("legacy")
-	end
+	ForeverCore.Leaderboards:Open("legacy")
 end
 
-if ns.Leaderboards then
-	ns.Leaderboards:Register("legacy", {
-		title = ns.TITLE,
-		icon = "Interface\\Icons\\Achievement_General",
-		metric = L["Flight paths"],
-		board = Board,
-		revision = function()
-			return peerStats:Revision()
-		end,
-		sharing = Sharing,
-		setSharing = function(shared)
-			ns.Saved.Set("statsShare", shared == true)
-		end,
-	})
-end
+ForeverCore.Leaderboards:Register("legacy", {
+	title = ns.TITLE,
+	icon = "Interface\\Icons\\Achievement_General",
+	metric = L["Flight paths"],
+	board = Board,
+	revision = function()
+		return peerStats:Revision()
+	end,
+	sharing = Sharing,
+	setSharing = function(shared)
+		ns.Saved.Set("statsShare", shared == true)
+	end,
+	safeCall = ns.core.SafeCall,
+})
 
 function Stats.Sync()
 	peerStats:Sync()

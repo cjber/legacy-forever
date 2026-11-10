@@ -1,6 +1,10 @@
 ---@type string, LegacyForeverNamespace
 local _, ns = ...
 
+if ns.broken then
+	return
+end
+
 -- Pure logic over the generated data and a snapshot of live progress; no WoW API
 -- calls, so tests/model_spec.lua can exercise it under plain LuaJIT.
 --
