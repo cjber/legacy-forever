@@ -15,6 +15,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 - **Zone completion's quest counts no longer stall the login frame, and no longer wait on Questie for the whole session.** The first read walks every quest QuestieDB holds, about fifteen fields each plus its prerequisites, so it now runs a slice a frame instead of all at once in the frame after entering the world and again when Questie finished starting. If Questie loads and never reports ready, quests are read from QuestieDB as it stands after a minute rather than leaving "Waiting for Questie to finish loading." up for good, and the line a missing or unsupported database shows now names QuestieDB, where the count comes from (#394).
 - **A dungeon entrance says what to install when AtlasLoot has no Dungeons & Raids module to read.** AtlasLoot keeps that data in a module it loads on demand; the map pin's tooltip asked for it while drawing, and when the module was missing or disabled it showed no recommended levels and no reason. The load now happens after the frame and only once, its public tables are checked before use, and the tooltip shows the same install line as without AtlasLoot (#394).
 
+### For addon authors
+
+- **`LegacyForever.API` is minor 2: `Subscribe` calls on the next frame with a table naming what changed.** A callback receives a fresh table with `progress` set on every change, as before in any zone, and `zone`, `summary` and `targets` set to `true` for what changed in the player's zone, at most once per burst of game events, and a callback added by another callback waits for the next burst. Code that relied on the synchronous call with no arguments needs to read again on the next frame. `Targets` also answers `nil, "loading"` before the game has reported the player, as `ZoneSummary` already did. `docs/api.md` lists the change names, each read's reasons and the minor history (#373).
+
 ## [2.0.0] - 2026-11-10
 <!-- discord-image: docs/screenshots/tracker.png -->
 

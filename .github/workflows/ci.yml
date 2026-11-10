@@ -129,6 +129,8 @@ jobs:
           persist-credentials: false
       # A release publishes its changelog entry, so every tagged version needs one.
       - run: python3 tools/changelog.py --check
+      # docs/api.md names every function Core/API.lua publishes and its minor history.
+      - run: python3 tools/check_api_docs.py
       - env:
           BASE: ${{ github.base_ref || github.event.repository.default_branch }}
         run: python3 tools/repo_rules.py --base "origin/$BASE"
