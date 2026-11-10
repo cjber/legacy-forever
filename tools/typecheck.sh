@@ -38,6 +38,7 @@ python3 tools/check_editorconfig.py
 # --release: a shipped locale missing a line now fails the PR that adds the English string, not the release.
 python3 tools/check_locales.py --release
 python3 tools/check_family.py
+python3 tools/check_store_page.py
 python3 tools/typecheck_coverage.py
 python3 tools/lint_multivalue.py
 
