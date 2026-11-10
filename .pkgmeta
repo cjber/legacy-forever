@@ -1,8 +1,5 @@
 package-as: LegacyForever
 
-# ForeverCore has no CurseForge project (it ships from GitHub and Wago), so it cannot be a
-# CurseForge relation; the TOC's `## Dependencies: ForeverCore` is what the client reads.
-
 manual-changelog:
   filename: .release-notes.md
   markup-type: markdown
@@ -30,3 +27,11 @@ optional-dependencies:
   - questiedb
   - questie
   - atlasloot-forever
+
+# ForeverCore ships inside this zip as its own folder, from the release tools/forever-core.txt pins, because
+# its CurseForge project is not yet approved and so cannot be a required-dependencies relation.
+externals:
+  ForeverCore: https://github.com/cjber/forever-core/releases/download/v1.1.0/ForeverCore-v1.1.0-forever.zip
+
+move-folders:
+  LegacyForever/ForeverCore: ForeverCore

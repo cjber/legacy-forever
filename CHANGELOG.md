@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-11-10
+
+- **Forever Core now comes in the same download.** This addon needs Forever Core, and until Forever Core has its own CurseForge page every Forever addon's download carries a copy of it, so the addon loads with nothing else to install.
+
 ## [2.0.1] - 2026-11-10
 
 - **Zone completion's quest counts no longer stall the login frame, and no longer wait on Questie for the whole session.** The first read walks every quest QuestieDB holds, about fifteen fields each plus its prerequisites, so it now runs a slice a frame instead of all at once in the frame after entering the world and again when Questie finished starting. If Questie loads and never reports ready, quests are read from QuestieDB as it stands after a minute rather than leaving "Waiting for Questie to finish loading." up for good, and the line a missing or unsupported database shows now names QuestieDB, where the count comes from (#394).
