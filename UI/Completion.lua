@@ -563,8 +563,8 @@ local QUESTS_STATUS = {
 		.. " "
 		.. L["Repeatable, holiday and profession quests are left out."],
 	loading = L["Waiting for Questie to finish loading."],
-	missing = L["Needs Questie, which lists each zone's quests."],
-	unsupported = L["This version of Questie isn't supported."],
+	missing = L["Needs QuestieDB, which lists each zone's quests."],
+	unsupported = L["This version of QuestieDB isn't supported."],
 }
 
 ---@return string

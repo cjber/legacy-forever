@@ -67,7 +67,7 @@ L["Legacy's options and map now open without a blocked-action error."] =
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Níveis, perícias, postos e tudo o que não tem lugar fixo."
 L["Lock the tracker"] = "Travar o rastreador"
-L["Needs Questie, which lists each zone's quests."] = "Requer o Questie, que lista as missões de cada zona."
+L["Needs QuestieDB, which lists each zone's quests."] = "Requer o QuestieDB, que lista as missões de cada zona."
 L["No fixed location"] = "Sem local fixo"
 L["No unfinished Legacy objectives with a place on this map."] =
 	"Nenhum objetivo de Legado não concluído com local neste mapa."
@@ -102,7 +102,7 @@ L["The zone you're in and what is left to do there. Challenges you track keep th
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"A zona exibida, no canto do mapa, e um selo em cada zona do mapa de um continente."
 L["This menu needs mouse and keyboard."] = "Este menu precisa de mouse e teclado."
-L["This version of Questie isn't supported."] = "Esta versão do Questie não é compatível."
+L["This version of QuestieDB isn't supported."] = "Esta versão do QuestieDB não é compatível."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"Desative se outro addon já as marca. O menu de Legado do mapa continua listando-as."
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =

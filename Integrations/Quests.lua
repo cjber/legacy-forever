@@ -21,6 +21,16 @@ local CONTRACT = 2
 -- Questie's blacklist value for a quest it only keeps off the map; the quest is still offered.
 local HIDE_ON_MAP = "HIDE_ON_MAP"
 
+-- Questie can load and then never report ready, when its own startup stops on an error for one character.
+-- Waiting longer than this leaves the category on its loading line for the whole session, so past this the
+-- database is read as it stands, without Questie's blacklist; a ready callback arriving later reads it again.
+local READY_WAIT = 60
+
+-- Milliseconds of the index one frame gets: QuestieDB reads about fifteen fields for every quest, then
+-- walks the prerequisites, and in one frame that was a visible stall on the first draw and again when
+-- Questie became ready.
+local SLICE_MS = 2
+
 -- Forever's Skyborne races use playable-race bits 32 and 33, not race ID minus one, and a
 -- faction-wide mask from the Classic data (77 or 178) takes them in with their faction.
 local SKYBORNE = { [95] = 2 ^ 32, [96] = 2 ^ 33 }
@@ -31,6 +41,13 @@ local FACTION_MASK = { Alliance = 77, Horde = 178 }
 local index
 ---@type string?
 local failure
+-- The index build in progress, a slice a frame; nil when there is none.
+---@type thread?
+local builder
+-- Milliseconds into the slice being built.
+local sliceStart = 0
+-- Whether Questie has kept the category waiting past READY_WAIT.
+local waited = false
 
 -- QuestieDB, when its contract and shape are the ones this was written for.
 ---@return LibQuestieDB?
@@ -79,9 +96,10 @@ function Quests.Status()
 	if index == false or not Library() then
 		return "unsupported"
 	end
-	-- Questie fills its blacklist as it starts; QuestieDB alone is ready once loaded.
+	-- Questie fills its blacklist as it starts; QuestieDB alone is ready once loaded. Questie can also stop
+	-- starting without ever reporting ready, so past READY_WAIT the database is read as it stands.
 	local api = type(Questie) == "table" and Questie.API
-	if type(api) == "table" and api.isReady == false then
+	if type(api) == "table" and api.isReady == false and not waited then
 		return "loading"
 	end
 	return "ready"
@@ -166,15 +184,86 @@ local function Source(lib)
 	}
 end
 
-local function Build()
-	local ok, result = pcall(function()
-		return ns.Model.QuestIndex(Source(assert(Library())), ns.Data.completion)
-	end)
-	index = ok and result or false
-	failure = not ok and tostring(result) or nil
+-- Resumes the build once; true once it has finished or failed, with `index` set.
+---@param co thread
+---@return boolean done
+local function Resume(co)
+	local ok, result = coroutine.resume(co)
+	if not ok then
+		index, failure = false, tostring(result)
+		return true
+	end
+	if coroutine.status(co) ~= "dead" then
+		return false
+	end
+	local built = result --[[@as table<number, LegacyQuestItem[]>]]
+	index, failure = built, nil
+	return true
 end
 
--- Whether QuestieDB is ready but its index not yet built: the first read scans the whole database.
+---@return LegacyQuestSource
+local function SourceNow()
+	return Source(assert(Library()))
+end
+
+-- Starts building the index, a slice a frame: the frame it lands on announces the change, as Questie
+-- finishing its start does.
+local function Start()
+	local ok, source = pcall(SourceNow)
+	if not ok then
+		index, failure = false, tostring(source)
+		ns.Live.Invalidate()
+		return
+	end
+	local co = coroutine.create(function()
+		return ns.Model.QuestIndex(source, ns.Data.completion, function()
+			if debugprofilestop() - sliceStart >= SLICE_MS then
+				coroutine.yield()
+			end
+		end)
+	end)
+	builder = co
+	local function Step()
+		-- A synchronous reader finished this build in its own call.
+		if builder ~= co then
+			return
+		end
+		sliceStart = debugprofilestop()
+		if Resume(co) then
+			builder = nil
+			ns.Live.Invalidate()
+		else
+			C_Timer.After(0, Step)
+		end
+	end
+	Step()
+end
+
+-- Builds the index in this call: a typed command (/lf audit) asks for the answer now. A build already
+-- sliced across frames is finished here rather than started again.
+local function Build()
+	if builder then
+		local co = builder
+		while not Resume(co) do
+		end
+		builder = nil
+		-- Whoever read the index as pending while it was sliced is waiting for this.
+		ns.Live.Invalidate()
+		return
+	end
+	local ok, source = pcall(SourceNow)
+	if not ok then
+		index, failure = false, tostring(source)
+		return
+	end
+	local co = coroutine.create(function()
+		return ns.Model.QuestIndex(source, ns.Data.completion)
+	end)
+	while not Resume(co) do
+	end
+end
+
+-- Whether QuestieDB is ready but its index not yet built: the first read walks the whole database.
 ---@return boolean
 function Quests.Cold()
 	return index == nil and Quests.Status() == "ready"
@@ -184,8 +273,8 @@ local scheduled = false
 
 -- The zone's quests for this character; false while Questie is still loading, nil without a usable QuestieDB
 -- (missing, an unsupported version, or a failed build).
--- `deferred` never builds the index during the call: a cold index reads as loading, is built on the
--- next frame, and the change is announced like Questie finishing its start.
+-- `deferred` never builds the index during the call: a cold index reads as loading, is built a slice a
+-- frame from the next one, and the change is announced like Questie finishing its start.
 ---@param uiMapID number
 ---@param deferred? boolean
 ---@return LegacyQuestItem[]|false|nil
@@ -198,15 +287,16 @@ function Quests.Zone(uiMapID, deferred)
 		if not deferred then
 			Build()
 		else
-			if not scheduled then
+			if not scheduled and not builder then
 				scheduled = true
 				C_Timer.After(0, function()
 					scheduled = false
 					if Quests.Cold() then
-						Build()
+						Start()
+					else
+						-- Another reader built it first: whoever read "loading" is waiting for this.
+						ns.Live.Invalidate()
 					end
-					-- Also when another reader built it first: whoever read "loading" is waiting for this.
-					ns.Live.Invalidate()
 				end)
 			end
 			return false
@@ -223,7 +313,18 @@ if type(api) == "table" and type(api.RegisterOnReady) == "function" then
 		if index == false then
 			return
 		end
-		index = nil
+		-- A build in flight read QuestieDB before its blacklist: drop it, so the rebuild has the blacklist.
+		index, builder = nil, nil
+		ns.Live.Invalidate()
+	end)
+end
+if type(api) == "table" and api.isReady == false then
+	C_Timer.After(READY_WAIT, function()
+		local now = type(Questie) == "table" and Questie.API
+		if waited or type(now) ~= "table" or now.isReady ~= false then
+			return
+		end
+		waited = true
 		ns.Live.Invalidate()
 	end)
 end

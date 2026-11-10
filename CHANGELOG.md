@@ -12,7 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
-
+- **Zone completion's quest counts no longer stall the login frame, and no longer wait on Questie for the whole session.** The first read walks every quest QuestieDB holds, about fifteen fields each plus its prerequisites, so it now runs a slice a frame instead of all at once in the frame after entering the world and again when Questie finished starting. If Questie loads and never reports ready, quests are read from QuestieDB as it stands after a minute rather than leaving "Waiting for Questie to finish loading." up for good, and the line a missing or unsupported database shows now names QuestieDB, where the count comes from (#394).
+- **A dungeon entrance says what to install when AtlasLoot has no Dungeons & Raids module to read.** AtlasLoot keeps that data in a module it loads on demand; the map pin's tooltip asked for it while drawing, and when the module was missing or disabled it showed no recommended levels and no reason. The load now happens after the frame and only once, its public tables are checked before use, and the tooltip shows the same install line as without AtlasLoot (#394).
 
 ## [2.0.0] - 2026-11-10
 <!-- discord-image: docs/screenshots/tracker.png -->
