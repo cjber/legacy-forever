@@ -826,14 +826,15 @@ end
 -- exploration level. With its reveal on, the shading sits one level above that pin, so the order is Leatrix's tint,
 -- then the shading, then every marker (#470); a level type would put it level with the tint, where either can draw
 -- first. Otherwise nil: the pool's canvas level, below every pin (#464).
----@param map Frame
+---@param map WorldMapFrame
 ---@return number?
 local function AreaLevel(map)
 	if not RevealedByLeatrix() then
 		return nil
 	end
-	local levels = map:GetPinFrameLevelsManager()
-	return levels:GetValidFrameLevel("PIN_FRAME_LEVEL_MAP_EXPLORATION") + 1
+	local levels = map.GetPinFrameLevelsManager and map:GetPinFrameLevelsManager()
+	local exploration = levels and levels:GetValidFrameLevel("PIN_FRAME_LEVEL_MAP_EXPLORATION")
+	return exploration and exploration + 1
 end
 
 --[[ Wiring ]]
