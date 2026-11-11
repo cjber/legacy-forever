@@ -5,6 +5,7 @@ if addon.broken then
 end
 
 ---@class LegacyForeverNamespace
+---@field Credits ForeverCreditsData the player credits Data/Credits.lua generates for the shared Thanks page
 ---@field core ForeverCoreAddon the addon's own ForeverCore services: journal, log, report and map canvas
 ---@field broken? boolean set when an installed ForeverCore is too old, so the addon's files stop
 ---@field ReportTitle string the localized title shown by the shared report window
