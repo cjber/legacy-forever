@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-11-11
+
+<!-- discord-image: docs/screenshots/map.png -->
+
 - **Forever Leaderboards are gone.** The leaderboard tab, the `/lf leaderboard` and `/lf stats` commands, the map menu entry and the sharing switch are all removed. Guild and group stat sharing has stopped, so nothing is sent to other players. Your flight-path records stay on this character.
 
 ### For addon authors
