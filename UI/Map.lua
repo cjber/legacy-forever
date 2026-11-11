@@ -585,7 +585,8 @@ function AreaPin:OnLoad()
 	self:SetIgnoreGlobalPinScale(true)
 	-- No level type: the canvas's own level plus one, above the map art and below every pin, ours, Blizzard's or
 	-- another addon's. Blizzard's exploration level is about 2,000, which drew the shading and its glow over other
-	-- addons' markers on the canvas (Leatrix Maps puts its points of interest at level 100).
+	-- addons' markers on the canvas (Leatrix Maps puts its points of interest at level 100). With Leatrix Maps'
+	-- reveal on, Draw raises it one level above the exploration pin instead (AreaLevel).
 	self.textures = CreateTexturePool(self, "OVERLAY")
 	self.drawn, self.glow, self.lines = {}, {}, {}
 	self.used = 0
@@ -821,6 +822,20 @@ local function RevealedByLeatrix()
 	return type(LeaMapsDB) == "table" and LeaMapsDB.RevealMap == "On"
 end
 
+-- Leatrix Maps draws its tint of unexplored ground with the exploration pin's own textures, at Blizzard's
+-- exploration level. With its reveal on, the shading sits one level above that pin, so the order is Leatrix's tint,
+-- then the shading, then every marker (#470); a level type would put it level with the tint, where either can draw
+-- first. Otherwise nil: the pool's canvas level, below every pin (#464).
+---@param map Frame
+---@return number?
+local function AreaLevel(map)
+	if not RevealedByLeatrix() then
+		return nil
+	end
+	local levels = map:GetPinFrameLevelsManager()
+	return levels:GetValidFrameLevel("PIN_FRAME_LEVEL_MAP_EXPLORATION") + 1
+end
+
 --[[ Wiring ]]
 
 -- The player's place on this map, or nil when the player is on another one. The client's point is a
@@ -926,6 +941,10 @@ local function Attach()
 		if drawn.shade or drawn.outline then
 			local pin = areas:Acquire(drawn.shade, RevealedByLeatrix() and 0 or AREA_ALPHA, drawn.outline)
 			---@cast pin LegacyAreaPin
+			local level = AreaLevel(map)
+			if level then
+				pin:SetFrameLevel(level)
+			end
 			areaPin = pin
 			pin.playerX, pin.playerY = u, v
 		else

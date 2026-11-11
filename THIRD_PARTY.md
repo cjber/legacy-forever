@@ -51,6 +51,7 @@ Credit for the ideas, translations and reports behind the addon.
 | [Polestar](https://github.com/fitzforge/polestar) by Fitz | Drawing the world map on frames of its own, which the map never touches. From cjber/adventure-guide-forever's issues: `/lf report` with its copy box and caught errors (#156), the issue forms (#157), the zip check (#158), `tools/doctor.py` (#160), the stale-screenshot check (#161), this file (#162), the "For addon authors" changelog subsection (#163) and `.editorconfig` (#165). | GPL-3.0. Inspired only; no code was copied. Fitz is welcome to use our code. |
 | Brainc3ll | The French translation (#99) | |
 | cotijelucie, on Discord | Asked to see exactly where an undiscovered area is credited, which became *Show where to discover areas* (#459), and reported the shading covering other addons' map markers (#464) | |
+| Lûca [Luutsa], on Discord | Reported the undiscovered-area shading drawing under Leatrix Maps' unexplored tint (#470) | |
 | Bigabyte | Found the quest tracker shifting when moved in Edit Mode (#103) | |
 | overspark | Asked on CurseForge for a way to hide the dungeon and raid entrance pins, which became *Show dungeon and raid entrances* (#139), and level ranges on entrance tooltips (#222); the same comment prompted drawing a cleared dungeon or raid entrance faded so finished and unfinished instances read differently | |
 | deathmvp1 and berserkerlxl, on CurseForge | Found Questie's quest list covering the Forever tracker sections, which now move clear of it (cjber/shortest-path-forever#214) | |

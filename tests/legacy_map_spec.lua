@@ -356,6 +356,10 @@ _G.LeaMapsDB = { RevealMap = "On" }
 ns.RefreshMap()
 check(#Areas() == 1, "Leatrix reveal preserves exploration hovers")
 local revealed = Areas()[1]
+-- Leatrix tints unexplored ground with the exploration pin's textures (level 20 here): the shading draws above
+-- that tint and still below every marker.
+check(revealed.level == 21, "with Leatrix's reveal on, the shading sits one level above its tint")
+check(revealed.level < pin.level, "with Leatrix's reveal on, our markers still draw above the shading")
 local tile = revealed.drawn[area.key][1]
 check(tile.color[4] == 0, "revealed ground has no resting black veil")
 revealed:Highlight(shade.areas[1])
@@ -368,6 +372,10 @@ check(tile.color[4] == 0 and tooltip.owner == nil, "leaving revealed ground rest
 _G.LeaMapsDB.RevealMap = "Off"
 ns.RefreshMap()
 check(Areas()[1].drawn[area.key][1].color[4] == 0.25, "turning reveal off restores the pooled layer's normal veil")
+check(
+	Areas()[1].level == Kit.canvas:GetFrameLevel() + 1,
+	"turning reveal off puts the shading back directly above the map art"
+)
 _G.LeaMapsDB = nil
 
 -- The terrain glow: the same frame as the shading, gold lines along the area's ground and a pin at the point
