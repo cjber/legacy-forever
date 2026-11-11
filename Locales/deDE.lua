@@ -93,8 +93,7 @@ L["Show undiscovered areas"] = "Unentdeckte Gebiete anzeigen"
 L["Show where to discover areas"] = "Zeige, wo Gebiete zu entdecken sind"
 L["Stop tracking"] = "Nicht mehr verfolgen"
 L["Suggest my other Forever addons"] = "Meine anderen Forever-Addons vorschlagen"
-L["Undiscovered areas shade above Leatrix Maps' unexplored tint again."] =
-	"Unentdeckte Gebiete werden wieder über der Tönung unerforschter Gebiete von Leatrix Maps schattiert."
+L["The players who helped are on the Thanks page."] = "Die Spieler, die geholfen haben, stehen auf der Dankesseite."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Eure aktuelle Zone und was dort noch zu tun ist. Verfolgte Herausforderungen behalten ihren eigenen Vermächtnisbereich."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
