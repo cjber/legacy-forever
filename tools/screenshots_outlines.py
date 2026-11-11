@@ -1,24 +1,19 @@
-"""AreaPin's terrain glow, drawn for the screenshots from the same values as the addon.
+"""AreaPin's terrain shading, drawn for the screenshots from the same values as the addon.
 
-UI/Map.lua AreaPin:Paint shows each undiscovered area's rings as a wide soft stroke under a brighter core,
-tinted gold and feathered by media/Glow.tga (Core/Art.lua Art.GlowLine). This module draws those lines and
-finds the pins and distances UI/MapContents.lua's OutlinePoint computes, so tools/screenshots.py can put them
-on the world map. Nothing here reads the client.
+UI/Map.lua AreaPin:Paint fills each undiscovered area's rings with triangles, a white texture tinted the shading's
+own black at AREA_ALPHA and brightened to AREA_HOVER_ALPHA under the mouse (MapContents.Triangles ear-clips each
+ring, whose triangles cover exactly the ring). This module fills each ring the same way and finds the pins and
+distances UI/MapContents.lua's OutlinePoint computes, so tools/screenshots.py can put them on the world map.
+Nothing here reads the client.
 """
 
 import math
-from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
-ROOT = Path(__file__).resolve().parent.parent
-
-# UI/Map.lua: GOLD_R, GOLD_G, GOLD_B, GLOW_WIDE, GLOW_WIDE_ALPHA, GLOW_CORE, GLOW_CORE_ALPHA, GLOW_HOVER.
-GLOW_RGB = (255, 204, 89)  # 1, 0.8, 0.35
-GLOW_WIDE, GLOW_WIDE_ALPHA = 11, 0.20
-GLOW_CORE, GLOW_CORE_ALPHA = 2.5, 0.75
-GLOW_HOVER = 1.7
-FEATHER = Image.open(ROOT / "media" / "Glow.tga").convert("RGBA")
+# UI/Map.lua: AREA_ALPHA, AREA_HOVER_ALPHA.
+AREA_ALPHA, AREA_HOVER_ALPHA = 0.25, 0.40
+SHADE_RGB = (0, 0, 0)
 
 
 def outline_player(zone, name, art):
@@ -55,46 +50,23 @@ def outline_point(explore_zone, rings, player):
     return best[1], best[2], math.sqrt(best[0])
 
 
-def glow_edge(canvas, x1, y1, x2, y2, thickness, alpha):
-    """One Line region as UI/Map.lua's AreaPin:DrawEdge and Core/Art.lua's Art.GlowLine draw it: media/Glow.tga
-    on a line `thickness` UI units across, tinted gold at SetVertexColor's alpha. Each edge reaches half a
-    thickness past its ends so neighbouring edges meet the way the client's line rasterizer joins them."""
-    length = math.hypot(x2 - x1, y2 - y1)
-    if length == 0:
-        return
-    ux, uy = (x2 - x1) / length, (y2 - y1) / length
-    half = thickness / 2
-    ax, ay = x1 - ux * half, y1 - uy * half
-    bx, by = x2 + ux * half, y2 + uy * half
-    scale = canvas.ui.scale
-    width = max(1, round(math.hypot(bx - ax, by - ay) * scale))
-    height = max(1, round(thickness * scale))
-    strip = FEATHER.resize((width, height), Image.LANCZOS)
-    band = strip.getchannel("A").point(lambda value: min(255, round(value * alpha)))
-    tinted = Image.new("RGBA", strip.size, (*GLOW_RGB, 255))
-    tinted.putalpha(band)
-    tinted = tinted.rotate(-math.degrees(math.atan2(by - ay, bx - ax)), expand=True, resample=Image.BICUBIC)
-    canvas.image.alpha_composite(
-        tinted,
-        (
-            round((ax + bx) / 2 * scale - tinted.width / 2),
-            round((ay + by) / 2 * scale - tinted.height / 2),
-        ),
-    )
-
-
-def outline_glow(canvas, rects, zone, explore_zone, live, hover):
-    """UI/Map.lua AreaPin:Paint: every outlined area's rings as a wide soft stroke under a brighter core, the
-    hovered area's brightened by GLOW_HOVER. Returns the areas, so world_map can pin and name them."""
+def outline_shading(canvas, rects, zone, explore_zone, live, hover):
+    """UI/Map.lua AreaPin:Paint: every outlined area's rings filled with the shading's black, each ring its own
+    fill, the hovered area's brightened as AreaPin:Highlight brightens its triangles. Returns the areas, so
+    world_map can pin and name them."""
     mx, my, mw, mh = rects["map"]
     areas = outline_areas(zone, explore_zone, live)
     for area, rings in areas:
-        factor = GLOW_HOVER if area["name"] == hover else 1
+        alpha = AREA_HOVER_ALPHA if area["name"] == hover else AREA_ALPHA
+        fill = (*SHADE_RGB, round(alpha * 255))
         for ring in rings:
-            for index in range(0, len(ring), 2):
-                following = (index + 2) % len(ring)
-                x1, y1 = mx + ring[index] * mw, my + ring[index + 1] * mh
-                x2, y2 = mx + ring[following] * mw, my + ring[following + 1] * mh
-                glow_edge(canvas, x1, y1, x2, y2, GLOW_WIDE, GLOW_WIDE_ALPHA * factor)
-                glow_edge(canvas, x1, y1, x2, y2, GLOW_CORE, GLOW_CORE_ALPHA * factor)
+            points = [
+                (canvas.px(mx + ring[index] * mw), canvas.px(my + ring[index + 1] * mh))
+                for index in range(0, len(ring), 2)
+            ]
+            if len(points) < 3:
+                continue
+            layer = Image.new("RGBA", canvas.image.size)
+            ImageDraw.Draw(layer).polygon(points, fill=fill)
+            canvas.image = Image.alpha_composite(canvas.image, layer)
     return areas

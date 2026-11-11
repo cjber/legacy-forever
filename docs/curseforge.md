@@ -14,9 +14,9 @@ Discover an area and its shading lifts. The Legacy menu tracks the challenges be
 
 Half of Ashenvale explored: the shield's number is what's left on this map, and its menu lists it by challenge.
 
-![Ashenvale on the world map with each undiscovered area glowing gold along its real ground and a tooltip over one](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/outlines.png)
+![Ashenvale on the world map with each undiscovered area shaded in its real shape and a tooltip over one](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/outlines.png)
 
-Off by default, "Show where to discover areas" glows each undiscovered area's real ground, with a shield at its nearest edge. Click one to travel there with Shortest Path Forever.
+Off by default, "Show where to discover areas" shades each undiscovered area in its real shape, with a shield at its nearest edge. Click one to travel there with Shortest Path Forever.
 
 ![Kalimdor on the world map with a Legacy badge on each zone that still has dungeon objectives](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/continent.png)
 
@@ -37,7 +37,7 @@ These images are generated previews of the Legacy UI.
 - **Map button.** A Legacy shield in the world map's button column, with the number of unfinished objectives on the map you're viewing inside it. Its menu lists them by challenge, with a tick box to track each one.
 - **Tracker.** A Legacy section in the objective tracker lists what you track, with live progress, and a zone ticked in the map menu tracks just that zone, such as "0/12 Explore Felwood". Click a challenge to open it in the Legacy panel, or right-click to stop tracking it.
 - **Map pins.** Dungeon and raid entrances show the challenge each counts toward and its Legacy points, plus the recommended level range in tooltips with AtlasLoot installed. Click one to travel there with Shortest Path Forever, or the game's own waypoint.
-- **Undiscovered areas.** They are shaded in their real shape on the zone map, and hovering one shows which challenge counts it, its points and how many of the zone's areas are left. The map menu turns the shading off, or draws each area as a soft gold glow along its real ground with a pin at the nearest edge instead.
+- **Undiscovered areas.** They are shaded in their real shape on the zone map, and hovering one shows which challenge counts it, its points and how many of the zone's areas are left. The map menu turns the shading off, or shades each area in its real shape with a pin at the nearest edge instead.
 - **Zone completion.** Guild Wars 2 style, it shows how much of a zone's areas, dungeons, raids and Legacy objectives you've done: in whichever corner of the zone's map covers least of it, as a badge on each zone of a continent map and, if you tick it, in the tracker, where the game's own progress bar fills with the percent inside it and the map's own icons count each kind. Flight paths, local reputations and, with Questie, quests can be added under "What counts", and a finished zone gets a toast and a sound.
 - **No fixed location.** Challenges whose remaining work isn't tied to a place, such as levels, skills and ranks, get a list of their own.
 

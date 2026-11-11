@@ -246,32 +246,80 @@ equal(#drawn.pins, 1, "but keeps its pins")
 drawn = MapContents.Drawn(nil)
 equal(#drawn.pins + #drawn.badges, 0, "no map, nothing drawn")
 
--- The terrain glow: with the switch on, an area with outline data is drawn along its ground and keeps its
--- Legacy step for the pin and the hover; every other area keeps the shading.
+-- The terrain fill: with the switch on, an area with terrain rings is filled from them and keeps its Legacy step
+-- for the pin and the hover; every other area keeps the tile shading.
 settings.showOutlines = true
 drawn = MapContents.Drawn(ZONE)
-local outline = assert(drawn.outline, "the glow is drawn")
-equal(#outline.areas, 1, "only the area with terrain data glows")
+local outline = assert(drawn.outline, "the terrain fill is drawn")
+equal(#outline.areas, 1, "only the area with terrain data is filled from its rings")
 equal(outline.areas[1].key, areaA.key, "the area with terrain data")
 equal(outline.areas[1].outline, true, "an outline area is marked for the hover")
-equal(outline.areas[1].objective.objective.text, "Step 1", "the glow carries its Legacy step")
-shade = assert(drawn.shade, "the areas without outline data keep the shading")
+equal(outline.areas[1].objective.objective.text, "Step 1", "the terrain fill carries its Legacy step")
+shade = assert(drawn.shade, "the areas without terrain data keep the shading")
 equal(#shade.areas, 2, "area B and the wide area stay shaded")
-equal(shade.byKey[areaA.key], nil, "an outlined area keeps no shading of its own")
+equal(shade.byKey[areaA.key], nil, "an outlined area keeps no tile shading of its own")
 equal(shade.areas[1].objective.objective.text, "Step 2", "a shaded area still carries its step")
 
--- A discovered area leaves neither the glow nor the shading.
+-- A discovered area leaves neither the terrain fill nor the shading.
 explored = { [areaA.key] = true }
 drawn = MapContents.Drawn(ZONE)
-equal(drawn.outline, nil, "nothing undiscovered to glow")
+equal(drawn.outline, nil, "nothing undiscovered to fill from terrain")
 equal(#assert(drawn.shade).areas, 2, "the remaining areas are still shaded")
 explored = {}
 
 settings.showOutlines = false
 drawn = MapContents.Drawn(ZONE)
-equal(drawn.outline, nil, "the glow switched off")
+equal(drawn.outline, nil, "the terrain fill switched off")
 equal(#assert(drawn.shade).areas, 3, "every undiscovered area is shaded again")
 settings.showOutlines = true
+
+-- The fill's triangles cover each ring exactly, for either winding and for a ring with a notch, and are kept
+-- once per ring table so a redraw costs no clipping.
+---@param ring number[]
+---@return number
+local function RingArea(ring)
+	local area = 0
+	local corners = #ring / 2
+	for index = 1, corners do
+		local following = index % corners + 1
+		area = area + ring[index * 2 - 1] * ring[following * 2] - ring[following * 2 - 1] * ring[index * 2]
+	end
+	return math.abs(area) / 2
+end
+---@param triangles number[][]
+---@return number
+local function TrianglesArea(triangles)
+	local area = 0
+	for _, triangle in ipairs(triangles) do
+		local cross = (triangle[3] - triangle[1]) * (triangle[6] - triangle[2])
+			- (triangle[4] - triangle[2]) * (triangle[5] - triangle[1])
+		area = area + math.abs(cross) / 2
+	end
+	return area
+end
+local squareRing = { 0, 0, 1, 0, 1, 1, 0, 1 }
+local squareRings = { squareRing }
+local squareTriangles = MapContents.Triangles(squareRings)
+equal(#squareTriangles, 2, "a convex ring of four points is two triangles")
+near(TrianglesArea(squareTriangles), RingArea(squareRing), "the triangles cover a convex ring exactly")
+equal(TrianglesArea(squareTriangles), 1, "a unit square's triangles cover one square unit")
+equal(MapContents.Triangles(squareRings), squareTriangles, "an area's triangles are kept, not clipped again")
+local reversed = {}
+for index = #squareRing, 1, -1 do
+	reversed[#reversed + 1] = squareRing[index]
+end
+local reversedTriangles = MapContents.Triangles({ reversed })
+equal(#reversedTriangles, 2, "a clockwise ring is two triangles too")
+near(TrianglesArea(reversedTriangles), 1, "either winding fills the same ring")
+local notch = { 0, 0, 3, 0, 3, 3, 2, 3, 2, 1, 1, 1, 1, 3, 0, 3 }
+local notchTriangles = MapContents.Triangles({ notch })
+equal(#notchTriangles, 6, "a concave ring of eight points is six triangles")
+near(TrianglesArea(notchTriangles), RingArea(notch), "the triangles cover a concave ring exactly")
+near(TrianglesArea(notchTriangles), 7, "a 3 by 3 square with a 1 by 2 notch covers seven square units")
+local twoRings = MapContents.Triangles({ squareRing, { 0.25, 0.25, 0.5, 0.25, 0.5, 0.5, 0.25, 0.5 } })
+equal(#twoRings, 4, "each ring of an area is filled on its own")
+near(TrianglesArea(twoRings), 1 + 0.0625, "both rings count")
+equal(#MapContents.Triangles({ { 0, 0, 1, 1 } }), 0, "a ring with fewer than three points fills nothing")
 
 -- The hover is exact: a point inside the rings, one in a hole, and one outside.
 equal(MapContents.OutlineAt(outline, 0.3, 0.3), outline.areas[1], "a point inside the ring is the area")

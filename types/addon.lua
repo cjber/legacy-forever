@@ -218,7 +218,7 @@ LegacyForever = nil
 ---@field group LegacyGroup
 ---@field objective LegacyObjective
 
--- One undiscovered area drawn as a glow along its terrain outline instead of the map-art shading.
+-- One undiscovered area filled from its real terrain instead of the map-art shading.
 ---@class LegacyOutlineArea
 ---@field key string
 ---@field name string
@@ -240,9 +240,8 @@ LegacyForever = nil
 ---@field y number
 ---@field yards? number
 
--- A glow line whose resting alpha is kept, so a hover can brighten it and then restore it.
----@class LegacyGlowLine : Line
----@field baseAlpha number
+-- One triangle of an area's terrain fill, three flat u, v pairs: u1, v1, u2, v2, u3, v3.
+---@alias LegacyTriangle number[]
 
 -- The objective tracker's own progress bar, created from ObjectiveTrackerProgressBarTemplate.
 ---@class LegacyZoneProgressBarFill : StatusBar

@@ -57,8 +57,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"이 캐릭터가 이 지역에서 받을 수 있는 모든 퀘스트(Questie 기준)."
 L["Flight paths"] = "비행 경로"
 L["Forever addons"] = "Forever 애드온"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"미발견 지역의 실제 지형을 빛나게 표시하고 가장자리에 핀을 표시합니다. 지형 데이터가 없는 지역은 음영 표시를 유지합니다."
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"미발견 지역의 실제 지형을 음영으로 표시하고 가장자리에 핀을 표시합니다. 지형 데이터가 없는 지역은 음영 표시를 유지합니다."
 L["Hide from the tracker"] = "추적기에서 숨기기"
 L["In the objective tracker"] = "목표 추적기에서"
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요."

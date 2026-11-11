@@ -60,8 +60,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Все задания зоны, доступные этому персонажу, по данным Questie."
 L["Flight paths"] = "Маршруты полетов"
 L["Forever addons"] = "Модификации Forever"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"Подсвечивает настоящую землю каждой неоткрытой области и ставит метку на её краю. Области без данных о местности сохраняют затемнение."
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Затеняет настоящую землю каждой неоткрытой области и ставит метку на её краю. Области без данных о местности сохраняют затемнение."
 L["Hide from the tracker"] = "Скрыть из отслеживания"
 L["In the objective tracker"] = "В отслеживании целей"
 L["Install AtlasLoot for recommended levels."] =

@@ -51,8 +51,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Toutes les quêtes que ce personnage peut prendre dans la zone, depuis Questie."
 L["Flight paths"] = "Points de vol"
 L["Forever addons"] = "Addons Forever"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"Illumine le terrain réel de chaque zone non découverte, avec un repère à son bord. Les zones sans données de terrain gardent l'ombrage." -- mt
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Ombre le terrain réel de chaque zone non découverte, avec un repère à son bord. Les zones sans données de terrain gardent l'ombrage." -- mt
 L["Hide from the tracker"] = "Masquer du suivi"
 L["In the objective tracker"] = "Dans le suivi des objectifs"
 L["Install AtlasLoot for recommended levels."] = "Installez AtlasLoot pour afficher les niveaux recommandés."

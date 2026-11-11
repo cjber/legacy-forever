@@ -51,8 +51,6 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Every quest this character can take in the zone, from Questie."
 L["Flight paths"] = "Flight paths"
 L["Forever addons"] = "Forever addons"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."
 L["Hide from the tracker"] = "Hide from the tracker"
 L["In the objective tracker"] = "In the objective tracker"
 L["Install AtlasLoot for recommended levels."] = "Install AtlasLoot for recommended levels."
@@ -85,6 +83,8 @@ L["Quest"] = "Quest"
 L["Recommended levels: %s (AtlasLoot)"] = "Recommended levels: %s (AtlasLoot)"
 L["Repeatable, holiday and profession quests are left out."] = "Repeatable, holiday and profession quests are left out."
 L["Reputations (Friendly)"] = "Reputations (Friendly)"
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
 	"Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."
 L["Show dungeon and raid entrances"] = "Show dungeon and raid entrances"

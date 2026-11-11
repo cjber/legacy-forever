@@ -2,33 +2,57 @@
 local core = os.getenv("FOREVER_CORE") or "../forever-core"
 local Kit = dofile(core .. "/tests/strict_map.lua")
 
--- The strict harness's frames have no CreateLine. Every frame made after this gets one, returning a region
--- that records the edge it draws, so a spec can read the glow.
+-- The client's four texture vertex indices (Blizzard_FrameXMLBase/Constants.lua) and each corner's natural place
+-- in its texture, as a fraction of the width and height. Screen y points down here; SetVertexOffset's y points up.
+local CORNERS = { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 1, 1 } }
+
+-- The strict harness's regions record only what a spec has read so far. Every one made after this also records
+-- what a shading texture is drawn with, so a spec can read a triangle's corners as well as its colour.
 local install = Kit.Install
 function Kit.Install(env)
 	install(env)
-	local create = env.CreateFrame
-	env.CreateFrame = function(...)
-		local frame = create(...)
-		frame.lines = {}
-		frame.CreateLine = function()
-			local line = Kit.Region()
-			line.SetStartPoint = function(self, point, relative, x, y)
-				self.start = { point, relative, x, y }
-			end
-			line.SetEndPoint = function(self, point, relative, x, y)
-				self.finish = { point, relative, x, y }
-			end
-			line.SetThickness = function(self, thickness)
-				self.thickness = thickness
-			end
-			line.SetAlpha = function(self, alpha)
-				self.alpha = alpha
-			end
-			frame.lines[#frame.lines + 1] = line
-			return line
+	-- The constants the client defines for Texture:SetVertexOffset.
+	env.UPPER_LEFT_VERTEX, env.LOWER_LEFT_VERTEX = 1, 2
+	env.UPPER_RIGHT_VERTEX, env.LOWER_RIGHT_VERTEX = 3, 4
+	local region = Kit.Region
+	function Kit.Region()
+		local made = region()
+		made.SetTexture = function(self, file)
+			self.file = file
 		end
-		return frame
+		made.SetTexCoord = function(self, ...)
+			self.texcoord = { ... }
+		end
+		made.SetSize = function(self, width, height)
+			self.width, self.height = width, height
+		end
+		made.ClearAllPoints = function(self)
+			rawset(self, "point", nil)
+		end
+		made.SetPoint = function(self, ...)
+			rawset(self, "point", { ... })
+		end
+		made.ClearVertexOffsets = function(self)
+			rawset(self, "offsets", nil)
+		end
+		made.SetVertexOffset = function(self, index, x, y)
+			local offsets = rawget(self, "offsets")
+			if not offsets then
+				offsets = {}
+				rawset(self, "offsets", offsets)
+			end
+			offsets[index] = { x, y }
+		end
+		-- Where a vertex lands on screen, in screen-down pixels: its natural corner from the texture's TOPLEFT
+		-- point and size, plus its offset, whose y is UI units up and so subtracts from that screen-down place.
+		made.Corner = function(self, index)
+			local point, natural = rawget(self, "point"), CORNERS[index]
+			local left, top = point[2], -point[3]
+			local offset = (rawget(self, "offsets") or {})[index] or { 0, 0 }
+			return left + natural[1] * rawget(self, "width") + offset[1],
+				top + natural[2] * rawget(self, "height") - offset[2]
+		end
+		return made
 	end
 end
 

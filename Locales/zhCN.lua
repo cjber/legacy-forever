@@ -48,8 +48,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"此角色在该地区可接的所有任务，数据来自Questie。"
 L["Flight paths"] = "飞行路线"
 L["Forever addons"] = "Forever插件"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"以金色光晕显示每个未探索区域的真实地形，并在边缘放置图钉。没有地形数据的区域仍然使用阴影。"
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"以阴影显示每个未探索区域的真实地形，并在边缘放置图钉。没有地形数据的区域仍然使用阴影。"
 L["Hide from the tracker"] = "从追踪栏中隐藏"
 L["In the objective tracker"] = "在目标追踪栏中"
 L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。"

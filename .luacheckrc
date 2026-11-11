@@ -24,6 +24,7 @@ read_globals = { "ForeverCore", "GetCVarBool", "GetQuestDifficultyColor", "RGBTa
 	"ObjectiveTrackerManager", "ShortestPathForever", "LeaMapsDB", "C_InputInterfaceStyle", "Lerp", "Saturate", "SoftCursor", "LibQuestieDB", "Questie", "QuestieLoader", "strtrim",
 	"C_MajorFactions", "Constants", "GameTooltip_AddErrorLine", "LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP", "RED_FONT_COLOR", "UIErrorsFrame",
 	"tContains", "time", "ToggleLegacySystemUI", "UnitClass", "UnitLevel", "debugstack", "debugprofilestop", "date", "UISpecialFrames", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
+	"UPPER_LEFT_VERTEX", "LOWER_LEFT_VERTEX", "UPPER_RIGHT_VERTEX", "LOWER_RIGHT_VERTEX",
 }
 
 read_globals[#read_globals + 1] = "GetServerTime"

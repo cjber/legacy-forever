@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+### Changed
+
+- **"Show where to discover areas" now shades each area instead of glowing along it.** Turned on, an area the game has terrain for is filled with the same dark shading as the rest of the map, only in its real shape rather than the map art's squares, and it brightens under the mouse like any shaded area. The gold glow is gone; areas without terrain data keep their square shading, and the switch still starts off (#474).
+
 ## [2.3.2] - 2026-11-11
 
 - **Undiscovered areas shade above Leatrix Maps' unexplored tint again.** With Leatrix Maps' *Show unexplored areas* on, its tint covered the shading of the area under your cursor, because the last version moved the shading down to sit just above the map art. With Leatrix's reveal on, the shading now sits directly above its tint, so the map reads Leatrix's tint, then the shading, then every marker. Without it, the shading stays below other addons' markers as in the last version. Thanks to Lûca [Luutsa] on Discord for the report (#470).
