@@ -12,9 +12,14 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
-## [2.1.4] - 2026-11-11
+## [2.2.0] - 2026-11-11
 
 - **Tells you which addon to update.** If another Forever addon you have installed is older than this one and stops it starting, the message now names that addon, so you know exactly what to update.
+- **Forever Leaderboards are gone.** The leaderboard tab, the `/lf leaderboard` and `/lf stats` commands, the map menu entry and the sharing switch are all removed. Guild and group stat sharing has stopped, so nothing is sent to other players. Your flight-path records stay on this character.
+
+### For addon authors
+
+- **`LegacyForever.API` is now version 2, minor 0.** `Leaderboard(limit)` is removed with Forever Leaderboards. Every other member keeps its contract, so callers that use only those need no change beyond their version check.
 
 ## [2.1.3] - 2026-11-11
 

@@ -11,8 +11,6 @@ globals = { "AdventureGuideForeverDB",
 	"LegacyForever_OnAddonCompartmentClick",
 	"SLASH_LEGACYFOREVER1",
 	"SLASH_LEGACYFOREVER2",
-	"SLASH_FOREVERLEADERBOARDS1",
-	"SLASH_FOREVERLEADERBOARDS2",
 	"SlashCmdList",
 }
 
@@ -28,9 +26,7 @@ read_globals = { "ForeverCore", "GetCVarBool", "GetQuestDifficultyColor", "RGBTa
 	"tContains", "time", "ToggleLegacySystemUI", "UnitClass", "UnitLevel", "debugstack", "debugprofilestop", "date", "UISpecialFrames", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
 }
 
-	for _, name in ipairs({ "GetServerTime", "GetNormalizedRealmName", "GetNumGroupMembers", "GetGuildRosterInfo", "GetNumGuildMembers", "LE_PARTY_CATEGORY_HOME", "issecretvalue", "C_GameRules", "GetRealmName", "IsInGuild", "IsInGroup", "IsInRaid", "LE_PARTY_CATEGORY_INSTANCE", "C_ChatInfo", "UnitName" }) do
-	read_globals[#read_globals + 1] = name
-end
+read_globals[#read_globals + 1] = "GetServerTime"
 files["Data/Legacy.lua"] = { max_line_length = false }
 -- A translation line is one string, plus a trailing `-- mt` when machine translated (WFA-34): no room to wrap.
 files["Locales/"] = { max_line_length = false }
@@ -62,7 +58,6 @@ files["tests/navigate_spec.lua"] = {
 files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore", "geterrorhandler", "seterrorhandler", "strtrim" } }
 files["tests/settings_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "C_SettingsUtil", "CreateSecureDelegate", "WorldMapFrame", "InCombatLockdown", "geterrorhandler", "seterrorhandler" } }
 files["tests/gamepad_menus_spec.lua"] = { globals = { "CreateFrame", "ForeverCore" } }
-files["tests/stats_spec.lua"] = { globals = { "ForeverCore" } }
 files["tests/legacy_map_spec.lua"] = {
 	globals = {
 		"ForeverCore", "EventUtil", "REPUTATION", "WHITE_FONT_COLOR", "Enum", "GameTooltip", "GameTooltip_SetTitle", "GameTooltip_AddNormalLine",
@@ -98,7 +93,6 @@ read_globals[#read_globals + 1] = "EditModeManagerFrame"
 files["tests/error_journal_spec.lua"] = {
 	globals = { "C_AddOns", "CreateFrame", "ForeverCore", "SlashCmdList", "geterrorhandler", "seterrorhandler", "strtrim", "date", "GetTime" },
 }
-files["tests/identity_icon_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore" } }
 -- ForeverCore's openers: the client's secure world map and settings panel openers.
 read_globals[#read_globals + 1] = "CreateSecureDelegate"
 read_globals[#read_globals + 1] = "C_SettingsUtil"
