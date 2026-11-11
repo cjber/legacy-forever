@@ -259,7 +259,7 @@ button:OnLeave()
 local pin = pins[1]
 local host = pin:GetParent():GetParent()
 check(host:GetParent() == Kit.canvas, "the pins sit on a layer of ours over the map's canvas")
-check(pin.level == 30 and Areas()[1].level == 20, "pins take the map's frame levels for their kind")
+check(pin.level == 30, "objective pins take the map's frame level for their kind")
 check(pin.point[2] == Kit.canvas and pin.point[4] == 250 and pin.point[5] == -350, "the pin sits at its map fraction")
 check(math.abs(pin.scale - 1) < 1e-9, "zoomed out, the pin is at its start scale")
 check(
@@ -267,6 +267,19 @@ check(
 	"right-click zooms out, and the pin never calls the restricted SetPassThroughButtons"
 )
 local areaFrame = Areas()[1]
+-- Another addon's marker on the canvas, the way Leatrix Maps places its points of interest: level 100.
+local otherMarker = Kit.CreateFrame("Frame")
+otherMarker:SetParent(Kit.canvas)
+otherMarker:SetFrameLevel(100)
+check(
+	areaFrame.level == Kit.canvas:GetFrameLevel() + 1,
+	"the undiscovered areas sit directly above the map art, at the canvas's level plus one"
+)
+check(areaFrame.level < otherMarker.level, "another addon's map marker draws above the undiscovered areas")
+check(
+	pin.levelType == "PIN_FRAME_LEVEL_AREA_POI" and areaFrame.levelType == nil,
+	"objective pins keep their own frame level type, the areas take the canvas's"
+)
 check(areaFrame.mouse == false, "the shading never takes the mouse, so the map keeps its clicks and drags")
 check(areaFrame.width == 1000 and areaFrame.height == 700, "the shading covers the canvas")
 
@@ -439,7 +452,7 @@ for _, frame in ipairs(Kit.frames) do
 	if frame ~= Kit.canvas and frame ~= Kit.container then
 		check(frame.madeUnder == nil, "every frame of ours is made with no parent")
 	end
-	onCanvas = onCanvas + (frame.parent == Kit.canvas and 1 or 0)
+	onCanvas = onCanvas + (frame.parent == Kit.canvas and frame ~= otherMarker and 1 or 0)
 	if frame.template == "LegacyForeverPinTemplate" or frame.shade then
 		for _, script in ipairs({ "OnClick", "OnMouseDown", "OnMouseUp", "OnDoubleClick" }) do
 			check(frame.scripts[script] == nil, "a pin has no " .. script .. " script")

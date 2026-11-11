@@ -583,7 +583,9 @@ local RefreshOutlinePins
 
 function AreaPin:OnLoad()
 	self:SetIgnoreGlobalPinScale(true)
-	self:UseFrameLevelType("PIN_FRAME_LEVEL_MAP_EXPLORATION")
+	-- No level type: the canvas's own level plus one, above the map art and below every pin, ours, Blizzard's or
+	-- another addon's. Blizzard's exploration level is about 2,000, which drew the shading and its glow over other
+	-- addons' markers on the canvas (Leatrix Maps puts its points of interest at level 100).
 	self.textures = CreateTexturePool(self, "OVERLAY")
 	self.drawn, self.glow, self.lines = {}, {}, {}
 	self.used = 0
