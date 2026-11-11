@@ -41,6 +41,7 @@ ns.MapContents = MapContents
 ---@field badges LegacyContinentZone[] a continent's zone badges
 ---@field pins LegacyMapPin[] a zone's place-bound objectives
 ---@field shade? LegacyShade a zone's undiscovered areas, when there are any to shade
+---@field outline? LegacyOutline a zone's undiscovered areas drawn along their terrain instead
 
 -- Exploration is shaded on the zone map; everything else is pinned.
 ---@param group LegacyGroup
@@ -153,10 +154,12 @@ local function AreaTiles(area, tileWidth, tileHeight)
 end
 
 -- The zone's undiscovered areas that have map tiles; nil for a map without shading data, with the
--- shading switched off, or with nothing left to discover.
+-- shading switched off, or with nothing left to discover. An area the outline layer draws keeps no
+-- shading of its own.
 ---@param uiMapID number
+---@param outline LegacyOutline?
 ---@return LegacyShade?
-local function Shade(uiMapID)
+local function Shade(uiMapID, outline)
 	local zone = ns.Saved.Get("showAreas") and ns.Data.completion[uiMapID]
 	if not (zone and zone.tileWidth and zone.tileHeight) then
 		return nil
@@ -165,7 +168,7 @@ local function Shade(uiMapID)
 	---@type LegacyShade
 	local shade = { zone = zone, areas = {}, byKey = {} }
 	for _, area in ipairs(zone.areas) do
-		if area.tiles and not explored[area.key] then
+		if area.tiles and not explored[area.key] and not (outline and outline.byKey[area.key]) then
 			local shaded = { area = area, tiles = AreaTiles(area, zone.tileWidth, zone.tileHeight) }
 			shade.areas[#shade.areas + 1] = shaded
 			shade.byKey[area.key] = shaded
@@ -174,11 +177,93 @@ local function Shade(uiMapID)
 	return #shade.areas > 0 and shade or nil
 end
 
+-- The zone's undiscovered areas that have terrain outlines; nil when the layer is off or the zone has no
+-- outline data. Areas without data stay with the shading.
+---@param uiMapID number
+---@return LegacyOutline?
+local function Outline(uiMapID)
+	local zone = ns.Data.completion[uiMapID]
+	local data = ns.Explore and ns.Explore.zones[uiMapID]
+	if not (zone and data) then
+		return nil
+	end
+	local explored = ns.Live.ZoneSnapshot(uiMapID).explored
+	---@type LegacyOutline
+	local outline = { zone = data, uiMapID = uiMapID, areas = {}, byKey = {} }
+	for _, area in ipairs(zone.areas) do
+		local rings = area.key and data.areas[area.key]
+		if rings and not explored[area.key] then
+			---@type LegacyOutlineArea
+			local drawn = { key = area.key, name = area.name, rings = rings, outline = true }
+			outline.areas[#outline.areas + 1] = drawn
+			outline.byKey[area.key] = drawn
+		end
+	end
+	return #outline.areas > 0 and outline or nil
+end
+
+-- The outlined area under a point, or nil. Rings lie along the real ground, so the test is exact: a point
+-- inside an odd number of rings (a hole counts as one more ring) is inside the area.
+---@param outline LegacyOutline
+---@param u number
+---@param v number
+---@return LegacyOutlineArea?
+function MapContents.OutlineAt(outline, u, v)
+	for _, area in ipairs(outline.areas) do
+		local inside = false
+		for _, ring in ipairs(area.rings) do
+			local count = #ring / 2
+			for index = 1, count do
+				local following = index % count + 1
+				local ui, vi, uj, vj =
+					ring[index * 2 - 1], ring[index * 2], ring[following * 2 - 1], ring[following * 2]
+				if (vi > v) ~= (vj > v) and u < (uj - ui) * (v - vi) / (vj - vi) + ui then
+					inside = not inside
+				end
+			end
+		end
+		if inside then
+			return area
+		end
+	end
+end
+
+-- Where an area's pin sits and how far it is: the outline point nearest the player when the player is on
+-- this map, else the first point of the first ring. The distance is in yards, from the zone's rectangle.
+---@param zone LegacyExploreZone
+---@param area LegacyOutlineArea
+---@param u? number
+---@param v? number
+---@return number x
+---@return number y
+---@return number? yards
+function MapContents.OutlinePoint(zone, area, u, v)
+	local rings = area.rings
+	local x, y = rings[1][1], rings[1][2]
+	local yards
+	if u and v then
+		local shortest = math.huge
+		for _, ring in ipairs(rings) do
+			for index = 1, #ring, 2 do
+				local dx, dy = (ring[index] - u) * zone.width, (ring[index + 1] - v) * zone.height
+				local distance = dx * dx + dy * dy
+				if distance < shortest then
+					shortest, x, y = distance, ring[index], ring[index + 1]
+				end
+			end
+		end
+		yards = math.sqrt(shortest)
+	end
+	return x, y, yards
+end
+
 -- What the map draws (UI/Map.lua). A continent gets zone badges, which follow zone completion's "On the
 -- world map" switch, so turning it off leaves continents bare. A zone gets a pin per place-bound
 -- objective (bosses, dungeons, quests) and its undiscovered areas shaded; exploration is never
--- pinned, a shaded area carrying its Legacy step for the hover instead. "Show dungeon and raid entrances"
--- off leaves out only the entrance pins: the button still counts them and its menu still lists them.
+-- pinned, a shaded area carrying its Legacy step for the hover instead. With "Show where to discover
+-- areas" on, an undiscovered area with terrain data is drawn as a glow along its ground and keeps its
+-- Legacy step for the pin and the hover; the areas without data keep the shading. "Show dungeon and raid
+-- entrances" off leaves out only the entrance pins: the button still counts them and its menu still lists them.
 ---@param uiMapID number?
 ---@return LegacyMapDrawing
 function MapContents.Drawn(uiMapID)
@@ -192,7 +277,8 @@ function MapContents.Drawn(uiMapID)
 		end
 		return drawn
 	end
-	local shade = uiMapID and Shade(uiMapID) or nil
+	local outline = uiMapID and ns.Saved.Get("showOutlines") and Outline(uiMapID) or nil
+	local shade = uiMapID and Shade(uiMapID, outline) or nil
 	-- Cleared dungeon and raid entrances are drawn too, marked done, so a zone shows both what is left and what is
 	-- finished. The button's count and the menu still list only the unfinished objectives (MapContents.Objectives).
 	local groups = uiMapID and ns.Model.ZoneObjectives(ns.Data, uiMapID, ns.Live.Visible(), ns.Live.Criteria, true)
@@ -200,8 +286,11 @@ function MapContents.Drawn(uiMapID)
 	for _, group in ipairs(groups) do
 		for _, objective in ipairs(group.objectives) do
 			local entry = objective.entry
+			local outlined = entry.kind == "explore" and outline and outline.byKey[entry.key]
 			local shaded = entry.kind == "explore" and shade and shade.byKey[entry.key]
-			if shaded then
+			if outlined then
+				outlined.objective = { group = group, objective = objective }
+			elseif shaded then
 				shaded.objective = { group = group, objective = objective }
 			elseif entry.x and entry.kind ~= "explore" and (entrances or entry.kind ~= "instance") then
 				drawn.pins[#drawn.pins + 1] = { group = group, objective = objective, done = objective.done }
@@ -209,6 +298,7 @@ function MapContents.Drawn(uiMapID)
 		end
 	end
 	drawn.shade = shade
+	drawn.outline = outline
 	return drawn
 end
 

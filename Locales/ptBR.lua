@@ -10,6 +10,7 @@ L["%d Legacy objectives left"] = "Faltam %d objetivos de Legado"
 L["%d not known yet."] = "%d ainda desconhecido(s)."
 L["%d unfinished Legacy objective on this map."] = "%d objetivo de Legado não concluído neste mapa."
 L["%d unfinished Legacy objectives on this map."] = "%d objetivos de Legado não concluídos neste mapa."
+L["%d yards away"] = "A %d jardas"
 L["%s %d Legacy |4point:points;"] = "%s %d |4ponto:pontos; de Legado"
 L["%s complete. %s"] = "%s concluída. %s"
 L["%s could not start. Reinstall %s to fix this."] = "%s não pôde iniciar. Reinstale %s para corrigir isto."
@@ -49,6 +50,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Todas as missões que este personagem pode pegar na zona, segundo o Questie."
 L["Flight paths"] = "Rotas de voo"
 L["Forever addons"] = "AddOns Forever"
+L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Ilumina o terreno real de cada área não descoberta, com um marcador na borda. Áreas sem dados de terreno mantêm o sombreamento."
 L["Hide from the tracker"] = "Ocultar do rastreador"
 L["In the objective tracker"] = "No rastreador de objetivos"
 L["Install AtlasLoot for recommended levels."] = "Instale AtlasLoot para ver os níveis recomendados."
@@ -87,9 +90,11 @@ L["Show a quiet line where one of my other Forever addons would help. Only for a
 	"Mostra uma linha discreta onde outro dos meus AddOns Forever ajudaria. Só para AddOns que você não tem."
 L["Show dungeon and raid entrances"] = "Mostrar entradas de masmorras e raides"
 L["Show undiscovered areas"] = "Mostrar áreas não descobertas"
+L["Show where to discover areas"] = "Mostrar onde descobrir áreas"
 L["Stop tracking"] = "Não rastrear"
 L["Suggest my other Forever addons"] = "Sugerir meus outros AddOns Forever"
-L["Tells you which addon to update."] = "Diz qual addon precisa ser atualizado."
+L["The map can now show where each undiscovered area really is."] =
+	"O mapa agora pode mostrar onde cada área não descoberta realmente fica."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"A zona em que você está e o que falta fazer nela. Desafios rastreados mantêm sua própria seção de Legado."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

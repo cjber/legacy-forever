@@ -34,6 +34,9 @@ UiMapPoint = nil
 ---@class LegacyShortestPathAPI
 ---@field version? integer
 ---@field Navigate? fun(owner: string, map: integer, x: number, y: number, title?: string): boolean
+---@field Estimate? fun(fromMap: number, fromX: number, fromY: number, toMap: number, toX: number, toY: number): number?, string?
+---@field CurrentStop? fun(owner: string): number?
+---@field Cancel? fun(owner: string): boolean
 
 ---@type {API: LegacyShortestPathAPI?}?
 ShortestPathForever = nil

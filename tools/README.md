@@ -5,6 +5,7 @@ Run from the repository root:
 ```sh
 python3 tools/gen_legacy.py --refresh
 python3 tools/gen_legacy.py --offline
+python3 tools/gen_explore.py --offline
 luajit tests/data_spec.lua
 ```
 
@@ -151,8 +152,9 @@ so a renamed or respelled entry stops the generator, naming both, for a fresh re
 
 `.github/workflows/refresh-data.yml` runs daily. It sets `BUILD` to the newest
 Forever build `latest_build.py` reads from wago.tools and `SOURCE_DATE` to the day,
-regenerates, runs `check_generated.py --offline`, luacheck, the specs and StyLua,
-opens a data PR and dispatches CI on its branch. A failed run on the default branch
+regenerates `Data/Legacy.lua`, runs `check_generated.py --offline` (CI's `generated` job also runs
+`check_explore.py`), luacheck, the specs and StyLua, opens a data PR and dispatches CI on its branch. A failed run on
+the default branch
 is re-run once ten minutes later by `retry-refresh.yml`; if that fails too it
 opens an issue titled "Data refresh failed" linking the run, or comments on the open
 one. The client build is the only pin it moves. `REVISION` in `fetch_tracker_ui.py`
@@ -165,6 +167,45 @@ unpinned entries by kind, remaps, completion counts, unresolved reward criteria 
 Spelunker wing. Those printed numbers are the current ones. The review of one build, with its counts, the
 unlocated objectives and why each stays so, and the reputation curation, is in
 [docs/data-audit-2026-09-21.md](../docs/data-audit-2026-09-21.md).
+
+## Exploration outlines
+
+`python3 tools/gen_explore.py` writes `Data/Explore.lua`: per zone uiMapID, its map rectangle in yards and, per
+completion area key, the rings around the area's real ground as flat `u, v` pairs. It is committed, and it is not
+part of the daily data refresh.
+
+- **Its own pin.** `TERRAIN_BUILD` in `tools/gen_explore.py` names the client build the ADT/WDT downloads and the
+  DB2 rows behind its area join are read at. It is separate from `gen_legacy.py`'s `BUILD` because wago.tools
+  exposes no per-file content hash: following every daily build would download all ~1,300 tiles again and add
+  about an hour to the refresh. The generated header names `TERRAIN_BUILD`.
+- **When to move it.** Run `python3 tools/check_explore.py`: it reads both committed files and names every zone or
+  area key in `Data/Explore.lua` that `Data/Legacy.lua`'s completion data no longer has. When it fails, bump
+  `TERRAIN_BUILD`, run `python3 tools/gen_explore.py`, check the glow still lines up, and commit both the script and
+  the data. Areas whose key is missing at runtime keep the map-art shading.
+
+- The areas are the zone's exploration criteria joined exactly as the completion areas are: `zone_areas` reuses
+  `gen_legacy.overlay_areas` and `Geography.by_art`. A terrain chunk counts when its `AreaTable` area is one of
+  those IDs or a child of one (`ParentAreaID`), so a subzone's chunks credit the area.
+- The map's WDT (`Map.WdtFileDataID`) is the only source of tile names: `MAIN` marks the tiles present and `MAID`
+  names each tile's root ADT FileDataID, so no file-list request is needed. Tiles are fetched from
+  `https://wago.tools/api/casc/<FileDataID>?version=<TERRAIN_BUILD>` (a browser User-Agent; Python's default gets
+  a 403) for the tiles each zone's world rectangle touches, about 1,300 for Kalimdor and the Eastern Kingdoms.
+  Every file is cached at `tools/.cache/adt/<TERRAIN_BUILD>/<FileDataID>.adt` and never fetched again, so only a
+  new `TERRAIN_BUILD` downloads tiles.
+- A root ADT's `MCNK` header gives the chunk's `AreaTable` area at 0x34 and its world corner at 0x68. A chunk is
+  533.3333/16 yards square. Marching squares over the chunk grid traces the exact boundary, two Chaikin passes
+  round the chunk steps, and Douglas-Peucker at 0.002 map units simplifies the ring, so a typical area keeps about
+  40 points. Disjoint rings and holes are kept.
+- `u = (Region_4 - y) / (Region_4 - Region_1)` and `v = (Region_3 - x) / (Region_3 - Region_0)` from the zone's
+  UiMapAssignment; a point outside the map rectangle is clipped to its edge. Coordinates are rounded to four
+  decimals, and zones, keys and rings are emitted in a fixed order, so the file is byte-stable.
+- Areas with no terrain outline keep the map-art shading (see `UI/MapContents.lua`), and the generator prints how
+  many there are. Timbermaw Hold is the current one: its chunks lie outside Felwood's map rectangle.
+- `tools/glow_texture.py` draws `media/Glow.tga`, the feathered strip the map's glow lines use.
+
+Verify with two consecutive `python3 tools/gen_explore.py --offline` runs (identical bytes), then
+`luajit tests/legacy_map_spec.lua`, `luajit tests/map_contents_spec.lua`, `luacheck .`, `stylua --check .` and
+`tools/typecheck.sh`. `--offline` refuses a missing tile instead of writing a partial file.
 
 ## Zone completion
 

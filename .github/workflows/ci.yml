@@ -136,6 +136,8 @@ jobs:
           key: regeneration-${{ runner.os }}-${{ hashFiles('tools/gen_*.py', 'tools/db2.py') }}
           restore-keys: regeneration-${{ runner.os }}-
       - run: python3 tools/check_generated.py
+      # Data/Explore.lua is traced at its own TERRAIN_BUILD; a data refresh can move the area keys it names.
+      - run: python3 tools/check_explore.py
 
   project-rules:
     runs-on: ubuntu-24.04

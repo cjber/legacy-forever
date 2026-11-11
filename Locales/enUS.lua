@@ -8,3 +8,7 @@ ns.L = setmetatable({}, {
 	end,
 })
 ns.L["This menu needs mouse and keyboard."] = "This menu needs mouse and keyboard."
+ns.L["Show where to discover areas"] = "Show where to discover areas"
+ns.L["%d yards away"] = "%d yards away"
+ns.L["A gold glow along the real ground of each undiscovered area, with a pin at its nearest edge. Areas without terrain data keep the shading."] =
+	"A gold glow along the real ground of each undiscovered area, with a pin at its nearest edge. Areas without terrain data keep the shading."

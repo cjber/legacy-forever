@@ -10,6 +10,7 @@ L["%d Legacy objectives left"] = "%d objectifs Héritage restants"
 L["%d not known yet."] = "%d encore inconnu."
 L["%d unfinished Legacy objective on this map."] = "%d objectif Héritage non terminé sur cette carte."
 L["%d unfinished Legacy objectives on this map."] = "%d objectifs Héritage non terminés sur cette carte."
+L["%d yards away"] = "À %d mètres" -- mt
 L["%s %d Legacy |4point:points;"] = "%s %d |4point Héritage:points Héritage;"
 L["%s complete. %s"] = "%s terminé. %s"
 L["%s could not start. Reinstall %s to fix this."] = "%s n'a pas pu démarrer. Réinstallez %s pour corriger cela." -- mt
@@ -50,6 +51,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Toutes les quêtes que ce personnage peut prendre dans la zone, depuis Questie."
 L["Flight paths"] = "Points de vol"
 L["Forever addons"] = "Addons Forever"
+L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Illumine le terrain réel de chaque zone non découverte, avec un repère à son bord. Les zones sans données de terrain gardent l'ombrage." -- mt
 L["Hide from the tracker"] = "Masquer du suivi"
 L["In the objective tracker"] = "Dans le suivi des objectifs"
 L["Install AtlasLoot for recommended levels."] = "Installez AtlasLoot pour afficher les niveaux recommandés."
@@ -88,9 +91,11 @@ L["Show a quiet line where one of my other Forever addons would help. Only for a
 	"Affiche une ligne discrète lorsqu'un de mes autres addons Forever pourrait vous aider. Uniquement pour les addons que vous ne possédez pas."
 L["Show dungeon and raid entrances"] = "Afficher les entrées de donjons et raids"
 L["Show undiscovered areas"] = "Afficher les zones non découvertes"
+L["Show where to discover areas"] = "Afficher où découvrir des zones" -- mt
 L["Stop tracking"] = "Arrêter le suivi"
 L["Suggest my other Forever addons"] = "Suggérer mes autres addons Forever"
-L["Tells you which addon to update."] = "Vous indique quel addon mettre à jour." -- mt
+L["The map can now show where each undiscovered area really is."] =
+	"La carte peut maintenant montrer où se trouve réellement chaque zone non découverte." -- mt
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"La zone où vous vous trouvez et ce qui reste à y faire. Les défis que vous suivez gardent leur propre section Héritage."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

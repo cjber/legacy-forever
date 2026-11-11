@@ -53,7 +53,7 @@ files["tests/quests_spec.lua"] = {
 files["tests/dungeon_levels_spec.lua"] = { globals = { "AtlasLoot", "InCombatLockdown", "C_Timer" } }
 files["tests/map_contents_spec.lua"] = { globals = { "C_Map", "Enum", "GetCVarBool" } }
 files["tests/navigate_spec.lua"] = {
-	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "ForeverCore", "UiMapPoint", "ShortestPathForever" },
+	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "ForeverCore", "InCombatLockdown", "UiMapPoint", "ShortestPathForever" },
 }
 files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore", "geterrorhandler", "seterrorhandler", "strtrim" } }
 files["tests/settings_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "C_SettingsUtil", "CreateSecureDelegate", "WorldMapFrame", "InCombatLockdown", "geterrorhandler", "seterrorhandler" } }
@@ -62,7 +62,7 @@ files["tests/legacy_map_spec.lua"] = {
 	globals = {
 		"ForeverCore", "EventUtil", "REPUTATION", "WHITE_FONT_COLOR", "Enum", "GameTooltip", "GameTooltip_SetTitle", "GameTooltip_AddNormalLine",
 		"GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine", "GameTooltip_AddDisabledLine",
-		"GameTooltip_AddColoredLine", "C_InputInterfaceStyle", "SoftCursor",
+		"GameTooltip_AddColoredLine", "C_InputInterfaceStyle", "SoftCursor", "C_Map",
         "GetQuestDifficultyColor", "RGBTableToColorCode", "FONT_COLOR_CODE_CLOSE",
 	},
 }

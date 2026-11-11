@@ -12,6 +12,7 @@ L["%d unfinished Legacy objective on this map."] =
 	"Невыполненных целей старинных испытаний на этой карте: %d."
 L["%d unfinished Legacy objectives on this map."] =
 	"Невыполненных целей старинных испытаний на этой карте: %d."
+L["%d yards away"] = "%d ярдов"
 L["%s %d Legacy |4point:points;"] = "%s %d |4очко:очка:очков; старинных наград"
 L["%s complete. %s"] = "%s: зона пройдена. %s"
 L["%s could not start. Reinstall %s to fix this."] =
@@ -59,6 +60,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Все задания зоны, доступные этому персонажу, по данным Questie."
 L["Flight paths"] = "Маршруты полетов"
 L["Forever addons"] = "Модификации Forever"
+L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Подсвечивает настоящую землю каждой неоткрытой области и ставит метку на её краю. Области без данных о местности сохраняют затемнение."
 L["Hide from the tracker"] = "Скрыть из отслеживания"
 L["In the objective tracker"] = "В отслеживании целей"
 L["Install AtlasLoot for recommended levels."] =
@@ -100,9 +103,11 @@ L["Show a quiet line where one of my other Forever addons would help. Only for a
 	"Показывать неприметную строку там, где помогла бы другая моя модификация Forever. Только для тех, что у вас не установлены."
 L["Show dungeon and raid entrances"] = "Показывать входы в подземелья и рейды"
 L["Show undiscovered areas"] = "Показывать неоткрытые области"
+L["Show where to discover areas"] = "Показывать места для обнаружения областей"
 L["Stop tracking"] = "Не отслеживать"
 L["Suggest my other Forever addons"] = "Предлагать другие мои модификации Forever"
-L["Tells you which addon to update."] = "Подсказывает, какой аддон нужно обновить."
+L["The map can now show where each undiscovered area really is."] =
+	"Карта теперь может показать, где на самом деле находится каждая неоткрытая область."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

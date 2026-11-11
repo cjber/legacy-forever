@@ -10,6 +10,7 @@ L["%d Legacy objectives left"] = "剩余%d个传承目标"
 L["%d not known yet."] = "还有%d个未知。"
 L["%d unfinished Legacy objective on this map."] = "此地图上有%d个未完成的传承目标。"
 L["%d unfinished Legacy objectives on this map."] = "此地图上有%d个未完成的传承目标。"
+L["%d yards away"] = "距离 %d 码"
 L["%s %d Legacy |4point:points;"] = "%s %d|4个:个;传承点数"
 L["%s complete. %s"] = "%s已完成。%s"
 L["%s could not start. Reinstall %s to fix this."] = "%s 无法启动。请重新安装 %s 以解决此问题。"
@@ -47,6 +48,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"此角色在该地区可接的所有任务，数据来自Questie。"
 L["Flight paths"] = "飞行路线"
 L["Forever addons"] = "Forever插件"
+L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"以金色光晕显示每个未探索区域的真实地形，并在边缘放置图钉。没有地形数据的区域仍然使用阴影。"
 L["Hide from the tracker"] = "从追踪栏中隐藏"
 L["In the objective tracker"] = "在目标追踪栏中"
 L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。"
@@ -84,9 +87,11 @@ L["Show a quiet line where one of my other Forever addons would help. Only for a
 	"在我的其他Forever插件能帮上忙的地方显示一行不显眼的提示。仅限你尚未安装的插件。"
 L["Show dungeon and raid entrances"] = "显示地下城和团队副本入口"
 L["Show undiscovered areas"] = "显示未发现的区域"
+L["Show where to discover areas"] = "显示可探索区域的位置"
 L["Stop tracking"] = "取消追踪"
 L["Suggest my other Forever addons"] = "推荐我的其他Forever插件"
-L["Tells you which addon to update."] = "告诉你需要更新哪个插件。"
+L["The map can now show where each undiscovered area really is."] =
+	"地图现在可以显示每个未探索区域的真实位置。"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地区以及那里剩余的事项。你追踪的挑战保留在各自的传承区块中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

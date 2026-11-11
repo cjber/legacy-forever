@@ -31,6 +31,7 @@ Locales\zhTW.lua
 Core\ForeverRequire.lua
 Core\Require.lua
 Data\Legacy.lua
+Data\Explore.lua
 Core\Core.lua
 Core\Art.lua
 Core\Saved.lua

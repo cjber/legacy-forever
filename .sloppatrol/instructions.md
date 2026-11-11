@@ -15,10 +15,10 @@ what the game loads; `tests/*_spec.lua` load them in that order inside a stubbed
 Things reached indirectly: none of them is dead code, even when no file calls it by name.
 
 - `LegacyForever.toc` file list: load order `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Core/ForeverRequire.lua`,
-  `Core/Require.lua`, `Data/Legacy.lua, Core, Art, Saved, WhatsNew, Model, Live, Quests, Navigate,
+  `Core/Require.lua`, `Data/Legacy.lua, Data/Explore.lua, Core, Art, Saved, WhatsNew, Model, Live, Quests, Navigate,
   ZoneCompletion, Tracker, Completion, Settings, MapContents, UI/Map.xml, Map, API, Report`; never reorder as formatting.
 - `## SavedVariables: LegacyForeverDB`: persisted keys `tracked`, `zoneCompletion`,
-  `flightPaths`, `showAreas`, `showEntrances`, `whatsNew`, `lastVersion`, named only in `Core/Saved.lua`, and `suggestFamily` (default
+  `flightPaths`, `showAreas`, `showOutlines`, `showEntrances`, `whatsNew`, `lastVersion`, named only in `Core/Saved.lua`, and `suggestFamily` (default
   in `Core/Saved.lua`) and `familyDismissed`, which ForeverCore's family page also reads and writes through `ns.FamilyDB()`;
   old keys in players' saved data are compatibility obligations (`companions`, pre-0.8, is migrated to `suggestFamily` once
   and dropped, `trackerHost` is offered once to ForeverCore's tracker host and then dropped, and `peerStats` and
@@ -36,6 +36,12 @@ Things reached indirectly: none of them is dead code, even when no file calls it
   in another with no import. Search all `.lua` files, including `tests/`.
 - `tools/gen_legacy.py` output format: `Data/Legacy.lua` keys are the contract read through `ns.Data` by
   every TOC Lua file after it (`rg -n 'ns\.Data' .`) and by `tests/data_spec.lua`.
+- `tools/gen_explore.py` output format: `Data/Explore.lua` keys are the contract read through `ns.Explore` by
+  `UI/MapContents.lua` (`Outline`, `MapContents.OutlineAt`) and the map's area frame, and checked by
+  `tools/gen_explore_test.py`; it imports `gen_legacy` for the schemas, `generate` and the overlay join, and pins
+  its own `TERRAIN_BUILD` for the DB2 rows and ADT/WDT downloads. `tools/check_explore.py`: run by CI's generated
+  job; requires every Explore zone and area key in Legacy's completion data and names the ones to retrace.
+  `tools/glow_texture.py` writes `media/Glow.tga`, read only by `UI/Map.lua` through `Art.GlowLine`.
 - `tools/legacy_render.py`: imported by `gen_legacy.py` and `screenshots.py`; `tools/db2.py` and
   `tools/locations.py`: imported by `gen_legacy.py`;
   `tools/screenshots.py`: run by hand after UI changes (needs Pillow and `wowmock`), and runs

@@ -21,6 +21,8 @@ ns.FamilyDB = function()
 	return db
 end
 
+-- The player's place on the map the map canvas is showing, for the outline's route estimates.
+local playerMap, playerPosition = 1440, { 0.1, 0.2 }
 local canSet = true
 C_Map = {
 	CanSetUserWaypointOnMap = function()
@@ -32,12 +34,44 @@ C_Map = {
 	GetMapInfo = function()
 		return { name = "Ashenvale" }
 	end,
+	GetBestMapForUnit = function()
+		return playerMap
+	end,
+	GetPlayerMapPosition = function()
+		if not playerPosition then
+			return nil
+		end
+		return {
+			GetXY = function()
+				return playerPosition[1], playerPosition[2]
+			end,
+		}
+	end,
 }
+
+-- Live progress and the discovery notice the outline journey listens to.
+local explored, liveListeners = {}, {}
+ns.Live = {
+	OnChange = function(callback)
+		liveListeners[#liveListeners + 1] = callback
+	end,
+	ZoneSnapshot = function()
+		return { explored = explored }
+	end,
+}
+local function Discover()
+	for _, callback in ipairs(liveListeners) do
+		callback()
+	end
+end
 C_SuperTrack = {
 	SetSuperTrackedUserWaypoint = function(on)
 		superTracked[#superTracked + 1] = on
 	end,
 }
+InCombatLockdown = function()
+	return false
+end
 UiMapPoint = {
 	CreateFromCoordinates = function(map, x, y)
 		return { uiMapID = map, x = x, y = y }
@@ -45,6 +79,8 @@ UiMapPoint = {
 }
 
 local accepts = true
+local estimates, estimateCalls = {}, {}
+local stop, cancelled = false, {}
 local function Install()
 	ShortestPathForever = {
 		API = {
@@ -52,6 +88,17 @@ local function Install()
 			Navigate = function(owner, map, x, y, title)
 				journeys[#journeys + 1] = { owner = owner, map = map, x = x, y = y, title = title }
 				return accepts
+			end,
+			Estimate = function(fromMap, fromX, fromY, toMap, toX, toY)
+				estimateCalls[#estimateCalls + 1] = { fromMap, fromX, fromY, toMap, toX, toY }
+				return estimates[toX .. ":" .. toY]
+			end,
+			CurrentStop = function()
+				return stop and 1 or nil
+			end,
+			Cancel = function(owner)
+				cancelled[#cancelled + 1] = owner
+				return true
 			end,
 		},
 	}
@@ -82,7 +129,7 @@ end
 -- Shortest Path present and accepting: it alone guides.
 Install()
 check(ns.NavigateHint():find("Shortest Path Forever", 1, true), "the hint names Shortest Path when it is loaded")
-ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
+check(ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps"), "a guided click answers true")
 local journey = journeys[1]
 check(journey and journey.owner == "LegacyForever" and journey.map == 1440, "the journey is ours, on the pin's map")
 check(journey.x == 0.25 and journey.y == 0.5 and journey.title == "Blackfathom Deeps", "the journey keeps the pin")
@@ -132,4 +179,79 @@ db.familyDismissed = { ["LegacyForever.pinShortestPath"] = true }
 check(ns.CompanionHint() == nil, "dismissed: nothing")
 db.familyDismissed = { ["LegacyForever.zoneAdventureGuide"] = true }
 check(ns.CompanionHint() == INSTALL, "another dismissed suggestion leaves this one")
+
+-- An outlined area's click: Shortest Path estimates every vertex of its ground and heads for the quickest
+-- route, not the nearest point.
+Install()
+accepts = true
+local area = { key = "area", name = "Tower of Althalaxx", outline = true, rings = { { 0.2, 0.3, 0.8, 0.7 } } }
+estimates = { ["0.2:0.3"] = 30, ["0.8:0.7"] = 12 }
+ns.NavigateOutline(1439, area, 0.2, 0.3)
+local route = journeys[#journeys]
+check(route.map == 1439 and route.x == 0.8 and route.y == 0.7, "the quickest outline vertex is the destination")
+check(
+	route.title == "Tower of Althalaxx" and route.owner == "LegacyForever",
+	"the journey is ours, named after the area"
+)
+check(#estimateCalls == 2, "every outline vertex is estimated")
+check(
+	estimateCalls[1][1] == 1440
+		and estimateCalls[1][2] == 0.1
+		and estimateCalls[1][3] == 0.2
+		and estimateCalls[1][4] == 1439,
+	"an estimate starts where the player is and ends on the area's map"
+)
+
+-- Without an estimate for any vertex (or without Shortest Path's Estimate at all), the nearest vertex is
+-- the destination, as the pin shows it.
+estimates = {}
+ns.NavigateOutline(1439, area, 0.2, 0.3)
+route = journeys[#journeys]
+check(route.x == 0.2 and route.y == 0.3, "no estimate leaves the pin's own vertex")
+ShortestPathForever = { API = { version = 1, Navigate = ShortestPathForever.API.Navigate } }
+ns.NavigateOutline(1439, area, 0.2, 0.3)
+route = journeys[#journeys]
+check(route.x == 0.2 and route.y == 0.3, "an API without Estimate leaves the pin's own vertex")
+
+-- A player on another map (no position) also keeps the pin's vertex.
+Install()
+playerPosition = nil
+local before = #estimateCalls
+ns.NavigateOutline(1439, area, 0.2, 0.3)
+check(journeys[#journeys].x == 0.2 and #estimateCalls == before, "no player position keeps the pin's vertex")
+playerPosition = { 0.1, 0.2 }
+
+-- When the area is discovered, our own journey ends.
+stop = true
+estimates = {}
+ns.NavigateOutline(1439, area, 0.2, 0.3)
+explored = { [area.key] = true }
+Discover()
+check(#cancelled == 1 and cancelled[1] == "LegacyForever", "discovering the area cancels our journey")
+
+-- A journey another Legacy pin starts replaces ours: discovering the outlined area leaves the dungeon's
+-- journey alone, even though Shortest Path still has a stop of ours.
+explored = {}
+ns.NavigateOutline(1439, area, 0.2, 0.3)
+check(ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps"), "the dungeon pin's journey starts")
+explored = { [area.key] = true }
+Discover()
+check(#cancelled == 1, "a dungeon journey started after an outline click is not cancelled by that area")
+
+-- A click the client cannot guide leaves nothing to cancel.
+accepts, canSet = false, false
+explored = {}
+ns.NavigateOutline(1439, area, 0.2, 0.3)
+explored = { [area.key] = true }
+Discover()
+check(#cancelled == 1, "a click that only names the place leaves nothing to cancel")
+accepts, canSet = true, true
+
+-- A discovered area with no journey of ours left is quiet.
+stop = false
+explored = {}
+ns.NavigateOutline(1439, area, 0.2, 0.3)
+explored = { [area.key] = true }
+Discover()
+check(#cancelled == 1, "no journey to cancel leaves us quiet")
 print(("navigate_spec: %d checks passed"):format(checks))

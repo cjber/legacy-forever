@@ -83,6 +83,12 @@ local map = Section(category, L["World map"])
 AddCheckbox(map, "showAreas", L["Show undiscovered areas"])
 AddCheckbox(
 	map,
+	"showOutlines",
+	L["Show where to discover areas"],
+	L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."]
+)
+AddCheckbox(
+	map,
 	"showEntrances",
 	L["Show dungeon and raid entrances"],
 	L["Turn this off if another addon already marks them. The Legacy map menu still lists them."]

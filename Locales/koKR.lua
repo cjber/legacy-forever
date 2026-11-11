@@ -12,6 +12,7 @@ L["%d unfinished Legacy objective on this map."] =
 	"이 지도에 완료하지 않은 유산 목표가 %d개 있습니다."
 L["%d unfinished Legacy objectives on this map."] =
 	"이 지도에 완료하지 않은 유산 목표가 %d개 있습니다."
+L["%d yards away"] = "%d 야드 거리"
 L["%s %d Legacy |4point:points;"] = "%s 유산 점수 %d|4점:점;"
 L["%s complete. %s"] = "%s 완료. %s"
 L["%s could not start. Reinstall %s to fix this."] =
@@ -56,6 +57,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"이 캐릭터가 이 지역에서 받을 수 있는 모든 퀘스트(Questie 기준)."
 L["Flight paths"] = "비행 경로"
 L["Forever addons"] = "Forever 애드온"
+L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"미발견 지역의 실제 지형을 빛나게 표시하고 가장자리에 핀을 표시합니다. 지형 데이터가 없는 지역은 음영 표시를 유지합니다."
 L["Hide from the tracker"] = "추적기에서 숨기기"
 L["In the objective tracker"] = "목표 추적기에서"
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요."
@@ -95,9 +98,11 @@ L["Show a quiet line where one of my other Forever addons would help. Only for a
 	"제 다른 Forever 애드온이 도움이 될 만한 곳에 조용히 한 줄을 표시합니다. 설치하지 않은 애드온만 해당됩니다."
 L["Show dungeon and raid entrances"] = "던전 및 공격대 입구 표시"
 L["Show undiscovered areas"] = "발견하지 않은 구역 표시"
+L["Show where to discover areas"] = "발견할 지역 위치 표시"
 L["Stop tracking"] = "추적 해제"
 L["Suggest my other Forever addons"] = "제 다른 Forever 애드온 추천"
-L["Tells you which addon to update."] = "업데이트할 애드온을 알려 줍니다."
+L["The map can now show where each undiscovered area really is."] =
+	"이제 지도에서 각 미발견 지역의 실제 위치를 표시할 수 있습니다."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

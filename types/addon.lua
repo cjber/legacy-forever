@@ -69,6 +69,17 @@
 ---@field hit? number[]
 ---@field tiles? number[]
 
+-- Generated terrain outlines (Data/Explore.lua): one zone's map rectangle in yards and, per completion
+-- area key, the rings around its real ground as flat lists of u, v pairs.
+---@class LegacyExploreZone
+---@field width number
+---@field height number
+---@field areas table<string, number[][]>
+
+---@class LegacyExplore
+---@field build string
+---@field zones table<number, LegacyExploreZone>
+
 ---@class LegacyTaxi
 ---@field name string
 ---@field node number
@@ -175,6 +186,8 @@
 ---@field whatsNew? boolean
 ---@field suggestFamily? boolean
 ---@field companions? boolean Before 0.8; Saved migrates it to suggestFamily.
+---@field peerStats? table<string, table> Forever Leaderboards' old per-character peer table, dropped once by Saved.
+---@field sharedStats? table<string, table> Forever Leaderboards' older shared cache, dropped once by Saved.
 ---@field lastVersion? string
 
 ---@type LegacySavedVariables?
@@ -204,6 +217,32 @@ LegacyForever = nil
 ---@class LegacyAreaObjective
 ---@field group LegacyGroup
 ---@field objective LegacyObjective
+
+-- One undiscovered area drawn as a glow along its terrain outline instead of the map-art shading.
+---@class LegacyOutlineArea
+---@field key string
+---@field name string
+---@field rings number[][]
+---@field outline boolean
+---@field objective? LegacyAreaObjective
+
+---@class LegacyOutline
+---@field zone LegacyExploreZone
+---@field uiMapID number
+---@field areas LegacyOutlineArea[]
+---@field byKey table<string, LegacyOutlineArea>
+
+-- The pin at an outlined area's place: the point nearest the player, else the first point of its first ring.
+---@class LegacyOutlinePin
+---@field uiMapID number
+---@field area LegacyOutlineArea
+---@field x number
+---@field y number
+---@field yards? number
+
+-- A glow line whose resting alpha is kept, so a hover can brighten it and then restore it.
+---@class LegacyGlowLine : Line
+---@field baseAlpha number
 
 -- The objective tracker's own progress bar, created from ObjectiveTrackerProgressBarTemplate.
 ---@class LegacyZoneProgressBarFill : StatusBar
