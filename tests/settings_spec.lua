@@ -36,6 +36,7 @@ ForeverCore = dofile("tests/forever_core.lua").install(coreEnv, {
 	"Core/OpenMap.lua",
 	"Core/OpenSettings.lua",
 	"UI/Report.lua",
+	"UI/Credits.lua",
 	"UI/MapCanvas.lua",
 	"Expose.lua",
 })

@@ -147,6 +147,7 @@ local ForeverCore = dofile("tests/forever_core.lua").install(_G, {
 	"Core/SafeCall.lua",
 	"Core/Log.lua",
 	"UI/Report.lua",
+	"UI/Credits.lua",
 	"UI/MapCanvas.lua",
 	"Expose.lua",
 })

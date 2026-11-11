@@ -84,4 +84,10 @@ With Shortest Path Forever, clicking a dungeon or raid pin plans the trip there.
 
 Source code and issues: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.
 
+<!-- forever-credits:start -->
+
+Thanks to overspark, cotijelucie, Brainc3ll, Bigabyte, Mouchoir, DanielVafidis, TheCheat54, KeijinDE, Lůca and everyone who reported a bug or asked for a feature.
+
+<!-- forever-credits:end -->
+
 Built with AI assistance.

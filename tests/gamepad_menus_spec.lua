@@ -65,6 +65,7 @@ ForeverCore = dofile("tests/forever_core.lua").install(_G, {
 	"Core/Log.lua",
 	"UI/Report.lua",
 	"UI/ContextMenu.lua",
+	"UI/Credits.lua",
 	"UI/MapCanvas.lua",
 	"Expose.lua",
 })

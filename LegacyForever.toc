@@ -32,6 +32,7 @@ Core\ForeverRequire.lua
 Core\Require.lua
 Data\Legacy.lua
 Data\Explore.lua
+Data\Credits.lua
 Core\Core.lua
 Core\Art.lua
 Core\Saved.lua

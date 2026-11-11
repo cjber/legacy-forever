@@ -115,6 +115,7 @@ ForeverCore = core.install(coreEnv, {
 	"Core/SafeCall.lua",
 	"Core/Log.lua",
 	"UI/Report.lua",
+	"UI/Credits.lua",
 	"UI/ForeverFamily.lua",
 	"UI/MapCanvas.lua",
 	"Expose.lua",

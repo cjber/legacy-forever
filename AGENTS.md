@@ -22,6 +22,7 @@ python3 tools/gen_legacy.py   # regenerate Data/Legacy.lua after a data change
 python3 tools/gen_explore.py  # retrace Data/Explore.lua after bumping its TERRAIN_BUILD; runs from the tile cache
 python3 tools/check_generated.py   # regenerate in a disposable tree; require fresh, byte-stable Data/Legacy.lua
 python3 tools/check_explore.py   # Data/Explore.lua's zones and area keys still exist in Data/Legacy.lua
+python3 tools/forever_tools/credits.py --check   # Data/Credits.lua and both thanks blocks are current (WFA-31)
 python3 tools/phrases.py > Locales/phrases.txt   # regenerate the translation template after a string change
 python3 tools/changelog.py --check
 python3 tools/check_screenshots.py   # an image older than its sources; --record after tools/screenshots.py
