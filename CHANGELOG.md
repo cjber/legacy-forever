@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [2.1.2] - 2026-11-11
+
+- **Forever Core now installs alongside it.** Forever Core is on CurseForge, so the CurseForge app installs and updates it with this addon instead of the addon carrying its own copy. On Wago, install Forever Core from its own page.
+
 ## [2.1.1] - 2026-11-11
 
 - **The Legacy data now names Forever build 1.60.1.70888.** `Data/Legacy.lua` is regenerated from the newer client build's achievements, criteria and world map tables. Every challenge, reward and located objective the map shows is identical to the previous build, so what you are chasing does not change.
