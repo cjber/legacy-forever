@@ -84,11 +84,14 @@ local function AreasLeftText(group)
 end
 
 -- An outlined area's tooltip: the same name and zone progress line as a shaded one, plus how far the
--- nearest part of its ground is when the player is on this map, and what a click does.
+-- nearest part of its ground is when the player is on this map. Only the area's pin can be clicked, so the
+-- click line (and the companion suggestion under it) appears when `clickable`: bare map never takes the
+-- mouse by design, and a hover there must not promise a click that does nothing.
 ---@param tooltip GameTooltip
 ---@param area LegacyOutlineArea
 ---@param yards? number
-local function AddOutlineTooltip(tooltip, area, yards)
+---@param clickable boolean
+local function AddOutlineTooltip(tooltip, area, yards, clickable)
 	GameTooltip_SetTitle(tooltip, area.name)
 	GameTooltip_AddNormalLine(tooltip, L["Undiscovered area"])
 	if area.objective then
@@ -97,10 +100,12 @@ local function AddOutlineTooltip(tooltip, area, yards)
 	if yards then
 		GameTooltip_AddNormalLine(tooltip, L["%d yards away"]:format(yards))
 	end
-	GameTooltip_AddInstructionLine(tooltip, ns.NavigateHint())
-	local companion = ns.CompanionHint()
-	if companion then
-		GameTooltip_AddDisabledLine(tooltip, companion)
+	if clickable then
+		GameTooltip_AddInstructionLine(tooltip, ns.NavigateHint())
+		local companion = ns.CompanionHint()
+		if companion then
+			GameTooltip_AddDisabledLine(tooltip, companion)
+		end
 	end
 end
 
@@ -510,7 +515,7 @@ function ObjectivePin:OnMouseEnter()
 	self.Highlight:Show()
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	if self.outline then
-		AddOutlineTooltip(GameTooltip, self.outline.area, self.outline.yards)
+		AddOutlineTooltip(GameTooltip, self.outline.area, self.outline.yards, true)
 	elseif self.zone then
 		AddZoneTooltip(GameTooltip, self.zone)
 	elseif self.group and self.objective then
@@ -792,7 +797,7 @@ function AreaPin:Highlight(area)
 			local _, _, distance = ns.MapContents.OutlinePoint(self.outline.zone, outlined, self.playerX, self.playerY)
 			yards = distance
 		end
-		AddOutlineTooltip(GameTooltip, outlined, yards)
+		AddOutlineTooltip(GameTooltip, outlined, yards, false)
 	else
 		local shaded = area --[[@as LegacyShadedArea]]
 		for _, texture in ipairs(self.drawn[shaded.area.key]) do

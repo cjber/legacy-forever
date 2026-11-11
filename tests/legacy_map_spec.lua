@@ -403,6 +403,10 @@ Kit.cursorX, Kit.cursorY = 300, -210
 Kit.Tick()
 check(tooltip.owner == glow and tooltip.lines[1] == "Northshire Ground", "the cursor over the outline names the area")
 check(tooltip.lines[2] == "Undiscovered area" and tooltip.lines[3] == "61 yards away", "the hover gives its distance")
+check(
+	tooltip.lines[#tooltip.lines] ~= "Click to travel there.",
+	"bare map shows no click hint, because the area hover takes no clicks"
+)
 check(lines[1].alpha and lines[1].alpha > lines[1].baseAlpha, "the hovered area's glow brightens")
 Kit.mouseFocus = false
 Kit.Tick()
