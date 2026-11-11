@@ -27,8 +27,6 @@ POLICY = package.Policy(
         for spec in sorted(p.relative_to(ROOT).as_posix() for p in ROOT.glob("tests/*_spec.lua"))
         if spec not in REPO_ONLY
     ),
-    # whatsnew_spec checks the shipped headline against CHANGELOG.md, which does not ship.
-    support=("tests", "CHANGELOG.md"),
 )
 
 if __name__ == "__main__":
