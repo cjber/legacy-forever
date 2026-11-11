@@ -93,7 +93,8 @@ L["Show undiscovered areas"] = "Mostrar áreas não descobertas"
 L["Show where to discover areas"] = "Mostrar onde descobrir áreas"
 L["Stop tracking"] = "Não rastrear"
 L["Suggest my other Forever addons"] = "Sugerir meus outros AddOns Forever"
-L["Tells you which addon to update."] = "Diz qual addon precisa ser atualizado."
+L["The map can now show where each undiscovered area really is."] =
+	"O mapa agora pode mostrar onde cada área não descoberta realmente fica."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"A zona em que você está e o que falta fazer nela. Desafios rastreados mantêm sua própria seção de Legado."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

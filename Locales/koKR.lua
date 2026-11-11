@@ -101,7 +101,8 @@ L["Show undiscovered areas"] = "발견하지 않은 구역 표시"
 L["Show where to discover areas"] = "발견할 지역 위치 표시"
 L["Stop tracking"] = "추적 해제"
 L["Suggest my other Forever addons"] = "제 다른 Forever 애드온 추천"
-L["Tells you which addon to update."] = "업데이트할 애드온을 알려 줍니다."
+L["The map can now show where each undiscovered area really is."] =
+	"이제 지도에서 각 미발견 지역의 실제 위치를 표시할 수 있습니다."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

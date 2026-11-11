@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "docs/screenshots"
 SOURCES = (
     "tools/screenshots.py",
+    "tools/screenshots_outlines.py",
     "tools/screenshots_model.lua",
     "Core/Model.lua",
     "Core/ZoneCompletion.lua",

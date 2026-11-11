@@ -3,9 +3,9 @@
 
 No game client is involved: map tiles, atlases, fonts and achievement data come from wago.tools via
 wowmock (the forever-core shared renderer). What the addon draws is reproduced here from
-its Lua: the zone objectives, the menu, the continent badges, an unvisited zone, the zone completion tracker section
-and the Legacy tracker, computed from Data/Legacy.lua and the client's achievement tables for one plausible
-character.
+its Lua: the zone objectives, the menu, the continent badges, an unvisited zone, the terrain glow of the areas still
+to discover, the zone completion tracker section and the Legacy tracker, computed from Data/Legacy.lua,
+Data/Explore.lua and the client's achievement tables for one plausible character.
 
     python3 tools/screenshots.py            # FOREVER_CORE=/path/to/forever-core to override
 """
@@ -29,6 +29,7 @@ sys.path.insert(0, str(WOWMOCK))
 
 from legacy_render import COMPLETION_CATEGORIES, lua_string, lua_unquote
 from PIL import Image
+from screenshots_outlines import outline_glow, outline_player, outline_point
 from wowmock import (
     FONTS,
     FRIZQT,
@@ -142,6 +143,11 @@ def parse_lua_table(text):
 def load_data():
     text = (ROOT / "Data" / "Legacy.lua").read_text()
     return parse_lua_table(text[text.index("{", text.index("ns.Data =")) :])
+
+
+def load_explore():
+    text = (ROOT / "Data" / "Explore.lua").read_text()
+    return parse_lua_table(text[text.index("{", text.index("ns.Explore =")) :])
 
 
 # --------------------------------------------------------------------------- the character, as Live sees it
@@ -373,6 +379,10 @@ ICONS = {
 TEXTURES = {"reputations"}
 POINTS_ICON = "UI-Legacy-Points-icon-c60"
 WHITE = (1, 1, 1)
+# UI/Map.lua AddOutlineTooltip: the kind line, and Integrations/Navigate.lua's NavigateHint() with Shortest
+# Path Forever installed.
+OUTLINE_KIND = "Undiscovered area"
+OUTLINE_CLICK = "Click to travel here with Shortest Path Forever."
 
 
 def fitted_markup(ui, name, size):
@@ -511,8 +521,10 @@ def corner_origin(rects, art, zone, pins, width, height):
     return best
 
 
-def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False):
-    """The world map on a Kalimdor zone with the addon's shading, pins, corner and button drawn in."""
+def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False, outlines=None):
+    """The world map on a Kalimdor zone with the addon's shading, pins, corner and button drawn in.
+    `outlines` = {"zone": Data/Explore.lua's zone, "player_area": name, "hover": name} draws the terrain glow
+    and its shields instead of the shading for the areas that have rings, and the hovered pin's tooltip."""
     zone = data["completion"][ui_map]
     name = ui.table("UiMap")[str(ui_map)]["Name_lang"]
     content = ui.content
@@ -521,13 +533,20 @@ def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False)
     for overlay in map_overlays(content, ui_map):
         if overlay.key in live.explored:
             draw_overlay(content, art, overlay.offset_x, overlay.offset_y, overlay.width, overlay.height, overlay.tiles)
-    # AreaPin (UI/Map.lua): every undiscovered area's tiles, black at AREA_ALPHA.
+    # AreaPin (UI/Map.lua): every undiscovered area's tiles, black at AREA_ALPHA, except the areas the
+    # outline layer draws instead (MapContents.Shade).
+    outlined = outlines["zone"]["areas"] if outlines else {}
     for area in zone["areas"]:
-        if area["key"] not in live.explored:
+        if area["key"] not in live.explored and area["key"] not in outlined:
             x, y, w, h = (int(n) for n in area["key"].split(":"))
             draw_overlay(content, art, x, y, w, h, area["tiles"], (0, 0, 0, 0.25), zone["tileWidth"])
     canvas, rects = world_map_frame(ui, art, ("World", "Kalimdor", name), arrows=("Kalimdor", name))
     mx, my, mw, mh = rects["map"]
+    glow = []
+    player = None
+    if outlines:
+        player = outline_player(zone, outlines["player_area"], art)
+        glow = outline_glow(canvas, rects, zone, outlines["zone"], live, outlines["hover"])
     groups = live.model.zone_objectives(ui_map)
     pins = []
     for group in groups:
@@ -537,6 +556,11 @@ def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False)
                 pins.append((entry["x"], entry["y"]))
                 portal = ("Raid" if entry.get("raid") else "Dungeon") if "instance" in entry else None
                 zone_pin(ui, canvas, mx + entry["x"] * mw, my + entry["y"] * mh, portal)
+    if outlines:
+        # ObjectivePin with a LegacyOutlinePin place: the shield at the ring vertex nearest the player.
+        for _, rings in glow:
+            x, y, _ = outline_point(outlines["zone"], rings, player)
+            zone_pin(ui, canvas, mx + x * mw, my + y * mh)
     completion_corner(ui, canvas, rects, art, zone, live.model.completion[ui_map], name, pins, collapsed)
     button = map_button(ui, canvas, rects, live.model.count(ui_map))
     if entrance:
@@ -572,6 +596,28 @@ def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False)
         )
         entry = objective["entry"]
         canvas.paste(panel, mx + entry["x"] * mw + 16, my + entry["y"] * mh)
+    if outlines:
+        # UI/Map.lua AddOutlineTooltip for the hovered outline pin, whose click line is
+        # Integrations/Navigate.lua's NavigateHint().
+        group = next(g for g in groups if g["objectives"][0]["entry"]["kind"] == "explore")
+        area, rings = next(entry for entry in glow if entry[0]["name"] == outlines["hover"])
+        x, y, yards = outline_point(outlines["zone"], rings, player)
+        progress = live.criteria(group["achievement"])
+        done = sum(1 for item in progress.values() if item.completed)
+        panel = tooltip(
+            ui,
+            [
+                TooltipLine(area["name"]),
+                TooltipLine(OUTLINE_KIND),
+                TooltipLine(
+                    f"{live.name(group['achievement'])}: {len(progress) - done} of {len(progress)} areas left",
+                    ui.global_color("HIGHLIGHT_FONT_COLOR"),
+                ),
+                TooltipLine(f"{math.floor(yards)} yards away"),
+                TooltipLine(OUTLINE_CLICK, ui.global_color("GREEN_FONT_COLOR")),
+            ],
+        )
+        canvas.paste(panel, mx + x * mw + 16, my + y * mh)
     return canvas, button
 
 
@@ -749,6 +795,19 @@ def zone_pin(ui, canvas, x, y, portal=None):
     canvas.draw(shield, x + 18 - w, y + 18 - 17, w, 17)
 
 
+def render_outlines(ui, data, live):
+    """Ashenvale with "Show where to discover areas" on: the gold glow along each undiscovered area's real
+    ground, a shield at its nearest edge, and the hovered pin's tooltip over Mystral Lake."""
+    explore = load_explore()["zones"][ASHENVALE]
+    canvas, _ = world_map(
+        ui,
+        data,
+        live,
+        outlines={"zone": explore, "player_area": "Astranaar", "hover": "Mystral Lake"},
+    )
+    return scene(ui, [(canvas, 0, 0)])
+
+
 def render_unvisited(ui, data, live):
     """Felwood, where this character has never been: every area shaded and the corner at 0%, its bar empty."""
     canvas, _ = world_map(ui, data, live, FELWOOD)
@@ -884,6 +943,7 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     for name, render in (
         ("map", render_map),
+        ("outlines", render_outlines),
         ("entrance", render_entrance),
         ("menu", render_menu),
         ("continent", render_continent),

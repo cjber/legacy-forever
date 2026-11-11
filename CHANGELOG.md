@@ -12,8 +12,12 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
-- **Other addons' map markers show above the undiscovered-area shading.** The shading and the terrain glow sat at Blizzard's exploration frame level (about 2,000), so markers other addons draw on the map canvas, such as Leatrix Maps' points of interest, were drawn under it. They now sit directly above the map art, below every pin. Thanks to cotijelucie on Discord for the report (#464).
+## [2.3.0] - 2026-11-11
+
+<!-- discord-image: docs/screenshots/outlines.png -->
+
 - **The map can now show where each undiscovered area really is.** A new World map switch, "Show where to discover areas", sits beside "Show undiscovered areas" and starts off. Turned on, each area the game has terrain for glows soft gold along its real ground instead of being shaded from the map art, with the Legacy shield at the point nearest you and a tooltip naming the area, the zone's areas left, the distance in yards and the click hint. Clicking travels to the area; with Shortest Path Forever installed it picks the outline point it can reach soonest, and the journey ends by itself once you walk in. Areas with no terrain data, and every area while the switch is off, keep the shading they had (#459). Thanks to cotijelucie on Discord for the idea.
+- **Other addons' map markers show above the undiscovered-area shading.** The shading and the terrain glow sat at Blizzard's exploration frame level (about 2,000), so markers other addons draw on the map canvas, such as Leatrix Maps' points of interest, were drawn under it. They now sit directly above the map art, below every pin. Thanks to cotijelucie on Discord for the report (#464).
 
 ## [2.2.0] - 2026-11-11
 

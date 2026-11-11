@@ -14,6 +14,10 @@ Discover an area and its shading lifts. The Legacy menu tracks the challenges be
 
 Half of Ashenvale explored: the shield's number is what's left on this map, and its menu lists it by challenge.
 
+![Ashenvale on the world map with each undiscovered area glowing gold along its real ground and a tooltip over one](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/outlines.png)
+
+Off by default, "Show where to discover areas" glows each undiscovered area's real ground, with a shield at its nearest edge. Click one to travel there with Shortest Path Forever.
+
 ![Kalimdor on the world map with a Legacy badge on each zone that still has dungeon objectives](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/continent.png)
 
 Zoom out and each zone with dungeon objectives left gets a badge.
