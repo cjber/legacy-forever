@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Print a translation template: every phrase the shipped Lua translates, as a Locales/<locale>.lua file (stdlib only).
 
-A phrase is the English text in `L["..."]`; the addon uses it as the key and falls back to it. The output is
-committed as Locales/phrases.txt for translators to copy, and tests/locale_spec.lua fails when the two disagree.
-Translation files themselves (Locales/) are not read, so a phrase the code no longer uses drops out.
+A phrase is the English text in `L["..."]`, or the text a shared file passes to its `phrase("...")` helper; the addon
+uses it as the key and falls back to it. The output is committed as Locales/phrases.txt for translators to copy, and
+tests/locale_spec.lua fails when the two disagree. Translation files themselves (Locales/) are not read, so a phrase
+the code no longer uses drops out.
 
     python3 tools/phrases.py > Locales/phrases.txt
 """
@@ -18,6 +19,9 @@ except ModuleNotFoundError:  # Direct invocation from the tools directory.
 
 ROOT = Path(__file__).resolve().parent.parent
 PHRASE = re.compile(r'\bL\["((?:\\.|[^"\\])*)"\]')
+# A shared Forever file may choose its English text with a helper, `phrase("%s is out of date.", name)`, and read
+# ns.L by that same key, so those strings are phrases too.
+PHRASE_HELPER = re.compile(r'\bphrase\("((?:\\.|[^"\\])*)"')
 # A shared window may choose a phrase in a bracket expression: `L[count == 1 and "board" or "boards"]` uses both,
 # so each string alternative is a phrase too.
 ALTERNATIVE = re.compile(r"\bL\[([^\]]*)\]")
@@ -48,6 +52,7 @@ def phrases(root=ROOT):
     for path in shipped(root):
         text = path.read_text()
         found.update(PHRASE.findall(text))
+        found.update(PHRASE_HELPER.findall(text))
         for expression in ALTERNATIVE.findall(text):
             found.update(STRING.findall(expression))
         tables = {name: STRING.findall(body) for name, body in TABLE.findall(text)}

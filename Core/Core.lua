@@ -10,9 +10,11 @@ end
 ---@field ReportTitle string the localized title shown by the shared report window
 ---@field TITLE string
 ---@field POINTS_ICON string
----@field WHATS_NEW string
+---@field WHATS_NEW string the headline of the release WHATS_NEW_VERSION names
+---@field WHATS_NEW_VERSION string the newest release in CHANGELOG.md with a bold headline
 ---@field CompanionHint fun(): string?
 ---@field WhatsNew fun()
+---@field ForeverRequire fun(ready: boolean): boolean
 ---@field L table<string, string>
 ---@field Art LegacyArt
 ---@field Saved LegacySaved
@@ -51,8 +53,11 @@ ns.core = ForeverCore.Register(addonName, {
 ns.TITLE = "Legacy Forever"
 -- The Legacy shield: map pins, the map button, menu entries and the zone-completion count all wear it.
 ns.POINTS_ICON = "UI-Legacy-Points-icon-c60"
--- One sentence for the chat line after an update (WhatsNew.lua): the headline of the release this ships in.
-ns.WHATS_NEW = L["Legacy's options and map now open without a blocked-action error."]
+-- One sentence for the chat line after an update (WhatsNew.lua): the newest release's headline, and the version whose
+-- release carries it. A core sync's maintenance entry has no headline, so this stays on the release before it and
+-- WhatsNew stays quiet for the maintenance version while still remembering it.
+ns.WHATS_NEW_VERSION = "2.2.0"
+ns.WHATS_NEW = L["Tells you which addon to update."]
 
 ---@param msg string
 function ns.Print(msg)

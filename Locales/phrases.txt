@@ -15,11 +15,14 @@ L["%d unfinished Legacy objective on this map."] = "%d unfinished Legacy objecti
 L["%d unfinished Legacy objectives on this map."] = "%d unfinished Legacy objectives on this map."
 L["%s %d Legacy |4point:points;"] = "%s %d Legacy |4point:points;"
 L["%s complete. %s"] = "%s complete. %s"
+L["%s could not start. Reinstall %s to fix this."] = "%s could not start. Reinstall %s to fix this."
 L["%s is at %s in %s."] = "%s is at %s in %s."
 L["%s is at %s."] = "%s is at %s."
 L["%s: %d left"] = "%s: %d left"
 L["%s: %d of %d areas left"] = "%s: %d of %d areas left"
 L["%s: %d of %d zones complete (%d%%)"] = "%s: %d of %d zones complete (%d%%)"
+L["%s: %s are out of date. Update them to fix this."] = "%s: %s are out of date. Update them to fix this."
+L["%s: %s is out of date. Update it to fix this."] = "%s: %s is out of date. Update it to fix this."
 L["/lf - open the world map and its Legacy menu"] = "/lf - open the world map and its Legacy menu"
 L["/lf audit - check the bundled data against the game"] = "/lf audit - check the bundled data against the game"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
@@ -57,8 +60,6 @@ L["Keeps the shared Forever tracker where you put it. The grip at its top no lon
 L["Legacy"] = "Legacy"
 L["Legacy Forever report"] = "Legacy Forever report"
 L["Legacy objectives"] = "Legacy objectives"
-L["Legacy's options and map now open without a blocked-action error."] =
-	"Legacy's options and map now open without a blocked-action error."
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Levels, skills, ranks and anything without a fixed place."
 L["Lock the tracker"] = "Lock the tracker"
@@ -87,6 +88,7 @@ L["Show dungeon and raid entrances"] = "Show dungeon and raid entrances"
 L["Show undiscovered areas"] = "Show undiscovered areas"
 L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
+L["Tells you which addon to update."] = "Tells you which addon to update."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
