@@ -15,6 +15,7 @@ globals = { "AdventureGuideForeverDB",
 }
 
 read_globals = { "ForeverCore", "GetCVarBool", "GetQuestDifficultyColor", "RGBTableToColorCode", "FONT_COLOR_CODE_CLOSE", "AtlasLoot", "C_XMLUtil", "CreateSettingsButtonInitializer", "Settings",
+	"CreateColor",
 	"AchievementFrame_SelectAchievement", "AlertFrame", "C_AddOns", "AlertFrame_OnClick", "C_Map", "C_MapExplorationInfo", "C_QuestLog", "C_Reputation", "C_SuperTrack", "C_TaxiMap", "C_Timer", "C_Texture", "C_Traits", "CreateAtlasMarkup",
 	"CreateFrame", "CreateFromMixins", "CreateTexturePool", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameFontNormal", "GameFontNormalSmall", "GameFontNormalTiny", "GameTooltip_AddBlankLineToTooltip", "GameTooltip_AddColoredLine", "GameTooltip_AddDisabledLine", "GetCursorPosition", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR", "HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",

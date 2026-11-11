@@ -29,6 +29,7 @@ end
 ---@field ZoneCompletion LegacyZoneCompletion
 ---@field Completion LegacyCompletion
 ---@field MapContents LegacyMapContents
+---@field Shading LegacyShading
 ---@field RefreshMap fun()
 ---@field OpenMapMenu fun()
 ---@field GamepadUI fun(): boolean whether the gamepad interface is on

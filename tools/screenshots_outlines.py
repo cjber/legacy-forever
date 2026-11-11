@@ -1,19 +1,22 @@
-"""AreaPin's terrain shading, drawn for the screenshots from the same values as the addon.
+"""The world map's terrain shading, drawn for the screenshots from the same values as the addon.
 
-UI/Map.lua AreaPin:Paint fills each undiscovered area's rings with triangles, a white texture tinted the shading's
-own black at AREA_ALPHA and brightened to AREA_HOVER_ALPHA under the mouse (MapContents.Triangles ear-clips each
-ring, whose triangles cover exactly the ring). This module fills each ring the same way and finds the pins and
-distances UI/MapContents.lua's OutlinePoint computes, so tools/screenshots.py can put them on the world map.
-Nothing here reads the client.
+UI/Shading.lua's Shading.Area, called by UI/Map.lua's AreaPin:Paint, fills each undiscovered area's rings with
+triangles, a white texture tinted the shading's own black at AREA_ALPHA and brightened to AREA_HOVER_ALPHA under the
+mouse (MapContents.Triangles ear-clips each ring, whose triangles cover exactly the ring), then feathers each ring
+edge outward over FEATHER of the map's width, fading from that alpha at the edge to nothing. This module fills and
+feathers each ring the same way and finds the pins and distances UI/MapContents.lua's OutlinePoint computes, so
+tools/screenshots.py can put them on the world map. Nothing here reads the client.
 """
 
 import math
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
-# UI/Map.lua: AREA_ALPHA, AREA_HOVER_ALPHA.
+# UI/Map.lua: AREA_ALPHA, AREA_HOVER_ALPHA, FEATHER.
 AREA_ALPHA, AREA_HOVER_ALPHA = 0.25, 0.40
 SHADE_RGB = (0, 0, 0)
+# UI/Shading.lua's FEATHER: the share of the map's width the exploration overlay alpha takes to fall to nothing.
+FEATHER = 40 / 1002
 
 
 def outline_player(zone, name, art):
@@ -50,15 +53,28 @@ def outline_point(explore_zone, rings, player):
     return best[1], best[2], math.sqrt(best[0])
 
 
+def outward_ramp(mask, band):
+    """Just outside a filled mask, full at its edge and 0 `band` pixels out, as UI/Shading.lua's DrawFeather fades
+    a ring edge. Dilating one pixel at a time gives that distance band."""
+    ramp = Image.new("L", mask.size, 0)
+    grown = mask
+    for step in range(band):
+        outer = grown.filter(ImageFilter.MaxFilter(3))
+        ramp.paste(round(255 * (1 - (step + 1) / band)), ImageChops.subtract(outer, grown))
+        grown = outer
+    return ramp
+
+
 def outline_shading(canvas, rects, zone, explore_zone, live, hover):
-    """UI/Map.lua AreaPin:Paint: every outlined area's rings filled with the shading's black, each ring its own
-    fill, the hovered area's brightened as AreaPin:Highlight brightens its triangles. Returns the areas, so
-    world_map can pin and name them."""
+    """UI/Shading.lua's Shading.Area, called by UI/Map.lua's AreaPin:Paint: every outlined area's rings filled with the
+    shading's black and feathered outward from each edge, the hovered area's brightened as AreaPin:Highlight
+    brightens its fill and feathers. Returns the
+    areas, so world_map can pin and name them."""
     mx, my, mw, mh = rects["map"]
+    band = round(FEATHER * (canvas.px(mx + mw) - canvas.px(mx)))
     areas = outline_areas(zone, explore_zone, live)
     for area, rings in areas:
         alpha = AREA_HOVER_ALPHA if area["name"] == hover else AREA_ALPHA
-        fill = (*SHADE_RGB, round(alpha * 255))
         for ring in rings:
             points = [
                 (canvas.px(mx + ring[index] * mw), canvas.px(my + ring[index + 1] * mh))
@@ -66,7 +82,14 @@ def outline_shading(canvas, rects, zone, explore_zone, live, hover):
             ]
             if len(points) < 3:
                 continue
-            layer = Image.new("RGBA", canvas.image.size)
-            ImageDraw.Draw(layer).polygon(points, fill=fill)
-            canvas.image = Image.alpha_composite(canvas.image, layer)
+            left = max(0, min(x for x, _ in points) - band)
+            top = max(0, min(y for _, y in points) - band)
+            right = min(canvas.image.width, max(x for x, _ in points) + band + 1)
+            bottom = min(canvas.image.height, max(y for _, y in points) + band + 1)
+            mask = Image.new("L", (right - left, bottom - top), 0)
+            ImageDraw.Draw(mask).polygon([(x - left, y - top) for x, y in points], fill=255)
+            cover = ImageChops.lighter(mask, outward_ramp(mask, band))
+            layer = Image.new("RGBA", mask.size, (*SHADE_RGB, 0))
+            layer.putalpha(cover.point(lambda value, scale=alpha: round(value * scale)))
+            canvas.image.alpha_composite(layer, (left, top))
     return areas

@@ -33,6 +33,7 @@ SOURCES = (
     "UI/Completion.xml",
     "media/Shade.tga",
     "UI/MapContents.lua",
+    "UI/Shading.lua",
     "UI/Map.lua",
     "Integrations/AtlasLoot.lua",
     "UI/Tracker.lua",

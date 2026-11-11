@@ -15,9 +15,6 @@ local DONE_ALPHA = 0.4
 -- Lists in the map menu scroll past 20 rows of 20 px: Blizzard's submenus never clamp to the screen (WFA-36).
 local MENU_EXTENT = 20 * 20
 local POINTS_ICON = ns.POINTS_ICON
--- An outlined area is filled with the shading's own texture and colour: a white pixel, tinted black at the
--- shading's alpha. Its triangles stretch it, as the shading is a fill by design.
-local SHADE_FILE = "Interface\\Buttons\\WHITE8X8"
 -- Moving the player moves the outline pins at most once a second, never once a frame.
 local PLAYER_REFRESH = 1
 
@@ -554,7 +551,7 @@ end
 -- the mouse, which would swallow the map's own clicks (right-click to zoom out, drag to pan): while the cursor
 -- is on bare map, the area under it is polled (MapContents.OutlineAt, then MapContents.AreaAt for the areas that
 -- keep their tiles).
----@class LegacyAreaPin : ForeverCanvasPin
+---@class LegacyAreaPin : ForeverCanvasPin, LegacyShadingCanvas
 ---@field textures LegacyTexturePool
 ---@field shade? LegacyShade
 ---@field outline? LegacyOutline
@@ -562,6 +559,7 @@ end
 ---@field cursorX? number
 ---@field cursorY? number
 ---@field drawn table<string, Texture[]>
+---@field feathers table<string, Texture[]>
 ---@field width number
 ---@field height number
 ---@field shadeAlpha number
@@ -582,6 +580,7 @@ function AreaPin:OnLoad()
 	-- Draw raises it one level above the exploration pin instead (AreaLevel).
 	self.textures = CreateTexturePool(self, "OVERLAY")
 	self.drawn = {}
+	self.feathers = {}
 	self.clock = 0
 	-- The area scan runs only when the cursor moves over the canvas; the position is in canvas pixels, so a zoom or
 	-- pan under a still cursor counts as a move. The player's place is read once a second, not every frame.
@@ -617,6 +616,7 @@ function AreaPin:OnReleased()
 	self.textures:ReleaseAll()
 	self.shade, self.outline = nil, nil
 	self.drawn = {}
+	self.feathers = {}
 	self.cursorX, self.cursorY = nil, nil
 end
 
@@ -654,48 +654,13 @@ function AreaPin:DrawTile(tile)
 	return texture
 end
 
--- One triangle of an area's real ground, drawn as the tile shading is: a white texture tinted the shading's
--- black at its alpha. The texture covers the triangle's bounding box, and Texture:SetVertexOffset moves each
--- corner onto the triangle's own points, one corner collapsed onto another, so the quad's four corners are the
--- triangle's three.
----@param triangle number[] u1, v1, u2, v2, u3, v3
----@return Texture
-function AreaPin:DrawTriangle(triangle)
-	local x1, y1 = triangle[1] * self.width, triangle[2] * self.height
-	local x2, y2 = triangle[3] * self.width, triangle[4] * self.height
-	local x3, y3 = triangle[5] * self.width, triangle[6] * self.height
-	local left, top = math.min(x1, x2, x3), math.min(y1, y2, y3)
-	local width, height = math.max(x1, x2, x3) - left, math.max(y1, y2, y3) - top
-	local texture = self:Acquire()
-	-- art-ok: one white pixel, stretched to a shading fill the way the map tiles are drawn
-	texture:SetTexture(SHADE_FILE)
-	texture:SetTexCoord(0, 1, 0, 1)
-	texture:SetSize(width, height)
-	texture:ClearAllPoints()
-	texture:SetPoint("TOPLEFT", left, -top)
-	-- SetVertexOffset's y is in UI units up from the corner, as SetPoint's is: the corner's y minus the point's
-	-- y. The first point takes the upper left, the third the lower left, and the second both right corners, so
-	-- the last edge covers nothing.
-	texture:SetVertexOffset(UPPER_LEFT_VERTEX, x1 - left, top - y1)
-	texture:SetVertexOffset(LOWER_LEFT_VERTEX, x3 - left, top + height - y3)
-	texture:SetVertexOffset(UPPER_RIGHT_VERTEX, x2 - left - width, top - y2)
-	texture:SetVertexOffset(LOWER_RIGHT_VERTEX, x2 - left - width, top + height - y2)
-	texture:SetVertexColor(0, 0, 0, self.shadeAlpha)
-	texture:Show()
-	return texture
-end
-
--- Every triangle of every outlined area, once per redraw: the ear clipping itself is kept on the area's rings
--- (MapContents.Triangles), so a zoom or resize only scales it.
+-- Every triangle and edge feather of every outlined area, once per redraw: the ear clipping itself is kept on the
+-- area's rings (MapContents.Triangles), so a zoom or resize only scales it.
 ---@param outline LegacyOutline
 function AreaPin:Paint(outline)
 	self.outline = outline
 	for _, area in ipairs(outline.areas) do
-		local textures = {}
-		for _, triangle in ipairs(ns.MapContents.Triangles(area.rings)) do
-			textures[#textures + 1] = self:DrawTriangle(triangle)
-		end
-		self.drawn[area.key] = textures
+		ns.Shading.Area(self, area)
 	end
 end
 
@@ -754,9 +719,8 @@ function AreaPin:Highlight(area)
 	local previous = self.hovered
 	if previous then
 		local key = previous.outline and previous.key or previous.area.key
-		for _, texture in ipairs(self.drawn[key] or {}) do
-			texture:SetVertexColor(0, 0, 0, self.shadeAlpha)
-		end
+		---@cast key string
+		ns.Shading.Alpha(self, key, self.shadeAlpha)
 		-- Only our own tooltip: a pin the cursor just moved onto has already shown its own.
 		if GameTooltip:GetOwner() == self then
 			GameTooltip:Hide()
@@ -768,9 +732,8 @@ function AreaPin:Highlight(area)
 	end
 	GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
 	local key = area.outline and area.key or area.area.key
-	for _, texture in ipairs(self.drawn[key] or {}) do
-		texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
-	end
+	---@cast key string
+	ns.Shading.Alpha(self, key, AREA_HOVER_ALPHA)
 	local outlined = area.outline and area --[[@as LegacyOutlineArea]]
 	if outlined then
 		local yards

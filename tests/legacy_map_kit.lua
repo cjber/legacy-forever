@@ -14,11 +14,23 @@ function Kit.Install(env)
 	-- The constants the client defines for Texture:SetVertexOffset.
 	env.UPPER_LEFT_VERTEX, env.LOWER_LEFT_VERTEX = 1, 2
 	env.UPPER_RIGHT_VERTEX, env.LOWER_RIGHT_VERTEX = 3, 4
+	-- CreateColor's ColorMixin, as far as a gradient reads it: the four channels.
+	---@param r number
+	---@param g number
+	---@param b number
+	---@param a number
+	---@return colorRGBA
+	env.CreateColor = function(r, g, b, a)
+		return { r = r, g = g, b = b, a = a } --[[@as colorRGBA]]
+	end
 	local region = Kit.Region
 	function Kit.Region()
 		local made = region()
 		made.SetTexture = function(self, file)
 			self.file = file
+		end
+		made.SetGradient = function(self, orientation, minColor, maxColor)
+			self.gradient = { orientation = orientation, min = minColor, max = maxColor }
 		end
 		made.SetTexCoord = function(self, ...)
 			self.texcoord = { ... }

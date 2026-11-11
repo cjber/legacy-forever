@@ -157,6 +157,7 @@ ns.Saved = {
 	OnChange = noop,
 }
 
+assert(loadfile("UI/Shading.lua"))("LegacyForever", ns)
 assert(loadfile("UI/Map.lua"))("LegacyForever", ns)
 check(attach ~= nil, "UI/Map.lua waits for the world map to load")
 attach()
