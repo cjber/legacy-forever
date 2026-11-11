@@ -1,8 +1,8 @@
 # LegacyForever.API
 
 Other addons can read Legacy Forever's zone completion and a zone's unfinished Legacy objectives, send the player
-to one, and track one in the objective tracker, through the global `LegacyForever.API`. It is version 1, minor 3;
-check `version == 1` and that each function exists before calling it. The full types are in
+to one, and track one in the objective tracker, through the global `LegacyForever.API`. It is version 2, minor 0;
+check `version == 2` and that each function exists before calling it. The full types are in
 [`types/API.lua`](../types/API.lua). On ForeverCore 1.3.2 or later the same table is listed by
 `ForeverCore.APIKit.Addons()`, so an addon that does not know this one's global can still find it.
 
@@ -12,17 +12,19 @@ in, and coordinates run from 0 to 1.
 ## Published functions
 
 `ZoneSummary(map)`, `Targets(map, limit)`, `IsTracked(key)`, `SetTracked(key, tracked)`, `Navigate(map, key)`,
-`Subscribe(callback)`, `Stats()` and `Leaderboard(limit?)`, each described below.
+`Subscribe(callback)` and `Stats()`, each described below.
 
-## Minor history
+## Version and minor history
 
-- `minor` 0: version 1's first members, `ZoneSummary(map)`, `Targets(map, limit)`, `Navigate(map, key)`,
+- version 1, `minor` 0: the first members, `ZoneSummary(map)`, `Targets(map, limit)`, `Navigate(map, key)`,
   `Subscribe(callback)` and `Stats()`, which shipped before minors were counted.
-- `minor` 1: `Leaderboard(limit)`.
-- `minor` 2: `Subscribe`'s `changes` table, delivered on the frame after a change, and `Targets`' not-ready answer
-  before the game has reported the player.
-- `minor` 3: IsTracked, SetTracked, tracked change, nil map means the current zone, achievementName and points on
-  targets.
+- version 1, `minor` 1: `Leaderboard(limit)`.
+- version 1, `minor` 2: `Subscribe`'s `changes` table, delivered on the frame after a change, and `Targets`'
+  not-ready answer before the game has reported the player.
+- version 1, `minor` 3: IsTracked, SetTracked, tracked change, nil map means the current zone, achievementName and
+  points on targets.
+- version 2, `minor` 0: `Leaderboard(limit)` is removed with Forever Leaderboards. Every other member keeps its
+  contract.
 
 ## Not ready
 
@@ -40,8 +42,7 @@ character's progress exists. Neither answers `"disabled"`: a category the player
 `categories`, and a zone with nothing counted still answers with zeroes. Called with no map they answer for the
 zone the player is in, and `nil, "none"` when there is none: on a continent, or in a zone without data.
 
-`IsTracked` and `SetTracked` answer `nil, "loading"` the same way. `Navigate` and `Stats` have no not-ready answer,
-and `Leaderboard`'s only nil is `nil, "invalid"` for a bad limit.
+`IsTracked` and `SetTracked` answer `nil, "loading"` the same way. `Navigate` and `Stats` have no not-ready answer.
 
 ## `ZoneSummary(map) -> LFZoneSummary?, LFReadError?`
 
@@ -134,16 +135,7 @@ table; `changes` is there on every minor 2 call.
 
 ## `Stats() -> LFActivityRecord[]`
 
-Returns one row per flight path currently known in this character's most recently opened flight-master maps. A node that becomes unreachable leaves this current-known view. These rows use the latest map observation timestamp; the cumulative leaderboard retains distinct nodes and their discovery timestamps. Each row has
+Returns one row per flight path currently known in this character's most recently opened flight-master maps. A node that becomes unreachable leaves this current-known view. These rows use the latest map observation timestamp. Each row has
 `addon`, `metric`, `subject`, `value`, and `eventUnix` when the client provided a timestamp. Forever's zone
 exploration data marks every taxi node as discovered, so Legacy only records this metric from the flight master's
-own node states. These per-node rows remain local. The leaderboard shares only a cumulative distinct-path snapshot with guild and group channels, classified by the client mode and Hardcore flag; no realm-wide record is claimed.
-
-
-## `Leaderboard(limit?) -> LFFlightLeaderboard?, LFReadError?`
-
-Available from minor 1. Returns fresh ranked rows for cumulative observed flight paths: `rank`, `name`, `value`, optional `eventUnix`, and `self` for the personal row. `metric` is `flight_path_known`, `scope` is `guild_group`, `ruleset` contains the client mode ID and Hardcore flag, `sharing` reports active participation, and `total` counts all eligible rows. Peer values are player-reported. Only the current client ruleset is compared; an unknown ruleset has no peer comparison. Self-declared challenges such as Ironman are not automatically classified.
-
-The default top list is 10, capped at 25, with the personal row retained even below the limit. A non-integer or negative limit returns `nil, "invalid"`; zero requests only the personal row. Opt-out hides peer rows and cancels pending sends without deleting personal history or the classified peer cache. Legacy never migrates the old unclassified peer cache into a ruleset board.
-
-Opting out cannot retract totals already received by other players. Their cached copies can remain visible.
+own node states. These per-node rows remain local.

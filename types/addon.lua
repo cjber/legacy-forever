@@ -160,7 +160,6 @@
 ---@field showAreas boolean
 ---@field showEntrances boolean
 ---@field whatsNew boolean
----@field statsShare boolean
 ---@field suggestFamily boolean
 ---@field zoneCompletion LegacySettings
 
@@ -174,11 +173,8 @@
 ---@field showAreas? boolean
 ---@field showEntrances? boolean
 ---@field whatsNew? boolean
----@field peerStats? table<string, table> per-character classified peer snapshots
----@field statsShare? boolean
 ---@field suggestFamily? boolean
 ---@field companions? boolean Before 0.8; Saved migrates it to suggestFamily.
----@field sharedStats? table<string, table<string, table<string, table<string, {value: integer, eventUnix: integer?}>>>>
 ---@field lastVersion? string
 
 ---@type LegacySavedVariables?

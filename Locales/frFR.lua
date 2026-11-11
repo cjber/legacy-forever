@@ -24,12 +24,8 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - lister ce que le jeu rapporte pour un haut fait"
 L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
 	"/lf issue - signaler un bug ou demander une fonctionnalité avec un lien d'issue GitHub prêt à l'emploi"
-L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
-	"/lf leaderboard - ouvrir les Classements Forever sur l'onglet de cet addon"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - afficher un rapport à copier dans un rapport de bug"
-L["/lf share on|off - share flight-path totals, keeping your history"] =
-	"/lf share on|off - partager les totaux de trajets aériens en conservant votre historique"
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever trace l'itinéraire des quêtes restantes dans cette zone."
 L["Already complete"] = "Déjà terminé"
@@ -49,8 +45,6 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"Toutes les quêtes que ce personnage peut prendre dans la zone, depuis Questie."
 L["Flight paths"] = "Points de vol"
-L["Flight-path leaderboard"] = "Classement des trajets aériens"
-L["Flight-path records"] = "Records de trajets aériens"
 L["Forever addons"] = "Addons Forever"
 L["Hide from the tracker"] = "Masquer du suivi"
 L["In the objective tracker"] = "Dans le suivi des objectifs"
@@ -74,8 +68,6 @@ L["No unfinished Legacy objectives with a place on this map."] =
 L["Nothing left to do here"] = "Plus rien à faire ici"
 L["Objective tracker"] = "Suivi des objectifs"
 L["On the world map"] = "Sur la carte du monde"
-L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
-	"Activé par défaut. Partage vos totaux de trajets aériens et vous fait apparaître dans les Classements Forever."
 L["Open"] = "Ouvrir"
 L["Open a flight master on this continent to check these."] =
 	"Parlez à un maître de vol sur ce continent pour les vérifier."
@@ -90,8 +82,6 @@ L["Recommended levels: %s (AtlasLoot)"] = "Niveaux recommandés : %s (AtlasLoot)
 L["Repeatable, holiday and profession quests are left out."] =
 	"Les quêtes répétables, d'événements mondiaux et de métiers sont exclues."
 L["Reputations (Friendly)"] = "Réputations (Amical)"
-L["Share flight-path totals with guild and group"] =
-	"Partager les totaux de trajets aériens avec la guilde et le groupe"
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
 	"Affiche une ligne discrète lorsqu'un de mes autres addons Forever pourrait vous aider. Uniquement pour les addons que vous ne possédez pas."
 L["Show dungeon and raid entrances"] = "Afficher les entrées de donjons et raids"
@@ -123,5 +113,4 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"impossible d'ajouter une section au suivi des objectifs ; veuillez signaler via /lf audit."
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"le suivi des objectifs n'est pas disponible, les défis suivis ne peuvent donc pas être affichés."
-L["total"] = "total"
 L["updated to %s. %s"] = "mis à jour vers %s. %s"

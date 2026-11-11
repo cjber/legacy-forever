@@ -169,14 +169,6 @@ for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 	AddCheckbox(counts, "count_" .. key, ns.Completion.Label(key), tooltip, usable)
 end
 
-local stats = Section(category, L["Flight-path records"])
-AddCheckbox(
-	stats,
-	"statsShare",
-	L["Share flight-path totals with guild and group"],
-	L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."]
-)
-
 local updates = Section(category, L["Updates"])
 AddCheckbox(updates, "whatsNew", L["What's new after an update"])
 

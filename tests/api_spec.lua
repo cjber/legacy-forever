@@ -105,7 +105,6 @@ local oldCore = {
 	Model = {},
 	Live = {},
 	Quests = {},
-	Stats = {},
 	ZoneCompletion = { OnChange = function() end },
 	Tracker = { OnChange = function() end },
 }
@@ -388,7 +387,7 @@ check(#errors == errorsBefore, "the corner draws without an error")
 zoneTracker:OnBlockHeaderClick({ id = 100 }, "LeftButton")
 check(openedMap == 100, "a click on the zone's tracker header asks the game to open its map")
 local API = LegacyForever.API
-check(API.version == 1 and API.minor == 3, "version 1 retains existing methods and adds a minor capability")
+check(API.version == 2 and API.minor == 0, "version 2 drops the leaderboard and keeps the other members")
 check(type(ForeverCore.APIKit.Hub) == "function", "the API is built on the shared API kit")
 local listed
 for _, entry in ipairs(ForeverCore.APIKit.Addons()) do
@@ -398,20 +397,7 @@ for _, entry in ipairs(ForeverCore.APIKit.Addons()) do
 end
 check(listed ~= nil and listed.api == API, "Addons() lists this addon and hands back its own table")
 check(listed and listed.version == API.version and listed.minor == API.minor, "with the API's own version and minor")
-local forwardedLimit
-local leaderboard = { metric = "flight_path_known", rows = {} }
-ns.Stats = {
-	Leaderboard = function(limit)
-		forwardedLimit = limit
-		if limit == -1 then
-			return nil, "invalid"
-		end
-		return leaderboard
-	end,
-}
-check(API.Leaderboard(0) == leaderboard and forwardedLimit == 0, "leaderboard forwards zero without replacing it")
-local invalidBoard, invalidReason = API.Leaderboard(-1)
-check(invalidBoard == nil and invalidReason == "invalid", "leaderboard preserves reader errors")
+check(API.Leaderboard == nil, "the leaderboard member is gone")
 local guid = UnitGUID("player")
 ns.SavedTable("flightPaths")[guid] = { known = { [10] = true, [11] = false }, continents = {}, observedAt = time() }
 local activity = API.Stats()
