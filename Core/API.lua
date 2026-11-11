@@ -441,3 +441,8 @@ end)
 ns.Tracker.OnChange(hub.Queue)
 
 LegacyForever = { API = API }
+-- Handed to the suite's one list, so a reader finds this API without naming it (ForeverCore.APIKit.Addons). A core
+-- from before the kit's minor 2 has no Publish, and the API reads exactly as before without it.
+if (ForeverCore.APIKit.minor or 1) >= 2 then
+	ForeverCore.APIKit.Publish("LegacyForever", API)
+end

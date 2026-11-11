@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+### For addon authors
+
+- **`LegacyForever.API` is now listed by `ForeverCore.APIKit.Addons()`.** On ForeverCore 1.3.2 or later the API hands its table to the shared kit once at load, so another addon finds it in the one suite-wide list instead of naming the global, with this addon's `version` and `minor` beside it. What the API answers does not change and neither does its minor, and a core from before the kit's `Publish` loads exactly as it did (#438).
+
 ## [2.1.2] - 2026-11-11
 
 - **Forever Core now installs alongside it.** Forever Core is on CurseForge, so the CurseForge app installs and updates it with this addon instead of the addon carrying its own copy. On Wago, install Forever Core from its own page.

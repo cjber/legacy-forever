@@ -3,7 +3,8 @@
 Other addons can read Legacy Forever's zone completion and a zone's unfinished Legacy objectives, send the player
 to one, and track one in the objective tracker, through the global `LegacyForever.API`. It is version 1, minor 3;
 check `version == 1` and that each function exists before calling it. The full types are in
-[`types/API.lua`](../types/API.lua).
+[`types/API.lua`](../types/API.lua). On ForeverCore 1.3.2 or later the same table is listed by
+`ForeverCore.APIKit.Addons()`, so an addon that does not know this one's global can still find it.
 
 Every call returns fresh tables that you may keep or change. `map` is a UiMapID, or nil for the zone the player is
 in, and coordinates run from 0 to 1.

@@ -92,6 +92,32 @@ ForeverCore = dofile("tests/forever_core.lua").install(_G, {
 	"UI/MapCanvas.lua",
 	"Expose.lua",
 })
+-- A core from before the kit's minor 2: APIKit has no Publish, so the API's guard leaves it unpublished rather than
+-- failing at load. Its own namespace and environment, so nothing here reaches the run below.
+local kit = ForeverCore.APIKit
+local published, kitMinor, kitPublish = {}, kit.minor, kit.Publish
+kit.minor = 1
+kit.Publish = function(name)
+	published[#published + 1] = name
+end
+local oldCore = {
+	Data = {},
+	Model = {},
+	Live = {},
+	Quests = {},
+	Stats = {},
+	ZoneCompletion = { OnChange = function() end },
+	Tracker = { OnChange = function() end },
+}
+-- The client's own globals stay readable; what the file assigns lands here instead of the run below.
+local oldEnv = setmetatable({ ForeverCore = ForeverCore }, { __index = _G })
+local oldChunk = assert(loadfile("Core/API.lua"))
+setfenv(oldChunk, oldEnv)
+local oldLoaded, oldError = pcall(oldChunk, "LegacyForever", oldCore)
+check(oldLoaded, "an older core without Publish still loads the API: " .. tostring(oldError))
+check(#published == 0, "a minor 1 kit publishes nothing")
+kit.minor, kit.Publish = kitMinor, kitPublish
+
 assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Art.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
@@ -364,6 +390,14 @@ check(openedMap == 100, "a click on the zone's tracker header asks the game to o
 local API = LegacyForever.API
 check(API.version == 1 and API.minor == 3, "version 1 retains existing methods and adds a minor capability")
 check(type(ForeverCore.APIKit.Hub) == "function", "the API is built on the shared API kit")
+local listed
+for _, entry in ipairs(ForeverCore.APIKit.Addons()) do
+	if entry.name == "LegacyForever" then
+		listed = entry
+	end
+end
+check(listed ~= nil and listed.api == API, "Addons() lists this addon and hands back its own table")
+check(listed and listed.version == API.version and listed.minor == API.minor, "with the API's own version and minor")
 local forwardedLimit
 local leaderboard = { metric = "flight_path_known", rows = {} }
 ns.Stats = {
