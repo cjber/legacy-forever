@@ -1,6 +1,6 @@
 ---@meta
 
--- LegacyForever.API, version 1, minor 3: the contract other addons read (docs/api.md). API.lua implements it.
+-- LegacyForever.API, version 2, minor 0: the contract other addons read (docs/api.md). API.lua implements it.
 
 ---@alias LFCategory "areas"|"taxis"|"dungeons"|"raids"|"legacy"|"reputations"|"quests"
 -- `"loading"` is ForeverCore.APIKit's not-ready reason; `"none"` is a call with no map and no current zone; the
@@ -45,9 +45,8 @@
 ---@field place? LFPoint
 
 ---@class LFAPI
----@field version 1
----@field minor 3
----@field Leaderboard fun(limit?: integer): LFFlightLeaderboard?, LFReadError?
+---@field version 2
+---@field minor 0
 ---@field ZoneSummary fun(map?: integer): LFZoneSummary?, LFReadError?
 ---@field Targets fun(map?: integer, limit?: number): LFTarget[]?, LFReadError?
 ---@field IsTracked fun(key: string): boolean?, LFReadError?

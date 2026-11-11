@@ -24,11 +24,7 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 列出游戏对某个成就报告的内容"
 L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
 	"/lf issue - 生成可直接使用的 GitHub issue 链接，用于报告错误或提出功能建议"
-L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
-	"/lf leaderboard - 在此插件的标签页打开 Forever 排行榜"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 显示可复制到错误报告中的报告"
-L["/lf share on|off - share flight-path totals, keeping your history"] =
-	"/lf share on|off - 分享飞行路线总数并保留个人记录"
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever会为此地区剩余的任务规划路线。"
 L["Already complete"] = "已完成"
@@ -48,8 +44,6 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"此角色在该地区可接的所有任务，数据来自Questie。"
 L["Flight paths"] = "飞行路线"
-L["Flight-path leaderboard"] = "飞行路线排行榜"
-L["Flight-path records"] = "飞行路线记录"
 L["Forever addons"] = "Forever插件"
 L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"以金色光晕显示每个未探索区域的真实地形，并在边缘放置图钉。没有地形数据的区域仍然使用阴影。"
@@ -75,8 +69,6 @@ L["No unfinished Legacy objectives with a place on this map."] =
 L["Nothing left to do here"] = "这里已无事可做"
 L["Objective tracker"] = "目标追踪栏"
 L["On the world map"] = "在世界地图上"
-L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
-	"除非关闭，否则开启。分享飞行路线总数，并将你列入 Forever 排行榜。"
 L["Open"] = "打开"
 L["Open a flight master on this continent to check these."] =
 	"与此大陆上的飞行管理员对话以检查这些路线。"
@@ -90,7 +82,6 @@ L["Quest"] = "任务"
 L["Recommended levels: %s (AtlasLoot)"] = "推荐等级：%s（AtlasLoot）"
 L["Repeatable, holiday and profession quests are left out."] = "不计入可重复、节日和专业任务。"
 L["Reputations (Friendly)"] = "声望（友善）"
-L["Share flight-path totals with guild and group"] = "与公会和队伍分享飞行路线总数"
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
 	"在我的其他Forever插件能帮上忙的地方显示一行不显眼的提示。仅限你尚未安装的插件。"
 L["Show dungeon and raid entrances"] = "显示地下城和团队副本入口"
@@ -123,5 +114,4 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"无法向目标追踪栏添加区块；请报告/lf audit的结果。"
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"目标追踪栏不可用，因此无法显示追踪的挑战。"
-L["total"] = "总计"
 L["updated to %s. %s"] = "已更新至%s。%s"

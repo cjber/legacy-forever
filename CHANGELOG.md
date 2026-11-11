@@ -14,6 +14,11 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 - **Other addons' map markers show above the undiscovered-area shading.** The shading and the terrain glow sat at Blizzard's exploration frame level (about 2,000), so markers other addons draw on the map canvas, such as Leatrix Maps' points of interest, were drawn under it. They now sit directly above the map art, below every pin. Thanks to cotijelucie on Discord for the report (#464).
 - **The map can now show where each undiscovered area really is.** A new World map switch, "Show where to discover areas", sits beside "Show undiscovered areas" and starts off. Turned on, each area the game has terrain for glows soft gold along its real ground instead of being shaded from the map art, with the Legacy shield at the point nearest you and a tooltip naming the area, the zone's areas left, the distance in yards and the click hint. Clicking travels to the area; with Shortest Path Forever installed it picks the outline point it can reach soonest, and the journey ends by itself once you walk in. Areas with no terrain data, and every area while the switch is off, keep the shading they had (#459). Thanks to cotijelucie on Discord for the idea.
+- **Forever Leaderboards are gone.** The leaderboard tab, the `/lf leaderboard` and `/lf stats` commands, the map menu entry and the sharing switch are all removed. Guild and group stat sharing has stopped, so nothing is sent to other players. Your flight-path records stay on this character.
+
+### For addon authors
+
+- **`LegacyForever.API` is now version 2, minor 0.** `Leaderboard(limit)` is removed with Forever Leaderboards. Every other member keeps its contract, so callers that use only those need no change beyond their version check.
 
 ## [2.1.3] - 2026-11-11
 

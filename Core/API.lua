@@ -8,12 +8,11 @@ end
 -- LegacyForever.API: zone completion and the zone's unfinished Legacy objectives for other addons, read from
 -- the same computations the map and tracker draw. Every call returns fresh tables. docs/api.md has the contract.
 -- Areas, flight paths, reputations and quests are this character's; dungeon wings, raids and Legacy
--- objectives are account-wide Legacy steps. `minor` rises with each addition within version 1 (1: Leaderboard,
--- 2: Subscribe's changes table and the reads' not-ready answers, 3: IsTracked/SetTracked and the tracked channel,
--- a nil map's current zone, achievementName and points on targets); a caller checks a member before using it.
+-- objectives are account-wide Legacy steps. `version` rises when a published member breaks and `minor` with each
+-- addition within a version; version 2 drops Leaderboard, and a caller checks a member before using it.
 local API = {
-	version = 1,
-	minor = 3,
+	version = 2,
+	minor = 0,
 }
 
 -- The shared shape every Forever addon's API follows: the hub that tells callers a frame after a change, and the
@@ -344,15 +343,6 @@ function API.Stats()
 	return rows
 end
 ns.ActivityStats = API.Stats
-
--- Cumulative flight paths observed, as Forever Leaderboards ranks them for this addon's tab. A read-through, so the
--- caller gets the board's own fresh rows.
----@param limit? integer
----@return LFFlightLeaderboard?
----@return LFReadError?
-function API.Leaderboard(limit)
-	return ns.Stats.Leaderboard(limit)
-end
 
 --[[ Subscribe: the frame after the zone, its summary or its targets changes ]]
 

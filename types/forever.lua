@@ -49,21 +49,6 @@ C_InputInterfaceStyle = nil
 ---@type Frame
 SoftCursor = nil
 
--- Client surfaces Core/Stats.lua reads that the pinned annotations omit.
----@type number
-LE_PARTY_CATEGORY_INSTANCE = nil
+-- A client surface Core/Live.lua reads that the pinned annotations omit.
 ---@type fun(): integer
 GetServerTime = nil
----@type fun(): string
-GetRealmName = nil
----@type fun(): boolean
-IsInGuild = nil
----@type fun(category?: number): boolean
-IsInGroup = nil
----@type fun(): boolean
-IsInRaid = nil
----@type fun(unit?: string): string?
-UnitName = nil
--- ChatFrame.lua: sending an addon message and registering its prefix.
----@type {SendAddonMessage: fun(prefix: string, text: string, channel: string, target?: string): number?, RegisterAddonMessagePrefix: fun(prefix: string): boolean?}
-C_ChatInfo = nil

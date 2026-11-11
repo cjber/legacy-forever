@@ -23,7 +23,6 @@ ns.Saved = Saved
 ---| 'showOutlines'
 ---| 'showEntrances'
 ---| 'whatsNew'
----| 'statsShare'
 ---| 'suggestFamily'
 ---| 'map'
 ---| 'tracker'
@@ -50,8 +49,6 @@ local DEFAULTS = {
 	showEntrances = true,
 	-- One chat line after an update, never on a first install.
 	whatsNew = true,
-	-- Share small activity rows over guild/group channels; local records stay either way (Core/Stats.lua).
-	statsShare = true,
 	-- A grey line where one of the other Forever addons, not installed, would do more for you. The shared
 	-- Forever addons page (ForeverCore's UI/ForeverFamily.lua) reads it from the saved table by this name.
 	suggestFamily = true,
@@ -86,6 +83,9 @@ local function Root()
 		end
 		root.companions = nil
 	end
+	-- Forever Leaderboards is gone, so the peer tables it kept are dead data.
+	root.peerStats = nil
+	root.sharedStats = nil
 	return root
 end
 
