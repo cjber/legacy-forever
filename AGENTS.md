@@ -29,7 +29,8 @@ python3 tools/repo_rules.py   # rules no linter covers; CI runs it in project-ru
 ```
 
 `FOREVER_CORE` names the cjber/forever-core checkout the specs load, defaulting to the sibling `../forever-core`.
-`tools/forever-core.txt` holds the git ref CI checks out for them: `v1.1.0`, the release that adds the shared API kit.
+`tools/forever-core.txt` holds the git ref CI checks out for them: `v1.3.2`, the release whose API kit lists every
+addon's published API.
 
 CI's `package` job builds the zip with the release's packager without uploading (`-d -z`) and runs
 `python3 tools/check_package.py` on its output: every loaded file ships, no development folder does, a licence file and

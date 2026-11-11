@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+### For addon authors
+
+- **`LegacyForever.API` is now listed by `ForeverCore.APIKit.Addons()`.** On ForeverCore 1.3.2 or later the API hands its table to the shared kit once at load, so another addon finds it in the one suite-wide list instead of naming the global, with this addon's `version` and `minor` beside it. What the API answers does not change and neither does its minor, and a core from before the kit's `Publish` loads exactly as it did (#438).
+
 ## [2.1.1] - 2026-11-11
 
 - **The Legacy data now names Forever build 1.60.1.70888.** `Data/Legacy.lua` is regenerated from the newer client build's achievements, criteria and world map tables. Every challenge, reward and located objective the map shows is identical to the previous build, so what you are chasing does not change.
