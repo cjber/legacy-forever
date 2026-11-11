@@ -37,7 +37,7 @@ addon's published API.
 
 CI's `package` job builds the zip with the release's packager without uploading (`-d -z`) and runs
 `python3 tools/check_package.py` on its output: every loaded file ships, no development folder does, a licence file and
-THIRD_PARTY.md ship with README's `## Credits` and THIRD_PARTY's `## Ideas and contributors` (WFA-10, WFA-31), and the
+THIRD_PARTY.md ship with README's `## Credits` and THIRD_PARTY's `## Players` (WFA-10, WFA-31), and the
 specs pass on the packaged files.
 
 The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and history. CI's jobs are `deadcode`,
