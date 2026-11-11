@@ -31,6 +31,17 @@ local ns = {
 			[PLAIN] = { areas = { areaA } },
 		},
 	},
+	Explore = {
+		build = "test",
+		zones = {
+			-- A square of real ground for area A only: area B, wide and untiled have no terrain outline.
+			[ZONE] = {
+				width = 1000,
+				height = 500,
+				areas = { [areaA.key] = { { 0.2, 0.2, 0.4, 0.2, 0.4, 0.4, 0.2, 0.4 } } },
+			},
+		},
+	},
 }
 
 local live = { [500] = {}, [100] = {} }
@@ -39,7 +50,7 @@ for id = 1, 10 do
 end
 live[100][5].completed = true
 
-local settings = { showAreas = true, showEntrances = true }
+local settings = { showAreas = true, showEntrances = true, showOutlines = false }
 local nativeEntrances = true
 GetCVarBool = function(name)
 	assert(name == "showDungeonEntrancesOnMap")
@@ -100,6 +111,14 @@ local checks = 0
 local function equal(actual, expected, label)
 	checks = checks + 1
 	assert(actual == expected, label .. ": expected " .. tostring(expected) .. ", got " .. tostring(actual))
+end
+
+local function near(actual, expected, label)
+	checks = checks + 1
+	assert(
+		math.abs(actual - expected) < 1e-9,
+		label .. ": expected " .. tostring(expected) .. ", got " .. tostring(actual)
+	)
 end
 
 -- The button's count and the menu's entries: every unfinished objective placed on the map, pinned or not.
@@ -226,5 +245,62 @@ equal(drawn.shade, nil, "a zone without tile data has no shade")
 equal(#drawn.pins, 1, "but keeps its pins")
 drawn = MapContents.Drawn(nil)
 equal(#drawn.pins + #drawn.badges, 0, "no map, nothing drawn")
+
+-- The terrain glow: with the switch on, an area with outline data is drawn along its ground and keeps its
+-- Legacy step for the pin and the hover; every other area keeps the shading.
+settings.showOutlines = true
+drawn = MapContents.Drawn(ZONE)
+local outline = assert(drawn.outline, "the glow is drawn")
+equal(#outline.areas, 1, "only the area with terrain data glows")
+equal(outline.areas[1].key, areaA.key, "the area with terrain data")
+equal(outline.areas[1].outline, true, "an outline area is marked for the hover")
+equal(outline.areas[1].objective.objective.text, "Step 1", "the glow carries its Legacy step")
+shade = assert(drawn.shade, "the areas without outline data keep the shading")
+equal(#shade.areas, 2, "area B and the wide area stay shaded")
+equal(shade.byKey[areaA.key], nil, "an outlined area keeps no shading of its own")
+equal(shade.areas[1].objective.objective.text, "Step 2", "a shaded area still carries its step")
+
+-- A discovered area leaves neither the glow nor the shading.
+explored = { [areaA.key] = true }
+drawn = MapContents.Drawn(ZONE)
+equal(drawn.outline, nil, "nothing undiscovered to glow")
+equal(#assert(drawn.shade).areas, 2, "the remaining areas are still shaded")
+explored = {}
+
+settings.showOutlines = false
+drawn = MapContents.Drawn(ZONE)
+equal(drawn.outline, nil, "the glow switched off")
+equal(#assert(drawn.shade).areas, 3, "every undiscovered area is shaded again")
+settings.showOutlines = true
+
+-- The hover is exact: a point inside the rings, one in a hole, and one outside.
+equal(MapContents.OutlineAt(outline, 0.3, 0.3), outline.areas[1], "a point inside the ring is the area")
+equal(MapContents.OutlineAt(outline, 0.5, 0.5), nil, "a point outside every ring is no area")
+local holed = {
+	zone = outline.zone,
+	uiMapID = ZONE,
+	areas = {
+		{
+			key = "hole",
+			name = "Holed",
+			outline = true,
+			rings = { { 0, 0, 1, 0, 1, 1, 0, 1 }, { 0.4, 0.4, 0.6, 0.4, 0.6, 0.6, 0.4, 0.6 } },
+		},
+	},
+	byKey = {},
+}
+equal(MapContents.OutlineAt(holed, 0.5, 0.5), nil, "a point in a hole is outside the area")
+equal(MapContents.OutlineAt(holed, 0.2, 0.2), holed.areas[1], "a point between the rings is inside")
+
+-- The pin's place: the outline point nearest the player, else the first point, and the distance in yards.
+local square = { key = "square", name = "Square", outline = true, rings = { { 0.2, 0.2, 0.8, 0.8 } } }
+local x, y, yards = MapContents.OutlinePoint(outline.zone, square, 0.75, 0.7)
+equal(x, 0.8, "the nearest vertex: x")
+equal(y, 0.8, "the nearest vertex: y")
+near(yards, math.sqrt((0.05 * 1000) ^ 2 + (0.1 * 500) ^ 2), "the distance comes from the zone's rectangle in yards")
+x, y, yards = MapContents.OutlinePoint(outline.zone, square)
+equal(x, 0.2, "without the player, the first point: x")
+equal(y, 0.2, "without the player, the first point: y")
+equal(yards, nil, "without the player, no distance")
 
 print(("map_contents_spec: %d checks passed"):format(checks))

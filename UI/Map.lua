@@ -15,6 +15,15 @@ local DONE_ALPHA = 0.4
 -- Lists in the map menu scroll past 20 rows of 20 px: Blizzard's submenus never clamp to the screen (WFA-36).
 local MENU_EXTENT = 20 * 20
 local POINTS_ICON = ns.POINTS_ICON
+-- The terrain glow: a soft wide stroke under a brighter core, in the Legacy gold, along each area's real
+-- ground. The strip is a feather texture, the same for every area.
+local GLOW = "Interface\\AddOns\\LegacyForever\\media\\Glow"
+local GOLD_R, GOLD_G, GOLD_B = 1, 0.8, 0.35
+local GLOW_WIDE, GLOW_WIDE_ALPHA = 11, 0.2
+local GLOW_CORE, GLOW_CORE_ALPHA = 2.5, 0.75
+local GLOW_HOVER = 1.7
+-- Moving the player moves the outline pins at most once a second, never once a frame.
+local PLAYER_REFRESH = 1
 
 local KIND_LABEL = {
 	explore = L["Undiscovered area"],
@@ -72,6 +81,27 @@ end
 local function AreasLeftText(group)
 	local done, total = ns.Model.Tally(ns.Live.Criteria(group.achievement) or {})
 	return L["%s: %d of %d areas left"]:format(ns.Live.Name(group.achievement), total - done, total)
+end
+
+-- An outlined area's tooltip: the same name and zone progress line as a shaded one, plus how far the
+-- nearest part of its ground is when the player is on this map, and what a click does.
+---@param tooltip GameTooltip
+---@param area LegacyOutlineArea
+---@param yards? number
+local function AddOutlineTooltip(tooltip, area, yards)
+	GameTooltip_SetTitle(tooltip, area.name)
+	GameTooltip_AddNormalLine(tooltip, L["Undiscovered area"])
+	if area.objective then
+		GameTooltip_AddHighlightLine(tooltip, AreasLeftText(area.objective.group))
+	end
+	if yards then
+		GameTooltip_AddNormalLine(tooltip, L["%d yards away"]:format(yards))
+	end
+	GameTooltip_AddInstructionLine(tooltip, ns.NavigateHint())
+	local companion = ns.CompanionHint()
+	if companion then
+		GameTooltip_AddDisabledLine(tooltip, companion)
+	end
 end
 
 ---@param tooltip GameTooltip
@@ -261,6 +291,14 @@ local function BuildMenu(root, uiMapID)
 	end
 	root:CreateDivider()
 	root:CreateCheckbox(L["Show undiscovered areas"], ns.Saved.Get, ToggleSetting, "showAreas")
+	local outlines = root:CreateCheckbox(L["Show where to discover areas"], ns.Saved.Get, ToggleSetting, "showOutlines")
+	outlines:SetTooltip(function(tooltip)
+		GameTooltip_SetTitle(tooltip, L["Show where to discover areas"])
+		GameTooltip_AddNormalLine(
+			tooltip,
+			L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."]
+		)
+	end)
 	local entrances =
 		root:CreateCheckbox(L["Show dungeon and raid entrances"], ns.Saved.Get, ToggleSetting, "showEntrances")
 	entrances:SetTooltip(function(tooltip)
@@ -404,6 +442,7 @@ end
 ---@field group? LegacyGroup
 ---@field objective? LegacyObjective
 ---@field zone? LegacyContinentZone
+---@field outline? LegacyOutlinePin the outlined area's place, when this pin stands on one
 ---@field done boolean a cleared dungeon or raid entrance, drawn faded
 local ObjectivePin = CreateFromMixins(ns.core.MapCanvas.PinMixin)
 
@@ -416,15 +455,19 @@ end
 ---@param group LegacyGroup?
 ---@param objective LegacyObjective?
 ---@param zone LegacyContinentZone?
-function ObjectivePin:OnAcquired(group, objective, zone)
+---@param outline? LegacyOutlinePin
+function ObjectivePin:OnAcquired(group, objective, zone, outline)
 	self.group = group
 	self.objective = objective
 	self.zone = zone
+	self.outline = outline
 	self.done = objective ~= nil and objective.done == true
-	-- A zone badge lets the click open the zone below it.
-	self.clicks = self:Destination() ~= nil
+	-- A zone badge lets the click open the zone below it; an outlined area's click sets a waypoint.
+	self.clicks = self:Destination() ~= nil or outline ~= nil
 	self:Layout(objective and objective.entry)
-	if zone then
+	if outline then
+		self:SetPosition(outline.x, outline.y)
+	elseif zone then
 		self:SetPosition(zone.x, zone.y)
 	elseif objective then
 		self:SetPosition(objective.entry.x, objective.entry.y)
@@ -471,7 +514,9 @@ end
 function ObjectivePin:OnMouseEnter()
 	self.Highlight:Show()
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-	if self.zone then
+	if self.outline then
+		AddOutlineTooltip(GameTooltip, self.outline.area, self.outline.yards)
+	elseif self.zone then
 		AddZoneTooltip(GameTooltip, self.zone)
 	elseif self.group and self.objective then
 		AddPinTooltip(GameTooltip, self.group, self.objective)
@@ -488,8 +533,15 @@ end
 
 ---@param button string
 function ObjectivePin:OnMouseClickAction(button)
+	if button ~= "LeftButton" then
+		return
+	end
+	if self.outline then
+		ns.NavigateOutline(self.outline.uiMapID, self.outline.area, self.outline.x, self.outline.y)
+		return
+	end
 	local uiMapID, x, y = self:Destination()
-	if button == "LeftButton" and uiMapID and x and y and self.objective then
+	if uiMapID and x and y and self.objective then
 		ns.Navigate(uiMapID, x, y, self.objective.text)
 	end
 end
@@ -502,27 +554,50 @@ function ObjectivePin:OnMouseLeave()
 end
 
 -- One frame per zone map holding every undiscovered area, drawn from the same map tiles Blizzard reveals on
--- discovery (see MapExplorationPinMixin:RefreshOverlays). It never takes the mouse, which would swallow the map's own
--- clicks (right-click to zoom out, drag to pan): while the cursor is on bare map, the area under it is polled
--- (MapContents.AreaAt).
+-- discovery (see MapExplorationPinMixin:RefreshOverlays), or, with "Show where to discover areas" on, as a gold
+-- glow along each area's real ground (MapContents.OutlineAt). It never takes the mouse, which would swallow the
+-- map's own clicks (right-click to zoom out, drag to pan): while the cursor is on bare map, the area under it is
+-- polled (MapContents.OutlineAt, then MapContents.AreaAt for the areas that keep their shading).
 ---@class LegacyAreaPin : ForeverCanvasPin
 ---@field textures LegacyTexturePool
 ---@field shade? LegacyShade
----@field hovered? LegacyShadedArea
+---@field outline? LegacyOutline
+---@field hovered? LegacyShadedArea|LegacyOutlineArea
 ---@field cursorX? number
 ---@field cursorY? number
 ---@field drawn table<string, Texture[]>
+---@field glow table<string, LegacyGlowLine[]>
+---@field lines LegacyGlowLine[]
+---@field used number
+---@field width number
+---@field height number
 ---@field shadeAlpha number
+---@field playerX? number
+---@field playerY? number
+---@field clock number
 local AreaPin = CreateFromMixins(ns.core.MapCanvas.PinMixin)
+
+-- Set by Attach: moves the outline pins to the player's new place while the map shows.
+---@type (fun()|nil)
+local RefreshOutlinePins
 
 function AreaPin:OnLoad()
 	self:SetIgnoreGlobalPinScale(true)
 	self:UseFrameLevelType("PIN_FRAME_LEVEL_MAP_EXPLORATION")
 	self.textures = CreateTexturePool(self, "OVERLAY")
-	self.drawn = {}
+	self.drawn, self.glow, self.lines = {}, {}, {}
+	self.used = 0
+	self.clock = 0
 	-- The area scan runs only when the cursor moves over the canvas; the position is in canvas pixels, so a zoom or
-	-- pan under a still cursor counts as a move.
-	self:SetScript("OnUpdate", function()
+	-- pan under a still cursor counts as a move. The player's place is read once a second, not every frame.
+	self:SetScript("OnUpdate", function(_, elapsed)
+		self.clock = self.clock + elapsed
+		if self.outline and self.clock >= PLAYER_REFRESH then
+			self.clock = 0
+			if RefreshOutlinePins then
+				RefreshOutlinePins()
+			end
+		end
 		if self:GetMap():IsCanvasMouseFocus() then
 			local x, y = self:CursorPosition()
 			if x ~= self.cursorX or y ~= self.cursorY then
@@ -545,7 +620,12 @@ end
 function AreaPin:OnReleased()
 	self:Highlight(nil)
 	self.textures:ReleaseAll()
-	self.shade, self.drawn = nil, {}
+	for _, line in ipairs(self.lines) do
+		line:Hide()
+	end
+	self.shade, self.outline = nil, nil
+	self.drawn, self.glow = {}, {}
+	self.used = 0
 	self.cursorX, self.cursorY = nil, nil
 end
 
@@ -575,19 +655,83 @@ function AreaPin:DrawTile(tile)
 	return texture
 end
 
----@param shade LegacyShade
+-- One line of the glow from the pool; a shorter ring hides the lines it does not need.
+---@param u1 number
+---@param v1 number
+---@param u2 number
+---@param v2 number
+---@param thickness number
 ---@param alpha number
-function AreaPin:OnAcquired(shade, alpha)
-	self:SetSize(self:GetMap():GetCanvas():GetSize())
-	self:SetPosition(0.5, 0.5)
-	self.shade = shade
-	self.shadeAlpha = alpha
-	for _, shaded in ipairs(shade.areas) do
-		local textures = {}
-		for _, tile in ipairs(shaded.tiles) do
-			textures[#textures + 1] = self:DrawTile(tile)
+---@return Line
+function AreaPin:DrawEdge(u1, v1, u2, v2, thickness, alpha)
+	local index = self.used + 1
+	local line = self.lines[index]
+	if not line then
+		local created = self:CreateLine(nil, "OVERLAY")
+		---@cast created LegacyGlowLine
+		self.lines[index] = created
+		line = created
+	end
+	self.used = index
+	ns.Art.GlowLine(line, GLOW, thickness, GOLD_R, GOLD_G, GOLD_B, alpha)
+	line.baseAlpha = alpha
+	line:SetStartPoint("TOPLEFT", self, u1 * self.width, -v1 * self.height)
+	line:SetEndPoint("TOPLEFT", self, u2 * self.width, -v2 * self.height)
+	line:Show()
+	return line
+end
+
+-- Every ring of every area, as a wide soft stroke under a brighter core.
+---@param outline LegacyOutline
+function AreaPin:Paint(outline)
+	self.outline = outline
+	self.used = 0
+	for _, area in ipairs(outline.areas) do
+		local lines = {}
+		for _, ring in ipairs(area.rings) do
+			local count = #ring / 2
+			for index = 1, count do
+				local following = index % count + 1
+				local u1, v1, u2, v2 =
+					ring[index * 2 - 1], ring[index * 2], ring[following * 2 - 1], ring[following * 2]
+				if not (u1 == u2 and v1 == v2) then
+					lines[#lines + 1] = self:DrawEdge(u1, v1, u2, v2, GLOW_WIDE, GLOW_WIDE_ALPHA)
+					lines[#lines + 1] = self:DrawEdge(u1, v1, u2, v2, GLOW_CORE, GLOW_CORE_ALPHA)
+				end
+			end
 		end
-		self.drawn[shaded.area.key] = textures
+		self.glow[area.key] = lines
+	end
+	for index = self.used + 1, #self.lines do
+		self.lines[index]:Hide()
+	end
+end
+
+---@param shade? LegacyShade
+---@param alpha number
+---@param outline? LegacyOutline
+function AreaPin:OnAcquired(shade, alpha, outline)
+	local width, height = self:GetMap():GetCanvas():GetSize()
+	self:SetSize(width, height)
+	self:SetPosition(0.5, 0.5)
+	self.width, self.height = width, height
+	self.shade, self.shadeAlpha = shade, alpha
+	if shade then
+		for _, shaded in ipairs(shade.areas) do
+			local textures = {}
+			for _, tile in ipairs(shaded.tiles) do
+				textures[#textures + 1] = self:DrawTile(tile)
+			end
+			self.drawn[shaded.area.key] = textures
+		end
+	end
+	if outline then
+		self:Paint(outline)
+	else
+		self.outline = nil
+		for _, line in ipairs(self.lines) do
+			line:Hide()
+		end
 	end
 end
 
@@ -603,37 +747,67 @@ end
 ---@param x number
 ---@param y number
 function AreaPin:HoverAt(x, y)
-	local shaded = self.shade and ns.MapContents.AreaAt(self.shade, x, y) or nil
-	if shaded ~= self.hovered then
-		self:Highlight(shaded)
+	local target
+	if self.outline then
+		target = ns.MapContents.OutlineAt(self.outline, x / self.width, y / self.height)
+	end
+	if not target then
+		target = self.shade and ns.MapContents.AreaAt(self.shade, x, y) or nil
+	end
+	if target ~= self.hovered then
+		self:Highlight(target)
 	end
 end
 
----@param shaded LegacyShadedArea?
-function AreaPin:Highlight(shaded)
-	if self.hovered then
-		for _, texture in ipairs(self.drawn[self.hovered.area.key]) do
-			texture:SetVertexColor(0, 0, 0, self.shadeAlpha)
+-- The hovered area's own drawing brightens: a shaded area's tiles, or an outlined area's glow.
+---@param area LegacyShadedArea|LegacyOutlineArea?
+function AreaPin:Highlight(area)
+	local previous = self.hovered
+	if previous then
+		local before = previous.outline and previous --[[@as LegacyOutlineArea]]
+		if before then
+			for _, line in ipairs(self.glow[before.key] or {}) do
+				line:SetAlpha(line.baseAlpha)
+			end
+		else
+			local shaded = previous --[[@as LegacyShadedArea]]
+			for _, texture in ipairs(self.drawn[shaded.area.key]) do
+				texture:SetVertexColor(0, 0, 0, self.shadeAlpha)
+			end
 		end
 		-- Only our own tooltip: a pin the cursor just moved onto has already shown its own.
 		if GameTooltip:GetOwner() == self then
 			GameTooltip:Hide()
 		end
 	end
-	self.hovered = shaded
-	if not shaded then
+	self.hovered = area
+	if not area then
 		return
 	end
-	for _, texture in ipairs(self.drawn[shaded.area.key]) do
-		texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
-	end
 	GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
-	local objective = shaded.objective
-	if objective then
-		AddPinTooltip(GameTooltip, objective.group, objective.objective)
+	local outlined = area.outline and area --[[@as LegacyOutlineArea]]
+	if outlined then
+		for _, line in ipairs(self.glow[outlined.key] or {}) do
+			line:SetAlpha(line.baseAlpha * GLOW_HOVER)
+		end
+		local yards
+		if self.outline then
+			local _, _, distance = ns.MapContents.OutlinePoint(self.outline.zone, outlined, self.playerX, self.playerY)
+			yards = distance
+		end
+		AddOutlineTooltip(GameTooltip, outlined, yards)
 	else
-		GameTooltip_SetTitle(GameTooltip, shaded.area.name)
-		GameTooltip_AddNormalLine(GameTooltip, KIND_LABEL.explore)
+		local shaded = area --[[@as LegacyShadedArea]]
+		for _, texture in ipairs(self.drawn[shaded.area.key]) do
+			texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
+		end
+		local objective = shaded.objective
+		if objective then
+			AddPinTooltip(GameTooltip, objective.group, objective.objective)
+		else
+			GameTooltip_SetTitle(GameTooltip, shaded.area.name)
+			GameTooltip_AddNormalLine(GameTooltip, KIND_LABEL.explore)
+		end
 	end
 	GameTooltip:Show()
 end
@@ -647,12 +821,67 @@ end
 
 --[[ Wiring ]]
 
+-- The player's place on this map, or nil when the player is on another one. The client's point is a
+-- vector with GetXY, absent where the map does not cover the player.
+---@param uiMapID number?
+---@return number? u
+---@return number? v
+local function PlayerPosition(uiMapID)
+	if not uiMapID then
+		return nil
+	end
+	local position = C_Map.GetPlayerMapPosition(uiMapID, "player")
+	if not position then
+		return nil
+	end
+	local x, y = position:GetXY()
+	if not x or not y then
+		return nil
+	end
+	return x, y
+end
+
 local function Attach()
 	local map = WorldMapFrame
 	local MapCanvas = ns.core.MapCanvas
 	local pins = MapCanvas.Pool(map, ObjectivePin, { template = PIN_TEMPLATE, marker = "legacy" })
 	local areas = MapCanvas.Pool(map, AreaPin)
 	local refreshPending = false
+	-- The outlined areas' pins, and the drawing they stand on, as the last Draw left them.
+	---@type LegacyObjectivePin[]
+	local outlinePins = {}
+	---@type LegacyOutline?
+	local outlineDrawn
+	---@type LegacyAreaPin?
+	local areaPin
+	-- The player's place the pins were last placed at, so a still player costs no second pass.
+	local placed, placedU, placedV
+
+	-- The outline pins follow the player: the point nearest the player on each area's ground, or the
+	-- area's first point while the player is elsewhere.
+	local function PlaceOutlinePins()
+		local zone = outlineDrawn and outlineDrawn.zone
+		if not (zone and map:IsShown()) then
+			return
+		end
+		local u, v = PlayerPosition(map:GetMapID())
+		if placed and u == placedU and v == placedV then
+			return
+		end
+		placed, placedU, placedV = true, u, v
+		for _, pin in ipairs(outlinePins) do
+			local place = pin.outline
+			if place then
+				local x, y, yards = ns.MapContents.OutlinePoint(zone, place.area, u, v)
+				place.x, place.y, place.yards = x, y, yards
+				pin:SetPosition(x, y)
+			end
+		end
+		if areaPin then
+			areaPin.playerX, areaPin.playerY = u, v
+		end
+	end
+	RefreshOutlinePins = PlaceOutlinePins
 
 	-- Our pins are our own frames, but a pass-through change is refused in combat, so a redraw in combat hides them
 	-- and waits for its end.
@@ -665,15 +894,40 @@ local function Attach()
 		refreshPending = false
 		pins:ReleaseAll()
 		areas:ReleaseAll()
-		local drawn = ns.MapContents.Drawn(map:GetMapID())
+		outlinePins = {}
+		placed = false
+		local uiMapID = map:GetMapID()
+		local drawn = ns.MapContents.Drawn(uiMapID)
+		outlineDrawn = drawn.outline
 		for _, zone in ipairs(drawn.badges) do
 			pins:Acquire(nil, nil, zone)
 		end
 		for _, pin in ipairs(drawn.pins) do
 			pins:Acquire(pin.group, pin.objective)
 		end
-		if drawn.shade then
-			areas:Acquire(drawn.shade, RevealedByLeatrix() and 0 or AREA_ALPHA)
+		local u, v
+		if drawn.outline then
+			u, v = PlayerPosition(uiMapID)
+			for _, area in ipairs(drawn.outline.areas) do
+				local x, y, yards = ns.MapContents.OutlinePoint(drawn.outline.zone, area, u, v)
+				local objective = area.objective
+				local pin = pins:Acquire(
+					objective and objective.group,
+					objective and objective.objective,
+					nil,
+					{ uiMapID = uiMapID, area = area, x = x, y = y, yards = yards }
+				)
+				---@cast pin LegacyObjectivePin
+				outlinePins[#outlinePins + 1] = pin
+			end
+		end
+		if drawn.shade or drawn.outline then
+			local pin = areas:Acquire(drawn.shade, RevealedByLeatrix() and 0 or AREA_ALPHA, drawn.outline)
+			---@cast pin LegacyAreaPin
+			areaPin = pin
+			pin.playerX, pin.playerY = u, v
+		else
+			areaPin = nil
 		end
 		MapCanvas.SetShown(map, true)
 	end
@@ -713,7 +967,7 @@ local function Attach()
 	-- Progress moves the pins and the "On the world map" switch the badges: zone completion's notice covers both.
 	ns.ZoneCompletion.OnChange(ns.RefreshMap)
 	ns.Saved.OnChange(function(key)
-		if key == "showAreas" or key == "showEntrances" then
+		if key == "showAreas" or key == "showOutlines" or key == "showEntrances" then
 			ns.RefreshMap()
 		end
 	end)

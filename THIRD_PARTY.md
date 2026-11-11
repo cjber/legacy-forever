@@ -9,9 +9,11 @@ refresh that moves the pin never leaves this file behind. The addon itself is GP
 | Input | Used for | Pin | Licence |
 |---|---|---|---|
 | WoW: Forever client tables, via [wago.tools](https://wago.tools) | Achievements, criteria, zones and instances in `Data/Legacy.lua` | `BUILD` in `tools/gen_legacy.py` | Blizzard Entertainment's game data |
+| WoW: Forever client terrain files (root ADT files), via [wago.tools](https://wago.tools) | Exploration area outlines in `Data/Explore.lua` | `BUILD` in `tools/gen_explore.py` | Blizzard Entertainment's game data |
 | `tools/locations.json` | Reviewed facts the client data cannot give (where a criterion happens), each with its evidence | Committed; `tools/locations.py` checks it against the pinned rows | This addon's own |
 
-No embedded libraries ship. `media/` is this addon's own: the icon is drawn in `media/icon.svg`. `Locales/frFR.lua`
+No embedded libraries ship. `media/` is this addon's own: the icon is drawn in `media/icon.svg`, and the map glow's
+feather strip `media/Glow.tga` by `tools/glow_texture.py`. `Locales/frFR.lua`
 is the French translation Brainc3ll wrote (#99), since extended with machine-translated lines (marked `-- mt`) for new
 strings, under this addon's licence.
 
@@ -48,6 +50,7 @@ Credit for the ideas, translations and reports behind the addon.
 | [cjber](https://github.com/cjber) | Requested the companion-addon compatibility audit (#235), cumulative flight-path comparisons, sharing controls and a ranked view (cjber/forever-core#49, #231) | |
 | [Polestar](https://github.com/fitzforge/polestar) by Fitz | Drawing the world map on frames of its own, which the map never touches. From cjber/adventure-guide-forever's issues: `/lf report` with its copy box and caught errors (#156), the issue forms (#157), the zip check (#158), `tools/doctor.py` (#160), the stale-screenshot check (#161), this file (#162), the "For addon authors" changelog subsection (#163) and `.editorconfig` (#165). | GPL-3.0. Inspired only; no code was copied. Fitz is welcome to use our code. |
 | Brainc3ll | The French translation (#99) | |
+| cotijelucie, on Discord | Asked to see exactly where an undiscovered area is credited, which became *Show where to discover areas* (#459) | |
 | Bigabyte | Found the quest tracker shifting when moved in Edit Mode (#103) | |
 | overspark | Asked on CurseForge for a way to hide the dungeon and raid entrance pins, which became *Show dungeon and raid entrances* (#139), and level ranges on entrance tooltips (#222); the same comment prompted drawing a cleared dungeon or raid entrance faded so finished and unfinished instances read differently | |
 | deathmvp1 and berserkerlxl, on CurseForge | Found Questie's quest list covering the Forever tracker sections, which now move clear of it (cjber/shortest-path-forever#214) | |

@@ -357,6 +357,7 @@ local kinds, expectedKinds =
 		"checkbox@World map",
 		"checkbox@World map",
 		"checkbox@World map",
+		"checkbox@World map",
 		"button@Legacy Forever",
 		"checkbox@Objective tracker",
 		"checkbox@Objective tracker",
@@ -388,6 +389,7 @@ local expected = {
 	trackerAttached = true,
 	trackerLocked = false,
 	showAreas = true,
+	showOutlines = false,
 	showEntrances = true,
 	map = true,
 	tracker = false,
@@ -425,7 +427,7 @@ check(
 -- Quests grey out without Questie, as the map menu's box does, and the name and tooltip are translated.
 local quests = byKey.count_quests
 check(quests.name == "quests", "a category row is named by its label")
-check(#registered[10].initializer.modify == 0, "only quests can grey out")
+check(#registered[11].initializer.modify == 0, "only quests can grey out")
 local questsRow
 for _, entry in ipairs(registered) do
 	if entry.initializer.setting == quests then
@@ -462,9 +464,9 @@ check(byKey.showAreas:GetValue() == false, "a toggle elsewhere shows on the row"
 check(notified[#notified] == "LegacyForever_showAreas", "a toggle elsewhere has the row read again")
 
 -- The entrances row, under the shading on the World map page, says what the menu keeps.
-check(registered[3].initializer.setting == byKey.showEntrances, "entrances follow the shading on the map page")
+check(registered[4].initializer.setting == byKey.showEntrances, "entrances follow the shading on the map page")
 check(byKey.showEntrances.name == "Show dungeon and raid entrances", "the entrances row is named as in the menu")
-check(registered[3].initializer.tooltip:find("menu still lists them", 1, true), "and says the menu keeps them")
+check(registered[4].initializer.tooltip:find("menu still lists them", 1, true), "and says the menu keeps them")
 byKey.showEntrances:SetValue(false)
 check(LegacyForeverDB.showEntrances == false and not Saved.Get("showEntrances"), "the entrances row saves")
 check(heard[#heard] == "second showEntrances", "and tells the listeners, which redraw the map")

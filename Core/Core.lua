@@ -18,6 +18,7 @@ end
 ---@field Art LegacyArt
 ---@field Saved LegacySaved
 ---@field Data LegacyData
+---@field Explore LegacyExplore
 ---@field Model LegacyModel
 ---@field Live LegacyLive
 ---@field Quests LegacyQuests
@@ -29,7 +30,8 @@ end
 ---@field RefreshMap fun()
 ---@field OpenMapMenu fun()
 ---@field GamepadUI fun(): boolean whether the gamepad interface is on
----@field Navigate fun(uiMapID: number, x: number, y: number, title: string)
+---@field Navigate fun(uiMapID: number, x: number, y: number, title: string): boolean
+---@field NavigateOutline fun(uiMapID: number, area: LegacyOutlineArea, x: number, y: number)
 ---@field NavigateHint fun(): string
 ---@field DungeonLevelRange fun(instance: number): number?, number?, string? recommended range from installed AtlasLoot
 ---@field Guide fun(uiMapID: number, x: number, y: number, title: string): boolean, ("combat"|"unavailable")?

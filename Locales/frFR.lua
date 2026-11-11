@@ -10,6 +10,7 @@ L["%d Legacy objectives left"] = "%d objectifs Héritage restants"
 L["%d not known yet."] = "%d encore inconnu."
 L["%d unfinished Legacy objective on this map."] = "%d objectif Héritage non terminé sur cette carte."
 L["%d unfinished Legacy objectives on this map."] = "%d objectifs Héritage non terminés sur cette carte."
+L["%d yards away"] = "À %d mètres" -- mt
 L["%s %d Legacy |4point:points;"] = "%s %d |4point Héritage:points Héritage;"
 L["%s complete. %s"] = "%s terminé. %s"
 L["%s is at %s in %s."] = "%s est à %s à %s."
@@ -52,6 +53,8 @@ L["Flight paths"] = "Points de vol"
 L["Flight-path leaderboard"] = "Classement des trajets aériens"
 L["Flight-path records"] = "Records de trajets aériens"
 L["Forever addons"] = "Addons Forever"
+L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Illumine le terrain réel de chaque zone non découverte, avec un repère à son bord. Les zones sans données de terrain gardent l'ombrage." -- mt
 L["Hide from the tracker"] = "Masquer du suivi"
 L["In the objective tracker"] = "Dans le suivi des objectifs"
 L["Install AtlasLoot for recommended levels."] = "Installez AtlasLoot pour afficher les niveaux recommandés."
@@ -96,6 +99,7 @@ L["Show a quiet line where one of my other Forever addons would help. Only for a
 	"Affiche une ligne discrète lorsqu'un de mes autres addons Forever pourrait vous aider. Uniquement pour les addons que vous ne possédez pas."
 L["Show dungeon and raid entrances"] = "Afficher les entrées de donjons et raids"
 L["Show undiscovered areas"] = "Afficher les zones non découvertes"
+L["Show where to discover areas"] = "Afficher où découvrir des zones" -- mt
 L["Stop tracking"] = "Arrêter le suivi"
 L["Suggest my other Forever addons"] = "Suggérer mes autres addons Forever"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =

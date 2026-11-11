@@ -46,6 +46,21 @@ GameTooltip_SetTitle, GameTooltip_AddNormalLine, GameTooltip_AddHighlightLine = 
 GameTooltip_AddInstructionLine, GameTooltip_AddDisabledLine = Line, Line
 GameTooltip_AddColoredLine = Line
 
+-- Where the player is on the map being drawn, as C_Map answers it for the outline pins.
+local playerPosition = { 0.35, 0.25 }
+C_Map = {
+	GetPlayerMapPosition = function()
+		if not playerPosition then
+			return nil
+		end
+		return {
+			GetXY = function()
+				return playerPosition[1], playerPosition[2]
+			end,
+		}
+	end,
+}
+
 -- What the map shows: on map 1429 an objective with a place and a shaded area; on continent 1415 a zone badge.
 local drawCalls = 0
 local group = { challenge = 10, achievement = 10, uiMapID = 1429, objectives = {} }
@@ -56,11 +71,31 @@ local area = { name = "Northshire", key = "0:0:1:1" }
 local shade = {
 	areas = { { area = area, tiles = { { file = 1, x = 0, y = 0, width = 256, height = 256, u = 1, v = 1 } } } },
 }
+-- The outlined area on 1429: one square of real ground, no shading, with a pin of its own.
+local outlineArea = {
+	key = "outline:0",
+	name = "Northshire Ground",
+	rings = { { 0.2, 0.2, 0.4, 0.2, 0.4, 0.4, 0.2, 0.4 } },
+	outline = true,
+}
+local outline = {
+	uiMapID = 1429,
+	zone = { width = 1000, height = 700, areas = {} },
+	areas = { outlineArea },
+	byKey = { [outlineArea.key] = outlineArea },
+}
 local drawn = {
-	[1429] = { badges = {}, pins = { { group = group, objective = objective } }, shade = shade },
+	[1429] = {
+		badges = {},
+		pins = { { group = group, objective = objective } },
+		shade = shade,
+		outline = outline,
+	},
+	[1430] = { badges = {}, pins = {} },
 	[1415] = { badges = { badge }, pins = {} },
 }
-local navigated, hovering, switched = {}, nil, nil
+local navigated, outlined, hovering, switched = {}, {}, nil, nil
+local settings = { showAreas = true, showEntrances = true, showOutlines = false }
 
 local ns = {
 	L = setmetatable({}, {
@@ -69,7 +104,12 @@ local ns = {
 		end,
 	}),
 	POINTS_ICON = "UI-Legacy-Points-icon-c60",
-	Art = { Fit = function() end },
+	Art = {
+		Fit = function() end,
+		GlowLine = function(line, file, thickness, r, g, b, a)
+			line.file, line.thickness, line.color, line.baseAlpha = file, thickness, { r, g, b, a }, a
+		end,
+	},
 	GamepadUI = function()
 		return false
 	end,
@@ -84,7 +124,11 @@ local ns = {
 	MapContents = {
 		Drawn = function(uiMapID)
 			drawCalls = drawCalls + 1
-			return drawn[uiMapID] or { badges = {}, pins = {} }
+			local drawing = drawn[uiMapID] or { badges = {}, pins = {} }
+			if drawing.outline and not settings.showOutlines then
+				return { badges = drawing.badges, pins = drawing.pins, shade = drawing.shade }
+			end
+			return drawing
 		end,
 		Objectives = function()
 			return {}, 1
@@ -94,6 +138,31 @@ local ns = {
 		end,
 		AreaAt = function()
 			return hovering
+		end,
+		OutlineAt = function(data, u, v)
+			for _, shape in ipairs(data.areas) do
+				if u > 0.2 and u < 0.4 and v > 0.2 and v < 0.4 then
+					return shape
+				end
+			end
+		end,
+		OutlinePoint = function(zone, shape, u, v)
+			local x, y = shape.rings[1][1], shape.rings[1][2]
+			local yards
+			if u then
+				local best = math.huge
+				for _, ring in ipairs(shape.rings) do
+					for index = 1, #ring, 2 do
+						local dx, dy = (ring[index] - u) * zone.width, (ring[index + 1] - v) * zone.height
+						local distance = dx * dx + dy * dy
+						if distance < best then
+							best, x, y = distance, ring[index], ring[index + 1]
+						end
+					end
+				end
+				yards = math.sqrt(best)
+			end
+			return x, y, yards
 		end,
 	},
 	Completion = { AddSummary = function() end },
@@ -106,10 +175,13 @@ local ns = {
 	Navigate = function(uiMapID, x, y, title)
 		navigated[#navigated + 1] = { uiMapID, x, y, title }
 	end,
+	NavigateOutline = function(uiMapID, shape, x, y)
+		outlined[#outlined + 1] = { uiMapID, shape, x, y }
+	end,
 	ZoneCompletion = { OnChange = function() end },
 	Saved = {
-		Get = function()
-			return true
+		Get = function(key)
+			return settings[key] ~= false
 		end,
 		OnChange = function(callback)
 			switched = callback
@@ -284,6 +356,81 @@ _G.LeaMapsDB.RevealMap = "Off"
 ns.RefreshMap()
 check(Areas()[1].drawn[area.key][1].color[4] == 0.25, "turning reveal off restores the pooled layer's normal veil")
 _G.LeaMapsDB = nil
+
+-- The terrain glow: the same frame as the shading, gold lines along the area's ground and a pin at the point
+-- nearest the player.
+settings.showOutlines = true
+ns.RefreshMap()
+local glow = Areas()[1]
+check(glow.outline and glow.outline.areas[1] == outlineArea, "the glow is drawn on the shading's own frame")
+local lines = {}
+for _, line in ipairs(glow.lines) do
+	if line.shown then
+		lines[#lines + 1] = line
+	end
+end
+check(#lines == 8, "each outline edge is a soft stroke and a bright core")
+check(lines[1].file == "Interface\\AddOns\\LegacyForever\\media\\Glow", "the glow lines carry the feather strip")
+check(lines[1].thickness == 11 and lines[2].thickness == 2.5, "the wide stroke lies under the narrow one")
+check(#Pins() == 2, "an outlined area adds a pin beside the objective's")
+local outlinePin = Pins()[2]
+check(
+	outlinePin.outline and outlinePin.point[4] == 400 and outlinePin.point[5] == -140,
+	"the outline pin sits at the vertex nearest the player"
+)
+outlinePin:Run("OnEnter")
+check(tooltip.lines[1] == "Northshire Ground" and tooltip.lines[2] == "Undiscovered area", "the pin names its area")
+check(tooltip.lines[3] == "61 yards away", "the pin gives the distance to the nearest ground")
+check(tooltip.lines[#tooltip.lines] == "Click to travel there.", "the pin says what a click does")
+outlinePin:Run("OnLeave")
+
+-- Bare map over the outline: the same frame hovers it, brightens its glow, and a click routes the journey.
+Kit.mouseFocus = true
+Kit.cursorX, Kit.cursorY = 300, -210
+Kit.Tick()
+check(tooltip.owner == glow and tooltip.lines[1] == "Northshire Ground", "the cursor over the outline names the area")
+check(tooltip.lines[2] == "Undiscovered area" and tooltip.lines[3] == "61 yards away", "the hover gives its distance")
+check(lines[1].alpha and lines[1].alpha > lines[1].baseAlpha, "the hovered area's glow brightens")
+Kit.mouseFocus = false
+Kit.Tick()
+check(tooltip.owner == nil and lines[1].alpha == lines[1].baseAlpha, "leaving the outline restores the glow")
+
+Kit.mouseOver = outlinePin
+outlinePin:Run("OnEnter")
+Kit.Fire("GLOBAL_MOUSE_DOWN", "LeftButton")
+Kit.Fire("GLOBAL_MOUSE_UP", "LeftButton")
+check(
+	#outlined == 1 and outlined[1][1] == 1429 and outlined[1][2] == outlineArea,
+	"a click on an outline pin asks for its outline route"
+)
+Kit.mouseOver = nil
+outlinePin:Run("OnLeave")
+
+-- With the glow off, the shading is the drawing again: no lines and no extra pin.
+settings.showOutlines = false
+ns.RefreshMap()
+check(#Pins() == 1, "with the glow off, an outlined area adds no pin")
+check(#Areas() == 1 and Areas()[1].drawn[area.key] ~= nil, "with the glow off, the shading keeps the area")
+local hidden = true
+for _, line in ipairs(Areas()[1].lines) do
+	hidden = hidden and line.shown == false
+end
+check(hidden, "with the glow off, no glow line is drawn")
+
+-- Changing the map releases the glow's lines, and a map without outlines keeps no outline pin.
+settings.showOutlines = true
+Kit.mapID = 1430
+Kit.Tick()
+check(#Pins() == 0, "a map without the glow keeps no outline pin")
+check(#Areas() == 0, "a map with neither shading nor glow draws no area frame")
+hidden = true
+for _, line in ipairs(glow.lines) do
+	hidden = hidden and line.shown == false
+end
+check(hidden, "changing the map disposes of the glow's lines")
+Kit.mapID = 1429
+settings.showOutlines = false
+Kit.Tick()
 
 -- Nothing of ours is made inside an open window, the canvas holds one frame of ours, and no pin has a click script
 -- or a field the map reads off its mouse focus.

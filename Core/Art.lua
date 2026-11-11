@@ -64,3 +64,18 @@ function Art.Icon(texture, file, size)
 	texture:SetTexture(file)
 	texture:SetSize(size, size)
 end
+
+-- A glow line along one edge of an outline: the feather strip is the line's own texture, drawn across the
+-- line's thickness, which is the shape it was made for, so nothing is stretched into another box.
+---@param line Line
+---@param file string
+---@param thickness number
+---@param red number
+---@param green number
+---@param blue number
+---@param alpha number
+function Art.GlowLine(line, file, thickness, red, green, blue, alpha)
+	line:SetTexture(file)
+	line:SetThickness(thickness)
+	line:SetVertexColor(red, green, blue, alpha)
+end
