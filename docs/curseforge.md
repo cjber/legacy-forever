@@ -1,7 +1,5 @@
 Legacy Forever shows unfinished Legacy challenges on the world map and tracks the ones you choose in the objective tracker.
 
-Nothing else needs installing.
-
 Free, with nothing locked behind it. If it saves you time, you can [sponsor me on GitHub](https://github.com/sponsors/cjber), which takes no fees, or [buy me a coffee on Ko-fi](https://ko-fi.com/cjber). For help and each day's release notes, [join me on Discord](https://discord.gg/FpHugGxRJY).
 
 [![Join me on Discord](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/discord-button.png)](https://discord.gg/FpHugGxRJY) [![Sponsor me on GitHub](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/github-sponsors-button.png)](https://github.com/sponsors/cjber) [![Support me on Ko-fi](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/kofi-button.png)](https://ko-fi.com/cjber)
@@ -81,6 +79,12 @@ For help, ideas and each day's release notes, join [cjber's Workshop on Discord]
 <!-- forever-family:end -->
 
 With Shortest Path Forever, clicking a dungeon or raid pin plans the trip there. Adventure Guide Forever shows your zone completion in its guide. Tweaks Forever's dungeon entrance icons and unexplored-area tint step aside where Legacy already marks the map. Tracked challenges share one tracker column with the other addons' tracker sections, above your quests.
+
+<!-- forever-credits:start -->
+
+Thanks to overspark, Lûca, cotijelucie, Brainc3ll, Bigabyte, Mouchoir, DanielVafidis, TheCheat54, KeijinDE and everyone who reported a bug or asked for a feature.
+
+<!-- forever-credits:end -->
 
 Source code and issues: [github.com/cjber/legacy-forever](https://github.com/cjber/legacy-forever). Licence: GPL-3.0-or-later.
 

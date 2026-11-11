@@ -3,8 +3,8 @@
 -- FOREVER_CORE, or the sibling ../forever-core used for local runs.
 --
 --   local core = dofile("tests/forever_core.lua")
---   local ForeverCore = core.install(env, { "Core/SafeCall.lua", "Core/Log.lua", "UI/Report.lua", "UI/MapCanvas.lua",
---       "Expose.lua" })
+--   local ForeverCore = core.install(env, { "Core/SafeCall.lua", "Core/Log.lua", "UI/Report.lua",
+--       "UI/Credits.lua", "UI/MapCanvas.lua", "Expose.lua" })
 --
 -- `install` returns the ForeverCore global, so a spec can register through it. With no file list, every file the TOC
 -- names loads. `enUS.lua` always loads first: its phrases are the keys every core module reads.

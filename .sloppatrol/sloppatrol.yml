@@ -10,6 +10,7 @@ checks:
   - { name: specs, run: "for s in tests/*_spec.lua; do luajit \"$s\" || exit 1; done", tests: true }
   - { name: tools, run: "ruff format --check . && ruff check ." }
   - { name: generated, run: "python3 tools/check_generated.py" }
+  - { name: credits, run: "python3 tools/forever_tools/credits.py --check" }
   - { name: rules, run: "python3 tools/repo_rules.py" }
 focus: [Core/**, UI/**, Integrations/**]
 ignore: [Data/**, Locales/**, Libs/**, tools/forever_tools/**]

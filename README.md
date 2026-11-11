@@ -48,7 +48,7 @@ Progress comes from the game each time, so it matches the Legacy panel and follo
 
 ## Install
 
-Install it from [CurseForge](https://www.curseforge.com/wow/addons/legacy-forever) or [Wago Addons](https://addons.wago.io/addons/legacy-forever), or download the zip from [Releases](https://github.com/cjber/legacy-forever/releases). Nothing else needs installing. To install the zip by hand, extract it into the WoW: Forever client's `Interface/AddOns/` folder (`_forever_` on the live client, `_classic_beta_` on the beta) so you end up with `AddOns/LegacyForever/LegacyForever.toc`.
+Install it from [CurseForge](https://www.curseforge.com/wow/addons/legacy-forever) or [Wago Addons](https://addons.wago.io/addons/legacy-forever), or download the zip from [Releases](https://github.com/cjber/legacy-forever/releases). To install the zip by hand, extract it into the WoW: Forever client's `Interface/AddOns/` folder (`_forever_` on the live client, `_classic_beta_` on the beta) so you end up with `AddOns/LegacyForever/LegacyForever.toc`.
 
 ## Usage
 
@@ -145,7 +145,13 @@ The addon is free and stays GPL-3.0. If it saves you time, you can [sponsor me o
 
 ## Credits
 
-Brainc3ll translated Legacy Forever into French. Some features were inspired by [Polestar](https://github.com/fitzforge/polestar) by Fitz, such as `/lf report` and the issue forms; no code was copied. Fitz is welcome to use our code. Thanks to Bigabyte, overspark, deathmvp1, berserkerlxl and everyone who reported a bug or asked for a feature. [THIRD_PARTY.md](THIRD_PARTY.md) has the full list.
+Brainc3ll translated Legacy Forever into French. Some features were inspired by [Polestar](https://github.com/fitzforge/polestar) by Fitz, such as `/lf report` and the issue forms; no code was copied. Fitz is welcome to use our code.
+
+<!-- forever-credits:start -->
+
+Thanks to overspark, Lûca, cotijelucie, Brainc3ll, Bigabyte, Mouchoir, DanielVafidis, TheCheat54, KeijinDE and everyone who reported a bug or asked for a feature.
+
+<!-- forever-credits:end -->
 
 ## Licence
 

@@ -106,8 +106,8 @@ L["Show undiscovered areas"] = "Показывать неоткрытые обл
 L["Show where to discover areas"] = "Показывать места для обнаружения областей"
 L["Stop tracking"] = "Не отслеживать"
 L["Suggest my other Forever addons"] = "Предлагать другие мои модификации Forever"
-L["Undiscovered areas shade above Leatrix Maps' unexplored tint again."] =
-	"Неоткрытые области снова затеняются поверх тонировки неисследованных областей Leatrix Maps."
+L["The players who helped are on the Thanks page."] =
+	"Игроки, которые помогли, указаны на странице благодарностей."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
