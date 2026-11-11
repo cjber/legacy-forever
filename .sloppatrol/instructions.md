@@ -14,7 +14,8 @@ what the game loads; `tests/*_spec.lua` load them in that order inside a stubbed
 
 Things reached indirectly: none of them is dead code, even when no file calls it by name.
 
-- `LegacyForever.toc` file list: load order `Core/Require.lua`, `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Data/Legacy.lua, Core, Art, Saved, WhatsNew, Model, Live, Quests, Navigate,
+- `LegacyForever.toc` file list: load order `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Core/ForeverRequire.lua`,
+  `Core/Require.lua`, `Data/Legacy.lua, Core, Art, Saved, WhatsNew, Model, Live, Quests, Navigate,
   ZoneCompletion, Tracker, Completion, Settings, MapContents, UI/Map.xml, Map, API, Stats, Report`; never reorder as formatting.
 - `## SavedVariables: LegacyForeverDB`: persisted keys `tracked`, `zoneCompletion`,
   `flightPaths`, `showAreas`, `showEntrances`, `whatsNew`, `lastVersion`, named only in `Core/Saved.lua`, and `suggestFamily` (default

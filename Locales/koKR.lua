@@ -14,11 +14,17 @@ L["%d unfinished Legacy objectives on this map."] =
 	"이 지도에 완료하지 않은 유산 목표가 %d개 있습니다."
 L["%s %d Legacy |4point:points;"] = "%s 유산 점수 %d|4점:점;"
 L["%s complete. %s"] = "%s 완료. %s"
+L["%s could not start. Reinstall %s to fix this."] =
+	"%s을(를) 시작할 수 없습니다. 이 문제를 해결하려면 %s을(를) 다시 설치하세요."
 L["%s is at %s in %s."] = "%s 위치: %s (%s)."
 L["%s is at %s."] = "%s 위치: %s."
 L["%s: %d left"] = "%s: %d개 남음"
 L["%s: %d of %d areas left"] = "%s: 구역 %d/%d개 남음"
 L["%s: %d of %d zones complete (%d%%)"] = "%s: 지역 %d/%d개 완료 (%d%%)"
+L["%s: %s are out of date. Update them to fix this."] =
+	"%s: %s이(가) 오래되었습니다. 이 문제를 해결하려면 모두 업데이트하세요."
+L["%s: %s is out of date. Update it to fix this."] =
+	"%s: %s이(가) 오래되었습니다. 이 문제를 해결하려면 업데이트하세요."
 L["/lf - open the world map and its Legacy menu"] = "/lf - 세계 지도와 유산 메뉴를 엽니다"
 L["/lf audit - check the bundled data against the game"] = "/lf audit - 내장 데이터를 게임과 대조합니다"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
@@ -66,8 +72,6 @@ L["Keeps the shared Forever tracker where you put it. The grip at its top no lon
 L["Legacy"] = "유산"
 L["Legacy Forever report"] = "Legacy Forever 보고서"
 L["Legacy objectives"] = "유산 목표"
-L["Legacy's options and map now open without a blocked-action error."] =
-	"Legacy의 설정과 지도가 이제 차단된 작업 오류 없이 열립니다."
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"레벨, 숙련, 등급 등 정해진 장소가 없는 모든 것."
 L["Lock the tracker"] = "추적기 잠금"
@@ -102,6 +106,7 @@ L["Show dungeon and raid entrances"] = "던전 및 공격대 입구 표시"
 L["Show undiscovered areas"] = "발견하지 않은 구역 표시"
 L["Stop tracking"] = "추적 해제"
 L["Suggest my other Forever addons"] = "제 다른 Forever 애드온 추천"
+L["Tells you which addon to update."] = "업데이트할 애드온을 알려 줍니다."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

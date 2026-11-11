@@ -68,7 +68,8 @@ request against its base and fails on a regression. Every version needs a
   their definitions; do not restore a LuaLS globals whitelist.
 - `tools/typecheck.sh` fetches pinned WoW API/FrameXML annotations into an ignored types cache and
   rejects every LuaLS diagnostic, including Information. All TOC Lua files, including generated
-  data, are checked. Install LuaLS 3.19.1 locally; CI verifies its release checksum.
+  data, are checked. Install LuaLS 3.19.1 locally; CI verifies its release checksum. `Core/ForeverRequire.lua` is
+  copied byte for byte from ForeverCore and is never edited here.
 - A final `select(...)` argument, table element or return must be parenthesized to keep one value,
   or carry a trailing `-- multi-value: <reason>` when expansion is intentional.
 - Commits are signed (`git commit -S`) with the personal email.
