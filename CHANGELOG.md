@@ -18,6 +18,12 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 - **`LegacyForever.API` is now version 2, minor 0.** `Leaderboard(limit)` is removed with Forever Leaderboards. Every other member keeps its contract, so callers that use only those need no change beyond their version check.
 
+## [2.1.4] - 2026-11-11
+
+<!-- forever-core-sync -->
+
+- Ships with the same shared code as your other Forever addons, so they keep working together.
+
 ## [2.1.3] - 2026-11-11
 
 - **Works again after updating.** Updating to the last version could leave the addon switched off in the game's AddOns list with "ForeverCore: missing", because the update did not bring Forever Core with it. Forever Core now comes inside this addon's download again, from CurseForge, Wago or GitHub alike, so updating is all it takes (cjber/shortest-path-forever#731).
