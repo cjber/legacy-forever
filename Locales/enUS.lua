@@ -7,7 +7,8 @@ ns.L = setmetatable({}, {
 		return key
 	end,
 })
-ns.L["Undiscovered areas shade above Leatrix Maps' unexplored tint again."] = "Undiscovered areas shade above Leatrix Maps' unexplored tint again."
+ns.L["Undiscovered areas shade above Leatrix Maps' unexplored tint again."] =
+	"Undiscovered areas shade above Leatrix Maps' unexplored tint again."
 ns.L["This menu needs mouse and keyboard."] = "This menu needs mouse and keyboard."
 ns.L["Show where to discover areas"] = "Show where to discover areas"
 ns.L["%d yards away"] = "%d yards away"
