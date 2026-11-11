@@ -149,7 +149,7 @@ Brainc3ll translated Legacy Forever into French. Some features were inspired by 
 
 <!-- forever-credits:start -->
 
-Thanks to overspark, cotijelucie, Brainc3ll, Bigabyte, Mouchoir, DanielVafidis, TheCheat54, KeijinDE, Lůca and everyone who reported a bug or asked for a feature.
+Thanks to overspark, Lûca, cotijelucie, Brainc3ll, Bigabyte, Mouchoir, DanielVafidis, TheCheat54, KeijinDE and everyone who reported a bug or asked for a feature.
 
 <!-- forever-credits:end -->
 

@@ -90,8 +90,8 @@ L["Show undiscovered areas"] = "顯示未發現的區域"
 L["Show where to discover areas"] = "顯示可探索區域的位置"
 L["Stop tracking"] = "停止追蹤"
 L["Suggest my other Forever addons"] = "推薦我的其他Forever插件"
-L["The map can now show where each undiscovered area really is."] =
-	"地圖現在可以顯示每個未探索區域的真實位置。"
+L["Undiscovered areas shade above Leatrix Maps' unexplored tint again."] =
+	"未發現區域的陰影再次顯示在 Leatrix Maps 未探索區域著色之上。"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地區以及那裡剩餘的事項。你追蹤的挑戰保留在各自的傳承區塊中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
