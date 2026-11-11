@@ -1,6 +1,6 @@
 Legacy Forever shows unfinished Legacy challenges on the world map and tracks the ones you choose in the objective tracker.
 
-Legacy Forever needs [Forever Core](https://www.curseforge.com/wow/addons/forever-core), which CurseForge and Wago install with it.
+Legacy Forever needs [Forever Core](https://www.curseforge.com/wow/addons/forevercore), which CurseForge and Wago install with it.
 
 Free, with nothing locked behind it. If it saves you time, you can [sponsor me on GitHub](https://github.com/sponsors/cjber), which takes no fees, or [buy me a coffee on Ko-fi](https://ko-fi.com/cjber). For help and each day's release notes, [join me on Discord](https://discord.gg/FpHugGxRJY).
 
