@@ -26,11 +26,7 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - list what the game reports for one achievement"
 L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
 	"/lf issue - report a bug or request a feature with a ready-made GitHub issue link"
-L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
-	"/lf leaderboard - open Forever Leaderboards on this addon's tab"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - show a report to copy into a bug report"
-L["/lf share on|off - share flight-path totals, keeping your history"] =
-	"/lf share on|off - share flight-path totals, keeping your history"
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever routes the quests left in this zone."
 L["Already complete"] = "Already complete"
@@ -50,8 +46,6 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"Every quest this character can take in the zone, from Questie."
 L["Flight paths"] = "Flight paths"
-L["Flight-path leaderboard"] = "Flight-path leaderboard"
-L["Flight-path records"] = "Flight-path records"
 L["Forever addons"] = "Forever addons"
 L["Hide from the tracker"] = "Hide from the tracker"
 L["In the objective tracker"] = "In the objective tracker"
@@ -75,8 +69,6 @@ L["No unfinished Legacy objectives with a place on this map."] =
 L["Nothing left to do here"] = "Nothing left to do here"
 L["Objective tracker"] = "Objective tracker"
 L["On the world map"] = "On the world map"
-L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
-	"On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."
 L["Open"] = "Open"
 L["Open a flight master on this continent to check these."] = "Open a flight master on this continent to check these."
 L["Open in the Legacy panel"] = "Open in the Legacy panel"
@@ -89,7 +81,6 @@ L["Quest"] = "Quest"
 L["Recommended levels: %s (AtlasLoot)"] = "Recommended levels: %s (AtlasLoot)"
 L["Repeatable, holiday and profession quests are left out."] = "Repeatable, holiday and profession quests are left out."
 L["Reputations (Friendly)"] = "Reputations (Friendly)"
-L["Share flight-path totals with guild and group"] = "Share flight-path totals with guild and group"
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
 	"Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."
 L["Show dungeon and raid entrances"] = "Show dungeon and raid entrances"
@@ -121,5 +112,4 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"couldn't add a section to the objective tracker; please report /lf audit."
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"the objective tracker isn't available, so tracked challenges can't be shown."
-L["total"] = "total"
 L["updated to %s. %s"] = "updated to %s. %s"

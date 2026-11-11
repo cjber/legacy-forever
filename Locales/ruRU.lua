@@ -27,12 +27,8 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - показать, что игра сообщает об одном достижении"
 L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
 	"/lf issue - создает ссылку на issue GitHub для сообщения об ошибке или предложения улучшения"
-L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
-	"/lf leaderboard - открывает Forever Leaderboards на вкладке этого аддона"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - показать отчет для сообщения об ошибке"
-L["/lf share on|off - share flight-path totals, keeping your history"] =
-	"/lf share on|off - делиться числом маршрутов полётов, сохраняя историю"
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever проложит маршрут по оставшимся заданиям этой зоны."
 L["Already complete"] = "Уже завершено"
@@ -56,8 +52,6 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"Все задания зоны, доступные этому персонажу, по данным Questie."
 L["Flight paths"] = "Маршруты полетов"
-L["Flight-path leaderboard"] = "Рейтинг маршрутов полётов"
-L["Flight-path records"] = "История маршрутов полётов"
 L["Forever addons"] = "Модификации Forever"
 L["Hide from the tracker"] = "Скрыть из отслеживания"
 L["In the objective tracker"] = "В отслеживании целей"
@@ -83,8 +77,6 @@ L["No unfinished Legacy objectives with a place on this map."] =
 L["Nothing left to do here"] = "Здесь больше нечего делать"
 L["Objective tracker"] = "Отслеживание целей"
 L["On the world map"] = "На карте мира"
-L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
-	"Включено, пока вы не выключите. Делится числом маршрутов полётов и добавляет вас в рейтинги Forever."
 L["Open"] = "Открыть"
 L["Open a flight master on this continent to check these."] =
 	"Поговорите с распорядителем полетов на этом континенте, чтобы проверить их."
@@ -100,8 +92,6 @@ L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровн
 L["Repeatable, holiday and profession quests are left out."] =
 	"Повторяемые, праздничные задания и задания профессий не учитываются."
 L["Reputations (Friendly)"] = "Репутация (Дружелюбие)"
-L["Share flight-path totals with guild and group"] =
-	"Делиться числом маршрутов полётов с гильдией и группой"
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
 	"Показывать неприметную строку там, где помогла бы другая моя модификация Forever. Только для тех, что у вас не установлены."
 L["Show dungeon and raid entrances"] = "Показывать входы в подземелья и рейды"
@@ -133,5 +123,4 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"не удалось добавить раздел в отслеживание целей; сообщите результат /lf audit."
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"отслеживание целей недоступно, поэтому отслеживаемые испытания не показываются."
-L["total"] = "всего"
 L["updated to %s. %s"] = "обновлено до версии %s. %s"

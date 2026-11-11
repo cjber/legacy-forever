@@ -4,7 +4,7 @@ Legacy Forever is a WoW: Forever addon (Interface 16001) that puts unfinished Le
 world map and in the objective tracker. Players install the zip the BigWigs packager builds on a `v*` tag.
 
 It requires ForeverCore (`## Dependencies: ForeverCore`), the standalone addon that owns the shared tracker column,
-report window, error journal and debug log, Forever Leaderboards, the minimap button, the quest log side tabs, the
+report window, error journal and debug log, the minimap button, the quest log side tabs, the
 settings-page chrome, the family page and the map canvas. CurseForge and Wago install ForeverCore with it through
 `.pkgmeta`'s `required-dependencies`; nothing shared is vendored here.
 

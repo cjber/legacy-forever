@@ -25,12 +25,8 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 	"/lf criteria 684 - 업적 하나에 대해 게임이 알려주는 내용을 표시합니다"
 L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
 	"/lf issue - 오류 제보나 기능 요청에 바로 쓸 수 있는 GitHub 이슈 링크를 만듭니다"
-L["/lf leaderboard - open Forever Leaderboards on this addon's tab"] =
-	"/lf leaderboard - 이 애드온 탭에서 Forever Leaderboards를 엽니다"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - 오류 제보에 붙여 넣을 보고서를 표시합니다"
-L["/lf share on|off - share flight-path totals, keeping your history"] =
-	"/lf share on|off - 기록을 유지하며 비행 경로 합계 공유"
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever는 이 지역에 남은 퀘스트의 경로를 짜 줍니다."
 L["Already complete"] = "이미 완료됨"
@@ -53,8 +49,6 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"이 캐릭터가 이 지역에서 받을 수 있는 모든 퀘스트(Questie 기준)."
 L["Flight paths"] = "비행 경로"
-L["Flight-path leaderboard"] = "비행 경로 순위"
-L["Flight-path records"] = "비행 경로 기록"
 L["Forever addons"] = "Forever 애드온"
 L["Hide from the tracker"] = "추적기에서 숨기기"
 L["In the objective tracker"] = "목표 추적기에서"
@@ -79,8 +73,6 @@ L["No unfinished Legacy objectives with a place on this map."] =
 L["Nothing left to do here"] = "여기서 더 할 일이 없습니다"
 L["Objective tracker"] = "목표 추적기"
 L["On the world map"] = "세계 지도에서"
-L["On unless you turn it off. Shares flight-path totals and puts you on Forever Leaderboards."] =
-	"끄지 않는 한 켜져 있습니다. 비행 경로 합계를 공유하고 Forever 순위표에 올립니다."
 L["Open"] = "열기"
 L["Open a flight master on this continent to check these."] =
 	"이 대륙의 비행 조련사와 대화하면 확인할 수 있습니다."
@@ -95,7 +87,6 @@ L["Recommended levels: %s (AtlasLoot)"] = "권장 레벨: %s (AtlasLoot)"
 L["Repeatable, holiday and profession quests are left out."] =
 	"반복 가능, 축제, 전문 기술 퀘스트는 제외됩니다."
 L["Reputations (Friendly)"] = "평판 (약간 우호적)"
-L["Share flight-path totals with guild and group"] = "길드 및 파티와 비행 경로 합계 공유"
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
 	"제 다른 Forever 애드온이 도움이 될 만한 곳에 조용히 한 줄을 표시합니다. 설치하지 않은 애드온만 해당됩니다."
 L["Show dungeon and raid entrances"] = "던전 및 공격대 입구 표시"
@@ -127,5 +118,4 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"목표 추적기에 항목을 추가하지 못했습니다. /lf audit 결과를 제보해 주세요."
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"목표 추적기를 사용할 수 없어 추적 중인 도전을 표시할 수 없습니다."
-L["total"] = "총"
 L["updated to %s. %s"] = "%s 버전으로 업데이트되었습니다. %s"
