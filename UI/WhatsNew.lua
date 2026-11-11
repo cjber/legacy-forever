@@ -7,7 +7,9 @@ if ns.broken then
 end
 
 -- One chat line after an update: the new version and ns.WHATS_NEW. A first install stays quiet (there is no
--- version to compare with), and so does a checkout, whose version the packager never filled in.
+-- version to compare with), and so does a checkout, whose version the packager never filled in. A maintenance
+-- release (a core sync) has no headline in CHANGELOG.md, so an update to it says nothing new but still moves the
+-- remembered version on.
 function ns.WhatsNew()
 	local version = C_AddOns.GetAddOnMetadata(addonName, "Version")
 	if not version or version:find("^@") then
@@ -15,7 +17,7 @@ function ns.WhatsNew()
 	end
 	-- Forever's beta client can start without the saved variables loaded; that reads as a first install.
 	local last = ns.Saved.SeenVersion(version)
-	if last and last ~= version and ns.Saved.Get("whatsNew") then
+	if last and last ~= version and ns.Saved.Get("whatsNew") and version == ns.WHATS_NEW_VERSION then
 		ns.Print(L["updated to %s. %s"]:format(version, ns.WHATS_NEW))
 	end
 end

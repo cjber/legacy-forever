@@ -13,11 +13,15 @@ L["%d unfinished Legacy objectives on this map."] = "%d objectifs Héritage non 
 L["%d yards away"] = "À %d mètres" -- mt
 L["%s %d Legacy |4point:points;"] = "%s %d |4point Héritage:points Héritage;"
 L["%s complete. %s"] = "%s terminé. %s"
+L["%s could not start. Reinstall %s to fix this."] = "%s n'a pas pu démarrer. Réinstallez %s pour corriger cela." -- mt
 L["%s is at %s in %s."] = "%s est à %s à %s."
 L["%s is at %s."] = "%s est à %s."
 L["%s: %d left"] = "%s : %d restant"
 L["%s: %d of %d areas left"] = "%s : %d sur %d zones restantes"
 L["%s: %d of %d zones complete (%d%%)"] = "%s : %d sur %d zones terminées (%d%%)"
+L["%s: %s are out of date. Update them to fix this."] =
+	"%s : %s ne sont plus à jour. Mettez-les à jour pour corriger cela." -- mt
+L["%s: %s is out of date. Update it to fix this."] = "%s : %s n'est plus à jour. Mettez-le à jour pour corriger cela." -- mt
 L["/lf - open the world map and its Legacy menu"] = "/lf - ouvrir la carte du monde et son menu Héritage"
 L["/lf audit - check the bundled data against the game"] =
 	"/lf audit - vérifier les données intégrées par rapport au jeu"
@@ -59,8 +63,6 @@ L["Keeps the shared Forever tracker where you put it. The grip at its top no lon
 L["Legacy"] = "Héritage"
 L["Legacy Forever report"] = "Rapport Legacy Forever"
 L["Legacy objectives"] = "Objectifs Héritage"
-L["Legacy's options and map now open without a blocked-action error."] =
-	"Les options et la carte d'Héritage s'ouvrent désormais sans erreur d'action bloquée."
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Niveaux, compétences, rangs et tout ce qui n'a pas d'emplacement fixe."
 L["Lock the tracker"] = "Verrouiller le suivi"
@@ -92,6 +94,7 @@ L["Show undiscovered areas"] = "Afficher les zones non découvertes"
 L["Show where to discover areas"] = "Afficher où découvrir des zones" -- mt
 L["Stop tracking"] = "Arrêter le suivi"
 L["Suggest my other Forever addons"] = "Suggérer mes autres addons Forever"
+L["Tells you which addon to update."] = "Vous indique quel addon mettre à jour." -- mt
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"La zone où vous vous trouvez et ce qui reste à y faire. Les défis que vous suivez gardent leur propre section Héritage."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

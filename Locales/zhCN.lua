@@ -13,11 +13,14 @@ L["%d unfinished Legacy objectives on this map."] = "此地图上有%d个未完�
 L["%d yards away"] = "距离 %d 码"
 L["%s %d Legacy |4point:points;"] = "%s %d|4个:个;传承点数"
 L["%s complete. %s"] = "%s已完成。%s"
+L["%s could not start. Reinstall %s to fix this."] = "%s 无法启动。请重新安装 %s 以解决此问题。"
 L["%s is at %s in %s."] = "%s位于%s（%s）。"
 L["%s is at %s."] = "%s位于%s。"
 L["%s: %d left"] = "%s：剩余%d"
 L["%s: %d of %d areas left"] = "%s：剩余%d/%d个区域"
 L["%s: %d of %d zones complete (%d%%)"] = "%s：已完成%d/%d个地区（%d%%）"
+L["%s: %s are out of date. Update them to fix this."] = "%s：%s 已过期。请更新它们以解决此问题。"
+L["%s: %s is out of date. Update it to fix this."] = "%s：%s 已过期。请更新它以解决此问题。"
 L["/lf - open the world map and its Legacy menu"] = "/lf - 打开世界地图及其传承菜单"
 L["/lf audit - check the bundled data against the game"] = "/lf audit - 将内置数据与游戏核对"
 L["/lf criteria 684 - list what the game reports for one achievement"] =
@@ -57,8 +60,6 @@ L["Keeps the shared Forever tracker where you put it. The grip at its top no lon
 L["Legacy"] = "传承"
 L["Legacy Forever report"] = "Legacy Forever报告"
 L["Legacy objectives"] = "传承目标"
-L["Legacy's options and map now open without a blocked-action error."] =
-	"Legacy 的选项和地图现在打开时不再出现操作被阻止的错误。"
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"等级、技能、级别以及其他没有固定地点的内容。"
 L["Lock the tracker"] = "锁定追踪器"
@@ -89,6 +90,7 @@ L["Show undiscovered areas"] = "显示未发现的区域"
 L["Show where to discover areas"] = "显示可探索区域的位置"
 L["Stop tracking"] = "取消追踪"
 L["Suggest my other Forever addons"] = "推荐我的其他Forever插件"
+L["Tells you which addon to update."] = "告诉你需要更新哪个插件。"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地区以及那里剩余的事项。你追踪的挑战保留在各自的传承区块中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

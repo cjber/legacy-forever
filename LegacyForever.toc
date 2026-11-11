@@ -12,12 +12,12 @@
 ## IconTexture: Interface\AddOns\LegacyForever\media\Icon
 ## X-Forever-Icon: Interface\Icons\Achievement_General
 ## Dependencies: ForeverCore
+## X-Forever-Core: v1.5.0
 ## OptionalDeps: ShortestPathForever, QuestieDB, Questie, AtlasLootClassic
 ## SavedVariables: LegacyForeverDB
 ## LoadSavedVariablesFirst: 1
 ## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick
 
-Core\Require.lua
 Locales\enUS.lua
 Locales\deDE.lua
 Locales\esES.lua
@@ -28,6 +28,8 @@ Locales\ptBR.lua
 Locales\ruRU.lua
 Locales\zhCN.lua
 Locales\zhTW.lua
+Core\ForeverRequire.lua
+Core\Require.lua
 Data\Legacy.lua
 Data\Explore.lua
 Core\Core.lua

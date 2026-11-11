@@ -15,11 +15,17 @@ L["%d unfinished Legacy objectives on this map."] =
 L["%d yards away"] = "%d ярдов"
 L["%s %d Legacy |4point:points;"] = "%s %d |4очко:очка:очков; старинных наград"
 L["%s complete. %s"] = "%s: зона пройдена. %s"
+L["%s could not start. Reinstall %s to fix this."] =
+	"%s не удалось запустить. Переустановите %s, чтобы исправить это."
 L["%s is at %s in %s."] = "%s: координаты %s (%s)."
 L["%s is at %s."] = "%s: координаты %s."
 L["%s: %d left"] = "%s: осталось %d"
 L["%s: %d of %d areas left"] = "%s: осталось областей: %d из %d"
 L["%s: %d of %d zones complete (%d%%)"] = "%s: пройдено зон: %d из %d (%d%%)"
+L["%s: %s are out of date. Update them to fix this."] =
+	"%s: %s устарели. Обновите их, чтобы исправить это."
+L["%s: %s is out of date. Update it to fix this."] =
+	"%s: %s устарел. Обновите его, чтобы исправить это."
 L["/lf - open the world map and its Legacy menu"] =
 	"/lf - открыть карту мира и меню старинных испытаний"
 L["/lf audit - check the bundled data against the game"] =
@@ -67,8 +73,6 @@ L["Keeps the shared Forever tracker where you put it. The grip at its top no lon
 L["Legacy"] = "Старинные испытания"
 L["Legacy Forever report"] = "Отчет Legacy Forever"
 L["Legacy objectives"] = "Цели старинных испытаний"
-L["Legacy's options and map now open without a blocked-action error."] =
-	"Настройки и карта Legacy теперь открываются без ошибки заблокированного действия."
 L["Levels, skills, ranks and anything without a fixed place."] =
 	"Уровни, навыки, звания и все, что не привязано к месту."
 L["Lock the tracker"] = "Закрепить трекер"
@@ -102,6 +106,7 @@ L["Show undiscovered areas"] = "Показывать неоткрытые обл
 L["Show where to discover areas"] = "Показывать места для обнаружения областей"
 L["Stop tracking"] = "Не отслеживать"
 L["Suggest my other Forever addons"] = "Предлагать другие мои модификации Forever"
+L["Tells you which addon to update."] = "Подсказывает, какой аддон нужно обновить."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
