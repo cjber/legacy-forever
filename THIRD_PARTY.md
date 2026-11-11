@@ -41,21 +41,32 @@ strings, under this addon's licence.
 
 CI tools (StyLua, ruff, luacheck, lua-language-server, actionlint, zizmor, gitleaks, the BigWigs packager) are pinned in `.github/workflows/` and `tools/typecheck.sh`, except luajit and luacheck, which come from the runner's apt; they build and check the addon and are never part of it.
 
-## Ideas and contributors
+## Players
 
-Credit for the ideas, translations and reports behind the addon.
+Credit for the reports, translations and requests behind the addon.
 
 | Who | What | Notes |
 |---|---|---|
-| [cjber](https://github.com/cjber) | Requested the companion-addon compatibility audit (#235), cumulative flight-path comparisons, sharing controls and a ranked view (cjber/forever-core#49, #231) | |
-| [Polestar](https://github.com/fitzforge/polestar) by Fitz | Drawing the world map on frames of its own, which the map never touches. From cjber/adventure-guide-forever's issues: `/lf report` with its copy box and caught errors (#156), the issue forms (#157), the zip check (#158), `tools/doctor.py` (#160), the stale-screenshot check (#161), this file (#162), the "For addon authors" changelog subsection (#163) and `.editorconfig` (#165). | GPL-3.0. Inspired only; no code was copied. Fitz is welcome to use our code. |
-| Brainc3ll | The French translation (#99) | |
-| cotijelucie, on Discord | Asked to see exactly where an undiscovered area is credited, which became *Show where to discover areas* (#459), and reported the shading covering other addons' map markers (#464) | |
-| Lûca [Luutsa], on Discord | Reported the undiscovered-area shading drawing under Leatrix Maps' unexplored tint (#470) | |
-| Bigabyte | Found the quest tracker shifting when moved in Edit Mode (#103) | |
-| overspark | Asked on CurseForge for a way to hide the dungeon and raid entrance pins, which became *Show dungeon and raid entrances* (#139), and level ranges on entrance tooltips (#222); the same comment prompted drawing a cleared dungeon or raid entrance faded so finished and unfinished instances read differently | |
-| deathmvp1 and berserkerlxl, on CurseForge | Found Questie's quest list covering the Forever tracker sections, which now move clear of it (cjber/shortest-path-forever#214) | |
-| [Mouchoir](https://github.com/Mouchoir) | Found the Lua errors the map button raised as the world map loaded, and wrote the fix (#148, #147, merged as #149) | Code contributor |
-| [DanielVafidis](https://github.com/DanielVafidis) | Reported the addons breaking Questie, fixed in 0.11.2 when nothing of ours was anchored to Questie's quest list any more (#150) | |
+| Brainc3ll | French translation | GitHub; #99, #203, #353 |
+| Bigabyte | Tracker no longer shifts in Edit Mode | GitHub; #103 |
+| overspark | Dungeon entrance pins can be hidden | CurseForge; #139 |
+| overspark | Level ranges on entrance tooltips | CurseForge; #222 |
+| overspark | Cleared entrances drawn faded | CurseForge |
+| [Mouchoir](https://github.com/Mouchoir) | Fixed the map button errors (code) | GitHub; #147, #148, PR #149 |
+| [DanielVafidis](https://github.com/DanielVafidis) | Fixed the addon breaking Questie | GitHub; #150 |
+| TheCheat54 | Tirisfal Glades counts 18 exploration areas | GitHub; #332 |
+| KeijinDE | Fixed the Forever Core link | CurseForge; #441 |
+| Lûca | Zone completion corner back on the world map | Discord |
+| cotijelucie | Show where to discover areas | Discord; #459 |
+| cotijelucie | Map markers drawn above the area shading | Discord; #464 |
+| Lûca | Undiscovered areas shaded above Leatrix Maps' unexplored tint | Discord; #470 |
+
+## Inspired by
+
+Credit for the addons and projects an idea came from.
+
+| Who | What | Notes |
+|---|---|---|
+| [Polestar](https://github.com/fitzforge/polestar) by Fitz | Drawing the world map on frames of its own; the shared report window and tooling | GPL-3.0. Inspired only; no code was copied. Fitz is welcome to use our code. |
 
 Thanks also to everyone else who reported a bug, here or on CurseForge.

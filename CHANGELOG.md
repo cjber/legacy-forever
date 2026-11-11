@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **The players who helped are on the Thanks page.** Settings, Forever addons, Thanks lists everyone whose report or idea shipped in Legacy Forever, ranked by how much they gave. (#448)
+
 ## [2.3.2] - 2026-11-11
 
 - **Undiscovered areas shade above Leatrix Maps' unexplored tint again.** With Leatrix Maps' *Show unexplored areas* on, its tint covered the shading of the area under your cursor, because the last version moved the shading down to sit just above the map art. With Leatrix's reveal on, the shading now sits directly above its tint, so the map reads Leatrix's tint, then the shading, then every marker. Without it, the shading stays below other addons' markers as in the last version. Thanks to Lûca [Luutsa] on Discord for the report (#470).

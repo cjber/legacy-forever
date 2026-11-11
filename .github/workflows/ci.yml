@@ -138,6 +138,8 @@ jobs:
       - run: python3 tools/check_generated.py
       # Data/Explore.lua is traced at its own TERRAIN_BUILD; a data refresh can move the area keys it names.
       - run: python3 tools/check_explore.py
+      # Data/Credits.lua and the README and store thanks blocks are generated from THIRD_PARTY.md (WFA-31).
+      - run: python3 tools/forever_tools/credits.py --check
 
   project-rules:
     runs-on: ubuntu-24.04

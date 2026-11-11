@@ -22,6 +22,7 @@ python3 tools/gen_legacy.py   # regenerate Data/Legacy.lua after a data change
 python3 tools/gen_explore.py  # retrace Data/Explore.lua after bumping its TERRAIN_BUILD; runs from the tile cache
 python3 tools/check_generated.py   # regenerate in a disposable tree; require fresh, byte-stable Data/Legacy.lua
 python3 tools/check_explore.py   # Data/Explore.lua's zones and area keys still exist in Data/Legacy.lua
+python3 tools/forever_tools/credits.py --check   # Data/Credits.lua and both thanks blocks are current (WFA-31)
 python3 tools/phrases.py > Locales/phrases.txt   # regenerate the translation template after a string change
 python3 tools/changelog.py --check
 python3 tools/check_screenshots.py   # an image older than its sources; --record after tools/screenshots.py
@@ -36,7 +37,7 @@ addon's published API.
 
 CI's `package` job builds the zip with the release's packager without uploading (`-d -z`) and runs
 `python3 tools/check_package.py` on its output: every loaded file ships, no development folder does, a licence file and
-THIRD_PARTY.md ship with README's `## Credits` and THIRD_PARTY's `## Ideas and contributors` (WFA-10, WFA-31), and the
+THIRD_PARTY.md ship with README's `## Credits` and THIRD_PARTY's `## Players` (WFA-10, WFA-31), and the
 specs pass on the packaged files.
 
 The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and history. CI's jobs are `deadcode`,
