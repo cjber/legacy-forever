@@ -92,6 +92,7 @@ L["Show undiscovered areas"] = "Show undiscovered areas"
 L["Show where to discover areas"] = "Show where to discover areas"
 L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
+L["The players who helped are on the Thanks page."] = "The players who helped are on the Thanks page."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
@@ -103,8 +104,6 @@ L["Turn this off if another addon already marks them. The Legacy map menu still 
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"Turn this off to drag the shared Forever tracker anywhere on screen."
 L["Undiscovered area"] = "Undiscovered area"
-L["Undiscovered areas shade above Leatrix Maps' unexplored tint again."] =
-	"Undiscovered areas shade above Leatrix Maps' unexplored tint again."
 L["Updates"] = "Updates"
 L["Waiting for Questie and your quest log."] = "Waiting for Questie and your quest log."
 L["Waiting for Questie to finish loading."] = "Waiting for Questie to finish loading."

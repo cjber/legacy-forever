@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [2.3.3] - 2026-11-11
+
 - **The players who helped are on the Thanks page.** Settings, Forever addons, Thanks lists everyone whose report or idea shipped in Legacy Forever, ranked by how much they gave. (#448)
 
 ## [2.3.2] - 2026-11-11
