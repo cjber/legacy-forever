@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-11-11
+
+<!-- discord-image: docs/screenshots/tracker.png -->
+
 ### For addon authors
 
 - **`LegacyForever.API` is minor 3: a challenge can be tracked from another addon, and a read can ask about the zone the player is in.** `IsTracked(key)` and `SetTracked(key, tracked)` take the same `key` as a `Targets` row, and a tracking change reaches `Subscribe` callbacks as `tracked` on the next frame, whether the player ticked the Legacy map menu or another addon asked. A `ZoneSummary` or `Targets` call with no map now answers the zone the player is in and `nil, "none"` on a continent, `Targets` can leave its `limit` out, and each target row carries its `achievementName` and, when the game reports one, its Legacy `points` (#373).
