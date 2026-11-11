@@ -5,6 +5,7 @@ if addon.broken then
 end
 
 ---@class LegacyForeverNamespace
+---@field Credits ForeverCreditsData the player credits Data/Credits.lua generates for the shared Thanks page
 ---@field core ForeverCoreAddon the addon's own ForeverCore services: journal, log, report and map canvas
 ---@field broken? boolean set when an installed ForeverCore is too old, so the addon's files stop
 ---@field ReportTitle string the localized title shown by the shared report window
@@ -52,14 +53,20 @@ ns.core = ForeverCore.Register(addonName, {
 	end,
 })
 
+-- Hands the generated player credits to the shared Thanks page (WFA-31). An older core has no Credits module, and the
+-- addon loads as before.
+if type(ForeverCore.Credits) == "table" then
+	ns.core.SafeCall("credits", ForeverCore.Credits.Register, "Legacy Forever", ns.Credits)
+end
+
 ns.TITLE = "Legacy Forever"
 -- The Legacy shield: map pins, the map button, menu entries and the zone-completion count all wear it.
 ns.POINTS_ICON = "UI-Legacy-Points-icon-c60"
 -- One sentence for the chat line after an update (WhatsNew.lua): the newest release's headline, and the version whose
 -- release carries it. A core sync's maintenance entry has no headline, so this stays on the release before it and
 -- WhatsNew stays quiet for the maintenance version while still remembering it.
-ns.WHATS_NEW_VERSION = "2.3.2"
-ns.WHATS_NEW = L["Undiscovered areas shade above Leatrix Maps' unexplored tint again."]
+ns.WHATS_NEW_VERSION = "2.3.3"
+ns.WHATS_NEW = L["The players who helped are on the Thanks page."]
 
 ---@param msg string
 function ns.Print(msg)
