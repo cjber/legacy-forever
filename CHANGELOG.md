@@ -12,6 +12,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [2.1.1] - 2026-11-11
+
+- **The Legacy data now names Forever build 1.60.1.70888.** `Data/Legacy.lua` is regenerated from the newer client build's achievements, criteria and world map tables. Every challenge, reward and located objective the map shows is identical to the previous build, so what you are chasing does not change.
+
 ## [2.1.0] - 2026-11-11
 
 <!-- discord-image: docs/screenshots/tracker.png -->
