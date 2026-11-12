@@ -4,6 +4,8 @@ if GetLocale() ~= "ruRU" then
 	return
 end
 local L = ns.L
+L["Terrain shading now follows each area's real ground with smooth native fades."] =
+	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
 
 L["%d Legacy objective left"] = "Осталось целей старинных испытаний: %d"
 L["%d Legacy objectives left"] = "Осталось целей старинных испытаний: %d"
@@ -60,8 +62,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Все задания зоны, доступные этому персонажу, по данным Questie."
 L["Flight paths"] = "Маршруты полетов"
 L["Forever addons"] = "Модификации Forever"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"Подсвечивает настоящую землю каждой неоткрытой области и ставит метку на её краю. Области без данных о местности сохраняют затемнение."
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Затеняет настоящую землю каждой неоткрытой области и ставит метку на её краю. Области без данных о местности сохраняют затемнение."
 L["Hide from the tracker"] = "Скрыть из отслеживания"
 L["In the objective tracker"] = "В отслеживании целей"
 L["Install AtlasLoot for recommended levels."] =
@@ -106,8 +108,6 @@ L["Show undiscovered areas"] = "Показывать неоткрытые обл
 L["Show where to discover areas"] = "Показывать места для обнаружения областей"
 L["Stop tracking"] = "Не отслеживать"
 L["Suggest my other Forever addons"] = "Предлагать другие мои модификации Forever"
-L["The players who helped are on the Thanks page."] =
-	"Игроки, которые помогли, указаны на странице благодарностей."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

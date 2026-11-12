@@ -4,6 +4,8 @@ if GetLocale() ~= "esES" then
 	return
 end
 local L = ns.L
+L["Terrain shading now follows each area's real ground with smooth native fades."] =
+	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
 
 L["%d Legacy objective left"] = "Queda %d objetivo de legado"
 L["%d Legacy objectives left"] = "Quedan %d objetivos de legado"
@@ -50,8 +52,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Todas las misiones que este personaje puede aceptar en la zona, según Questie."
 L["Flight paths"] = "Rutas de vuelo"
 L["Forever addons"] = "Addons Forever"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"Ilumina el terreno real de cada zona sin descubrir, con un marcador en su borde. Las zonas sin datos del terreno mantienen el sombreado."
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Sombrea el terreno real de cada zona sin descubrir, con un marcador en su borde. Las zonas sin datos del terreno mantienen el sombreado."
 L["Hide from the tracker"] = "Ocultar del rastreador"
 L["In the objective tracker"] = "En el rastreador de objetivos"
 L["Install AtlasLoot for recommended levels."] = "Instala AtlasLoot para ver los niveles recomendados."
@@ -93,8 +95,6 @@ L["Show undiscovered areas"] = "Mostrar áreas sin descubrir"
 L["Show where to discover areas"] = "Mostrar dónde descubrir zonas"
 L["Stop tracking"] = "Dejar de seguir"
 L["Suggest my other Forever addons"] = "Sugerir mis otros addons Forever"
-L["The players who helped are on the Thanks page."] =
-	"Los jugadores que ayudaron aparecen en la página de Agradecimientos."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"La zona en la que estás y lo que queda por hacer. Los desafíos que sigues mantienen su propia sección de legado."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

@@ -51,8 +51,6 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Every quest this character can take in the zone, from Questie."
 L["Flight paths"] = "Flight paths"
 L["Forever addons"] = "Forever addons"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."
 L["Hide from the tracker"] = "Hide from the tracker"
 L["In the objective tracker"] = "In the objective tracker"
 L["Install AtlasLoot for recommended levels."] = "Install AtlasLoot for recommended levels."
@@ -85,6 +83,8 @@ L["Quest"] = "Quest"
 L["Recommended levels: %s (AtlasLoot)"] = "Recommended levels: %s (AtlasLoot)"
 L["Repeatable, holiday and profession quests are left out."] = "Repeatable, holiday and profession quests are left out."
 L["Reputations (Friendly)"] = "Reputations (Friendly)"
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
 	"Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."
 L["Show dungeon and raid entrances"] = "Show dungeon and raid entrances"
@@ -92,7 +92,8 @@ L["Show undiscovered areas"] = "Show undiscovered areas"
 L["Show where to discover areas"] = "Show where to discover areas"
 L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
-L["The players who helped are on the Thanks page."] = "The players who helped are on the Thanks page."
+L["Terrain shading now follows each area's real ground with smooth native fades."] =
+	"Terrain shading now follows each area's real ground with smooth native fades."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

@@ -4,6 +4,8 @@ if GetLocale() ~= "frFR" then
 	return
 end
 local L = ns.L
+L["Terrain shading now follows each area's real ground with smooth native fades."] =
+	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
 
 L["%d Legacy objective left"] = "%d objectif Héritage restant"
 L["%d Legacy objectives left"] = "%d objectifs Héritage restants"
@@ -51,8 +53,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Toutes les quêtes que ce personnage peut prendre dans la zone, depuis Questie."
 L["Flight paths"] = "Points de vol"
 L["Forever addons"] = "Addons Forever"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"Illumine le terrain réel de chaque zone non découverte, avec un repère à son bord. Les zones sans données de terrain gardent l'ombrage." -- mt
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Ombre le terrain réel de chaque zone non découverte, avec un repère à son bord. Les zones sans données de terrain gardent l'ombrage." -- mt
 L["Hide from the tracker"] = "Masquer du suivi"
 L["In the objective tracker"] = "Dans le suivi des objectifs"
 L["Install AtlasLoot for recommended levels."] = "Installez AtlasLoot pour afficher les niveaux recommandés."
@@ -94,7 +96,6 @@ L["Show undiscovered areas"] = "Afficher les zones non découvertes"
 L["Show where to discover areas"] = "Afficher où découvrir des zones" -- mt
 L["Stop tracking"] = "Arrêter le suivi"
 L["Suggest my other Forever addons"] = "Suggérer mes autres addons Forever"
-L["The players who helped are on the Thanks page."] = "Les joueurs qui ont aidé figurent sur la page Remerciements." -- mt
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"La zone où vous vous trouvez et ce qui reste à y faire. Les défis que vous suivez gardent leur propre section Héritage."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

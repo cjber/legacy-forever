@@ -50,8 +50,10 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Jede Quest dieser Zone, die dieser Charakter annehmen kann, laut Questie."
 L["Flight paths"] = "Flugrouten"
 L["Forever addons"] = "Forever-Addons"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"Lässt den echten Boden jedes unentdeckten Gebiets leuchten, mit einer Markierung am Rand. Gebiete ohne Geländedaten behalten die Schattierung."
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Schattiert den echten Boden jedes unentdeckten Gebiets, mit einer Markierung am Rand. Gebiete ohne Geländedaten behalten die Schattierung."
+L["Terrain shading now follows each area's real ground with smooth native fades."] =
+	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
 L["Hide from the tracker"] = "In der Verfolgung ausblenden"
 L["In the objective tracker"] = "In der Questzielverfolgung"
 L["Install AtlasLoot for recommended levels."] = "Installiert AtlasLoot für empfohlene Stufen."
@@ -93,7 +95,6 @@ L["Show undiscovered areas"] = "Unentdeckte Gebiete anzeigen"
 L["Show where to discover areas"] = "Zeige, wo Gebiete zu entdecken sind"
 L["Stop tracking"] = "Nicht mehr verfolgen"
 L["Suggest my other Forever addons"] = "Meine anderen Forever-Addons vorschlagen"
-L["The players who helped are on the Thanks page."] = "Die Spieler, die geholfen haben, stehen auf der Dankesseite."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Eure aktuelle Zone und was dort noch zu tun ist. Verfolgte Herausforderungen behalten ihren eigenen Vermächtnisbereich."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

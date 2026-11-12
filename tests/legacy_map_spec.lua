@@ -71,7 +71,7 @@ local area = { name = "Northshire", key = "0:0:1:1" }
 local shade = {
 	areas = { { area = area, tiles = { { file = 1, x = 0, y = 0, width = 256, height = 256, u = 1, v = 1 } } } },
 }
--- The outlined area on 1429: one square of real ground, no shading, with a pin of its own.
+-- The outlined area on 1429: one square of real ground, filled from its terrain, with a pin of its own.
 local outlineArea = {
 	key = "outline:0",
 	name = "Northshire Ground",
@@ -98,6 +98,11 @@ local navigated, outlined, hovering, switched = {}, {}, nil, nil
 local settings = { showAreas = true, showEntrances = true, showOutlines = false }
 
 local ns = {
+	ShadingMasks = {
+		[1429] = {
+			["outline:0"] = { 160, 93, 512, 256, "Interface\\AddOns\\LegacyForever\\media\\legacy-masks\\Fixture" },
+		},
+	},
 	L = setmetatable({}, {
 		__index = function(_, key)
 			return key
@@ -106,9 +111,6 @@ local ns = {
 	POINTS_ICON = "UI-Legacy-Points-icon-c60",
 	Art = {
 		Fit = function() end,
-		GlowLine = function(line, file, thickness, r, g, b, a)
-			line.file, line.thickness, line.color, line.baseAlpha = file, thickness, { r, g, b, a }, a
-		end,
 	},
 	GamepadUI = function()
 		return false
@@ -145,6 +147,23 @@ local ns = {
 					return shape
 				end
 			end
+		end,
+		-- UI/MapContents.lua ear-clips each ring; this stub fans a convex ring, which is enough for a square.
+		Triangles = function(rings)
+			local triangles = {}
+			for _, ring in ipairs(rings) do
+				for index = 3, #ring / 2 do
+					triangles[#triangles + 1] = {
+						ring[1],
+						ring[2],
+						ring[(index - 1) * 2 - 1],
+						ring[(index - 1) * 2],
+						ring[index * 2 - 1],
+						ring[index * 2],
+					}
+				end
+			end
+			return triangles
 		end,
 		OutlinePoint = function(zone, shape, u, v)
 			local x, y = shape.rings[1][1], shape.rings[1][2]
@@ -198,6 +217,7 @@ ForeverCore = dofile("tests/forever_core.lua").install(_G, {
 	"Expose.lua",
 })
 ns.core = ForeverCore.Register("LegacyForever", {})
+assert(loadfile("UI/Shading.lua"))("LegacyForever", ns)
 assert(loadfile("UI/Map.lua"))("LegacyForever", ns)
 check(attach, "UI/Map.lua waits for the world map to load")
 attach()
@@ -379,21 +399,24 @@ check(
 )
 _G.LeaMapsDB = nil
 
--- The terrain glow: the same frame as the shading, gold lines along the area's ground and a pin at the point
--- nearest the player.
+-- The terrain shading: the same frame as the tile shading, one fill per triangle of the area's real ground and a
+-- pin at the point nearest the player. No gold glow and no line at all.
 settings.showOutlines = true
 ns.RefreshMap()
-local glow = Areas()[1]
-check(glow.outline and glow.outline.areas[1] == outlineArea, "the glow is drawn on the shading's own frame")
-local lines = {}
-for _, line in ipairs(glow.lines) do
-	if line.shown then
-		lines[#lines + 1] = line
-	end
-end
-check(#lines == 8, "each outline edge is a soft stroke and a bright core")
-check(lines[1].file == "Interface\\AddOns\\LegacyForever\\media\\Glow", "the glow lines carry the feather strip")
-check(lines[1].thickness == 11 and lines[2].thickness == 2.5, "the wide stroke lies under the narrow one")
+local filled = Areas()[1]
+check(filled.outline and filled.outline.areas[1] == outlineArea, "the terrain fill is drawn on the shading's own frame")
+check(filled.lines == nil, "an outlined area draws no line")
+local textures = filled.drawn[outlineArea.key]
+check(#textures == 1, "one alpha field covers the area without overlapping feather quads")
+local mask = textures[1]
+check(mask.file == "Interface\\AddOns\\LegacyForever\\media\\legacy-masks\\Fixture", "the area uses its generated mask")
+check(mask.color[4] == 0.25, "the mask uses normal shading opacity")
+check(rawget(mask, "offsets") == nil, "reused textures clear old vertex offsets")
+check(math.abs(mask.width - 512 * 1000 / 1002) < 1e-6, "mask width scales from canonical map pixels")
+check(math.abs(mask.height - 256 * 700 / 668) < 1e-6, "mask height scales independently with the canvas")
+check(math.abs(mask.point[2] - 160 * 1000 / 1002) < 1e-6, "mask left anchor scales with the canvas")
+check(math.abs(mask.point[3] + 93 * 700 / 668) < 1e-6, "mask top anchor keeps screen-down orientation")
+check(next(filled.feathers) == nil, "no independent edge gradients can stack at corners")
 check(#Pins() == 2, "an outlined area adds a pin beside the objective's")
 local outlinePin = Pins()[2]
 check(
@@ -406,20 +429,21 @@ check(tooltip.lines[3] == "61 yards away", "the pin gives the distance to the ne
 check(tooltip.lines[#tooltip.lines] == "Click to travel there.", "the pin says what a click does")
 outlinePin:Run("OnLeave")
 
--- Bare map over the outline: the same frame hovers it, brightens its glow, and a click routes the journey.
+-- Bare map over the outline: the same frame hovers it and brightens its terrain fill exactly as a tile-shaded area
+-- brightens its tiles, and a click on the pin routes the journey.
 Kit.mouseFocus = true
 Kit.cursorX, Kit.cursorY = 300, -210
 Kit.Tick()
-check(tooltip.owner == glow and tooltip.lines[1] == "Northshire Ground", "the cursor over the outline names the area")
+check(tooltip.owner == filled and tooltip.lines[1] == "Northshire Ground", "the cursor over the outline names the area")
 check(tooltip.lines[2] == "Undiscovered area" and tooltip.lines[3] == "61 yards away", "the hover gives its distance")
 check(
 	tooltip.lines[#tooltip.lines] ~= "Click to travel there.",
 	"bare map shows no click hint, because the area hover takes no clicks"
 )
-check(lines[1].alpha and lines[1].alpha > lines[1].baseAlpha, "the hovered area's glow brightens")
+check(mask.color[4] == 0.4, "the hovered area's terrain fill brightens like a tile-shaded area")
 Kit.mouseFocus = false
 Kit.Tick()
-check(tooltip.owner == nil and lines[1].alpha == lines[1].baseAlpha, "leaving the outline restores the glow")
+check(tooltip.owner == nil and mask.color[4] == 0.25, "leaving the outline restores the terrain fill")
 
 Kit.mouseOver = outlinePin
 outlinePin:Run("OnEnter")
@@ -432,28 +456,41 @@ check(
 Kit.mouseOver = nil
 outlinePin:Run("OnLeave")
 
--- With the glow off, the shading is the drawing again: no lines and no extra pin.
+-- With Leatrix Maps' reveal on, its aerial tint stands in for the veil: the terrain fill and its feathers clear.
+_G.LeaMapsDB = { RevealMap = "On" }
+ns.RefreshMap()
+local clearOutline = Areas()[1]
+check(clearOutline.drawn[outlineArea.key][1].color[4] == 0, "revealed ground leaves the terrain fill clear")
+_G.LeaMapsDB = nil
+ns.RefreshMap()
+filled = Areas()[1]
+check(filled.drawn[outlineArea.key][1].color[4] == 0.25, "turning reveal off restores the mask alpha")
+
+-- A missing descriptor never falls back to overlapping geometry or borrows another zone's area key.
+local savedMasks = ns.ShadingMasks[1429]
+ns.ShadingMasks[1429] = nil
+ns.ShadingMasks[1430] = savedMasks
+ns.RefreshMap()
+check(Areas()[1].drawn[outlineArea.key] == nil, "mask lookup is scoped to the map")
+ns.ShadingMasks[1429] = savedMasks
+ns.ShadingMasks[1430] = nil
+ns.RefreshMap()
+
+-- With the terrain fill off, the tile shading is the drawing again: no triangles and no extra pin.
 settings.showOutlines = false
 ns.RefreshMap()
-check(#Pins() == 1, "with the glow off, an outlined area adds no pin")
-check(#Areas() == 1 and Areas()[1].drawn[area.key] ~= nil, "with the glow off, the shading keeps the area")
-local hidden = true
-for _, line in ipairs(Areas()[1].lines) do
-	hidden = hidden and line.shown == false
-end
-check(hidden, "with the glow off, no glow line is drawn")
+check(#Pins() == 1, "with the terrain fill off, an outlined area adds no pin")
+check(#Areas() == 1 and Areas()[1].drawn[area.key] ~= nil, "with the terrain fill off, the shading keeps the area")
+check(Areas()[1].drawn[outlineArea.key] == nil, "with the terrain fill off, no terrain triangle is drawn")
 
--- Changing the map releases the glow's lines, and a map without outlines keeps no outline pin.
+-- Changing the map releases the terrain triangles, and a map without terrain areas keeps no outline pin.
 settings.showOutlines = true
 Kit.mapID = 1430
 Kit.Tick()
-check(#Pins() == 0, "a map without the glow keeps no outline pin")
-check(#Areas() == 0, "a map with neither shading nor glow draws no area frame")
-hidden = true
-for _, line in ipairs(glow.lines) do
-	hidden = hidden and line.shown == false
-end
-check(hidden, "changing the map disposes of the glow's lines")
+check(#Pins() == 0, "a map without terrain areas keeps no outline pin")
+check(#Areas() == 0, "a map with neither shading nor terrain fill draws no area frame")
+check(filled.drawn[outlineArea.key] == nil, "changing the map releases the terrain triangles")
+check(filled.feathers[outlineArea.key] == nil, "changing the map releases the edge feathers")
 Kit.mapID = 1429
 settings.showOutlines = false
 Kit.Tick()

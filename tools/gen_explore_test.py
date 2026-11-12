@@ -9,6 +9,7 @@ from gen_explore import (
     boundary_rings,
     chaikin,
     chunk_cells,
+    clip_ring,
     grid,
     number,
     ring_lines,
@@ -61,6 +62,41 @@ class SmoothTests(unittest.TestCase):
 
 
 class CoordinateTests(unittest.TestCase):
+    @staticmethod
+    def polygon_area(points):
+        return abs(sum(a[0] * b[1] - b[0] * a[1] for a, b in zip(points, points[1:] + points[:1], strict=False))) / 2
+
+    def test_ring_is_clipped_at_map_edges_before_projection(self):
+        rectangle = (0.0, 100.0 * CHUNK, 0.0, 100.0 * CHUNK)
+        ring = [(-50.0, 25.0), (50.0, 150.0), (150.0, 25.0), (50.0, -50.0)]
+        clipped = clip_ring(ring, rectangle)
+        self.assertTrue(all(0 <= x <= 100 and 0 <= y <= 100 for x, y in clipped))
+        self.assertEqual(len(clipped), 6)
+        self.assertEqual(self.polygon_area(clipped), 9875)
+        self.assertIn((0.0, 87.5), clipped)
+        self.assertIn((100.0, 87.5), clipped)
+
+        # The previous per-vertex UV clamp loses the edge intersections and changes the fill area.
+        clamped = [(min(100.0, max(0.0, x)), min(100.0, max(0.0, y))) for x, y in ring]
+        self.assertNotEqual(self.polygon_area(clamped), self.polygon_area(clipped))
+
+    def test_concave_ring_keeps_unique_vertices_within_map(self):
+        rectangle = (0.0, 100.0 * CHUNK, 0.0, 100.0 * CHUNK)
+        ring = [
+            (-20.0, 10.0),
+            (20.0, 10.0),
+            (20.0, 80.0),
+            (80.0, 80.0),
+            (80.0, 10.0),
+            (120.0, 10.0),
+            (120.0, 90.0),
+            (-20.0, 90.0),
+        ]
+        clipped = clip_ring(ring, rectangle)
+        self.assertEqual(len(clipped), len(set(clipped)))
+        self.assertGreater(self.polygon_area(clipped), 0)
+        self.assertTrue(all(0 <= x <= 100 and 0 <= y <= 100 for x, y in clipped))
+
     def test_the_map_rectangle_edges_map_to_the_map_edges(self):
         rectangle = (100.0, 500.0, -200.0, 600.0)
         for point, expected in (

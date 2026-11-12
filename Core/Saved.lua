@@ -42,7 +42,7 @@ ns.Saved = Saved
 local DEFAULTS = {
 	-- The shading is the quickest way to see what a zone still hides.
 	showAreas = true,
-	-- The terrain glow names each area's real ground, but only where the client's terrain has it, so it waits
+	-- The terrain fill names each area's real ground, but only where the client's terrain has it, so it waits
 	-- to be asked for.
 	showOutlines = false,
 	-- Many map addons already mark every entrance, so the player can hide Legacy's to avoid a second icon there.
