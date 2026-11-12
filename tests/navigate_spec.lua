@@ -150,6 +150,8 @@ ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
 check(#waypoints == 2 and #journeys == 2, "no Shortest Path sets the native waypoint")
 Install()
 ShortestPathForever.API.version = 2
+check(ns.NavigateHint() == "Click to travel here with Shortest Path Forever.", "API v2 retains navigation")
+ShortestPathForever.API.version = 3
 ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
 check(#journeys == 2 and #waypoints == 3, "an unknown API version is treated as absent")
 ShortestPathForever = { API = { version = 1 } }
