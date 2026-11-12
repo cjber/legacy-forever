@@ -11,6 +11,19 @@ local CORNERS = { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 1, 1 } }
 local install = Kit.Install
 function Kit.Install(env)
 	install(env)
+	-- The client's world map registers these pin levels in this order: exploration (20 here, 2002 in the client),
+	-- fog of war (25/2006), then every marker from quest blobs up, with dungeon entrances at 28/2015 and area
+	-- points of interest at 30/2023. Core's strict map lists only the two its own canvas spec reads, so the rest
+	-- are filled in for the layers Legacy draws against.
+	local levels = Kit.map:GetPinFrameLevelsManager()
+	local valid = levels.GetValidFrameLevel
+	local levelsByName = {
+		PIN_FRAME_LEVEL_FOG_OF_WAR = 25,
+		PIN_FRAME_LEVEL_DUNGEON_ENTRANCE = 28,
+	}
+	rawset(levels, "GetValidFrameLevel", function(self, levelType)
+		return valid(self, levelType) or levelsByName[levelType]
+	end)
 	-- The constants the client defines for Texture:SetVertexOffset.
 	env.UPPER_LEFT_VERTEX, env.LOWER_LEFT_VERTEX = 1, 2
 	env.UPPER_RIGHT_VERTEX, env.LOWER_RIGHT_VERTEX = 3, 4

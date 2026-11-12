@@ -73,7 +73,7 @@ local shade = {
 }
 -- The outlined area on 1429: one square of real ground, filled from its terrain, with a pin of its own.
 local outlineArea = {
-	key = "outline:0",
+	key = area.key,
 	name = "Northshire Ground",
 	rings = { { 0.2, 0.2, 0.4, 0.2, 0.4, 0.4, 0.2, 0.4 } },
 	outline = true,
@@ -100,7 +100,7 @@ local settings = { showAreas = true, showEntrances = true, showOutlines = false 
 local ns = {
 	ShadingMasks = {
 		[1429] = {
-			["outline:0"] = { 160, 93, 512, 256, "Interface\\AddOns\\LegacyForever\\media\\legacy-masks\\Fixture" },
+			["0:0:1:1"] = { 160, 93, 512, 256, "Interface\\AddOns\\LegacyForever\\media\\legacy-masks\\Fixture" },
 		},
 	},
 	L = setmetatable({}, {
@@ -127,10 +127,12 @@ local ns = {
 		Drawn = function(uiMapID)
 			drawCalls = drawCalls + 1
 			local drawing = drawn[uiMapID] or { badges = {}, pins = {} }
-			if drawing.outline and not settings.showOutlines then
-				return { badges = drawing.badges, pins = drawing.pins, shade = drawing.shade }
-			end
-			return drawing
+			return {
+				badges = drawing.badges,
+				pins = drawing.pins,
+				shade = settings.showAreas and drawing.shade or nil,
+				outline = settings.showOutlines and drawing.outline or nil,
+			}
 		end,
 		Objectives = function()
 			return {}, 1
@@ -234,7 +236,7 @@ end
 local function Areas()
 	local shown = {}
 	for _, frame in ipairs(Kit.frames) do
-		if frame.shade and frame.shown then
+		if (frame.shade or frame.outline) and frame.shown then
 			shown[#shown + 1] = frame
 		end
 	end
@@ -288,18 +290,26 @@ check(
 	"right-click zooms out, and the pin never calls the restricted SetPassThroughButtons"
 )
 local areaFrame = Areas()[1]
--- Another addon's marker on the canvas, the way Leatrix Maps places its points of interest: level 100.
+local levels = Kit.map:GetPinFrameLevelsManager()
+local fogLevel = levels:GetValidFrameLevel("PIN_FRAME_LEVEL_FOG_OF_WAR")
+local explorationLevel = levels:GetValidFrameLevel("PIN_FRAME_LEVEL_MAP_EXPLORATION")
+-- Blizzard's dungeon entrance pins and another addon's marker on the canvas, the way Leatrix Maps places its
+-- points of interest: both must draw above the shading.
+local entranceMarker = Kit.CreateFrame("Frame")
+entranceMarker:SetParent(Kit.canvas)
+entranceMarker:SetFrameLevel(levels:GetValidFrameLevel("PIN_FRAME_LEVEL_DUNGEON_ENTRANCE"))
 local otherMarker = Kit.CreateFrame("Frame")
 otherMarker:SetParent(Kit.canvas)
 otherMarker:SetFrameLevel(100)
 check(
-	areaFrame.level == Kit.canvas:GetFrameLevel() + 1,
-	"the undiscovered areas sit directly above the map art, at the canvas's level plus one"
+	areaFrame.level == fogLevel,
+	"the undiscovered areas take the map's fog-of-war pin level, above the map art and the exploration pin"
 )
+check(areaFrame.level < entranceMarker.level, "Blizzard's dungeon entrance pins draw above the undiscovered areas")
 check(areaFrame.level < otherMarker.level, "another addon's map marker draws above the undiscovered areas")
 check(
-	pin.levelType == "PIN_FRAME_LEVEL_AREA_POI" and areaFrame.levelType == nil,
-	"objective pins keep their own frame level type, the areas take the canvas's"
+	pin.levelType == "PIN_FRAME_LEVEL_AREA_POI" and areaFrame.levelType == "PIN_FRAME_LEVEL_FOG_OF_WAR",
+	"objective pins take their marker level type, the areas the map's fog-of-war type"
 )
 check(areaFrame.mouse == false, "the shading never takes the mouse, so the map keeps its clicks and drags")
 check(areaFrame.width == 1000 and areaFrame.height == 700, "the shading covers the canvas")
@@ -377,10 +387,10 @@ _G.LeaMapsDB = { RevealMap = "On" }
 ns.RefreshMap()
 check(#Areas() == 1, "Leatrix reveal preserves exploration hovers")
 local revealed = Areas()[1]
--- Leatrix tints unexplored ground with the exploration pin's textures (level 20 here): the shading draws above
--- that tint and still below every marker.
-check(revealed.level == 21, "with Leatrix's reveal on, the shading sits one level above its tint")
-check(revealed.level < pin.level, "with Leatrix's reveal on, our markers still draw above the shading")
+-- Leatrix reveals the exploration pin's ground: the shading draws above that reveal and still below every marker.
+check(revealed.level == fogLevel, "with Leatrix's reveal on, the shading keeps the fog-of-war level above its reveal")
+check(revealed.level < entranceMarker.level, "with Leatrix's reveal on, dungeon entrance pins stay above the shading")
+check(revealed.level < otherMarker.level, "with Leatrix's reveal on, other addons' markers stay above the shading")
 local tile = revealed.drawn[area.key][1]
 check(tile.color[4] == 0, "revealed ground has no resting black veil")
 revealed:Highlight(shade.areas[1])
@@ -394,10 +404,50 @@ _G.LeaMapsDB.RevealMap = "Off"
 ns.RefreshMap()
 check(Areas()[1].drawn[area.key][1].color[4] == 0.25, "turning reveal off restores the pooled layer's normal veil")
 check(
-	Areas()[1].level == Kit.canvas:GetFrameLevel() + 1,
-	"turning reveal off puts the shading back directly above the map art"
+	Areas()[1].level == fogLevel,
+	"turning reveal off keeps the shading on the map's fog-of-war level, below every marker"
 )
 _G.LeaMapsDB = nil
+
+-- Each discover switch alone and both together, with and without Leatrix's reveal: the shading keeps the client's
+-- fog-of-war level, below Blizzard's dungeon entrance pins and another addon's markers, after a zoom and a reopen.
+local function CheckAreaBelowMarkers(label)
+	local drawnArea = Areas()[1]
+	check(drawnArea ~= nil, label .. ": the map draws its area frame")
+	check(drawnArea.levelType == "PIN_FRAME_LEVEL_FOG_OF_WAR", label .. ": the areas take the fog-of-war level type")
+	check(drawnArea.level == fogLevel, label .. ": the areas sit at the fog-of-war level")
+	check(drawnArea.level > explorationLevel, label .. ": the areas draw above the exploration pin's revealed textures")
+	check(drawnArea.level < entranceMarker.level, label .. ": dungeon entrance pins draw above the shading")
+	check(drawnArea.level < otherMarker.level, label .. ": another addon's markers draw above the shading")
+end
+
+-- The two switches in every combination, each with and without Leatrix's reveal.
+local cases = {
+	{ "the shading alone", true, false, false },
+	{ "the terrain fill alone", false, true, false },
+	{ "both discover options", true, true, false },
+	{ "the shading alone, Leatrix revealed", true, false, true },
+	{ "the terrain fill alone, Leatrix revealed", false, true, true },
+	{ "both discover options, Leatrix revealed", true, true, true },
+}
+for _, case in ipairs(cases) do
+	local label = case[1]
+	settings.showAreas, settings.showOutlines = case[2], case[3]
+	_G.LeaMapsDB = case[4] and { RevealMap = "On" } or nil
+	ns.RefreshMap()
+	CheckAreaBelowMarkers(label)
+	Kit.zoom, Kit.scale = 1, 2
+	Kit.Tick()
+	CheckAreaBelowMarkers(label .. " after zooming in")
+	Kit.zoom, Kit.scale = 0, 1
+	Kit.Close()
+	Kit.visible = true
+	Kit.Tick()
+	CheckAreaBelowMarkers(label .. " after reopening the map")
+end
+_G.LeaMapsDB = nil
+settings.showAreas, settings.showOutlines = true, false
+ns.RefreshMap()
 
 -- The terrain shading: the same frame as the tile shading, one fill per triangle of the area's real ground and a
 -- pin at the point nearest the player. No gold glow and no line at all.
@@ -407,8 +457,10 @@ local filled = Areas()[1]
 check(filled.outline and filled.outline.areas[1] == outlineArea, "the terrain fill is drawn on the shading's own frame")
 check(filled.lines == nil, "an outlined area draws no line")
 local textures = filled.drawn[outlineArea.key]
-check(#textures == 1, "one alpha field covers the area without overlapping feather quads")
-local mask = textures[1]
+check(#textures == 2, "the terrain fill stacks on the dark fade, so both switches on keeps the fade")
+local tileTexture = textures[1]
+local mask = textures[2]
+check(tileTexture.file == 1 and tileTexture.color[4] == 0.25, "the outlined area keeps its tile shading under the fill")
 check(mask.file == "Interface\\AddOns\\LegacyForever\\media\\legacy-masks\\Fixture", "the area uses its generated mask")
 check(mask.color[4] == 0.25, "the mask uses normal shading opacity")
 check(rawget(mask, "offsets") == nil, "reused textures clear old vertex offsets")
@@ -440,10 +492,13 @@ check(
 	tooltip.lines[#tooltip.lines] ~= "Click to travel there.",
 	"bare map shows no click hint, because the area hover takes no clicks"
 )
-check(mask.color[4] == 0.4, "the hovered area's terrain fill brightens like a tile-shaded area")
+check(mask.color[4] == 0.4 and tileTexture.color[4] == 0.4, "the hover brightens the fill and the fade beneath it")
 Kit.mouseFocus = false
 Kit.Tick()
-check(tooltip.owner == nil and mask.color[4] == 0.25, "leaving the outline restores the terrain fill")
+check(
+	tooltip.owner == nil and mask.color[4] == 0.25 and tileTexture.color[4] == 0.25,
+	"leaving the outline restores the terrain fill and the dark fade"
+)
 
 Kit.mouseOver = outlinePin
 outlinePin:Run("OnEnter")
@@ -456,22 +511,27 @@ check(
 Kit.mouseOver = nil
 outlinePin:Run("OnLeave")
 
--- With Leatrix Maps' reveal on, its aerial tint stands in for the veil: the terrain fill and its feathers clear.
+-- With Leatrix Maps' reveal on, its aerial tint stands in for the veil: the terrain fill and the tile fade clear.
 _G.LeaMapsDB = { RevealMap = "On" }
 ns.RefreshMap()
 local clearOutline = Areas()[1]
-check(clearOutline.drawn[outlineArea.key][1].color[4] == 0, "revealed ground leaves the terrain fill clear")
+local cleared = clearOutline.drawn[outlineArea.key]
+check(
+	#cleared == 2 and cleared[1].color[4] == 0 and cleared[2].color[4] == 0,
+	"revealed ground leaves both layers clear"
+)
 _G.LeaMapsDB = nil
 ns.RefreshMap()
 filled = Areas()[1]
-check(filled.drawn[outlineArea.key][1].color[4] == 0.25, "turning reveal off restores the mask alpha")
+check(filled.drawn[outlineArea.key][2].color[4] == 0.25, "turning reveal off restores the mask alpha")
 
 -- A missing descriptor never falls back to overlapping geometry or borrows another zone's area key.
 local savedMasks = ns.ShadingMasks[1429]
 ns.ShadingMasks[1429] = nil
 ns.ShadingMasks[1430] = savedMasks
 ns.RefreshMap()
-check(Areas()[1].drawn[outlineArea.key] == nil, "mask lookup is scoped to the map")
+local unmasked = Areas()[1].drawn[outlineArea.key]
+check(unmasked and #unmasked == 1 and unmasked[1].file == 1, "mask lookup is scoped to the map")
 ns.ShadingMasks[1429] = savedMasks
 ns.ShadingMasks[1430] = nil
 ns.RefreshMap()
@@ -481,7 +541,7 @@ settings.showOutlines = false
 ns.RefreshMap()
 check(#Pins() == 1, "with the terrain fill off, an outlined area adds no pin")
 check(#Areas() == 1 and Areas()[1].drawn[area.key] ~= nil, "with the terrain fill off, the shading keeps the area")
-check(Areas()[1].drawn[outlineArea.key] == nil, "with the terrain fill off, no terrain triangle is drawn")
+check(#Areas()[1].drawn[outlineArea.key] == 1, "with the terrain fill off, no terrain triangle is drawn")
 
 -- Changing the map releases the terrain triangles, and a map without terrain areas keeps no outline pin.
 settings.showOutlines = true
@@ -502,7 +562,7 @@ for _, frame in ipairs(Kit.frames) do
 	if frame ~= Kit.canvas and frame ~= Kit.container then
 		check(frame.madeUnder == nil, "every frame of ours is made with no parent")
 	end
-	onCanvas = onCanvas + (frame.parent == Kit.canvas and frame ~= otherMarker and 1 or 0)
+	onCanvas = onCanvas + (frame.parent == Kit.canvas and frame ~= otherMarker and frame ~= entranceMarker and 1 or 0)
 	if frame.template == "LegacyForeverPinTemplate" or frame.shade then
 		for _, script in ipairs({ "OnClick", "OnMouseDown", "OnMouseUp", "OnDoubleClick" }) do
 			check(frame.scripts[script] == nil, "a pin has no " .. script .. " script")

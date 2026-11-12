@@ -154,12 +154,11 @@ local function AreaTiles(area, tileWidth, tileHeight)
 end
 
 -- The zone's undiscovered areas that have map tiles; nil for a map without shading data, with the
--- shading switched off, or with nothing left to discover. An area the outline layer draws keeps no
--- shading of its own.
+-- shading switched off, or with nothing left to discover. An area the outline layer also draws keeps its
+-- tile shading, so the dark fade stays under the terrain fill.
 ---@param uiMapID number
----@param outline LegacyOutline?
 ---@return LegacyShade?
-local function Shade(uiMapID, outline)
+local function Shade(uiMapID)
 	local zone = ns.Saved.Get("showAreas") and ns.Data.completion[uiMapID]
 	if not (zone and zone.tileWidth and zone.tileHeight) then
 		return nil
@@ -168,7 +167,7 @@ local function Shade(uiMapID, outline)
 	---@type LegacyShade
 	local shade = { zone = zone, areas = {}, byKey = {} }
 	for _, area in ipairs(zone.areas) do
-		if area.tiles and not explored[area.key] and not (outline and outline.byKey[area.key]) then
+		if area.tiles and not explored[area.key] then
 			local shaded = { area = area, tiles = AreaTiles(area, zone.tileWidth, zone.tileHeight) }
 			shade.areas[#shade.areas + 1] = shaded
 			shade.byKey[area.key] = shaded
@@ -355,10 +354,10 @@ end
 -- world map" switch, so turning it off leaves continents bare. A zone gets a pin per place-bound
 -- objective (bosses, dungeons, quests) and its undiscovered areas shaded; exploration is never
 -- pinned, a shaded area carrying its Legacy step for the hover instead. With "Show where to discover
--- areas" on, an undiscovered area with terrain data is filled from its terrain instead of the map-art
--- tiles and keeps its Legacy step for the pin and the hover; the areas without data keep the shading.
--- "Show dungeon and raid entrances" off leaves out only the entrance pins: the button still counts them
--- and its menu still lists them.
+-- areas" on, an undiscovered area with terrain data is also filled from its terrain and keeps its
+-- Legacy step for the pin and the hover; it keeps the tile shading too, so the dark fade stays under
+-- the fill. The areas without data have only the shading. "Show dungeon and raid entrances" off leaves
+-- out only the entrance pins: the button still counts them and its menu still lists them.
 ---@param uiMapID number?
 ---@return LegacyMapDrawing
 function MapContents.Drawn(uiMapID)
@@ -373,7 +372,7 @@ function MapContents.Drawn(uiMapID)
 		return drawn
 	end
 	local outline = uiMapID and ns.Saved.Get("showOutlines") and Outline(uiMapID) or nil
-	local shade = uiMapID and Shade(uiMapID, outline) or nil
+	local shade = uiMapID and Shade(uiMapID) or nil
 	-- Cleared dungeon and raid entrances are drawn too, marked done, so a zone shows both what is left and what is
 	-- finished. The button's count and the menu still list only the unfinished objectives (MapContents.Objectives).
 	local groups = uiMapID and ns.Model.ZoneObjectives(ns.Data, uiMapID, ns.Live.Visible(), ns.Live.Criteria, true)
@@ -385,9 +384,16 @@ function MapContents.Drawn(uiMapID)
 			local shaded = entry.kind == "explore" and shade and shade.byKey[entry.key]
 			if outlined then
 				outlined.objective = { group = group, objective = objective }
-			elseif shaded then
+			end
+			if shaded then
 				shaded.objective = { group = group, objective = objective }
-			elseif entry.x and entry.kind ~= "explore" and (entrances or entry.kind ~= "instance") then
+			end
+			if
+				not (outlined or shaded)
+				and entry.x
+				and entry.kind ~= "explore"
+				and (entrances or entry.kind ~= "instance")
+			then
 				drawn.pins[#drawn.pins + 1] = { group = group, objective = objective, done = objective.done }
 			end
 		end
