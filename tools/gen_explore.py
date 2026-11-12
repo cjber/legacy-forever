@@ -304,6 +304,31 @@ def uv(point, rectangle):
     )
 
 
+def clip_ring(points, rectangle):
+    """Clip a terrain-grid ring to the map rectangle before projecting it to UVs."""
+    xmin, xmax, ymin, ymax = (value / CHUNK for value in rectangle)
+    result = list(points)
+    for axis, low, high in ((0, xmin, xmax), (1, ymin, ymax)):
+        for bound, keep_low in ((low, True), (high, False)):
+            if not result:
+                return []
+            clipped = []
+            previous = result[-1]
+            previous_inside = previous[axis] >= bound if keep_low else previous[axis] <= bound
+            for current in result:
+                current_inside = current[axis] >= bound if keep_low else current[axis] <= bound
+                if current_inside != previous_inside:
+                    fraction = (bound - previous[axis]) / (current[axis] - previous[axis])
+                    clipped.append(
+                        tuple(previous[index] + fraction * (current[index] - previous[index]) for index in (0, 1))
+                    )
+                if current_inside:
+                    clipped.append(current)
+                previous, previous_inside = current, current_inside
+            result = clipped
+    return result
+
+
 def number(value):
     """Four decimals, without the trailing zeros Lua would only pad back."""
     text = f"{value:.4f}".rstrip("0").rstrip(".")
@@ -515,7 +540,10 @@ def outlines(tables, completion, source, workers):
                 continue
             rings = []
             for ring in boundary_rings(cells):
-                points = simplify(chaikin([uv(point, rectangles[zone]) for point in ring]))
+                clipped = clip_ring(ring, rectangles[zone])
+                if len(clipped) < 3:
+                    continue
+                points = simplify(chaikin([uv(point, rectangles[zone]) for point in clipped]))
                 rounded = []
                 for point in points:
                     corner = (round4(point[0]), round4(point[1]))
