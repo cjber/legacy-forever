@@ -4,8 +4,8 @@ if GetLocale() ~= "esMX" then
 	return
 end
 local L = ns.L
-L["Terrain shading now follows each area's real ground with smooth native fades."] =
-	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
+L["Both discover switches now keep the dark fade, and the shading stays under every map marker."] =
+	"Los dos interruptores de descubrimiento ahora mantienen el desvanecido oscuro, y el sombreado queda debajo de cada marcador del mapa."
 
 L["%d Legacy objective left"] = "Queda %d objetivo de legado"
 L["%d Legacy objectives left"] = "Quedan %d objetivos de legado"
