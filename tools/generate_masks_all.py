@@ -75,7 +75,8 @@ def generate(groups, output, manifest):
                 lines.append("\t},")
             lines.append(f"\t[{zone}] = {{")
             previous_zone = zone
-        lines.append(f'\t\t["{key}"] = {{ {left}, {top}, {image.width}, {image.height}, "{basename}" }},')
+        texture = r"Interface\\AddOns\\LegacyForever\\media\\legacy-masks\\" + basename
+        lines.append(f'\t\t["{key}"] = {{ {left}, {top}, {image.width}, {image.height}, "{texture}" }},')
     if previous_zone is not None:
         lines.append("\t},")
     lines.append("}")

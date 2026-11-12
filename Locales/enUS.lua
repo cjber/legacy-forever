@@ -7,7 +7,6 @@ ns.L = setmetatable({}, {
 		return key
 	end,
 })
-ns.L["The players who helped are on the Thanks page."] = "The players who helped are on the Thanks page."
 ns.L["This menu needs mouse and keyboard."] = "This menu needs mouse and keyboard."
 ns.L["Show where to discover areas"] = "Show where to discover areas"
 ns.L["%d yards away"] = "%d yards away"

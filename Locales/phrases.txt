@@ -94,7 +94,6 @@ L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
 L["Terrain shading now follows each area's real ground with smooth native fades."] =
 	"Terrain shading now follows each area's real ground with smooth native fades."
-L["The players who helped are on the Thanks page."] = "The players who helped are on the Thanks page."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

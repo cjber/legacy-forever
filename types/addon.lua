@@ -85,7 +85,7 @@
 ---@field [2] number top coordinate in the 1002 by 668 source canvas
 ---@field [3] number power-of-two texture width
 ---@field [4] number power-of-two texture height
----@field [5] string media basename without extension
+---@field [5] string complete addon texture path without extension
 
 ---@alias LegacyShadingMasks table<number, table<string, LegacyShadingMask>>
 

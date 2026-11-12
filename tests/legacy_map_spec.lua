@@ -98,7 +98,11 @@ local navigated, outlined, hovering, switched = {}, {}, nil, nil
 local settings = { showAreas = true, showEntrances = true, showOutlines = false }
 
 local ns = {
-	ShadingMasks = { [1429] = { ["outline:0"] = { 160, 93, 512, 256, "Fixture" } } },
+	ShadingMasks = {
+		[1429] = {
+			["outline:0"] = { 160, 93, 512, 256, "Interface\\AddOns\\LegacyForever\\media\\legacy-masks\\Fixture" },
+		},
+	},
 	L = setmetatable({}, {
 		__index = function(_, key)
 			return key

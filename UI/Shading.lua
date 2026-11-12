@@ -30,7 +30,7 @@ function Shading.Area(pin, area)
 	end
 	local texture = pin:Acquire()
 	-- art-ok: generated terrain alpha mask, scaled with the map canvas as a shading fill
-	texture:SetTexture("Interface\\AddOns\\LegacyForever\\media\\legacy-masks\\" .. mask[5], nil, nil, "TRILINEAR")
+	texture:SetTexture(mask[5], nil, nil, "TRILINEAR")
 	texture:ClearVertexOffsets()
 	texture:SetTexCoord(0, 1, 0, 1)
 	texture:SetSize(mask[3] * pin.width / 1002, mask[4] * pin.height / 668)

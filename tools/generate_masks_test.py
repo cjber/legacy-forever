@@ -80,7 +80,7 @@ class MaskGeneratorTests(unittest.TestCase):
         manifests = {(int(row[0]), row[1]): row[6] for row in (line.split("\t") for line in output.splitlines())}
         self.assertEqual(set(groups), set(manifests))
         for basename in manifests.values():
-            self.assertTrue((ROOT / "media/legacy-masks" / f"{basename}.tga").is_file())
+            self.assertTrue((ROOT / "media/legacy-masks" / f"{basename.split(chr(92))[-1]}.tga").is_file())
 
 
 if __name__ == "__main__":

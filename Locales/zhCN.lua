@@ -92,7 +92,6 @@ L["Show undiscovered areas"] = "显示未发现的区域"
 L["Show where to discover areas"] = "显示可探索区域的位置"
 L["Stop tracking"] = "取消追踪"
 L["Suggest my other Forever addons"] = "推荐我的其他Forever插件"
-L["The players who helped are on the Thanks page."] = "帮助过的玩家都列在致谢页面上。"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地区以及那里剩余的事项。你追踪的挑战保留在各自的传承区块中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
