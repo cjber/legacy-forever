@@ -184,9 +184,13 @@ end
 local handle = assert(io.open("Locales/phrases.txt"))
 local committed = handle:read("*a")
 handle:close()
-local pipe = assert(io.popen("python3 tools/phrases.py"))
-local printed = pipe:read("*a")
+-- The marker is printed only when the helper exits successfully: LuaJIT's pipe close reports true even for a
+-- failed command, so a helper that dies before printing must not read as an empty, up-to-date template.
+local pipe = assert(io.popen("python3 tools/phrases.py 2>&1 && printf '%s\\n' __PHRASES_COMPLETE__"))
+local phrase_output = pipe:read("*a")
 pipe:close()
+local printed = phrase_output:match("^(.-)__PHRASES_COMPLETE__\r?\n?$")
+check(printed ~= nil, "tools/phrases.py did not finish: " .. phrase_output)
 check(printed ~= "", "tools/phrases.py prints the phrases")
 check(committed == printed, "Locales/phrases.txt is stale: python3 tools/phrases.py > Locales/phrases.txt")
 
@@ -198,10 +202,29 @@ end
 files:close()
 
 -- The BigWigs packager's localization keyword fetches from CurseForge, whose localization export is gone: the 404
--- page would fail the release. Built in two parts so this file doesn't match itself.
-local keyword = assert(io.popen("git grep -l -F '@" .. "localization' -- ."))
-local users = keyword:read("*a")
-keyword:close()
+-- page would fail the release. Only the files that filter reads can trigger it: every `.lua` the packager ships and
+-- the project TOC release.sh selects (`packaged_runtime_files` and `localization_toc_files` are the canonical
+-- packager selection), so tooling that never ships may name the keyword. Built in two parts so this file doesn't
+-- match itself. The marker is the only proof the scan finished: LuaJIT's pipe close reports true even for a failed
+-- command, so an import or packaging error must not leave empty output that reads as no matches.
+local scope = assert(io.popen([[
+python3 -c '
+from pathlib import Path
+from tools.forever_tools import pkgmeta, visual_proof
+
+root = Path(".").resolve()
+shipped = visual_proof.packaged_runtime_files(root)
+files = [path for name, path in shipped.items() if name.endswith(".lua")]
+files += pkgmeta.localization_toc_files(root)
+for path in files:
+    if "@" + "localization" in path.read_text(encoding="utf-8", errors="replace"):
+        print(path.relative_to(root))
+' 2>&1 && printf '%s\n' __LOCALE_SCOPE_COMPLETE__
+]]))
+local scope_output = scope:read("*a")
+scope:close()
+local users = scope_output:match("^(.-)__LOCALE_SCOPE_COMPLETE__\r?\n?$")
+check(users ~= nil, "the localization scope check did not finish: " .. scope_output)
 check(users == "", "the packager's localization keyword would fail the release: " .. users)
 
 -- The English fallback: a phrase no locale translates reads as itself.
