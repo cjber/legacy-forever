@@ -80,6 +80,15 @@
 ---@field build string
 ---@field zones table<number, LegacyExploreZone>
 
+---@class LegacyShadingMask
+---@field [1] number left coordinate in the 1002 by 668 source canvas
+---@field [2] number top coordinate in the 1002 by 668 source canvas
+---@field [3] number power-of-two texture width
+---@field [4] number power-of-two texture height
+---@field [5] string media basename without extension
+
+---@alias LegacyShadingMasks table<number, table<string, LegacyShadingMask>>
+
 ---@class LegacyTaxi
 ---@field name string
 ---@field node number

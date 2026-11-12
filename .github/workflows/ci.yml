@@ -115,6 +115,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends --allow-downgrades \
             "luajit=$LUAJIT" "libluajit-5.1-2=$LUAJIT" "libluajit-5.1-common=$LUAJIT"
+      - name: Install terrain-mask test dependencies
+        run: |
+          python3 -m venv "$RUNNER_TEMP/mask-tests"
+          "$RUNNER_TEMP/mask-tests/bin/pip" install numpy==2.5.4 Pillow==13.0.0
+          echo "$RUNNER_TEMP/mask-tests/bin" >> "$GITHUB_PATH"
       - name: Lua types and multi-value argument lint
         run: |
           curl --retry 8 --retry-delay 5 --retry-all-errors --connect-timeout 20 --max-time 300 -fsSL -o "$RUNNER_TEMP/luals.tgz" \

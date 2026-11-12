@@ -98,6 +98,7 @@ local navigated, outlined, hovering, switched = {}, {}, nil, nil
 local settings = { showAreas = true, showEntrances = true, showOutlines = false }
 
 local ns = {
+	ShadingMasks = { [1429] = { ["outline:0"] = { 160, 93, 512, 256, "Fixture" } } },
 	L = setmetatable({}, {
 		__index = function(_, key)
 			return key
@@ -401,65 +402,17 @@ ns.RefreshMap()
 local filled = Areas()[1]
 check(filled.outline and filled.outline.areas[1] == outlineArea, "the terrain fill is drawn on the shading's own frame")
 check(filled.lines == nil, "an outlined area draws no line")
-local triangles = filled.drawn[outlineArea.key]
-check(#triangles == 2, "a square of real ground is two triangles")
-check(triangles[1].file == "Interface\\Buttons\\WHITE8X8", "a triangle is the shading's white fill texture")
-check(
-	triangles[1].color[1] == 0
-		and triangles[1].color[2] == 0
-		and triangles[1].color[3] == 0
-		and triangles[1].color[4] == 0.25,
-	"a triangle is the shading's own black at the shading's alpha"
-)
-check(
-	triangles[1].width and triangles[1].width > 0 and triangles[1].width <= 200,
-	"a triangle covers its own bounding box, not the whole area"
-)
-check(
-	triangles[1].offsets
-		and triangles[1].offsets[1]
-		and triangles[1].offsets[2]
-		and triangles[1].offsets[3]
-		and triangles[1].offsets[4],
-	"the texture's four corners are moved onto the triangle's three points"
-)
--- Each edge is feathered: its upper corners on the edge, its lower ones the feather width outward, and a
--- vertical gradient from the shading's alpha at the edge to nothing outside.
-local feathers = filled.feathers[outlineArea.key]
-check(feathers and #feathers == 4, "a square of real ground feathers each of its four edges")
-check(feathers[1].file == "Interface\\Buttons\\WHITE8X8", "a feather is the shading's white fill texture")
-local function cornerAt(texture, index, x, y)
-	local cx, cy = texture:Corner(index)
-	return math.abs(cx - x) < 1e-6 and math.abs(cy - y) < 1e-6
-end
--- The square's edges in canvas pixels, and each one's outward unit normal: the feather is 4% of the width.
-local reach = 40 / 1002 * 1000
-local edges = {
-	{ 200, 140, 400, 140, 0, -1 },
-	{ 400, 140, 400, 280, 1, 0 },
-	{ 400, 280, 200, 280, 0, 1 },
-	{ 200, 280, 200, 140, -1, 0 },
-}
-for index, edge in ipairs(edges) do
-	local texture = feathers[index]
-	local ax, ay, bx, by, nx, ny = unpack(edge)
-	check(
-		cornerAt(texture, 1, ax, ay) and cornerAt(texture, 3, bx, by),
-		"a feather's upper corners sit on its ring edge"
-	)
-	check(
-		cornerAt(texture, 2, ax + nx * reach, ay + ny * reach)
-			and cornerAt(texture, 4, bx + nx * reach, by + ny * reach),
-		"a feather's lower corners lie the feather width outward from its edge"
-	)
-end
-check(
-	feathers[1].gradient
-		and feathers[1].gradient.orientation == "VERTICAL"
-		and feathers[1].gradient.min.a == 0
-		and feathers[1].gradient.max.a == 0.25,
-	"a feather fades from the shading's alpha at the edge to nothing outside"
-)
+local textures = filled.drawn[outlineArea.key]
+check(#textures == 1, "one alpha field covers the area without overlapping feather quads")
+local mask = textures[1]
+check(mask.file == "Interface\\AddOns\\LegacyForever\\media\\legacy-masks\\Fixture", "the area uses its generated mask")
+check(mask.color[4] == 0.25, "the mask uses normal shading opacity")
+check(rawget(mask, "offsets") == nil, "reused textures clear old vertex offsets")
+check(math.abs(mask.width - 512 * 1000 / 1002) < 1e-6, "mask width scales from canonical map pixels")
+check(math.abs(mask.height - 256 * 700 / 668) < 1e-6, "mask height scales independently with the canvas")
+check(math.abs(mask.point[2] - 160 * 1000 / 1002) < 1e-6, "mask left anchor scales with the canvas")
+check(math.abs(mask.point[3] + 93 * 700 / 668) < 1e-6, "mask top anchor keeps screen-down orientation")
+check(next(filled.feathers) == nil, "no independent edge gradients can stack at corners")
 check(#Pins() == 2, "an outlined area adds a pin beside the objective's")
 local outlinePin = Pins()[2]
 check(
@@ -483,12 +436,10 @@ check(
 	tooltip.lines[#tooltip.lines] ~= "Click to travel there.",
 	"bare map shows no click hint, because the area hover takes no clicks"
 )
-check(triangles[1].color[4] == 0.4, "the hovered area's terrain fill brightens like a tile-shaded area")
-check(feathers[1].gradient.max.a == 0.4, "the hovered area's edge feathers brighten with its fill")
+check(mask.color[4] == 0.4, "the hovered area's terrain fill brightens like a tile-shaded area")
 Kit.mouseFocus = false
 Kit.Tick()
-check(tooltip.owner == nil and triangles[1].color[4] == 0.25, "leaving the outline restores the terrain fill")
-check(feathers[1].gradient.max.a == 0.25, "leaving the outline restores the edge feathers")
+check(tooltip.owner == nil and mask.color[4] == 0.25, "leaving the outline restores the terrain fill")
 
 Kit.mouseOver = outlinePin
 outlinePin:Run("OnEnter")
@@ -501,97 +452,24 @@ check(
 Kit.mouseOver = nil
 outlinePin:Run("OnLeave")
 
--- A ring wound the other way feathers outward too: its winding says which side is outside the area.
-local reversedArea = {
-	key = "outline:reversed",
-	name = "Reversed Ground",
-	rings = { { 0.6, 0.2, 0.6, 0.4, 0.8, 0.4, 0.8, 0.2 } },
-	outline = true,
-}
-local reversedOutline = {
-	uiMapID = 1429,
-	zone = outline.zone,
-	areas = { reversedArea },
-	byKey = { [reversedArea.key] = reversedArea },
-}
-drawn[1429].outline = reversedOutline
-ns.RefreshMap()
-local reversedFeather = Areas()[1].feathers[reversedArea.key][1]
-check(
-	cornerAt(reversedFeather, 1, 600, 140) and cornerAt(reversedFeather, 3, 600, 280),
-	"a reversed ring's feather starts on its edge"
-)
-check(
-	cornerAt(reversedFeather, 2, 600 - reach, 140) and cornerAt(reversedFeather, 4, 600 - reach, 280),
-	"a reversed ring feathers outward from the edge, not into the area"
-)
-drawn[1429].outline = outline
-ns.RefreshMap()
-
 -- With Leatrix Maps' reveal on, its aerial tint stands in for the veil: the terrain fill and its feathers clear.
 _G.LeaMapsDB = { RevealMap = "On" }
 ns.RefreshMap()
 local clearOutline = Areas()[1]
 check(clearOutline.drawn[outlineArea.key][1].color[4] == 0, "revealed ground leaves the terrain fill clear")
-check(clearOutline.feathers[outlineArea.key][1].gradient.max.a == 0, "revealed ground leaves its edge feathers clear")
 _G.LeaMapsDB = nil
 ns.RefreshMap()
 filled = Areas()[1]
-check(
-	filled.feathers[outlineArea.key][1].gradient.max.a == 0.25,
-	"turning reveal off restores the edge feathers' alpha"
-)
+check(filled.drawn[outlineArea.key][1].color[4] == 0.25, "turning reveal off restores the mask alpha")
 
--- A slanted triangle of real ground: its texture's four corners resolve to its three points, not their vertical
--- mirror inside the bounding box. Screen pixels are y-down, at the map's size, and each vertex's y is UI units up.
-local slantedArea = {
-	key = "outline:slant",
-	name = "Slanted Ground",
-	rings = { { 0.1, 0.1, 0.5, 0.2, 0.3, 0.6 } },
-	outline = true,
-}
-local slantedOutline = {
-	uiMapID = 1429,
-	zone = outline.zone,
-	areas = { slantedArea },
-	byKey = { [slantedArea.key] = slantedArea },
-}
-drawn[1429].outline = slantedOutline
+-- A missing descriptor never falls back to overlapping geometry or borrows another zone's area key.
+local savedMasks = ns.ShadingMasks[1429]
+ns.ShadingMasks[1429] = nil
+ns.ShadingMasks[1430] = savedMasks
 ns.RefreshMap()
-local slanted = Areas()[1].drawn[slantedArea.key][1]
-local corners, distinct = {}, {}
-for index = 1, 4 do
-	local x, y = slanted:Corner(index)
-	corners[#corners + 1] = { x, y }
-end
-for _, corner in ipairs(corners) do
-	local seen = false
-	for _, kept in ipairs(distinct) do
-		if math.abs(kept[1] - corner[1]) < 1e-6 and math.abs(kept[2] - corner[2]) < 1e-6 then
-			seen = true
-			break
-		end
-	end
-	if not seen then
-		distinct[#distinct + 1] = corner
-	end
-end
-local function at(point, x, y)
-	return math.abs(point[1] - x) < 1e-6 and math.abs(point[2] - y) < 1e-6
-end
-local function corner(x, y)
-	for _, point in ipairs(distinct) do
-		if at(point, x, y) then
-			return true
-		end
-	end
-	return false
-end
-check(
-	#distinct == 3 and corner(100, 70) and corner(500, 140) and corner(300, 420),
-	"a triangle's four corners resolve to its three points in screen pixels, not their vertical mirror"
-)
-drawn[1429].outline = outline
+check(Areas()[1].drawn[outlineArea.key] == nil, "mask lookup is scoped to the map")
+ns.ShadingMasks[1429] = savedMasks
+ns.ShadingMasks[1430] = nil
 ns.RefreshMap()
 
 -- With the terrain fill off, the tile shading is the drawing again: no triangles and no extra pin.

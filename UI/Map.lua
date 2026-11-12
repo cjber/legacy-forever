@@ -654,8 +654,7 @@ function AreaPin:DrawTile(tile)
 	return texture
 end
 
--- Every triangle and edge feather of every outlined area, once per redraw: the ear clipping itself is kept on the
--- area's rings (MapContents.Triangles), so a zoom or resize only scales it.
+-- Each outlined area uses its generated alpha mask; zooming and resizing only scale its map coordinates.
 ---@param outline LegacyOutline
 function AreaPin:Paint(outline)
 	self.outline = outline

@@ -12,7 +12,7 @@
 ## IconTexture: Interface\AddOns\LegacyForever\media\Icon
 ## X-Forever-Icon: Interface\Icons\Achievement_General
 ## Dependencies: ForeverCore
-## X-Forever-Core: v1.7.3
+## X-Forever-Core: v1.7.4
 ## OptionalDeps: ShortestPathForever, QuestieDB, Questie, AtlasLootClassic
 ## SavedVariables: LegacyForeverDB
 ## LoadSavedVariablesFirst: 1
@@ -32,6 +32,7 @@ Core\ForeverRequire.lua
 Core\Require.lua
 Data\Legacy.lua
 Data\Explore.lua
+Data\ShadingMasks.lua
 Data\Credits.lua
 Core\Core.lua
 Core\Art.lua

@@ -34,10 +34,15 @@ SOURCES = (
     "media/Shade.tga",
     "UI/MapContents.lua",
     "UI/Shading.lua",
+    "Data/ShadingMasks.lua",
+    "tools/generate_masks_all.py",
+    "tools/export_shading_masks.lua",
     "UI/Map.lua",
     "Integrations/AtlasLoot.lua",
     "UI/Tracker.lua",
 )
+SOURCES += tuple(str(path.relative_to(ROOT)) for path in sorted((ROOT / "media/legacy-masks").glob("*.tga")))
+
 SCENES = {
     path.name: functools.partial(screens.files, ROOT, SOURCES)
     for pattern in screens.IMAGES

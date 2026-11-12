@@ -12,9 +12,9 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
-### Changed
+## [2.3.5] - 2026-11-12
 
-- **"Show where to discover areas" now shades each area instead of glowing along it.** Turned on, an area the game has terrain for is filled with the same dark shading as the rest of the map, only in its real shape rather than the map art's squares, its edge fading out over the same soft band as the map-art shading, and it brightens under the mouse like any shaded area. The gold glow is gone; areas without terrain data keep their square shading, and the switch still starts off (#474).
+- **Terrain shading now follows each area's real ground with smooth native fades.** Clipped terrain data removes jagged corners and overfill, while areas without terrain data keep their map-art shading. (#474)
 
 ## [2.3.4] - 2026-11-11
 

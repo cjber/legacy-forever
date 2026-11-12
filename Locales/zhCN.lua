@@ -4,6 +4,8 @@ if GetLocale() ~= "zhCN" then
 	return
 end
 local L = ns.L
+L["Terrain shading now follows each area's real ground with smooth native fades."] =
+	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
 
 L["%d Legacy objective left"] = "剩余%d个传承目标"
 L["%d Legacy objectives left"] = "剩余%d个传承目标"

@@ -52,6 +52,8 @@ L["Flight paths"] = "Flugrouten"
 L["Forever addons"] = "Forever-Addons"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Schattiert den echten Boden jedes unentdeckten Gebiets, mit einer Markierung am Rand. Gebiete ohne Geländedaten behalten die Schattierung."
+L["Terrain shading now follows each area's real ground with smooth native fades."] =
+	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
 L["Hide from the tracker"] = "In der Verfolgung ausblenden"
 L["In the objective tracker"] = "In der Questzielverfolgung"
 L["Install AtlasLoot for recommended levels."] = "Installiert AtlasLoot für empfohlene Stufen."

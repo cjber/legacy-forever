@@ -546,7 +546,7 @@ def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False,
     player = None
     if outlines:
         player = outline_player(zone, outlines["player_area"], art)
-        shaded = outline_shading(canvas, rects, zone, outlines["zone"], live, outlines["hover"])
+        shaded = outline_shading(canvas, rects, zone, outlines["zone"], live, outlines["hover"], ui_map_id=ui_map)
     groups = live.model.zone_objectives(ui_map)
     pins = []
     for group in groups:
