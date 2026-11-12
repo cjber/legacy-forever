@@ -58,7 +58,7 @@ files["tests/navigate_spec.lua"] = {
 	globals = { "C_AddOns", "C_Map", "C_SuperTrack", "ForeverCore", "InCombatLockdown", "UiMapPoint", "ShortestPathForever" },
 }
 files["tests/whatsnew_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore", "geterrorhandler", "seterrorhandler", "strtrim" } }
-files["tests/settings_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "C_SettingsUtil", "CreateSecureDelegate", "WorldMapFrame", "InCombatLockdown", "geterrorhandler", "seterrorhandler" } }
+files["tests/settings_spec.lua"] = { globals = { "C_AddOns", "CreateFrame", "ForeverCore", "Settings", "CreateSettingsButtonInitializer", "strtrim", "C_Map", "C_SettingsUtil", "securecallfunction", "WorldMapFrame", "InCombatLockdown", "geterrorhandler", "seterrorhandler" } }
 files["tests/gamepad_menus_spec.lua"] = { globals = { "CreateFrame", "ForeverCore" } }
 files["tests/legacy_map_spec.lua"] = {
 	globals = {
@@ -76,7 +76,7 @@ files["tests/api_spec.lua"] = {
 		"HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "C_AddOns", "WHITE_FONT_COLOR", "GameTooltip", "GameTooltip_SetTitle",
 		"GameTooltip_AddColoredLine", "GameTooltip_AddInstructionLine", "GameTooltip_AddDisabledLine",
 		"Enum", "WorldMapFrame", "CreateFrame", "Mixin", "CreateFromMixins", "Saturate", "Lerp",
-		"seterrorhandler", "strtrim", "CreateSecureDelegate", "debugprofilestop",
+		"seterrorhandler", "strtrim", "securecallfunction", "debugprofilestop",
 	},
 }
 for _, name in ipairs({ "UnitGUID", "time" }) do
@@ -96,5 +96,5 @@ files["tests/error_journal_spec.lua"] = {
 	globals = { "C_AddOns", "CreateFrame", "ForeverCore", "SlashCmdList", "geterrorhandler", "seterrorhandler", "strtrim", "date", "GetTime" },
 }
 -- ForeverCore's openers: the client's secure world map and settings panel openers.
-read_globals[#read_globals + 1] = "CreateSecureDelegate"
+read_globals[#read_globals + 1] = "securecallfunction"
 read_globals[#read_globals + 1] = "C_SettingsUtil"

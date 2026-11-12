@@ -171,7 +171,7 @@ WorldMapFrame = {
 }
 -- C_Map.OpenWorldMap is restricted: asked from addon code, the client refuses it and blames the addon
 -- (cjber/adventure-guide-forever#411, cjber/forever-core#333). This stub does the same, so a /lf that went back to
--- it fails here; the secure delegate is how the game lets addon code ask.
+-- it fails here; the client's securecallfunction is how the game lets addon code ask.
 local addonTaint = true
 local function RawOpenWorldMap(uiMapID)
 	assert(not addonTaint, "C_Map.OpenWorldMap called straight from addon code")
@@ -179,15 +179,13 @@ local function RawOpenWorldMap(uiMapID)
 	calls.map = (calls.map or 0) + 1
 end
 C_Map = { OpenWorldMap = RawOpenWorldMap }
-CreateSecureDelegate = function(open)
-	return function(...)
-		local outer = addonTaint
-		addonTaint = false
-		local ok, err = pcall(open, ...)
-		addonTaint = outer
-		if not ok then
-			error(err, 0)
-		end
+securecallfunction = function(fn, ...)
+	local outer = addonTaint
+	addonTaint = false
+	local ok, err = pcall(fn, ...)
+	addonTaint = outer
+	if not ok then
+		error(err, 0)
 	end
 end
 InCombatLockdown = function()
@@ -199,12 +197,12 @@ end
 function ns.Print(text)
 	printed[#printed + 1] = text
 end
--- A build without the client's secure delegate opens nothing, so the menu that lives on the map stays closed too.
-local delegate = CreateSecureDelegate
-CreateSecureDelegate = nil
+-- A build without the client's securecallfunction opens nothing, so the menu that lives on the map stays closed too.
+local securecall = securecallfunction
+securecallfunction = nil
 SlashCmdList.LEGACYFOREVER("")
 check(calls.map == nil and calls.menu == nil and #printed == 0, "a map that cannot open leaves its menu closed")
-CreateSecureDelegate = delegate
+securecallfunction = securecall
 SlashCmdList.LEGACYFOREVER("")
 check(calls.map == 1 and calls.menu == 1 and #printed == 0, "a bare /lf opens the map and its menu")
 LegacyForever_OnAddonCompartmentClick()

@@ -1,0 +1,29 @@
+{
+  "input_digest": "9ea0179cb02988a5ef69b7dd0ceaba94fe554044da5aa6768c4e3c930374f188",
+  "runtime_sha256": "9ea0179cb02988a5ef69b7dd0ceaba94fe554044da5aa6768c4e3c930374f188",
+  "candidate": "7b30555ec420cc4284637fc35dfad9201a4a57b5917884233291d1a4be0baee7",
+  "tested_artifact": "release-package",
+  "client_build": "1.60.1.70888 (Interface 16001)",
+  "flows": [
+    {
+      "name": "/lf opens the map and its menu through ForeverCore 1.8.1's opener",
+      "steps": [
+        "Install the packaged candidate with its bundled ForeverCore v1.8.1 and /reload",
+        "Print the loaded versions: ForeverCore v1.8.1 and LegacyForever v2.3.5-6-g3aba7dd, both loaded, ProfessionTabs.minor 2",
+        "Type /lf",
+        "Confirm the world map opens on the player's zone with Legacy's menu beside it and no action-blocked message"
+      ],
+      "result": "pass"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://gist.githubusercontent.com/cjber/328823e9708f8e8ea7847dc01bd53905/raw/55de9fd8b9c4d5fdf425aa1a72db5386128d3749/sync181-versions.png",
+      "sha256": "68bb8f958f2dab34bbf7a541f311f8141db7ebeaca4a51e39fbe9bf4c725e7c6"
+    },
+    {
+      "url": "https://gist.githubusercontent.com/cjber/328823e9708f8e8ea7847dc01bd53905/raw/55de9fd8b9c4d5fdf425aa1a72db5386128d3749/sync181-legacy-lf-7b30555.png",
+      "sha256": "94670ef89fcb52de77e4200779877d4992acec54d95476d755b3c8242fcd2d4b"
+    }
+  ]
+}
