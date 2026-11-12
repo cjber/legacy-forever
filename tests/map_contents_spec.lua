@@ -247,7 +247,7 @@ drawn = MapContents.Drawn(nil)
 equal(#drawn.pins + #drawn.badges, 0, "no map, nothing drawn")
 
 -- The terrain fill: with the switch on, an area with terrain rings is filled from them and keeps its Legacy step
--- for the pin and the hover; every other area keeps the tile shading.
+-- for the pin and the hover; it keeps the tile shading too, so the dark fade stays under the fill.
 settings.showOutlines = true
 drawn = MapContents.Drawn(ZONE)
 local outline = assert(drawn.outline, "the terrain fill is drawn")
@@ -255,10 +255,11 @@ equal(#outline.areas, 1, "only the area with terrain data is filled from its rin
 equal(outline.areas[1].key, areaA.key, "the area with terrain data")
 equal(outline.areas[1].outline, true, "an outline area is marked for the hover")
 equal(outline.areas[1].objective.objective.text, "Step 1", "the terrain fill carries its Legacy step")
-shade = assert(drawn.shade, "the areas without terrain data keep the shading")
-equal(#shade.areas, 2, "area B and the wide area stay shaded")
-equal(shade.byKey[areaA.key], nil, "an outlined area keeps no tile shading of its own")
-equal(shade.areas[1].objective.objective.text, "Step 2", "a shaded area still carries its step")
+shade = assert(drawn.shade, "every undiscovered area keeps the dark fade")
+equal(#shade.areas, 3, "the outlined area and the areas without terrain data stay shaded")
+equal(shade.byKey[areaA.key].area, areaA, "an outlined area keeps its tile shading of its own")
+equal(shade.byKey[areaA.key].objective.objective.text, "Step 1", "the shaded outlined area carries the same step")
+equal(shade.areas[2].objective.objective.text, "Step 2", "a shaded area still carries its step")
 
 -- A discovered area leaves neither the terrain fill nor the shading.
 explored = { [areaA.key] = true }
@@ -270,7 +271,7 @@ explored = {}
 settings.showOutlines = false
 drawn = MapContents.Drawn(ZONE)
 equal(drawn.outline, nil, "the terrain fill switched off")
-equal(#assert(drawn.shade).areas, 3, "every undiscovered area is shaded again")
+equal(#assert(drawn.shade).areas, 3, "every undiscovered area is shaded")
 settings.showOutlines = true
 
 -- The fill's triangles cover each ring exactly, for either winding and for a ring with a notch, and are kept
