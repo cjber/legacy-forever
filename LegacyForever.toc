@@ -12,7 +12,7 @@
 ## IconTexture: Interface\AddOns\LegacyForever\media\Icon
 ## X-Forever-Icon: Interface\Icons\Achievement_General
 ## Dependencies: ForeverCore
-## X-Forever-Core: v1.8.1
+## X-Forever-Core: v1.8.2
 ## OptionalDeps: ShortestPathForever, QuestieDB, Questie, AtlasLootClassic
 ## SavedVariables: LegacyForeverDB
 ## LoadSavedVariablesFirst: 1
