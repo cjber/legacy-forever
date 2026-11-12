@@ -1,17 +1,17 @@
 {
-  "input_digest": "1f000d75a3399235139b23d0786ade3d3d9b8d108b7881c10804949ace9499c0",
-  "runtime_sha256": "1f000d75a3399235139b23d0786ade3d3d9b8d108b7881c10804949ace9499c0",
-  "candidate": "9ad58008b073572259b0c9dc8906b19f249713bca0741b8f880e074c3253506e",
+  "input_digest": "b1cc92b621c002c8d16403c504161c01244b0f71a3f1fdbad9827f798f58b1f2",
+  "runtime_sha256": "b1cc92b621c002c8d16403c504161c01244b0f71a3f1fdbad9827f798f58b1f2",
+  "candidate": "08e2cfb4cc661cdd905893277b4b53d0cd3abecef3725a3ec1a6e2b92937dc4e",
   "tested_artifact": "source-tree",
   "client_build": "1.60.1.70888 (Interface 16001)",
-  "source_commit": "165a67858055aa2786db2b5535f87c8ce65ecd90",
-  "notes": "Recorded on Hel Io in the player's live client from an installed source-tree build of this commit (git archive); visual_proof --compare reported no missing or differing runtime files, the install additionally carries the ignored store icon media/icon-400.png. Every other Forever addon's ForeverCore 1.8.2 sync build was loaded in the same session. BugGrabber recorded no addon errors (the session's two errors were the recorder's own /run lines calling a missing client API).",
+  "source_commit": "7c7c3390f4604e165055edc497db30c0c51c3613",
+  "notes": "Recorded on Hel Io in the player's live client from an installed source-tree build of this commit (git archive); --compare reported no missing or differing runtime files, the install additionally carries the ignored store icon. Every other Forever addon's 1.9.0 sync build was loaded in the same session. The only BugGrabber entries this session were the recorder's own over-long /run lines.",
   "flows": [
     {
-      "name": "/lf opens the map and its menu on ForeverCore 1.8.2",
+      "name": "/lf opens the map and its menu on ForeverCore 1.9.0",
       "steps": [
-        "Install the candidate with ForeverCore v1.8.2 and /reload",
-        "Print every Forever addon's loaded version into a chat tab with no channels: ForeverCore v1.8.2 plus this candidate, all loaded",
+        "Install the candidate with the store ForeverCore v1.9.0 and /reload",
+        "Print every Forever addon's loaded version into a chat tab with no channels: store ForeverCore v1.9.0 plus each 1.9.0 sync build, all loaded, and BugGrabber shows no addon errors this session",
         "Type /lf",
         "The world map opens on Redridge Mountains with Legacy's menu beside it and no action-blocked message"
       ],
@@ -20,12 +20,12 @@
   ],
   "images": [
     {
-      "url": "https://gist.githubusercontent.com/cjber/5cd61b138c1e01654d7aadd509568514/raw/82bfd62fbba753c8cc0a35be3f8e1c07fb2ac713/sync182-legacy-map.png",
-      "sha256": "e82a8ba7efaf309f8d49da4a5a8e72fff44cbe911d324740ea7a3e578f5ac3be"
+      "url": "https://gist.githubusercontent.com/cjber/627a1b4cf36d973bb26ba262c81eb601/raw/67bd0b623f26040eed9f66dd363a477dbb684579/sync190-legacy-map.png",
+      "sha256": "e00f8b3942156a92dc94d55688ee2ac18a107543de2e5be5d743244fb61dbdbc"
     },
     {
-      "url": "https://gist.githubusercontent.com/cjber/5cd61b138c1e01654d7aadd509568514/raw/82bfd62fbba753c8cc0a35be3f8e1c07fb2ac713/sync182-versions.png",
-      "sha256": "0a95af5dcd4392712f85093832d05c14411d76b4099d3b60185209cbdf0e1e1b"
+      "url": "https://gist.githubusercontent.com/cjber/627a1b4cf36d973bb26ba262c81eb601/raw/67bd0b623f26040eed9f66dd363a477dbb684579/sync190-versions.png",
+      "sha256": "9731b84977a7daf94152f9129b9ea996b4c467006f822f7acc430332fa8f08ec"
     }
   ]
 }
