@@ -1,29 +1,31 @@
 {
-  "input_digest": "9ea0179cb02988a5ef69b7dd0ceaba94fe554044da5aa6768c4e3c930374f188",
-  "runtime_sha256": "9ea0179cb02988a5ef69b7dd0ceaba94fe554044da5aa6768c4e3c930374f188",
-  "candidate": "7b30555ec420cc4284637fc35dfad9201a4a57b5917884233291d1a4be0baee7",
-  "tested_artifact": "release-package",
+  "input_digest": "1f000d75a3399235139b23d0786ade3d3d9b8d108b7881c10804949ace9499c0",
+  "runtime_sha256": "1f000d75a3399235139b23d0786ade3d3d9b8d108b7881c10804949ace9499c0",
+  "candidate": "9ad58008b073572259b0c9dc8906b19f249713bca0741b8f880e074c3253506e",
+  "tested_artifact": "source-tree",
   "client_build": "1.60.1.70888 (Interface 16001)",
+  "source_commit": "165a67858055aa2786db2b5535f87c8ce65ecd90",
+  "notes": "Recorded on Hel Io in the player's live client from an installed source-tree build of this commit (git archive); visual_proof --compare reported no missing or differing runtime files, the install additionally carries the ignored store icon media/icon-400.png. Every other Forever addon's ForeverCore 1.8.2 sync build was loaded in the same session. BugGrabber recorded no addon errors (the session's two errors were the recorder's own /run lines calling a missing client API).",
   "flows": [
     {
-      "name": "/lf opens the map and its menu through ForeverCore 1.8.1's opener",
+      "name": "/lf opens the map and its menu on ForeverCore 1.8.2",
       "steps": [
-        "Install the packaged candidate with its bundled ForeverCore v1.8.1 and /reload",
-        "Print the loaded versions: ForeverCore v1.8.1 and LegacyForever v2.3.5-6-g3aba7dd, both loaded, ProfessionTabs.minor 2",
+        "Install the candidate with ForeverCore v1.8.2 and /reload",
+        "Print every Forever addon's loaded version into a chat tab with no channels: ForeverCore v1.8.2 plus this candidate, all loaded",
         "Type /lf",
-        "Confirm the world map opens on the player's zone with Legacy's menu beside it and no action-blocked message"
+        "The world map opens on Redridge Mountains with Legacy's menu beside it and no action-blocked message"
       ],
       "result": "pass"
     }
   ],
   "images": [
     {
-      "url": "https://gist.githubusercontent.com/cjber/328823e9708f8e8ea7847dc01bd53905/raw/55de9fd8b9c4d5fdf425aa1a72db5386128d3749/sync181-versions.png",
-      "sha256": "68bb8f958f2dab34bbf7a541f311f8141db7ebeaca4a51e39fbe9bf4c725e7c6"
+      "url": "https://gist.githubusercontent.com/cjber/5cd61b138c1e01654d7aadd509568514/raw/82bfd62fbba753c8cc0a35be3f8e1c07fb2ac713/sync182-legacy-map.png",
+      "sha256": "e82a8ba7efaf309f8d49da4a5a8e72fff44cbe911d324740ea7a3e578f5ac3be"
     },
     {
-      "url": "https://gist.githubusercontent.com/cjber/328823e9708f8e8ea7847dc01bd53905/raw/55de9fd8b9c4d5fdf425aa1a72db5386128d3749/sync181-legacy-lf-7b30555.png",
-      "sha256": "94670ef89fcb52de77e4200779877d4992acec54d95476d755b3c8242fcd2d4b"
+      "url": "https://gist.githubusercontent.com/cjber/5cd61b138c1e01654d7aadd509568514/raw/82bfd62fbba753c8cc0a35be3f8e1c07fb2ac713/sync182-versions.png",
+      "sha256": "0a95af5dcd4392712f85093832d05c14411d76b4099d3b60185209cbdf0e1e1b"
     }
   ]
 }

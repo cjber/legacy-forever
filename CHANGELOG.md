@@ -12,6 +12,12 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [2.3.8] - 2026-11-12
+
+<!-- forever-core-sync -->
+
+- Ships with the same shared code as your other Forever addons, so they keep working together.
+
 ## [2.3.7] - 2026-11-12
 
 - **Both discover switches now keep the dark fade, and the shading stays under every map marker.** With "Show undiscovered areas" and "Show where to discover areas" both on, each outlined area keeps its unexplored-ground shading under the terrain fill, so the map no longer loses the dark fade. The shading also takes the map's own fog-of-war layer instead of a level worked out per map, so Blizzard's dungeon entrances and other addons' markers such as Leatrix Maps always draw above it, including with Leatrix's reveal on and after zooming or reopening the map. Thanks to cotijelucie on Discord for the report and follow-up. (#485)
