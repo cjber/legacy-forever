@@ -4,6 +4,8 @@ if GetLocale() ~= "ptBR" then
 	return
 end
 local L = ns.L
+L["Terrain shading now follows each area's real ground with smooth native fades."] =
+	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
 
 L["%d Legacy objective left"] = "Falta %d objetivo de Legado"
 L["%d Legacy objectives left"] = "Faltam %d objetivos de Legado"
@@ -50,8 +52,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Todas as missões que este personagem pode pegar na zona, segundo o Questie."
 L["Flight paths"] = "Rotas de voo"
 L["Forever addons"] = "AddOns Forever"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"Ilumina o terreno real de cada área não descoberta, com um marcador na borda. Áreas sem dados de terreno mantêm o sombreamento."
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Sombreia o terreno real de cada área não descoberta, com um marcador na borda. Áreas sem dados de terreno mantêm o sombreamento."
 L["Hide from the tracker"] = "Ocultar do rastreador"
 L["In the objective tracker"] = "No rastreador de objetivos"
 L["Install AtlasLoot for recommended levels."] = "Instale AtlasLoot para ver os níveis recomendados."
@@ -93,7 +95,6 @@ L["Show undiscovered areas"] = "Mostrar áreas não descobertas"
 L["Show where to discover areas"] = "Mostrar onde descobrir áreas"
 L["Stop tracking"] = "Não rastrear"
 L["Suggest my other Forever addons"] = "Sugerir meus outros AddOns Forever"
-L["The players who helped are on the Thanks page."] = "Os jogadores que ajudaram estão na página de Agradecimentos."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"A zona em que você está e o que falta fazer nela. Desafios rastreados mantêm sua própria seção de Legado."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

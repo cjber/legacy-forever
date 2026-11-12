@@ -7,9 +7,10 @@ ns.L = setmetatable({}, {
 		return key
 	end,
 })
-ns.L["The players who helped are on the Thanks page."] = "The players who helped are on the Thanks page."
 ns.L["This menu needs mouse and keyboard."] = "This menu needs mouse and keyboard."
 ns.L["Show where to discover areas"] = "Show where to discover areas"
 ns.L["%d yards away"] = "%d yards away"
-ns.L["A gold glow along the real ground of each undiscovered area, with a pin at its nearest edge. Areas without terrain data keep the shading."] =
-	"A gold glow along the real ground of each undiscovered area, with a pin at its nearest edge. Areas without terrain data keep the shading."
+ns.L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."
+ns.L["Terrain shading now follows each area's real ground with smooth native fades."] =
+	"Terrain shading now follows each area's real ground with smooth native fades."

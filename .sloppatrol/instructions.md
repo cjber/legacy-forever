@@ -16,7 +16,7 @@ Things reached indirectly: none of them is dead code, even when no file calls it
 
 - `LegacyForever.toc` file list: load order `Locales/enUS.lua` (then any `Locales/<locale>.lua`), `Core/ForeverRequire.lua`,
   `Core/Require.lua`, `Data/Legacy.lua, Data/Explore.lua, Core, Art, Saved, WhatsNew, Model, Live, Quests, Navigate,
-  ZoneCompletion, Tracker, Completion, Settings, MapContents, UI/Map.xml, Map, API, Report`; never reorder as formatting.
+  ZoneCompletion, Tracker, Completion, Settings, MapContents, Shading, UI/Map.xml, Map, API, Report`; never reorder as formatting.
 - `## SavedVariables: LegacyForeverDB`: persisted keys `tracked`, `zoneCompletion`,
   `flightPaths`, `showAreas`, `showOutlines`, `showEntrances`, `whatsNew`, `lastVersion`, named only in `Core/Saved.lua`, and `suggestFamily` (default
   in `Core/Saved.lua`) and `familyDismissed`, which ForeverCore's family page also reads and writes through `ns.FamilyDB()`;
@@ -41,7 +41,6 @@ Things reached indirectly: none of them is dead code, even when no file calls it
   `tools/gen_explore_test.py`; it imports `gen_legacy` for the schemas, `generate` and the overlay join, and pins
   its own `TERRAIN_BUILD` for the DB2 rows and ADT/WDT downloads. `tools/check_explore.py`: run by CI's generated
   job; requires every Explore zone and area key in Legacy's completion data and names the ones to retrace.
-  `tools/glow_texture.py` writes `media/Glow.tga`, read only by `UI/Map.lua` through `Art.GlowLine`.
 - `tools/legacy_render.py`: imported by `gen_legacy.py` and `screenshots.py`; `tools/db2.py` and
   `tools/locations.py`: imported by `gen_legacy.py`;
   `tools/screenshots.py`: run by hand after UI changes (needs Pillow and `wowmock`), and runs

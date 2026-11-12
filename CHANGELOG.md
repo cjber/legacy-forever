@@ -14,8 +14,7 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [2.3.5] - 2026-11-12
 
-<!-- forever-core-sync -->
-
+- **Terrain shading now follows each area's real ground with smooth native fades.** Clipped terrain data removes jagged corners and overfill, while areas without terrain data keep their map-art shading. Thanks to cotijelucie for the report and idea. (#474)
 - Ships with the same shared code as your other Forever addons, so they keep working together.
 
 ## [2.3.4] - 2026-11-11

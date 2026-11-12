@@ -4,6 +4,8 @@ if GetLocale() ~= "zhTW" then
 	return
 end
 local L = ns.L
+L["Terrain shading now follows each area's real ground with smooth native fades."] =
+	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
 
 L["%d Legacy objective left"] = "剩餘%d個傳承目標"
 L["%d Legacy objectives left"] = "剩餘%d個傳承目標"
@@ -48,8 +50,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"此角色在該地區可接的所有任務，資料來自Questie。"
 L["Flight paths"] = "飛行路線"
 L["Forever addons"] = "Forever插件"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"以金色光暈顯示每個未探索區域的真實地形，並在邊緣放置圖釘。沒有地形資料的區域仍然使用陰影。"
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"以陰影顯示每個未探索區域的真實地形，並在邊緣放置圖釘。沒有地形資料的區域仍然使用陰影。"
 L["Hide from the tracker"] = "從追蹤器中隱藏"
 L["In the objective tracker"] = "在目標追蹤器中"
 L["Install AtlasLoot for recommended levels."] = "安裝AtlasLoot以查看建議等級。"
@@ -90,7 +92,6 @@ L["Show undiscovered areas"] = "顯示未發現的區域"
 L["Show where to discover areas"] = "顯示可探索區域的位置"
 L["Stop tracking"] = "停止追蹤"
 L["Suggest my other Forever addons"] = "推薦我的其他Forever插件"
-L["The players who helped are on the Thanks page."] = "幫助過的玩家都列在致謝頁面上。"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地區以及那裡剩餘的事項。你追蹤的挑戰保留在各自的傳承區塊中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

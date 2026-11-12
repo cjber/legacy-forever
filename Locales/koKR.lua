@@ -4,6 +4,8 @@ if GetLocale() ~= "koKR" then
 	return
 end
 local L = ns.L
+L["Terrain shading now follows each area's real ground with smooth native fades."] =
+	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
 
 L["%d Legacy objective left"] = "남은 유산 목표 %d개"
 L["%d Legacy objectives left"] = "남은 유산 목표 %d개"
@@ -57,8 +59,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"이 캐릭터가 이 지역에서 받을 수 있는 모든 퀘스트(Questie 기준)."
 L["Flight paths"] = "비행 경로"
 L["Forever addons"] = "Forever 애드온"
-L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
-	"미발견 지역의 실제 지형을 빛나게 표시하고 가장자리에 핀을 표시합니다. 지형 데이터가 없는 지역은 음영 표시를 유지합니다."
+L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
+	"미발견 지역의 실제 지형을 음영으로 표시하고 가장자리에 핀을 표시합니다. 지형 데이터가 없는 지역은 음영 표시를 유지합니다."
 L["Hide from the tracker"] = "추적기에서 숨기기"
 L["In the objective tracker"] = "목표 추적기에서"
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요."
@@ -101,8 +103,6 @@ L["Show undiscovered areas"] = "발견하지 않은 구역 표시"
 L["Show where to discover areas"] = "발견할 지역 위치 표시"
 L["Stop tracking"] = "추적 해제"
 L["Suggest my other Forever addons"] = "제 다른 Forever 애드온 추천"
-L["The players who helped are on the Thanks page."] =
-	"도움을 준 플레이어들이 감사 페이지에 있습니다."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

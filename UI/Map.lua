@@ -15,13 +15,6 @@ local DONE_ALPHA = 0.4
 -- Lists in the map menu scroll past 20 rows of 20 px: Blizzard's submenus never clamp to the screen (WFA-36).
 local MENU_EXTENT = 20 * 20
 local POINTS_ICON = ns.POINTS_ICON
--- The terrain glow: a soft wide stroke under a brighter core, in the Legacy gold, along each area's real
--- ground. The strip is a feather texture, the same for every area.
-local GLOW = "Interface\\AddOns\\LegacyForever\\media\\Glow"
-local GOLD_R, GOLD_G, GOLD_B = 1, 0.8, 0.35
-local GLOW_WIDE, GLOW_WIDE_ALPHA = 11, 0.2
-local GLOW_CORE, GLOW_CORE_ALPHA = 2.5, 0.75
-local GLOW_HOVER = 1.7
 -- Moving the player moves the outline pins at most once a second, never once a frame.
 local PLAYER_REFRESH = 1
 
@@ -186,6 +179,8 @@ end
 local TRACK_HINT = L["Click to track, with live progress."]
 -- The same line as the switch's row on the Settings page.
 local ENTRANCES_TOOLTIP = L["Turn this off if another addon already marks them. The Legacy map menu still lists them."]
+local OUTLINES_TOOLTIP =
+	L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."]
 
 ---@param name string
 ---@param count number
@@ -299,10 +294,7 @@ local function BuildMenu(root, uiMapID)
 	local outlines = root:CreateCheckbox(L["Show where to discover areas"], ns.Saved.Get, ToggleSetting, "showOutlines")
 	outlines:SetTooltip(function(tooltip)
 		GameTooltip_SetTitle(tooltip, L["Show where to discover areas"])
-		GameTooltip_AddNormalLine(
-			tooltip,
-			L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."]
-		)
+		GameTooltip_AddNormalLine(tooltip, OUTLINES_TOOLTIP)
 	end)
 	local entrances =
 		root:CreateCheckbox(L["Show dungeon and raid entrances"], ns.Saved.Get, ToggleSetting, "showEntrances")
@@ -554,11 +546,12 @@ function ObjectivePin:OnMouseLeave()
 end
 
 -- One frame per zone map holding every undiscovered area, drawn from the same map tiles Blizzard reveals on
--- discovery (see MapExplorationPinMixin:RefreshOverlays), or, with "Show where to discover areas" on, as a gold
--- glow along each area's real ground (MapContents.OutlineAt). It never takes the mouse, which would swallow the
--- map's own clicks (right-click to zoom out, drag to pan): while the cursor is on bare map, the area under it is
--- polled (MapContents.OutlineAt, then MapContents.AreaAt for the areas that keep their shading).
----@class LegacyAreaPin : ForeverCanvasPin
+-- discovery (see MapExplorationPinMixin:RefreshOverlays), or, with "Show where to discover areas" on, filled
+-- from each area's real ground with the shading's own colour and alpha (MapContents.Triangles). It never takes
+-- the mouse, which would swallow the map's own clicks (right-click to zoom out, drag to pan): while the cursor
+-- is on bare map, the area under it is polled (MapContents.OutlineAt, then MapContents.AreaAt for the areas that
+-- keep their tiles).
+---@class LegacyAreaPin : ForeverCanvasPin, LegacyShadingCanvas
 ---@field textures LegacyTexturePool
 ---@field shade? LegacyShade
 ---@field outline? LegacyOutline
@@ -566,9 +559,7 @@ end
 ---@field cursorX? number
 ---@field cursorY? number
 ---@field drawn table<string, Texture[]>
----@field glow table<string, LegacyGlowLine[]>
----@field lines LegacyGlowLine[]
----@field used number
+---@field feathers table<string, Texture[]>
 ---@field width number
 ---@field height number
 ---@field shadeAlpha number
@@ -584,12 +575,12 @@ local RefreshOutlinePins
 function AreaPin:OnLoad()
 	self:SetIgnoreGlobalPinScale(true)
 	-- No level type: the canvas's own level plus one, above the map art and below every pin, ours, Blizzard's or
-	-- another addon's. Blizzard's exploration level is about 2,000, which drew the shading and its glow over other
-	-- addons' markers on the canvas (Leatrix Maps puts its points of interest at level 100). With Leatrix Maps'
-	-- reveal on, Draw raises it one level above the exploration pin instead (AreaLevel).
+	-- another addon's. Blizzard's exploration level is about 2,000, which drew the shading over other addons'
+	-- markers on the canvas (Leatrix Maps puts its points of interest at level 100). With Leatrix Maps' reveal on,
+	-- Draw raises it one level above the exploration pin instead (AreaLevel).
 	self.textures = CreateTexturePool(self, "OVERLAY")
-	self.drawn, self.glow, self.lines = {}, {}, {}
-	self.used = 0
+	self.drawn = {}
+	self.feathers = {}
 	self.clock = 0
 	-- The area scan runs only when the cursor moves over the canvas; the position is in canvas pixels, so a zoom or
 	-- pan under a still cursor counts as a move. The player's place is read once a second, not every frame.
@@ -623,20 +614,17 @@ end
 function AreaPin:OnReleased()
 	self:Highlight(nil)
 	self.textures:ReleaseAll()
-	for _, line in ipairs(self.lines) do
-		line:Hide()
-	end
 	self.shade, self.outline = nil, nil
-	self.drawn, self.glow = {}, {}
-	self.used = 0
+	self.drawn = {}
+	self.feathers = {}
 	self.cursorX, self.cursorY = nil, nil
 end
 
 local masks = setmetatable({}, { __mode = "k" })
 
----@param tile LegacyShadeTile
+-- A texture from the pool with the map's mask on it, so the drawing stops at the map art's edge like the map's own.
 ---@return Texture
-function AreaPin:DrawTile(tile)
+function AreaPin:Acquire()
 	local texture = self.textures:Acquire()
 	if masks[texture] then
 		texture:RemoveMaskTexture(masks[texture])
@@ -647,8 +635,16 @@ function AreaPin:DrawTile(tile)
 		texture:AddMaskTexture(mask)
 		masks[texture] = mask
 	end
+	return texture
+end
+
+---@param tile LegacyShadeTile
+---@return Texture
+function AreaPin:DrawTile(tile)
+	local texture = self:Acquire()
 	-- art-ok: a map tile at the size and crop the generated data gives it, and the pool only ever draws files
 	texture:SetTexture(tile.file, nil, nil, "TRILINEAR")
+	texture:ClearVertexOffsets()
 	texture:SetSize(tile.width, tile.height)
 	texture:SetTexCoord(0, tile.u, 0, tile.v)
 	texture:ClearAllPoints()
@@ -658,55 +654,12 @@ function AreaPin:DrawTile(tile)
 	return texture
 end
 
--- One line of the glow from the pool; a shorter ring hides the lines it does not need.
----@param u1 number
----@param v1 number
----@param u2 number
----@param v2 number
----@param thickness number
----@param alpha number
----@return Line
-function AreaPin:DrawEdge(u1, v1, u2, v2, thickness, alpha)
-	local index = self.used + 1
-	local line = self.lines[index]
-	if not line then
-		local created = self:CreateLine(nil, "OVERLAY")
-		---@cast created LegacyGlowLine
-		self.lines[index] = created
-		line = created
-	end
-	self.used = index
-	ns.Art.GlowLine(line, GLOW, thickness, GOLD_R, GOLD_G, GOLD_B, alpha)
-	line.baseAlpha = alpha
-	line:SetStartPoint("TOPLEFT", self, u1 * self.width, -v1 * self.height)
-	line:SetEndPoint("TOPLEFT", self, u2 * self.width, -v2 * self.height)
-	line:Show()
-	return line
-end
-
--- Every ring of every area, as a wide soft stroke under a brighter core.
+-- Each outlined area uses its generated alpha mask; zooming and resizing only scale its map coordinates.
 ---@param outline LegacyOutline
 function AreaPin:Paint(outline)
 	self.outline = outline
-	self.used = 0
 	for _, area in ipairs(outline.areas) do
-		local lines = {}
-		for _, ring in ipairs(area.rings) do
-			local count = #ring / 2
-			for index = 1, count do
-				local following = index % count + 1
-				local u1, v1, u2, v2 =
-					ring[index * 2 - 1], ring[index * 2], ring[following * 2 - 1], ring[following * 2]
-				if not (u1 == u2 and v1 == v2) then
-					lines[#lines + 1] = self:DrawEdge(u1, v1, u2, v2, GLOW_WIDE, GLOW_WIDE_ALPHA)
-					lines[#lines + 1] = self:DrawEdge(u1, v1, u2, v2, GLOW_CORE, GLOW_CORE_ALPHA)
-				end
-			end
-		end
-		self.glow[area.key] = lines
-	end
-	for index = self.used + 1, #self.lines do
-		self.lines[index]:Hide()
+		ns.Shading.Area(self, area)
 	end
 end
 
@@ -732,9 +685,6 @@ function AreaPin:OnAcquired(shade, alpha, outline)
 		self:Paint(outline)
 	else
 		self.outline = nil
-		for _, line in ipairs(self.lines) do
-			line:Hide()
-		end
 	end
 end
 
@@ -762,22 +712,14 @@ function AreaPin:HoverAt(x, y)
 	end
 end
 
--- The hovered area's own drawing brightens: a shaded area's tiles, or an outlined area's glow.
+-- The hovered area's own drawing brightens, textured or terrain-filled alike.
 ---@param area LegacyShadedArea|LegacyOutlineArea?
 function AreaPin:Highlight(area)
 	local previous = self.hovered
 	if previous then
-		local before = previous.outline and previous --[[@as LegacyOutlineArea]]
-		if before then
-			for _, line in ipairs(self.glow[before.key] or {}) do
-				line:SetAlpha(line.baseAlpha)
-			end
-		else
-			local shaded = previous --[[@as LegacyShadedArea]]
-			for _, texture in ipairs(self.drawn[shaded.area.key]) do
-				texture:SetVertexColor(0, 0, 0, self.shadeAlpha)
-			end
-		end
+		local key = previous.outline and previous.key or previous.area.key
+		---@cast key string
+		ns.Shading.Alpha(self, key, self.shadeAlpha)
 		-- Only our own tooltip: a pin the cursor just moved onto has already shown its own.
 		if GameTooltip:GetOwner() == self then
 			GameTooltip:Hide()
@@ -788,11 +730,11 @@ function AreaPin:Highlight(area)
 		return
 	end
 	GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
+	local key = area.outline and area.key or area.area.key
+	---@cast key string
+	ns.Shading.Alpha(self, key, AREA_HOVER_ALPHA)
 	local outlined = area.outline and area --[[@as LegacyOutlineArea]]
 	if outlined then
-		for _, line in ipairs(self.glow[outlined.key] or {}) do
-			line:SetAlpha(line.baseAlpha * GLOW_HOVER)
-		end
 		local yards
 		if self.outline then
 			local _, _, distance = ns.MapContents.OutlinePoint(self.outline.zone, outlined, self.playerX, self.playerY)
@@ -801,9 +743,6 @@ function AreaPin:Highlight(area)
 		AddOutlineTooltip(GameTooltip, outlined, yards, false)
 	else
 		local shaded = area --[[@as LegacyShadedArea]]
-		for _, texture in ipairs(self.drawn[shaded.area.key]) do
-			texture:SetVertexColor(0, 0, 0, AREA_HOVER_ALPHA)
-		end
 		local objective = shaded.objective
 		if objective then
 			AddPinTooltip(GameTooltip, objective.group, objective.objective)

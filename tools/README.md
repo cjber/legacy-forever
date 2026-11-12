@@ -180,7 +180,7 @@ part of the daily data refresh.
   about an hour to the refresh. The generated header names `TERRAIN_BUILD`.
 - **When to move it.** Run `python3 tools/check_explore.py`: it reads both committed files and names every zone or
   area key in `Data/Explore.lua` that `Data/Legacy.lua`'s completion data no longer has. When it fails, bump
-  `TERRAIN_BUILD`, run `python3 tools/gen_explore.py`, check the glow still lines up, and commit both the script and
+  `TERRAIN_BUILD`, run `python3 tools/gen_explore.py`, check the terrain fill still lines up, and commit both the script and
   the data. Areas whose key is missing at runtime keep the map-art shading.
 
 - The areas are the zone's exploration criteria joined exactly as the completion areas are: `zone_areas` reuses
@@ -201,7 +201,6 @@ part of the daily data refresh.
   decimals, and zones, keys and rings are emitted in a fixed order, so the file is byte-stable.
 - Areas with no terrain outline keep the map-art shading (see `UI/MapContents.lua`), and the generator prints how
   many there are. Timbermaw Hold is the current one: its chunks lie outside Felwood's map rectangle.
-- `tools/glow_texture.py` draws `media/Glow.tga`, the feathered strip the map's glow lines use.
 
 Verify with two consecutive `python3 tools/gen_explore.py --offline` runs (identical bytes), then
 `luajit tests/legacy_map_spec.lua`, `luajit tests/map_contents_spec.lua`, `luacheck .`, `stylua --check .` and

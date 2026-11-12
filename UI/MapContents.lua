@@ -41,7 +41,7 @@ ns.MapContents = MapContents
 ---@field badges LegacyContinentZone[] a continent's zone badges
 ---@field pins LegacyMapPin[] a zone's place-bound objectives
 ---@field shade? LegacyShade a zone's undiscovered areas, when there are any to shade
----@field outline? LegacyOutline a zone's undiscovered areas drawn along their terrain instead
+---@field outline? LegacyOutline a zone's undiscovered areas filled from their terrain instead
 
 -- Exploration is shaded on the zone map; everything else is pinned.
 ---@param group LegacyGroup
@@ -177,8 +177,8 @@ local function Shade(uiMapID, outline)
 	return #shade.areas > 0 and shade or nil
 end
 
--- The zone's undiscovered areas that have terrain outlines; nil when the layer is off or the zone has no
--- outline data. Areas without data stay with the shading.
+-- The zone's undiscovered areas that have terrain rings; nil when the layer is off or the zone has no
+-- terrain data. Areas without data stay with the shading.
 ---@param uiMapID number
 ---@return LegacyOutline?
 local function Outline(uiMapID)
@@ -200,6 +200,100 @@ local function Outline(uiMapID)
 		end
 	end
 	return #outline.areas > 0 and outline or nil
+end
+
+-- Each area's triangles, kept on its ring table: the map redraws on every zoom and resize, so an area is
+-- ear-clipped once, never once per frame.
+local triangulations = setmetatable({}, { __mode = "k" })
+
+-- Append a ring's triangles to `into`, ear clipping: a simple polygon, which a ring is, is cut by one ear
+-- (a convex corner no other point lies inside) at a time until three points are left. Either winding works;
+-- the ring's own signed area says which way its convex corners turn.
+---@param ring number[] flat u, v pairs
+---@param into LegacyTriangle[]
+local function ClipRing(ring, into)
+	local count = #ring / 2
+	if count < 3 then
+		return
+	end
+	---@type number[][]
+	local points = {}
+	for index = 1, count do
+		points[index] = { ring[index * 2 - 1], ring[index * 2] }
+	end
+	local area = 0
+	for index = 1, count do
+		local following = index % count + 1
+		area = area + points[index][1] * points[following][2] - points[following][1] * points[index][2]
+	end
+	local clockwise = area < 0
+	-- Strictly inside, so a point on an ear's diagonal does not keep that ear from being cut.
+	---@param a number[]
+	---@param b number[]
+	---@param c number[]
+	---@param point number[]
+	---@return boolean
+	local function inside(a, b, c, point)
+		local ab = (b[1] - a[1]) * (point[2] - a[2]) - (b[2] - a[2]) * (point[1] - a[1])
+		local bc = (c[1] - b[1]) * (point[2] - b[2]) - (c[2] - b[2]) * (point[1] - b[1])
+		local ca = (a[1] - c[1]) * (point[2] - c[2]) - (a[2] - c[2]) * (point[1] - c[1])
+		if clockwise then
+			return ab < 0 and bc < 0 and ca < 0
+		end
+		return ab > 0 and bc > 0 and ca > 0
+	end
+	local index = 1
+	while #points > 3 do
+		local total = #points
+		local clipped, convex
+		for offset = 0, total - 1 do
+			local at = (index - 1 + offset) % total + 1
+			local previous, following = (at - 2) % total + 1, at % total + 1
+			local a, b, c = points[previous], points[at], points[following]
+			local cross = (b[1] - a[1]) * (c[2] - b[2]) - (b[2] - a[2]) * (c[1] - b[1])
+			if cross ~= 0 and (cross < 0) == clockwise then
+				convex = convex or at
+				local ear = true
+				for other = 1, total do
+					if other ~= at and other ~= previous and other ~= following and inside(a, b, c, points[other]) then
+						ear = false
+						break
+					end
+				end
+				if ear then
+					clipped = at
+					break
+				end
+			end
+		end
+		-- A corner exactly on a diagonal, or a degenerate ring, can leave no ear: cut a convex corner
+		-- anyway, so the loop always ends.
+		clipped = clipped or convex or index
+		total = #points
+		local a, b, c = points[(clipped - 2) % total + 1], points[clipped], points[clipped % total + 1]
+		into[#into + 1] = { a[1], a[2], b[1], b[2], c[1], c[2] }
+		table.remove(points, clipped)
+		index = clipped
+	end
+	if #points == 3 then
+		into[#into + 1] = { points[1][1], points[1][2], points[2][1], points[2][2], points[3][1], points[3][2] }
+	end
+end
+
+-- An area's terrain rings as triangles, each a flat u, v, u, v, u, v: the fill that replaces the map-art
+-- tiles for an area with terrain data. Every ring is filled on its own.
+---@param rings number[][]
+---@return LegacyTriangle[]
+function MapContents.Triangles(rings)
+	local triangles = triangulations[rings]
+	if not triangles then
+		triangles = {}
+		for _, ring in ipairs(rings) do
+			ClipRing(ring, triangles)
+		end
+		triangulations[rings] = triangles
+	end
+	return triangles
 end
 
 -- The outlined area under a point, or nil. Rings lie along the real ground, so the test is exact: a point
@@ -261,9 +355,10 @@ end
 -- world map" switch, so turning it off leaves continents bare. A zone gets a pin per place-bound
 -- objective (bosses, dungeons, quests) and its undiscovered areas shaded; exploration is never
 -- pinned, a shaded area carrying its Legacy step for the hover instead. With "Show where to discover
--- areas" on, an undiscovered area with terrain data is drawn as a glow along its ground and keeps its
--- Legacy step for the pin and the hover; the areas without data keep the shading. "Show dungeon and raid
--- entrances" off leaves out only the entrance pins: the button still counts them and its menu still lists them.
+-- areas" on, an undiscovered area with terrain data is filled from its terrain instead of the map-art
+-- tiles and keeps its Legacy step for the pin and the hover; the areas without data keep the shading.
+-- "Show dungeon and raid entrances" off leaves out only the entrance pins: the button still counts them
+-- and its menu still lists them.
 ---@param uiMapID number?
 ---@return LegacyMapDrawing
 function MapContents.Drawn(uiMapID)

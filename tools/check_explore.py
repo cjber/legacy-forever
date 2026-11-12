@@ -3,7 +3,7 @@
 
 Data/Explore.lua is traced at its own pinned TERRAIN_BUILD, so a daily data refresh can move the completion
 area keys the game reports. The map falls back to the shading for an area without an outline, but a stale key
-means the glow quietly misses it: this fails, names each one, and says how to retrace the terrain.
+means the terrain fill quietly misses it: this fails, names each one, and says how to retrace the terrain.
 """
 
 import sys

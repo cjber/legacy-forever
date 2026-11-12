@@ -15,6 +15,7 @@ globals = { "AdventureGuideForeverDB",
 }
 
 read_globals = { "ForeverCore", "GetCVarBool", "GetQuestDifficultyColor", "RGBTableToColorCode", "FONT_COLOR_CODE_CLOSE", "AtlasLoot", "C_XMLUtil", "CreateSettingsButtonInitializer", "Settings",
+	"CreateColor",
 	"AchievementFrame_SelectAchievement", "AlertFrame", "C_AddOns", "AlertFrame_OnClick", "C_Map", "C_MapExplorationInfo", "C_QuestLog", "C_Reputation", "C_SuperTrack", "C_TaxiMap", "C_Timer", "C_Texture", "C_Traits", "CreateAtlasMarkup",
 	"CreateFrame", "CreateFromMixins", "CreateTexturePool", "DEFAULT_CHAT_FRAME", "Enum", "EventRegistry", "EventUtil", "GameTooltip",
 	"GameFontNormal", "GameFontNormalSmall", "GameFontNormalTiny", "GameTooltip_AddBlankLineToTooltip", "GameTooltip_AddColoredLine", "GameTooltip_AddDisabledLine", "GetCursorPosition", "GRAY_FONT_COLOR", "GREEN_FONT_COLOR", "HIGHLIGHT_FONT_COLOR", "NORMAL_FONT_COLOR", "GameTooltip_AddHighlightLine", "GameTooltip_AddInstructionLine",
@@ -24,6 +25,7 @@ read_globals = { "ForeverCore", "GetCVarBool", "GetQuestDifficultyColor", "RGBTa
 	"ObjectiveTrackerManager", "ShortestPathForever", "LeaMapsDB", "C_InputInterfaceStyle", "Lerp", "Saturate", "SoftCursor", "LibQuestieDB", "Questie", "QuestieLoader", "strtrim",
 	"C_MajorFactions", "Constants", "GameTooltip_AddErrorLine", "LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP", "RED_FONT_COLOR", "UIErrorsFrame",
 	"tContains", "time", "ToggleLegacySystemUI", "UnitClass", "UnitLevel", "debugstack", "debugprofilestop", "date", "UISpecialFrames", "UnitFactionGroup", "UnitGUID", "UnitRace", "UIParent", "UiMapPoint", "WHITE_FONT_COLOR", "WorldMapFrame",
+	"UPPER_LEFT_VERTEX", "LOWER_LEFT_VERTEX", "UPPER_RIGHT_VERTEX", "LOWER_RIGHT_VERTEX",
 }
 
 read_globals[#read_globals + 1] = "GetServerTime"

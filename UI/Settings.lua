@@ -85,7 +85,7 @@ AddCheckbox(
 	map,
 	"showOutlines",
 	L["Show where to discover areas"],
-	L["Glows each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."]
+	L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."]
 )
 AddCheckbox(
 	map,
