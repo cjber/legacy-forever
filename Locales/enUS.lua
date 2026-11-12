@@ -12,5 +12,5 @@ ns.L["Show where to discover areas"] = "Show where to discover areas"
 ns.L["%d yards away"] = "%d yards away"
 ns.L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."
-ns.L["Terrain shading now follows each area's real ground with smooth native fades."] =
-	"Terrain shading now follows each area's real ground with smooth native fades."
+ns.L["Both discover switches now keep the dark fade, and the shading stays under every map marker."] =
+	"Both discover switches now keep the dark fade, and the shading stays under every map marker."
