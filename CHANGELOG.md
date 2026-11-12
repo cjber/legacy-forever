@@ -12,6 +12,8 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+- **Navigation:** Keep routes working with Shortest Path Forever when its shared leaderboard features are removed.
+
 ## [2.3.5] - 2026-11-12
 
 - **Terrain shading now follows each area's real ground with smooth native fades.** Clipped terrain data removes jagged corners and overfill, while areas without terrain data keep their map-art shading. Thanks to cotijelucie for the report and idea. (#474)
