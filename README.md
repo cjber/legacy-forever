@@ -6,6 +6,7 @@
 Your unfinished WoW: Forever Legacy challenges, on the world map, for the zone you're looking at.<br>
 <a href="https://github.com/cjber/legacy-forever/actions/workflows/ci.yml"><img src="https://github.com/cjber/legacy-forever/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 <a href="https://github.com/cjber/legacy-forever/releases/latest"><img src="https://img.shields.io/github/v/release/cjber/legacy-forever" alt="Latest release"></a>
+<a href="https://www.curseforge.com/wow/addons/legacy-forever"><img src="https://img.shields.io/curseforge/dt/1705879?label=CurseForge%20downloads" alt="CurseForge downloads"></a>
 <br><br><a href="https://github.com/sponsors/cjber"><img src="docs/github-sponsors-button.png" alt="Sponsor me on GitHub"></a> <a href="https://ko-fi.com/cjber"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi"></a>
 </p>
 
