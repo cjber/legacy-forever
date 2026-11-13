@@ -1,0 +1,23 @@
+{
+  "input_digest": "4cb2046eeaf06287599c5257024d2f07ce5491d8298ee777bd7c33893465f866",
+  "runtime_sha256": "4cb2046eeaf06287599c5257024d2f07ce5491d8298ee777bd7c33893465f866",
+  "candidate": "22bbcb0cbbbceead261f7eb6e385260ea208151cde597e2d6144ee6f90aa9218",
+  "client_build": "1.60.1.70938 (Interface 16001)",
+  "tested_artifact": "source-tree",
+  "source_commit": "370b14172ebcce7ff4af16c4b1af58089f3eac02",
+  "flows": [
+    {
+      "name": "lf report",
+      "steps": [
+        "/lf report"
+      ],
+      "result": "pass"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://gist.githubusercontent.com/cjber/59dfe6b224d0df1e6962806deeaf7f28/raw/b8ae2ed29505728404a0b6d437690e5bde4f1f09/1-lf-report.png",
+      "sha256": "2531c0431fb3ba7e0d17df0ffd02b5710da0cbec08e764940590974bf50bad05"
+    }
+  ]
+}

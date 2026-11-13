@@ -524,7 +524,7 @@ def corner_origin(rects, art, zone, pins, width, height):
 def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False, outlines=None):
     """The world map on a Kalimdor zone with the addon's shading, pins, corner and button drawn in.
     `outlines` = {"zone": Data/Explore.lua's zone, "player_area": name, "hover": name} fills the areas that
-    have rings from their terrain instead of the map art, and draws the hovered pin's tooltip."""
+    have rings from their terrain on top of the dark fade, and draws the hovered pin's tooltip."""
     zone = data["completion"][ui_map]
     name = ui.table("UiMap")[str(ui_map)]["Name_lang"]
     content = ui.content
@@ -533,11 +533,10 @@ def world_map(ui, data, live, ui_map=ASHENVALE, collapsed=False, entrance=False,
     for overlay in map_overlays(content, ui_map):
         if overlay.key in live.explored:
             draw_overlay(content, art, overlay.offset_x, overlay.offset_y, overlay.width, overlay.height, overlay.tiles)
-    # AreaPin (UI/Map.lua): every undiscovered area's tiles, black at AREA_ALPHA, except the areas the
-    # outline layer draws instead (MapContents.Shade).
-    outlined = outlines["zone"]["areas"] if outlines else {}
+    # AreaPin (UI/Map.lua): every undiscovered area's tiles, black at AREA_ALPHA. The outline layer fills its
+    # areas on top, so both switches on keep the dark fade under the terrain fill.
     for area in zone["areas"]:
-        if area["key"] not in live.explored and area["key"] not in outlined:
+        if area["key"] not in live.explored:
             x, y, w, h = (int(n) for n in area["key"].split(":"))
             draw_overlay(content, art, x, y, w, h, area["tiles"], (0, 0, 0, 0.25), zone["tileWidth"])
     canvas, rects = world_map_frame(ui, art, ("World", "Kalimdor", name), arrows=("Kalimdor", name))
@@ -796,8 +795,8 @@ def zone_pin(ui, canvas, x, y, portal=None):
 
 
 def render_outlines(ui, data, live):
-    """Ashenvale with "Show where to discover areas" on: each undiscovered area shaded in its real shape, a
-    shield at its nearest edge, and the hovered pin's tooltip over Mystral Lake."""
+    """Ashenvale with both discover switches on: each undiscovered area keeps the dark fade and adds its real
+    ground shaded in its own shape, a shield at its nearest edge, and the hovered pin's tooltip over Mystral Lake."""
     explore = load_explore()["zones"][ASHENVALE]
     canvas, _ = world_map(
         ui,

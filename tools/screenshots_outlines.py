@@ -59,13 +59,18 @@ def shading_masks(root):
 
 
 def outline_shading(canvas, rects, zone, explore_zone, live, hover, masks_root=None, ui_map_id=None):
-    """Composite each runtime mask once, with the same normal and hover opacity."""
+    """Composite each runtime mask once, with the same normal and hover opacity, clipped to the map art.
+
+    UI/Map.lua gives every mask the map's own mask texture, so a fade that reaches the map's edge stops there.
+    """
     mx, my, mw, mh = rects["map"]
     masks = shading_masks(masks_root or Path(__file__).resolve().parent.parent)
     if ui_map_id is None:
         raise ValueError("outline_shading requires ui_map_id for the zone-qualified mask manifest")
     zone_masks = masks[ui_map_id]
     areas = outline_areas(zone, explore_zone, live)
+    map_left, map_top = canvas.px(mx), canvas.px(my)
+    layer = Image.new("RGBA", (canvas.px(mx + mw) - map_left, canvas.px(my + mh) - map_top), (0, 0, 0, 0))
     for area, _rings in areas:
         alpha = AREA_HOVER_ALPHA if area["name"] == hover else AREA_ALPHA
         descriptor = zone_masks[area["key"]]
@@ -77,5 +82,12 @@ def outline_shading(canvas, rects, zone, explore_zone, live, hover, masks_root=N
         scale_y = canvas.px(my + mh) - canvas.px(my)
         mask = mask.resize((round(width * scale_x / 1002), round(height * scale_y / 668)), Image.Resampling.BILINEAR)
         mask.putalpha(mask.getchannel("A").point(lambda value, scale=alpha: round(value * scale)))
-        canvas.image.alpha_composite(mask, (canvas.px(mx + left / 1002 * mw), canvas.px(my + top / 668 * mh)))
+        layer.alpha_composite(
+            mask,
+            (
+                canvas.px(mx + left / 1002 * mw) - map_left,
+                canvas.px(my + top / 668 * mh) - map_top,
+            ),
+        )
+    canvas.image.alpha_composite(layer, (map_left, map_top))
     return areas

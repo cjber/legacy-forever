@@ -38,7 +38,13 @@ function Shading.Area(pin, area)
 	texture:SetPoint("TOPLEFT", mask[1] * pin.width / 1002, -mask[2] * pin.height / 668)
 	texture:SetVertexColor(0, 0, 0, pin.shadeAlpha)
 	texture:Show()
-	pin.drawn[area.key] = { texture }
+	-- An area with tile shading under its terrain fill keeps both in one list, so a hover brightens both.
+	local textures = pin.drawn[area.key]
+	if not textures then
+		textures = {}
+		pin.drawn[area.key] = textures
+	end
+	textures[#textures + 1] = texture
 end
 
 ---@param pin LegacyShadingCanvas

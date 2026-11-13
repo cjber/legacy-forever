@@ -4,8 +4,8 @@ if GetLocale() ~= "ruRU" then
 	return
 end
 local L = ns.L
-L["Terrain shading now follows each area's real ground with smooth native fades."] =
-	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
+L["Both discover switches now keep the dark fade, and the shading stays under every map marker."] =
+	"Оба переключателя открытия теперь сохраняют тёмное затенение, а штриховка остаётся под каждой меткой на карте."
 
 L["%d Legacy objective left"] = "Осталось целей старинных испытаний: %d"
 L["%d Legacy objectives left"] = "Осталось целей старинных испытаний: %d"

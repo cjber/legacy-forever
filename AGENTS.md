@@ -11,11 +11,11 @@ settings-page chrome, the family page and the map canvas. CurseForge and Wago in
 ## Commands
 
 ```sh
-python3 tools/doctor.py   # first on a new machine: every tool pin below, with a fix for each problem
+python3 tools/doctor.py   # first on a new machine: every tool pin in tools/toolchain.json and tools/pyproject.toml, with a fix for each problem
 stylua --check .
 ruff format --check . && ruff check .
 luacheck .
-FOREVER_CORE=../forever-core tools/typecheck.sh   # LuaLS 3.19.1 + multi-value lint (Python self-tests included)
+FOREVER_CORE=../forever-core tools/typecheck.sh   # LuaLS + multi-value lint (Python self-tests included)
 for s in tests/*_spec.lua; do FOREVER_CORE=../forever-core luajit "$s" || exit 1; done
 FOREVER_CORE=../forever-core luajit tools/perf_bench.lua   # load and redraw cost over the headless harness
 python3 tools/gen_legacy.py   # regenerate Data/Legacy.lua after a data change
@@ -40,9 +40,11 @@ CI's `package` job builds the zip with the release's packager without uploading 
 THIRD_PARTY.md ship with README's `## Credits` and THIRD_PARTY's `## Players` (WFA-10, WFA-31), and the
 specs pass on the packaged files.
 
-The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and history. CI's jobs are `deadcode`,
-`check`, `typecheck`, `generated`, `project-rules`, `workflows`, `secrets` and `package`, and each runs on every pull
-request. `.github/workflows/speedpatrol.yml` times `tools/perf_bench.lua` (Speedpatrol's `harness.perf`) on the pull
+The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and history. CI installs the Lua, LuaLS,
+StyLua and gitleaks pins from `tools/toolchain.json` through cjber/forever-core's toolchain action, and the Python
+tools (ruff, ty, zizmor, actionlint) from `tools/pyproject.toml` with `uv run --project tools --frozen --group dev`.
+CI's jobs are `deadcode`, `check`, `typecheck`, `generated`, `project-rules`, `workflows`, `secrets` and `package`,
+and each runs on every pull request. `.github/workflows/speedpatrol.yml` times `tools/perf_bench.lua` (Speedpatrol's `harness.perf`) on the pull
 request against its base and fails on a regression. Every version needs a
 `CHANGELOG.md` entry (prose, bold-lead bullets) before its `v*` tag: the release publishes it as the notes.
 
@@ -77,7 +79,7 @@ request against its base and fails on a regression. Every version needs a
   their definitions; do not restore a LuaLS globals whitelist.
 - `tools/typecheck.sh` fetches pinned WoW API/FrameXML annotations into an ignored types cache and
   rejects every LuaLS diagnostic, including Information. All TOC Lua files, including generated
-  data, are checked. Install LuaLS 3.19.1 locally; CI verifies its release checksum. `Core/ForeverRequire.lua` is
+  data, are checked. Install LuaLS at `tools/toolchain.json`'s pin locally; CI verifies its release checksum. `Core/ForeverRequire.lua` is
   copied byte for byte from ForeverCore and is never edited here.
 - A final `select(...)` argument, table element or return must be parenthesized to keep one value,
   or carry a trailing `-- multi-value: <reason>` when expansion is intentional.

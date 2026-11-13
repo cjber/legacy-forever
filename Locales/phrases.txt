@@ -36,6 +36,8 @@ L["Adventure Guide Forever routes the quests left in this zone."] =
 L["Already complete"] = "Already complete"
 L["Areas explored"] = "Areas explored"
 L["Attach to quest tracker"] = "Attach to quest tracker"
+L["Both discover switches now keep the dark fade, and the shading stays under every map marker."] =
+	"Both discover switches now keep the dark fade, and the shading stays under every map marker."
 L["Click the zone to see where."] = "Click the zone to see where."
 L["Click to collapse."] = "Click to collapse."
 L["Click to expand."] = "Click to expand."
@@ -92,8 +94,6 @@ L["Show undiscovered areas"] = "Show undiscovered areas"
 L["Show where to discover areas"] = "Show where to discover areas"
 L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
-L["Terrain shading now follows each area's real ground with smooth native fades."] =
-	"Terrain shading now follows each area's real ground with smooth native fades."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

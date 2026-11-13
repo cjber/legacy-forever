@@ -14,6 +14,34 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 - **Navigation:** Keep routes working with Shortest Path Forever when its shared leaderboard features are removed.
 
+## [2.3.10] - 2026-11-13
+
+<!-- forever-core-sync -->
+
+- Ships with the same shared code as your other Forever addons, so they keep working together.
+
+## [2.3.9] - 2026-11-12
+
+<!-- forever-core-sync -->
+
+- Ships with the same shared code as your other Forever addons, so they keep working together.
+
+## [2.3.8] - 2026-11-12
+
+<!-- forever-core-sync -->
+
+- Ships with the same shared code as your other Forever addons, so they keep working together.
+
+## [2.3.7] - 2026-11-12
+
+- **Both discover switches now keep the dark fade, and the shading stays under every map marker.** With "Show undiscovered areas" and "Show where to discover areas" both on, each outlined area keeps its unexplored-ground shading under the terrain fill, so the map no longer loses the dark fade. The shading also takes the map's own fog-of-war layer instead of a level worked out per map, so Blizzard's dungeon entrances and other addons' markers such as Leatrix Maps always draw above it, including with Leatrix's reveal on and after zooming or reopening the map. Thanks to cotijelucie on Discord for the report and follow-up. (#485)
+
+## [2.3.6] - 2026-11-12
+
+<!-- forever-core-sync -->
+
+- Ships with the same shared code as your other Forever addons, so they keep working together.
+
 ## [2.3.5] - 2026-11-12
 
 - **Terrain shading now follows each area's real ground with smooth native fades.** Clipped terrain data removes jagged corners and overfill, while areas without terrain data keep their map-art shading. Thanks to cotijelucie for the report and idea. (#474)

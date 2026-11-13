@@ -4,8 +4,8 @@ if GetLocale() ~= "koKR" then
 	return
 end
 local L = ns.L
-L["Terrain shading now follows each area's real ground with smooth native fades."] =
-	"Terrain shading now follows each area's real ground with smooth native fades." -- mt
+L["Both discover switches now keep the dark fade, and the shading stays under every map marker."] =
+	"이제 두 발견 설정 모두 어두운 페이드를 유지하며, 음영은 모든 지도 표시 아래에 표시됩니다."
 
 L["%d Legacy objective left"] = "남은 유산 목표 %d개"
 L["%d Legacy objectives left"] = "남은 유산 목표 %d개"
