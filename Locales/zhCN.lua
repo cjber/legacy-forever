@@ -4,8 +4,8 @@ if GetLocale() ~= "zhCN" then
 	return
 end
 local L = ns.L
-L["Both discover switches now keep the dark fade, and the shading stays under every map marker."] =
-	"两个探索开关现在都会保留暗色渐隐，阴影也始终位于每个地图标记之下。"
+L["Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."] =
+	"即使 Shortest Path Forever 移除了共享排行榜功能，路线仍可正常使用。"
 
 L["%d Legacy objective left"] = "剩余%d个传承目标"
 L["%d Legacy objectives left"] = "剩余%d个传承目标"

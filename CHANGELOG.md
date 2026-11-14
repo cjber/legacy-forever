@@ -12,9 +12,9 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
-- **Navigation:** Keep routes working with Shortest Path Forever when its shared leaderboard features are removed.
+## [2.3.10] - 2026-11-14
 
-## [2.3.10] - 2026-11-13
+- **Routes keep working with Shortest Path Forever when its shared leaderboard features are removed.** Legacy did not recognise newer Shortest Path releases and behaved as if it were not installed: pins offered a waypoint, clicks skipped the plotted route and a journey no longer ended when you discovered the area. Older and newer Shortest Path releases both work now, so the route is plotted and ends as before.
 
 <!-- forever-core-sync -->
 

@@ -4,8 +4,8 @@ if GetLocale() ~= "ruRU" then
 	return
 end
 local L = ns.L
-L["Both discover switches now keep the dark fade, and the shading stays under every map marker."] =
-	"Оба переключателя открытия теперь сохраняют тёмное затенение, а штриховка остаётся под каждой меткой на карте."
+L["Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."] =
+	"Маршруты продолжают работать с Shortest Path Forever после удаления его общих функций таблицы лидеров."
 
 L["%d Legacy objective left"] = "Осталось целей старинных испытаний: %d"
 L["%d Legacy objectives left"] = "Осталось целей старинных испытаний: %d"

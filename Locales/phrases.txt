@@ -36,8 +36,6 @@ L["Adventure Guide Forever routes the quests left in this zone."] =
 L["Already complete"] = "Already complete"
 L["Areas explored"] = "Areas explored"
 L["Attach to quest tracker"] = "Attach to quest tracker"
-L["Both discover switches now keep the dark fade, and the shading stays under every map marker."] =
-	"Both discover switches now keep the dark fade, and the shading stays under every map marker."
 L["Click the zone to see where."] = "Click the zone to see where."
 L["Click to collapse."] = "Click to collapse."
 L["Click to expand."] = "Click to expand."
@@ -85,6 +83,8 @@ L["Quest"] = "Quest"
 L["Recommended levels: %s (AtlasLoot)"] = "Recommended levels: %s (AtlasLoot)"
 L["Repeatable, holiday and profession quests are left out."] = "Repeatable, holiday and profession quests are left out."
 L["Reputations (Friendly)"] = "Reputations (Friendly)"
+L["Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."] =
+	"Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."
 L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
