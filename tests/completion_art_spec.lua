@@ -145,10 +145,12 @@ C_Map = {
 		return { name = "Ashenvale" }
 	end,
 }
+local addonLoaded
 EventUtil = {
 	ContinueOnAddOnLoaded = function(_, callback)
 		-- The collapse restore waits for its event; the bar is drawn before it runs.
 		assert(type(callback) == "function")
+		addonLoaded = addonLoaded or callback
 	end,
 }
 
@@ -254,7 +256,12 @@ local ns = {
 			trackerModule.Header = Frame("Frame", name .. "Header")
 			trackerModule.Header.MinimizeButton = {}
 			function trackerModule:SetHeader() end
-			function trackerModule:SetCollapsed() end
+			function trackerModule:SetCollapsed(collapsed)
+				self.collapsed = collapsed
+			end
+			function trackerModule:IsCollapsed()
+				return self.collapsed
+			end
 			function trackerModule:MarkDirty() end
 			return trackerModule
 		end,
@@ -298,6 +305,14 @@ GameTooltip_SetTitle, GameTooltip_AddInstructionLine, GameTooltip_AddDisabledLin
 GameTooltip_AddColoredLine = function() end
 WHITE_FONT_COLOR = Color(1, 1, 1)
 
+hooksecurefunc = function(object, method, callback) -- luacheck: ignore 121
+	local original = object[method]
+	object[method] = function(self, ...)
+		original(self, ...)
+		callback(self, ...)
+	end
+end
+
 assert(loadfile("UI/Completion.lua"))("LegacyForever", ns)
 
 --[[ The tracker section's bar: the objective tracker's own, under the header band ]]
@@ -309,6 +324,18 @@ check(
 )
 local progress = trackerModule.Header.Progress
 check(progress ~= nil, "the section header holds a progress bar")
+do
+	local collapsed = arg[1] ~= "expanded"
+	saved.trackerCollapsed = collapsed
+	addonLoaded()
+	check(trackerModule:IsCollapsed() == collapsed, "saved section collapse state is restored")
+	check(progress.shown == not collapsed, "saved collapse controls the header progress bar")
+	trackerModule:SetCollapsed(not collapsed)
+	check(progress.shown == collapsed, "toggling collapse updates the header progress bar")
+	check(saved.trackerCollapsed == not collapsed, "toggling collapse saves the new state")
+	trackerModule:SetCollapsed(collapsed)
+	check(progress.shown == not collapsed, "repeated collapse toggles restore bar visibility")
+end
 check(createdTemplates[1] == "ObjectiveTrackerProgressBarTemplate", "the bar inherits the tracker's own template")
 check(progress.height == 15, "the bar keeps the tracker's 15-unit fill")
 check(progress.Bar.points[1][1] == "TOPLEFT" and progress.Bar.points[1][4] == 3, "the fill starts inside the caps")
@@ -438,5 +465,54 @@ check(xml:find('inherits="GameFontNormalLarge"', 1, true) ~= nil, "the title kee
 check(xml:find('inherits="GameFontHighlight"', 1, true) ~= nil, "the counts keep GameFontHighlight")
 local shade = assert(io.open("media/Shade.tga", "rb"))
 shade:close()
+
+-- The account switch sits directly after Quests, uses the saved setting, and explains missing support.
+ns.Model.COMPLETION_CATEGORIES = { "quests" }
+ns.Quests = {
+	Status = function()
+		return "ready"
+	end,
+}
+local accountAPI = true
+ns.Live.AccountQuestsUsable = function()
+	return accountAPI
+end
+local menuRows = {}
+local function Description(text, selected, toggle)
+	local row = { text = text, selected = selected, toggle = toggle }
+	function row:SetEnabled(predicate)
+		self.enabled = predicate
+	end
+	function row:SetTooltip(callback)
+		self.tooltip = callback
+	end
+	function row:CreateCheckbox(label, get, set)
+		local child = Description(label, get, set)
+		menuRows[#menuRows + 1] = child
+		return child
+	end
+	function row:CreateButton(label)
+		return Description(label)
+	end
+	function row:CreateTitle() end
+	return row
+end
+ns.Completion.AddMenu(Description("root"))
+local account = menuRows[#menuRows]
+check(
+	menuRows[#menuRows - 1].text:find("quests", 1, true) ~= nil
+		or menuRows[#menuRows - 1].text:find("Quests", 1, true) ~= nil,
+	"account switch follows Quests"
+)
+check(account.text == "Count account-completed quests" and not account.selected(), "account switch starts off")
+account.toggle()
+check(saved.accountQuests and account.selected(), "menu toggles the same saved setting")
+check(account.enabled(), "native account API enables the menu switch")
+accountAPI = false
+check(not account.enabled(), "missing native API disables the menu switch")
+check(
+	ns.Completion.AccountQuestsStatusText():find("unavailable", 1, true) ~= nil,
+	"missing account API explains character-only fallback"
+)
 
 print(("completion_art_spec: %d checks passed"):format(checks))

@@ -520,11 +520,15 @@ function root.CreateTitle() end
 function root.CreateButton()
 	return root
 end
-function root.CreateCheckbox(_, _, _, toggle, key)
-	toggles[key] = toggle
+function root.CreateCheckbox(_, label, _, toggle, key)
+	toggles[key or label] = toggle
 	return { SetEnabled = function() end, SetTooltip = function() end }
 end
 ns.Completion.AddMenu(root)
+check(
+	type(toggles["Count account-completed quests"]) == "function" and not ns.Saved.Get("accountQuests"),
+	"a checkbox with no callback data is captured and account quests stay off by default"
+)
 local unsubscribeFailing = API.Subscribe(function()
 	error("subscriber bug")
 end)

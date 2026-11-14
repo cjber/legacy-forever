@@ -33,6 +33,15 @@ class FileSizeTest(unittest.TestCase):
     def test_shrinking_a_large_file_passes(self):
         self.assertEqual(check([("M", "a.lua", "a.lua")], {"a.lua": BIG}, {"a.lua": BIGGER}), [])
 
+    def test_a_changelog_grows_by_design_and_is_exempt(self):
+        # A changelog is one history, never split, so the cap does not apply to it (forever-core#520).
+        rows = [("M", "CHANGELOG.md", "CHANGELOG.md"), ("A", "CHANGELOG.md", "CHANGELOG.md")]
+        self.assertEqual(check(rows, {"CHANGELOG.md": BIGGER}, {"CHANGELOG.md": BIG}), [])
+
+    def test_another_named_changelog_is_not_exempt(self):
+        rows = [("M", "docs/CHANGELOG.md", "docs/CHANGELOG.md")]
+        self.assertEqual(len(check(rows, {"docs/CHANGELOG.md": BIGGER}, {"docs/CHANGELOG.md": BIG})), 1)
+
     def test_a_marker_needs_a_reason(self):
         marked = b"; rule-ignore: file-size-no-growth - one lookup table, generated and reviewed\n" + BIG
         bare = b"; rule-ignore: file-size-no-growth - ok\n" + BIG

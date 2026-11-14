@@ -173,6 +173,15 @@ for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 		usable = ns.Completion.QuestsUsable
 	end
 	AddCheckbox(counts, "count_" .. key, ns.Completion.Label(key), tooltip, usable)
+	if key == "quests" then
+		AddCheckbox(
+			counts,
+			"accountQuests",
+			L["Count account-completed quests"],
+			ns.Completion.AccountQuestsStatusText,
+			ns.Live.AccountQuestsUsable
+		)
+	end
 end
 
 local updates = Section(category, L["Updates"])

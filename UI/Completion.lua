@@ -287,7 +287,9 @@ if trackerModule then
 	-- Deferred so the collapse state is restored even on a client that ignores LoadSavedVariablesFirst.
 	EventUtil.ContinueOnAddOnLoaded(addonName, function()
 		trackerModule:SetCollapsed(ns.Saved.Get("trackerCollapsed"))
+		header.Progress:SetShown(not trackerModule:IsCollapsed())
 		local function SaveCollapse(_, collapsed)
+			header.Progress:SetShown(not collapsed)
 			ns.Saved.Set("trackerCollapsed", collapsed)
 		end
 		hooksecurefunc(trackerModule, "SetCollapsed", SaveCollapse) -- taint-ok: addon-owned tracker
@@ -579,6 +581,14 @@ local function QuestsTooltip(tooltip)
 	GameTooltip_AddNormalLine(tooltip, QUESTS_STATUS[ns.Quests.Status()])
 end
 
+---@return string
+function Completion.AccountQuestsStatusText()
+	if not ns.Live.AccountQuestsUsable() then
+		return L["Account quest completion is unavailable on this client. Only this character's quests count."]
+	end
+	return L["Count quests completed by any character. The quests counted still match this character's race and class."]
+end
+
 ---@param root SharedMenuDescriptionProxy
 function Completion.AddMenu(root)
 	root:CreateTitle(L["Zone completion"])
@@ -602,6 +612,16 @@ function Completion.AddMenu(root)
 		if key == "quests" then
 			box:SetEnabled(Completion.QuestsUsable)
 			box:SetTooltip(QuestsTooltip)
+			local account = counts:CreateCheckbox(L["Count account-completed quests"], function()
+				return ns.Saved.Get("accountQuests")
+			end, function()
+				ns.Saved.Set("accountQuests", not ns.Saved.Get("accountQuests"))
+			end)
+			account:SetEnabled(ns.Live.AccountQuestsUsable)
+			account:SetTooltip(function(tooltip)
+				GameTooltip_SetTitle(tooltip, L["Count account-completed quests"])
+				GameTooltip_AddNormalLine(tooltip, Completion.AccountQuestsStatusText())
+			end)
 		end
 	end
 end

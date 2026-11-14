@@ -129,3 +129,11 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"목표 추적기를 사용할 수 없어 추적 중인 도전을 표시할 수 없습니다."
 L["updated to %s. %s"] = "%s 버전으로 업데이트되었습니다. %s"
+
+L["Count account-completed quests"] = "계정에서 완료한 퀘스트 집계" -- mt
+
+L["Count quests completed by any character. The quests counted still match this character's race and class."] =
+	"모든 캐릭터가 완료한 퀘스트를 집계합니다. 집계 대상 퀘스트는 여전히 이 캐릭터의 종족과 직업에 맞는 퀘스트입니다." -- mt
+
+L["Account quest completion is unavailable on this client. Only this character's quests count."] =
+	"이 클라이언트에서는 계정 퀘스트 완료 정보를 사용할 수 없습니다. 이 캐릭터의 퀘스트만 집계합니다." -- mt

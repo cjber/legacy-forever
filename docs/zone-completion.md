@@ -24,6 +24,7 @@ is read from the game. The README says
   once, with either side of an exclusive choice counting as the same quest. Repeatable, daily and dungeon quests are
   left out, and so is any quest behind a profession, reputation or spell, or after a choice that could shut it,
   since whether you can take it isn't certain. A quest counts as done once you've turned it in, or its follow-up.
+- **Count account-completed quests**, beside Quests under "What counts", starts off. Turn it on to count quests completed by any character on your account. The eligible quests still match your current character's race and class; areas, flight paths, reputations and Legacy objectives keep their usual rules. It uses the client's account completion information, including the existing exclusive-choice and follow-up rules. If the client lacks account quest completion, the switch is disabled with an explanation and only character completion counts. No saved list from other characters is inferred.
 - **Rares** are left out: the client doesn't say which belong to a zone, and no openly licensed list covers Forever.
 
 ## Where it shows

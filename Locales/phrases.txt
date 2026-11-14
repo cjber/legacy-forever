@@ -31,6 +31,8 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
 	"/lf issue - report a bug or request a feature with a ready-made GitHub issue link"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - show a report to copy into a bug report"
+L["Account quest completion is unavailable on this client. Only this character's quests count."] =
+	"Account quest completion is unavailable on this client. Only this character's quests count."
 L["Adventure Guide Forever routes the quests left in this zone."] =
 	"Adventure Guide Forever routes the quests left in this zone."
 L["Already complete"] = "Already complete"
@@ -43,6 +45,9 @@ L["Click to open the map. Right-click for options."] = "Click to open the map. R
 L["Click to set a waypoint here."] = "Click to set a waypoint here."
 L["Click to track, with live progress."] = "Click to track, with live progress."
 L["Click to travel here with Shortest Path Forever."] = "Click to travel here with Shortest Path Forever."
+L["Count account-completed quests"] = "Count account-completed quests"
+L["Count quests completed by any character. The quests counted still match this character's race and class."] =
+	"Count quests completed by any character. The quests counted still match this character's race and class."
 L["Defeat"] = "Defeat"
 L["Dungeon or raid"] = "Dungeon or raid"
 L["Dungeons, raids and Legacy objectives count your progress on any character."] =

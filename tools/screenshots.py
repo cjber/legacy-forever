@@ -697,6 +697,39 @@ def render_map(ui, data, live):
     return scene(ui, [(canvas, 0, 0), (menu, x, y)])
 
 
+def render_account_quests(ui, data, live):
+    """Illustrative map menu with Questie ready and the native account API present; switch still off."""
+    canvas, button = world_map(ui, data, live)
+    bx, by, bw, bh = button
+    entries = main_menu(ui, live)
+    entries = [
+        MenuButton(entry.text, entry.submenu, True)
+        if isinstance(entry, MenuButton) and entry.text == "What counts"
+        else entry
+        for entry in entries
+    ]
+    menu, x, y, rows = menu_at(ui, entries, right=bx + bw, top=by + bh)
+    index = next(i for i, entry in enumerate(entries) if isinstance(entry, MenuButton) and entry.text == "What counts")
+    rx, ry, rw, _ = rows[index]
+    labels = (
+        "Areas explored",
+        "Flight paths",
+        "Dungeons",
+        "Raids",
+        "Legacy objectives",
+        "Reputations (Friendly)",
+        "Quests",
+    )
+    keys = (*COMPLETION_CATEGORIES, "quests")
+    counts = [
+        MenuCheckbox(f"{icon(ui, key, 14)} {label}", key in {"areas", "dungeons", "raids", "legacy"})
+        for key, label in zip(keys, labels, strict=True)
+    ]
+    counts.append(MenuCheckbox("Count account-completed quests", False))
+    child, cx, cy, _ = menu_at(ui, counts, left=rx + rw, top=ry)
+    return scene(ui, [(canvas, 0, 0), (menu, x, y), (child, cx, cy)])
+
+
 def render_entrance(ui, data, live):
     canvas, _ = world_map(ui, data, live, entrance=True)
     return scene(ui, [(canvas, 0, 0)])
@@ -945,6 +978,7 @@ def main():
         ("outlines", render_outlines),
         ("entrance", render_entrance),
         ("menu", render_menu),
+        ("account-quests", render_account_quests),
         ("continent", render_continent),
         ("unvisited", render_unvisited),
         ("tracker", render_tracker),

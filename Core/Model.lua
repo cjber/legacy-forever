@@ -547,16 +547,17 @@ function Model.QuestIndex(source, zones, yield)
 	return index
 end
 
--- A zone quest is done once the character has turned in any of its IDs; unknown until the game says.
+-- A zone quest is done once any of its IDs is turned in, including account completions when enabled.
 ---@param item LegacyQuestItem
 ---@param completed LegacySet?
+---@param accountCompleted? fun(questID: number): boolean
 ---@return boolean?
-local function QuestDone(item, completed)
-	if not completed then
+local function QuestDone(item, completed, accountCompleted)
+	if not completed and not accountCompleted then
 		return nil
 	end
 	for _, questID in ipairs(item.ids) do
-		if completed[questID] then
+		if (completed and completed[questID]) or (accountCompleted and accountCompleted(questID)) then
 			return true
 		end
 	end
@@ -567,7 +568,7 @@ end
 ---@param snapshot LegacySnapshot
 ---@return boolean?
 local function QuestState(item, snapshot)
-	return QuestDone(item, snapshot.completed)
+	return QuestDone(item, snapshot.completed, snapshot.accountCompleted)
 end
 
 -- The zone's quests: absent without a source, one pending item while the source is still loading.
