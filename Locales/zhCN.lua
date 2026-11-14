@@ -118,3 +118,11 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"目标追踪栏不可用，因此无法显示追踪的挑战。"
 L["updated to %s. %s"] = "已更新至%s。%s"
+
+L["Count account-completed quests"] = "计入账号已完成的任务" -- mt
+
+L["Count quests completed by any character. The quests counted still match this character's race and class."] =
+	"计入任意角色已完成的任务。统计的任务仍符合当前角色的种族和职业。" -- mt
+
+L["Account quest completion is unavailable on this client. Only this character's quests count."] =
+	"此客户端无法获取账号任务完成信息。仅统计当前角色的任务。" -- mt

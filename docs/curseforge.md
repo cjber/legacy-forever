@@ -82,7 +82,7 @@ With Shortest Path Forever, clicking a dungeon or raid pin plans the trip there.
 
 <!-- forever-credits:start -->
 
-Thanks to overspark, Lûca, cotijelucie, Brainc3ll, Bigabyte, Mouchoir, DanielVafidis, TheCheat54, KeijinDE and everyone who reported a bug or asked for a feature.
+Thanks to cotijelucie, overspark, Lûca, Brainc3ll, Bigabyte, Mouchoir, DanielVafidis, TheCheat54, KeijinDE and everyone who reported a bug or asked for a feature.
 
 <!-- forever-credits:end -->
 

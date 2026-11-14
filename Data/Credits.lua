@@ -4,6 +4,7 @@ local _, ns = ...
 
 ns.Credits = {
 	players = {
+		{ name = "cotijelucie", what = "Count quests finished by other characters" },
 		{ name = "Brainc3ll", what = "French translation" },
 		{ name = "Bigabyte", what = "Tracker no longer shifts in Edit Mode" },
 		{ name = "overspark", what = "Dungeon entrance pins can be hidden" },

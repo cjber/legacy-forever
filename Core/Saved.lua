@@ -35,6 +35,7 @@ ns.Saved = Saved
 ---| 'count_legacy'
 ---| 'count_reputations'
 ---| 'count_quests'
+---| 'accountQuests'
 
 -- Every switch's default. A saved switch stays nil until the player changes it, and nil reads as the
 -- default here, so an old save file and a new option always agree.
@@ -68,6 +69,7 @@ local DEFAULTS = {
 		count_legacy = true,
 		count_reputations = false,
 		count_quests = false,
+		accountQuests = false,
 	},
 }
 

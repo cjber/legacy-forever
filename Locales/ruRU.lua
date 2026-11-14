@@ -134,3 +134,12 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"отслеживание целей недоступно, поэтому отслеживаемые испытания не показываются."
 L["updated to %s. %s"] = "обновлено до версии %s. %s"
+
+L["Count account-completed quests"] =
+	"Учитывать задания, выполненные на учётной записи" -- mt
+
+L["Count quests completed by any character. The quests counted still match this character's race and class."] =
+	"Учитывает задания, выполненные любым персонажем. Набор заданий по-прежнему соответствует расе и классу этого персонажа." -- mt
+
+L["Account quest completion is unavailable on this client. Only this character's quests count."] =
+	"Данные о выполнении заданий на учётной записи недоступны в этом клиенте. Учитываются только задания этого персонажа." -- mt

@@ -351,7 +351,7 @@ end)
 ns.Saved.OnChange(function(key)
 	if key == "map" or key == "tracker" then
 		Changed()
-	elseif key:find("^count_") then
+	elseif key == "accountQuests" or key:find("^count_") then
 		CheckNews(true)
 		Changed()
 	end

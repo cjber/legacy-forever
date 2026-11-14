@@ -354,6 +354,19 @@ local function CompletedQuests()
 	return completedQuests
 end
 
+-- Capability rather than a client-version guess. Older clients keep character completion.
+---@return boolean
+function Live.AccountQuestsUsable()
+	return C_QuestLog ~= nil and type(C_QuestLog.IsQuestFlaggedCompletedOnAccount) == "function"
+end
+
+ns.Saved.OnChange(function(key)
+	if key == "accountQuests" then
+		snapshots = {}
+		Changed()
+	end
+end)
+
 -- Built apart from Live.ZoneSnapshot so its cached path, taken on every read, makes no closure.
 ---@param uiMapID number
 ---@return LegacySnapshot
@@ -368,6 +381,10 @@ local function NewSnapshot(uiMapID)
 			return ns.Quests.Zone(uiMapID)
 		end,
 		completed = CompletedQuests(),
+		accountCompleted = ns.Saved.Get("accountQuests")
+				and Live.AccountQuestsUsable()
+				and C_QuestLog.IsQuestFlaggedCompletedOnAccount
+			or nil,
 	}
 	-- A zone this character has never entered reports no textures at all (nil), which
 	-- means nothing explored yet rather than unknown.

@@ -439,4 +439,53 @@ check(xml:find('inherits="GameFontHighlight"', 1, true) ~= nil, "the counts keep
 local shade = assert(io.open("media/Shade.tga", "rb"))
 shade:close()
 
+-- The account switch sits directly after Quests, uses the saved setting, and explains missing support.
+ns.Model.COMPLETION_CATEGORIES = { "quests" }
+ns.Quests = {
+	Status = function()
+		return "ready"
+	end,
+}
+local accountAPI = true
+ns.Live.AccountQuestsUsable = function()
+	return accountAPI
+end
+local menuRows = {}
+local function Description(text, selected, toggle)
+	local row = { text = text, selected = selected, toggle = toggle }
+	function row:SetEnabled(predicate)
+		self.enabled = predicate
+	end
+	function row:SetTooltip(callback)
+		self.tooltip = callback
+	end
+	function row:CreateCheckbox(label, get, set)
+		local child = Description(label, get, set)
+		menuRows[#menuRows + 1] = child
+		return child
+	end
+	function row:CreateButton(label)
+		return Description(label)
+	end
+	function row:CreateTitle() end
+	return row
+end
+ns.Completion.AddMenu(Description("root"))
+local account = menuRows[#menuRows]
+check(
+	menuRows[#menuRows - 1].text:find("quests", 1, true) ~= nil
+		or menuRows[#menuRows - 1].text:find("Quests", 1, true) ~= nil,
+	"account switch follows Quests"
+)
+check(account.text == "Count account-completed quests" and not account.selected(), "account switch starts off")
+account.toggle()
+check(saved.accountQuests and account.selected(), "menu toggles the same saved setting")
+check(account.enabled(), "native account API enables the menu switch")
+accountAPI = false
+check(not account.enabled(), "missing native API disables the menu switch")
+check(
+	ns.Completion.AccountQuestsStatusText():find("unavailable", 1, true) ~= nil,
+	"missing account API explains character-only fallback"
+)
+
 print(("completion_art_spec: %d checks passed"):format(checks))

@@ -317,8 +317,17 @@ function CreateSettingsButtonInitializer(name, text, click, _tooltip, addSearchT
 	check(text == "Open" and addSearchTags == false, "index buttons stay out of search")
 	return { button = true, name = name, click = click }
 end
+local accountUsable = true
+ns.Live = {
+	AccountQuestsUsable = function()
+		return accountUsable
+	end,
+}
 local questsUsable = true
 ns.Completion = {
+	AccountQuestsStatusText = function()
+		return "account status"
+	end,
 	Label = function(key)
 		return key
 	end,
@@ -363,7 +372,7 @@ local kinds, expectedKinds =
 		"checkbox@Objective tracker",
 		"button@Legacy Forever",
 	}
-for _ = 1, 7 do
+for _ = 1, 8 do
 	expectedKinds[#expectedKinds + 1] = "checkbox@What counts"
 end
 expectedKinds[#expectedKinds + 1] = "button@Legacy Forever"
@@ -397,6 +406,7 @@ local expected = {
 	count_legacy = true,
 	count_reputations = false,
 	count_quests = false,
+	accountQuests = false,
 	whatsNew = true,
 }
 for key, default in pairs(expected) do
@@ -495,3 +505,14 @@ LegacyForeverDB = { companions = false }
 check(panelArgs.db().suggestFamily == false and LegacyForeverDB.companions == nil, "read through the migration")
 
 print(("settings_spec: %d checks passed"):format(checks))
+
+local accountRow
+for _, entry in ipairs(registered) do
+	if entry.initializer.setting == byKey.accountQuests then
+		accountRow = entry.initializer
+	end
+end
+check(accountRow and accountRow.modify[1](), "account switch is available with native API")
+accountUsable = false
+check(not accountRow.modify[1](), "account switch is disabled without native API")
+check(accountRow.tooltip() == "account status", "account fallback is explained")

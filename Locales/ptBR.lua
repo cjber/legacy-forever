@@ -121,3 +121,11 @@ L["couldn't add a section to the objective tracker; please report /lf audit."] =
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"o rastreador de objetivos não está disponível, então os desafios rastreados não podem ser exibidos."
 L["updated to %s. %s"] = "atualizado para %s. %s"
+
+L["Count account-completed quests"] = "Contar missões concluídas na conta" -- mt
+
+L["Count quests completed by any character. The quests counted still match this character's race and class."] =
+	"Conta missões concluídas por qualquer personagem. As missões contadas ainda correspondem à raça e à classe deste personagem." -- mt
+
+L["Account quest completion is unavailable on this client. Only this character's quests count."] =
+	"A conclusão de missões da conta não está disponível neste cliente. Apenas as missões deste personagem contam." -- mt

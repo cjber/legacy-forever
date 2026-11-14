@@ -46,6 +46,7 @@ Credit for the reports, translations and requests behind the addon.
 
 | Who | What | Notes |
 |---|---|---|
+| cotijelucie | Count quests finished by other characters | Discord #help, #513 |
 | Brainc3ll | French translation | GitHub; #99, #203, #353 |
 | Bigabyte | Tracker no longer shifts in Edit Mode | GitHub; #103 |
 | overspark | Dungeon entrance pins can be hidden | CurseForge; #139 |
