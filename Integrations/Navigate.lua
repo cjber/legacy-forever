@@ -14,18 +14,18 @@ local OWNER = "LegacyForever"
 ---@type { uiMapID: number, key: string }?
 local pending
 
--- The API itself, checked version first; each caller below feature-detects the one member it uses, so a
--- newer Shortest Path that keeps version 1 still counts for what it has.
+-- The API itself, checked version first. Shortest Path versions 1 and 2 share the navigation contract; each
+-- caller below feature-detects the member it uses.
 ---@return LegacyShortestPathAPI?
 local function Api()
 	local addon = ShortestPathForever
 	local api = type(addon) == "table" and addon.API
-	if type(api) == "table" and api.version == 1 then
+	if type(api) == "table" and (api.version == 1 or api.version == 2) then
 		return api
 	end
 end
 
--- Only the one function called is checked, so a newer Shortest Path that keeps version 1 still counts.
+-- Only the one function called is checked, so both supported versions can provide navigation.
 ---@return (fun(owner: string, map: integer, x: number, y: number, title?: string): boolean)?
 local function ShortestPath()
 	local api = Api()

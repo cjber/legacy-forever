@@ -185,6 +185,8 @@ jobs:
           path: forever-core
           persist-credentials: false
       # Every version lives in tools/toolchain.json; the action installs and verifies each pin from it.
+      # `lua` installs luajit, lua5.1 and luac5.1: check_package.py parses the packaged files with luac5.1 and
+      # runs the specs under luajit.
       - uses: cjber/forever-core/.github/actions/toolchain@2596f68e68f9a727496a19f3f801c8a7039357d2 # main
         with:
           tools: lua

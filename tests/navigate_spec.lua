@@ -149,9 +149,19 @@ check(ns.NavigateHint() == "Click to set a waypoint here.", "the hint names the 
 ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
 check(#waypoints == 2 and #journeys == 2, "no Shortest Path sets the native waypoint")
 Install()
+accepts = true
 ShortestPathForever.API.version = 2
+check(ns.NavigateHint() == "Click to travel here with Shortest Path Forever.", "API v2 retains navigation")
+check(ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps"), "API v2 guides")
+local v2 = journeys[#journeys]
+check(
+	v2.owner == "LegacyForever" and v2.map == 1440 and v2.x == 0.25 and v2.y == 0.5 and v2.title == "Blackfathom Deeps",
+	"API v2 owns the journey with the pin's destination"
+)
+check(#journeys == 3 and #waypoints == 2, "API v2 sets no native waypoint")
+ShortestPathForever.API.version = 3
 ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
-check(#journeys == 2 and #waypoints == 3, "an unknown API version is treated as absent")
+check(#journeys == 3 and #waypoints == 3, "an unknown API version is treated as absent")
 ShortestPathForever = { API = { version = 1 } }
 check(ns.NavigateHint() == "Click to set a waypoint here.", "an API without Navigate is not named in the hint")
 ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
