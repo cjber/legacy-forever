@@ -4,8 +4,8 @@ if GetLocale() ~= "esMX" then
 	return
 end
 local L = ns.L
-L["Both discover switches now keep the dark fade, and the shading stays under every map marker."] =
-	"Los dos interruptores de descubrimiento ahora mantienen el desvanecido oscuro, y el sombreado queda debajo de cada marcador del mapa."
+L["Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."] =
+	"Las rutas siguen funcionando con Shortest Path Forever cuando se eliminan sus funciones compartidas de clasificación."
 
 L["%d Legacy objective left"] = "Queda %d objetivo de legado"
 L["%d Legacy objectives left"] = "Quedan %d objetivos de legado"
