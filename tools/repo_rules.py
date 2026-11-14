@@ -4,6 +4,7 @@
 - `file-size-no-growth`: a change may not add a file over LIMIT lines, or grow one that is already over it. Split
   the file along its responsibilities first, or put the new code in a new file. A file that is one unit by design
   says why in its first lines: `rule-ignore: file-size-no-growth - <reason of three words or more>`.
+  `CHANGELOG.md` is exempt by name: a changelog is one history, never split.
 - `workflow-hashfiles-path`: a literal `hashFiles()` path in a workflow names a file that exists. `hashFiles`
   ignores a path that matches nothing, so a stale one silently stops keying the cache (a key once hashed
   `tools/diff_forever.py`, which the repository never had). A glob may match nothing on purpose, so globs are skipped.
@@ -23,6 +24,8 @@ LIMIT = 1000
 MARKER_LINES = 5
 MARKER = re.compile(rf"rule-ignore:\s*{SIZE_RULE}\s+-\s+(\S+(?:\s+\S+){{2,}})")
 EXCLUDE = (
+    # A changelog is one history, never split, and grows by design on every release.
+    "CHANGELOG.md",
     "*.lock",
     "*-lock.json",
     "*-lock.yaml",

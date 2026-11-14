@@ -54,7 +54,7 @@ Credit for the reports, translations and requests behind the addon.
 | [Mouchoir](https://github.com/Mouchoir) | Fixed the map button errors (code) | GitHub; #147, #148, PR #149 |
 | [DanielVafidis](https://github.com/DanielVafidis) | Fixed the addon breaking Questie | GitHub; #150 |
 | TheCheat54 | Tirisfal Glades counts 18 exploration areas | GitHub; #332 |
-| KeijinDE | Fixed the Forever Core link | CurseForge; #441 |
+| KeijinDE | Fixed the ForeverCore link | CurseForge; #441 |
 | Lûca | Zone completion corner back on the world map | Discord |
 | cotijelucie | Show where to discover areas | Discord; #459 |
 | cotijelucie | Map markers drawn above the area shading | Discord; #464 |

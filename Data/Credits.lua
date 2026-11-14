@@ -12,7 +12,7 @@ ns.Credits = {
 		{ name = "Mouchoir", what = "Fixed the map button errors (code)" },
 		{ name = "DanielVafidis", what = "Fixed the addon breaking Questie" },
 		{ name = "TheCheat54", what = "Tirisfal Glades counts 18 exploration areas" },
-		{ name = "KeijinDE", what = "Fixed the Forever Core link" },
+		{ name = "KeijinDE", what = "Fixed the ForeverCore link" },
 		{ name = "Lûca", what = "Zone completion corner back on the world map" },
 		{ name = "cotijelucie", what = "Show where to discover areas" },
 		{ name = "cotijelucie", what = "Map markers drawn above the area shading" },

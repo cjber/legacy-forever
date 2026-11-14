@@ -28,7 +28,7 @@ local SINKS = {
 	GameTooltip_AddErrorLine = { 2 },
 }
 
--- Vendored Forever Core files write every player-facing line through L by English phrase. The runtime files are no
+-- Vendored ForeverCore files write every player-facing line through L by English phrase. The runtime files are no
 -- longer vendored, so every shipped file is walked.
 
 -- /lf audit and /lf criteria: output for reporting a data problem, left in English on purpose.

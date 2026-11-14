@@ -38,7 +38,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Read the Forever Core ref
+      - name: Read the ForeverCore ref
         id: forever-core
         run: echo "ref=$(cat tools/forever-core.txt)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -81,7 +81,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Read the Forever Core ref
+      - name: Read the ForeverCore ref
         id: forever-core
         run: echo "ref=$(cat tools/forever-core.txt)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -175,7 +175,7 @@ jobs:
           # Every commit and tag for the version, without old file contents.
           filter: blob:none
           persist-credentials: false
-      - name: Read the Forever Core ref
+      - name: Read the ForeverCore ref
         id: forever-core
         run: echo "ref=$(cat tools/forever-core.txt)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
