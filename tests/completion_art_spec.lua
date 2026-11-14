@@ -145,10 +145,12 @@ C_Map = {
 		return { name = "Ashenvale" }
 	end,
 }
+local addonLoaded
 EventUtil = {
 	ContinueOnAddOnLoaded = function(_, callback)
 		-- The collapse restore waits for its event; the bar is drawn before it runs.
 		assert(type(callback) == "function")
+		addonLoaded = addonLoaded or callback
 	end,
 }
 
@@ -254,7 +256,12 @@ local ns = {
 			trackerModule.Header = Frame("Frame", name .. "Header")
 			trackerModule.Header.MinimizeButton = {}
 			function trackerModule:SetHeader() end
-			function trackerModule:SetCollapsed() end
+			function trackerModule:SetCollapsed(collapsed)
+				self.collapsed = collapsed
+			end
+			function trackerModule:IsCollapsed()
+				return self.collapsed
+			end
 			function trackerModule:MarkDirty() end
 			return trackerModule
 		end,
@@ -298,6 +305,14 @@ GameTooltip_SetTitle, GameTooltip_AddInstructionLine, GameTooltip_AddDisabledLin
 GameTooltip_AddColoredLine = function() end
 WHITE_FONT_COLOR = Color(1, 1, 1)
 
+hooksecurefunc = function(object, method, callback) -- luacheck: ignore 121
+	local original = object[method]
+	object[method] = function(self, ...)
+		original(self, ...)
+		callback(self, ...)
+	end
+end
+
 assert(loadfile("UI/Completion.lua"))("LegacyForever", ns)
 
 --[[ The tracker section's bar: the objective tracker's own, under the header band ]]
@@ -309,6 +324,18 @@ check(
 )
 local progress = trackerModule.Header.Progress
 check(progress ~= nil, "the section header holds a progress bar")
+do
+	local collapsed = arg[1] ~= "expanded"
+	saved.trackerCollapsed = collapsed
+	addonLoaded()
+	check(trackerModule:IsCollapsed() == collapsed, "saved section collapse state is restored")
+	check(progress.shown == not collapsed, "saved collapse controls the header progress bar")
+	trackerModule:SetCollapsed(not collapsed)
+	check(progress.shown == collapsed, "toggling collapse updates the header progress bar")
+	check(saved.trackerCollapsed == not collapsed, "toggling collapse saves the new state")
+	trackerModule:SetCollapsed(collapsed)
+	check(progress.shown == not collapsed, "repeated collapse toggles restore bar visibility")
+end
 check(createdTemplates[1] == "ObjectiveTrackerProgressBarTemplate", "the bar inherits the tracker's own template")
 check(progress.height == 15, "the bar keeps the tracker's 15-unit fill")
 check(progress.Bar.points[1][1] == "TOPLEFT" and progress.Bar.points[1][4] == 3, "the fill starts inside the caps")

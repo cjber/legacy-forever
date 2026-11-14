@@ -46,6 +46,7 @@ Credit for the reports, translations and requests behind the addon.
 
 | Who | What | Notes |
 |---|---|---|
+| [kowakowa93](https://github.com/kowakowa93) | Hide the region progress bar when its tracker section is collapsed | GitHub; #516, [report and fix](https://github.com/cjber/forever-core/issues/602#issuecomment-6882241203) |
 | cotijelucie | Count quests finished by other characters | Discord #help, #513 |
 | Brainc3ll | French translation | GitHub; #99, #203, #353 |
 | Bigabyte | Tracker no longer shifts in Edit Mode | GitHub; #103 |

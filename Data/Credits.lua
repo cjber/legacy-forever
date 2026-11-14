@@ -4,6 +4,7 @@ local _, ns = ...
 
 ns.Credits = {
 	players = {
+		{ name = "kowakowa93", what = "Hide the region progress bar when its tracker section is collapsed" },
 		{ name = "cotijelucie", what = "Count quests finished by other characters" },
 		{ name = "Brainc3ll", what = "French translation" },
 		{ name = "Bigabyte", what = "Tracker no longer shifts in Edit Mode" },
