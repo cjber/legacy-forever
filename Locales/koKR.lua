@@ -4,8 +4,8 @@ if GetLocale() ~= "koKR" then
 	return
 end
 local L = ns.L
-L["Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."] =
-	"Shortest Path Forever의 공유 순위표 기능이 제거되어도 경로는 계속 작동합니다."
+L["A collapsed tracker section no longer keeps its progress bar."] =
+	"접힌 추적기 섹션에서 진행 표시줄이 더 이상 남지 않습니다."
 
 L["%d Legacy objective left"] = "남은 유산 목표 %d개"
 L["%d Legacy objectives left"] = "남은 유산 목표 %d개"

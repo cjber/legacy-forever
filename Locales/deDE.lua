@@ -52,8 +52,8 @@ L["Flight paths"] = "Flugrouten"
 L["Forever addons"] = "Forever-Addons"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Schattiert den echten Boden jedes unentdeckten Gebiets, mit einer Markierung am Rand. Gebiete ohne Geländedaten behalten die Schattierung."
-L["Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."] =
-	"Routen funktionieren weiterhin mit Shortest Path Forever, wenn dessen gemeinsame Bestenlistenfunktionen entfernt werden."
+L["A collapsed tracker section no longer keeps its progress bar."] =
+	"Ein eingeklappter Abschnitt der Verfolgung behält seine Fortschrittsleiste nicht mehr."
 L["Hide from the tracker"] = "In der Verfolgung ausblenden"
 L["In the objective tracker"] = "In der Questzielverfolgung"
 L["Install AtlasLoot for recommended levels."] = "Installiert AtlasLoot für empfohlene Stufen."
