@@ -67,8 +67,8 @@ ns.POINTS_ICON = "UI-Legacy-Points-icon-c60"
 -- One sentence for the chat line after an update (WhatsNew.lua): the newest release's headline, and the version whose
 -- release carries it. A core sync's maintenance entry has no headline, so this stays on the release before it and
 -- WhatsNew stays quiet for that maintenance version while still remembering it.
-ns.WHATS_NEW_VERSION = "2.3.10"
-ns.WHATS_NEW = L["Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."]
+ns.WHATS_NEW_VERSION = "2.3.11"
+ns.WHATS_NEW = L["A collapsed tracker section no longer keeps its progress bar."]
 
 ---@param msg string
 function ns.Print(msg)
