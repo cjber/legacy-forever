@@ -168,6 +168,9 @@ jobs:
     timeout-minutes: 30
     env:
       FOREVER_CORE: ${{ github.workspace }}/forever-core
+      # tools/forever-core.txt's pin is checked against core's latest published release, and an anonymous read
+      # shares the runner's rate limit with every other job on it, so it must authenticate.
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

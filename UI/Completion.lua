@@ -287,7 +287,11 @@ if trackerModule then
 	-- Deferred so the collapse state is restored even on a client that ignores LoadSavedVariablesFirst.
 	EventUtil.ContinueOnAddOnLoaded(addonName, function()
 		trackerModule:SetCollapsed(ns.Saved.Get("trackerCollapsed"))
+		-- The bar lives on the header, which the collapse keeps drawing, so it has to be hidden by hand
+		-- (kowakowa93 on cjber/forever-core#602, tracked as #516).
+		header.Progress:SetShown(not trackerModule:IsCollapsed())
 		local function SaveCollapse(_, collapsed)
+			header.Progress:SetShown(not collapsed)
 			ns.Saved.Set("trackerCollapsed", collapsed)
 		end
 		hooksecurefunc(trackerModule, "SetCollapsed", SaveCollapse) -- taint-ok: addon-owned tracker
