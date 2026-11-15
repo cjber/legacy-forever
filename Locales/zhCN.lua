@@ -4,8 +4,8 @@ if GetLocale() ~= "zhCN" then
 	return
 end
 local L = ns.L
-L["Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."] =
-	"即使 Shortest Path Forever 移除了共享排行榜功能，路线仍可正常使用。"
+L["A collapsed tracker section no longer keeps its progress bar."] =
+	"折叠的追踪器分区不再保留其进度条。"
 
 L["%d Legacy objective left"] = "剩余%d个传承目标"
 L["%d Legacy objectives left"] = "剩余%d个传承目标"

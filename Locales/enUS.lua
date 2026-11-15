@@ -12,5 +12,5 @@ ns.L["Show where to discover areas"] = "Show where to discover areas"
 ns.L["%d yards away"] = "%d yards away"
 ns.L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."
-ns.L["Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."] =
-	"Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."
+ns.L["A collapsed tracker section no longer keeps its progress bar."] =
+	"A collapsed tracker section no longer keeps its progress bar."
