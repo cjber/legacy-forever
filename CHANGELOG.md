@@ -12,6 +12,16 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [2.3.11] - 2026-11-15
+
+<!-- discord-image: docs/screenshots/tracker.png -->
+
+- **A collapsed tracker section no longer keeps its progress bar.** Collapsing a region left the bar drawn under the heading, over the rows beneath it, until the section was expanded again. It now hides with the rest of the section. Thanks to kowakowa93 for the report (#516).
+
+<!-- forever-core-sync -->
+
+- Ships with the same shared code as your other Forever addons, so they keep working together.
+
 ## [2.3.10] - 2026-11-14
 
 - **Routes keep working with Shortest Path Forever when its shared leaderboard features are removed.** Legacy did not recognise newer Shortest Path releases and behaved as if it were not installed: pins offered a waypoint, clicks skipped the plotted route and a journey no longer ended when you discovered the area. Older and newer Shortest Path releases both work now, so the route is plotted and ends as before.
