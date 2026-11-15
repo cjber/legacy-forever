@@ -1,23 +1,23 @@
 {
-  "input_digest": "f045247fc6607c1b08e1fadee2170b56fcfa68b725d67e5e55bfc1fe699af276",
-  "runtime_sha256": "f045247fc6607c1b08e1fadee2170b56fcfa68b725d67e5e55bfc1fe699af276",
-  "candidate": "ce180c3b126546b814ac8eb31373751d758472258b006706b26e6c221de72c5e",
+  "input_digest": "7b7e7aefef4fd58ac4ed5941b38c82def7cdbc1e5b6a68cddc8c460848365bba",
+  "runtime_sha256": "7b7e7aefef4fd58ac4ed5941b38c82def7cdbc1e5b6a68cddc8c460848365bba",
+  "candidate": "6a7403384cd73dbe113c61fba21d65a2cdae29d0de9f578eb99f8ccbfbc29626",
   "client_build": "1.60.1.70938 (Interface 16001)",
   "tested_artifact": "source-tree",
-  "source_commit": "64db6a42c02e8883f863551bc54cf746a7be4521",
+  "source_commit": "1323fb0e877f4ed6f8e0b476c98ca0ab291cdfd4",
   "flows": [
     {
-      "name": "legacy",
+      "name": "client",
       "steps": [
-        "/lf"
+        "/lf report"
       ],
       "result": "pass"
     }
   ],
   "images": [
     {
-      "url": "https://gist.githubusercontent.com/cjber/8683fc969cd1859517680ea800e72c63/raw/15456a88d113829d047277e0ed3580c16f038299/1-legacy.png",
-      "sha256": "fa4d70945fbcb7597c562d239d7fea095ed02ea3d7634447ce0de37cb0f7856f"
+      "url": "https://gist.githubusercontent.com/cjber/78c694c6c032289f7d8995757cc604ce/raw/8287245bdb0cb2792bf4cd968171d71580551646/1-client.png",
+      "sha256": "2e84e669740b58268e67875910f751fcac9f22b2712eb0b6eaa9d0361d3f3b09"
     }
   ]
 }
