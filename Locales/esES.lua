@@ -4,8 +4,8 @@ if GetLocale() ~= "esES" then
 	return
 end
 local L = ns.L
-L["Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."] =
-	"Las rutas siguen funcionando con Shortest Path Forever cuando se eliminan sus funciones compartidas de clasificación."
+L["A collapsed tracker section no longer keeps its progress bar."] =
+	"Una sección plegada del seguimiento ya no mantiene visible su barra de progreso."
 
 L["%d Legacy objective left"] = "Queda %d objetivo de legado"
 L["%d Legacy objectives left"] = "Quedan %d objetivos de legado"
