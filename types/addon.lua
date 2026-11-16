@@ -140,6 +140,7 @@
 ---@field criteria LegacyCriteriaReader
 ---@field reaction fun(factionID: number): number
 ---@field quests? fun(): LegacyQuestItem[]|false|nil
+---@field accountCompleted? fun(questID: number): boolean
 ---@field completed? LegacySet
 
 ---@class LegacyCategory

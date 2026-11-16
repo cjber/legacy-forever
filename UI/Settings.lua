@@ -19,7 +19,8 @@ local PREFIX = "LegacyForever_"
 
 -- One switch: the same key, default and tooltip the Legacy map menu uses. The row is a proxy: it holds no
 -- value of its own and reads and saves through ns.Saved, which redraws whatever the switch affects. `usable`
--- greys the row out. The row inserts from Blizzard's delegate.
+-- disables the control, which greys the row and leaves its tick box in place: an option this client cannot use
+-- still reads, with its tooltip saying why. The row inserts from Blizzard's delegate.
 ---@param category SettingsCategoryMixin
 ---@param key string
 ---@param name string
@@ -173,6 +174,17 @@ for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 		usable = ns.Completion.QuestsUsable
 	end
 	AddCheckbox(counts, "count_" .. key, ns.Completion.Label(key), tooltip, usable)
+	if key == "quests" then
+		-- Named short: the page draws a row's label up to 85 px left of its centre and cuts what is longer, so a
+		-- full sentence runs into the tick box. The explanation stays in the tooltip.
+		AddCheckbox(
+			counts,
+			"accountQuests",
+			L["Count account quests"],
+			ns.Completion.AccountQuestsStatusText,
+			ns.Live.AccountQuestsUsable
+		)
+	end
 end
 
 local updates = Section(category, L["Updates"])

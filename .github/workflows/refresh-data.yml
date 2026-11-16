@@ -55,7 +55,7 @@ jobs:
         with:
           tools: lua stylua
       - if: steps.build.outputs.new == 'true'
-        name: Read the Forever Core ref
+        name: Read the ForeverCore ref
         id: forever-core
         run: echo "ref=$(cat tools/forever-core.txt)" >> "$GITHUB_OUTPUT"
       - if: steps.build.outputs.new == 'true'
@@ -88,6 +88,8 @@ jobs:
           branch: data/forever-${{ steps.build.outputs.version }}
           title: "data: Legacy data for Forever ${{ steps.build.outputs.version }}"
           commit-message: "data: Legacy data for Forever ${{ steps.build.outputs.version }}"
+          # GitHub signs these commits when the action uses GITHUB_TOKEN.
+          sign-commits: true
           body: |
             Regenerated `Data/Legacy.lua` from the achievement, criteria and world map DB2s of Forever build ${{ steps.build.outputs.version }}.
 

@@ -1,23 +1,23 @@
 {
-  "input_digest": "7b7e7aefef4fd58ac4ed5941b38c82def7cdbc1e5b6a68cddc8c460848365bba",
-  "runtime_sha256": "7b7e7aefef4fd58ac4ed5941b38c82def7cdbc1e5b6a68cddc8c460848365bba",
-  "candidate": "6a7403384cd73dbe113c61fba21d65a2cdae29d0de9f578eb99f8ccbfbc29626",
+  "input_digest": "75a55e1e5e3f1f223b93c992f197b484408408685b9f3bf57ae0a6bbaa513f6d",
+  "runtime_sha256": "75a55e1e5e3f1f223b93c992f197b484408408685b9f3bf57ae0a6bbaa513f6d",
+  "candidate": "31a430b71b2f8028547c6b9fc78088c9e781a2bcc969c897eb765ac6194c17f8",
   "client_build": "1.60.1.70938 (Interface 16001)",
   "tested_artifact": "source-tree",
-  "source_commit": "1323fb0e877f4ed6f8e0b476c98ca0ab291cdfd4",
+  "source_commit": "02f77d29099fe96bcad06b02fade94e600ebfd8e",
   "flows": [
     {
-      "name": "client",
+      "name": "what counts",
       "steps": [
-        "/lf report"
+        "legacy-counts.lua sha256:b236e0175bd2dc4fddb5ea22932bad091d7a8e3786736628aa2e35cc81510423"
       ],
       "result": "pass"
     }
   ],
   "images": [
     {
-      "url": "https://gist.githubusercontent.com/cjber/78c694c6c032289f7d8995757cc604ce/raw/8287245bdb0cb2792bf4cd968171d71580551646/1-client.png",
-      "sha256": "2e84e669740b58268e67875910f751fcac9f22b2712eb0b6eaa9d0361d3f3b09"
+      "url": "https://gist.githubusercontent.com/cjber/d11e539f6051b20157d3ce1b6e72d455/raw/91826df6dd2c593d5e5d0ed63c1703829bb63c7f/1-what-counts.png",
+      "sha256": "af41e4194445cfc2bb17bff0cc2e8752868649832b448b7bafa94556c656429e"
     }
   ]
 }

@@ -16,6 +16,16 @@ local ns = {
 		completion = { [2] = { taxis = { { node = 10 } } } },
 	},
 }
+local accountQuests = false
+local savedChanged
+ns.Saved = {
+	Get = function()
+		return accountQuests
+	end,
+	OnChange = function(callback)
+		savedChanged = callback
+	end,
+}
 local records = {}
 function ns.SavedTable(key)
 	assert(key == "flightPaths")
@@ -311,4 +321,32 @@ Live.Criteria(100)
 Live.Criteria(999)
 Live.Criteria(999)
 check(criteriaReads == before + 1, "criteria are read once, even when the game has none")
+-- Account completion comes only from the native query, never another character's saved observations.
+local accountCalls = {}
+C_QuestLog.IsQuestFlaggedCompletedOnAccount = function(id)
+	accountCalls[#accountCalls + 1] = id
+	return id == 77
+end
+check(Live.ZoneSnapshot(2).accountCompleted == nil, "account query is off by default")
+accountQuests = true
+if savedChanged then
+	savedChanged("accountQuests")
+end
+local accountSnapshot = Live.ZoneSnapshot(2)
+check(
+	accountSnapshot.accountCompleted and accountSnapshot.accountCompleted(77),
+	"native account completion reaches the snapshot"
+)
+check(not accountSnapshot.accountCompleted(78) and accountCalls[2] == 78, "native false is retained")
+accountQuests = false
+savedChanged("accountQuests")
+check(Live.ZoneSnapshot(2).accountCompleted == nil, "turning off discards the account snapshot")
+accountQuests = true
+C_QuestLog.IsQuestFlaggedCompletedOnAccount = nil
+savedChanged("accountQuests")
+check(not Live.AccountQuestsUsable(), "missing native account API is unsupported")
+check(Live.ZoneSnapshot(2).accountCompleted == nil, "missing API uses character completion only")
+accountQuests = false
+savedChanged("accountQuests")
+
 print(("live_spec: %d checks passed"):format(checks))

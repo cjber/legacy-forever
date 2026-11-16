@@ -4,6 +4,8 @@ local _, ns = ...
 
 ns.Credits = {
 	players = {
+		{ name = "kowakowa93", what = "Hide the region progress bar when its tracker section is collapsed" },
+		{ name = "cotijelucie", what = "Count quests finished by other characters" },
 		{ name = "Brainc3ll", what = "French translation" },
 		{ name = "Bigabyte", what = "Tracker no longer shifts in Edit Mode" },
 		{ name = "overspark", what = "Dungeon entrance pins can be hidden" },
@@ -12,7 +14,7 @@ ns.Credits = {
 		{ name = "Mouchoir", what = "Fixed the map button errors (code)" },
 		{ name = "DanielVafidis", what = "Fixed the addon breaking Questie" },
 		{ name = "TheCheat54", what = "Tirisfal Glades counts 18 exploration areas" },
-		{ name = "KeijinDE", what = "Fixed the Forever Core link" },
+		{ name = "KeijinDE", what = "Fixed the ForeverCore link" },
 		{ name = "Lûca", what = "Zone completion corner back on the world map" },
 		{ name = "cotijelucie", what = "Show where to discover areas" },
 		{ name = "cotijelucie", what = "Map markers drawn above the area shading" },

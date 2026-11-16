@@ -28,7 +28,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Read the Forever Core ref
+      - name: Read the ForeverCore ref
         id: forever-core
         run: echo "ref=$(cat tools/forever-core.txt)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

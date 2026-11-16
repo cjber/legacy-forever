@@ -287,9 +287,13 @@ Settings = {
 	end,
 	CreateCheckboxInitializer = function(setting, options, tooltip)
 		check(setting.varType == "boolean" and options == nil, "boolean rows only")
-		local initializer = { setting = setting, tooltip = tooltip, modify = {} }
+		local initializer = { setting = setting, tooltip = tooltip, modify = {}, shown = {} }
 		function initializer.AddModifyPredicate(self, predicate)
 			self.modify[#self.modify + 1] = predicate
+		end
+		-- A shown predicate removes the row, which is not how a client without the data greys a switch out.
+		function initializer.AddShownPredicate(self, predicate)
+			self.shown[#self.shown + 1] = predicate
 		end
 		return initializer
 	end,
@@ -317,8 +321,17 @@ function CreateSettingsButtonInitializer(name, text, click, _tooltip, addSearchT
 	check(text == "Open" and addSearchTags == false, "index buttons stay out of search")
 	return { button = true, name = name, click = click }
 end
+local accountUsable = true
+ns.Live = {
+	AccountQuestsUsable = function()
+		return accountUsable
+	end,
+}
 local questsUsable = true
 ns.Completion = {
+	AccountQuestsStatusText = function()
+		return "account status"
+	end,
 	Label = function(key)
 		return key
 	end,
@@ -363,7 +376,7 @@ local kinds, expectedKinds =
 		"checkbox@Objective tracker",
 		"button@Legacy Forever",
 	}
-for _ = 1, 7 do
+for _ = 1, 8 do
 	expectedKinds[#expectedKinds + 1] = "checkbox@What counts"
 end
 expectedKinds[#expectedKinds + 1] = "button@Legacy Forever"
@@ -397,6 +410,7 @@ local expected = {
 	count_legacy = true,
 	count_reputations = false,
 	count_quests = false,
+	accountQuests = false,
 	whatsNew = true,
 }
 for key, default in pairs(expected) do
@@ -423,13 +437,14 @@ check(
 -- Quests grey out without Questie, as the map menu's box does, and the name and tooltip are translated.
 local quests = byKey.count_quests
 check(quests.name == "quests", "a category row is named by its label")
-check(#registered[11].initializer.modify == 0, "only quests can grey out")
+check(#registered[11].initializer.modify == 0, "a row with nothing to gate carries no predicate")
 local questsRow
 for _, entry in ipairs(registered) do
 	if entry.initializer.setting == quests then
 		questsRow = entry.initializer
 	end
 end
+check(#questsRow.modify == 1 and #questsRow.shown == 0, "quests grey out, never disappear")
 check(questsRow.modify[1](), "quests are usable while Questie is ready")
 questsUsable = false
 check(not questsRow.modify[1](), "quests grey out without Questie")
@@ -493,5 +508,23 @@ check(
 check(panelArgs.safeCall == ns.core.SafeCall, "the page runs in Legacy's own SafeCall")
 LegacyForeverDB = { companions = false }
 check(panelArgs.db().suggestFamily == false and LegacyForeverDB.companions == nil, "read through the migration")
+
+-- The account switch sits under Quests with a label short enough for the column: the page draws a row's name up
+-- to 85 px left of its centre and cuts the rest, so "Count account-completed quests" was cut to "Count
+-- account-completed qu" and ran into its tick box. Without the client's account API the row greys out like the
+-- Quests row, keeping its box and its tooltip's explanation; a shown predicate would take the row away instead.
+local accountRow
+for _, entry in ipairs(registered) do
+	if entry.initializer.setting == byKey.accountQuests then
+		accountRow = entry.initializer
+	end
+end
+check(accountRow ~= nil, "the account switch is on the page")
+check(byKey.accountQuests.name == "Count account quests", "the account row is named short for the column")
+check(#accountRow.modify == 1 and #accountRow.shown == 0, "the account row greys out, never disappears")
+check(accountRow.modify[1](), "account switch is available with native API")
+accountUsable = false
+check(not accountRow.modify[1](), "account switch is disabled without native API")
+check(accountRow.tooltip() == "account status", "account fallback is explained")
 
 print(("settings_spec: %d checks passed"):format(checks))

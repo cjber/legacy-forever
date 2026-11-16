@@ -46,6 +46,8 @@ Credit for the reports, translations and requests behind the addon.
 
 | Who | What | Notes |
 |---|---|---|
+| [kowakowa93](https://github.com/kowakowa93) | Hide the region progress bar when its tracker section is collapsed | GitHub; #516, [report and fix](https://github.com/cjber/forever-core/issues/602#issuecomment-6882241203) |
+| cotijelucie | Count quests finished by other characters | Discord #help, #513 |
 | Brainc3ll | French translation | GitHub; #99, #203, #353 |
 | Bigabyte | Tracker no longer shifts in Edit Mode | GitHub; #103 |
 | overspark | Dungeon entrance pins can be hidden | CurseForge; #139 |
@@ -54,7 +56,7 @@ Credit for the reports, translations and requests behind the addon.
 | [Mouchoir](https://github.com/Mouchoir) | Fixed the map button errors (code) | GitHub; #147, #148, PR #149 |
 | [DanielVafidis](https://github.com/DanielVafidis) | Fixed the addon breaking Questie | GitHub; #150 |
 | TheCheat54 | Tirisfal Glades counts 18 exploration areas | GitHub; #332 |
-| KeijinDE | Fixed the Forever Core link | CurseForge; #441 |
+| KeijinDE | Fixed the ForeverCore link | CurseForge; #441 |
 | Lûca | Zone completion corner back on the world map | Discord |
 | cotijelucie | Show where to discover areas | Discord; #459 |
 | cotijelucie | Map markers drawn above the area shading | Discord; #464 |

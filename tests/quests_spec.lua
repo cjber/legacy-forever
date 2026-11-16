@@ -241,6 +241,39 @@ equal(
 	"a continent counts a zone with quests left as incomplete"
 )
 
+-- A native account query changes completion only, not the eligible set or other categories.
+snapshot.accountCompleted = function(id)
+	return id == 1 or id == 21
+end
+local account = ns.Model.ZoneCompletion(zone, snapshot)
+equal(account.quests.total, completion.quests.total, "account mode keeps this character's eligible quests")
+equal(account.quests.done, 3, "native account completion adds Wolves without double counting the breadcrumb")
+equal(account.areas.done, completion.areas.done, "account mode changes quests only")
+snapshot.accountCompleted = function()
+	return false
+end
+equal(ns.Model.ZoneCompletion(zone, snapshot).quests.done, 2, "native false preserves character completions")
+snapshot.accountCompleted = nil
+equal(ns.Model.ZoneCompletion(zone, snapshot).quests.done, 2, "off restores character-only counts")
+local characterCompleted = snapshot.completed
+snapshot.completed = {}
+snapshot.accountCompleted = function(id)
+	return id == 7 or id == 21
+end
+equal(
+	ns.Model.ZoneCompletion(zone, snapshot).quests.done,
+	2,
+	"native account exclusive partner and follow-up each complete one group"
+)
+snapshot.completed = nil
+equal(
+	ns.Model.ZoneCompletion(zone, snapshot).quests.done,
+	2,
+	"native account answers work while the character list is unavailable"
+)
+snapshot.accountCompleted = nil
+snapshot.completed = characterCompleted
+
 local allDone = {}
 for _, item in ipairs(elwynn) do
 	allDone[item.ids[1]] = true

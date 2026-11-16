@@ -34,6 +34,7 @@ python3 -m unittest discover -s tests -p '*_test.py'
 python3 -m unittest discover -s tools -p '*_test.py'
 python3 tools/lint_art.py
 python3 tools/lint_secret.py
+python3 tools/lint_client_calls.py
 python3 tools/check_editorconfig.py
 # --release: a shipped locale missing a line now fails the PR that adds the English string, not the release.
 python3 tools/check_locales.py --release
