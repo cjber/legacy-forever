@@ -12,6 +12,12 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [2.4.1] - 2026-11-16
+
+<!-- forever-core-sync -->
+
+- Ships with the same shared code as your other Forever addons, so they keep working together.
+
 ## [2.4.0] - 2026-11-16
 
 <!-- discord-image: docs/screenshots/account-quests.png -->
