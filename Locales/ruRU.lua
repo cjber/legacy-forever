@@ -135,8 +135,7 @@ L["the objective tracker isn't available, so tracked challenges can't be shown."
 	"отслеживание целей недоступно, поэтому отслеживаемые испытания не показываются."
 L["updated to %s. %s"] = "обновлено до версии %s. %s"
 
-L["Count account-completed quests"] =
-	"Учитывать задания, выполненные на учётной записи" -- mt
+L["Count account quests"] = "Задания учётной записи" -- mt
 
 L["Count quests completed by any character. The quests counted still match this character's race and class."] =
 	"Учитывает задания, выполненные любым персонажем. Набор заданий по-прежнему соответствует расе и классу этого персонажа." -- mt

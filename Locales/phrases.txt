@@ -47,7 +47,7 @@ L["Click to open the map. Right-click for options."] = "Click to open the map. R
 L["Click to set a waypoint here."] = "Click to set a waypoint here."
 L["Click to track, with live progress."] = "Click to track, with live progress."
 L["Click to travel here with Shortest Path Forever."] = "Click to travel here with Shortest Path Forever."
-L["Count account-completed quests"] = "Count account-completed quests"
+L["Count account quests"] = "Count account quests"
 L["Count quests completed by any character. The quests counted still match this character's race and class."] =
 	"Count quests completed by any character. The quests counted still match this character's race and class."
 L["Defeat"] = "Defeat"

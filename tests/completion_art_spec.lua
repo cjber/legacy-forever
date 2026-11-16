@@ -504,7 +504,7 @@ check(
 		or menuRows[#menuRows - 1].text:find("Quests", 1, true) ~= nil,
 	"account switch follows Quests"
 )
-check(account.text == "Count account-completed quests" and not account.selected(), "account switch starts off")
+check(account.text == "Count account quests" and not account.selected(), "account switch starts off")
 account.toggle()
 check(saved.accountQuests and account.selected(), "menu toggles the same saved setting")
 check(account.enabled(), "native account API enables the menu switch")

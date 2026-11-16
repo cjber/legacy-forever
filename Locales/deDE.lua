@@ -122,7 +122,7 @@ L["the objective tracker isn't available, so tracked challenges can't be shown."
 	"die Questzielverfolgung ist nicht verfügbar, verfolgte Herausforderungen können nicht angezeigt werden."
 L["updated to %s. %s"] = "auf %s aktualisiert. %s"
 
-L["Count account-completed quests"] = "Accountweit abgeschlossene Quests zählen" -- mt
+L["Count account quests"] = "Accountweite Quests zählen" -- mt
 
 L["Count quests completed by any character. The quests counted still match this character's race and class."] =
 	"Zählt Quests, die ein beliebiger Charakter abgeschlossen hat. Die gezählten Quests entsprechen weiterhin dem Volk und der Klasse dieses Charakters." -- mt

@@ -12,7 +12,7 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
-- **Count quests finished by your other characters.** The optional "Count account-completed quests" switch beside Quests uses account progress while keeping the quests eligible for your current character. It starts off, and clients without account quest progress keep character-only counts, thanks to cotijelucie for the idea.
+- **Count quests finished by your other characters.** The optional "Count account quests" switch beside Quests uses account progress while keeping the quests eligible for your current character. It starts off, and clients without account quest progress keep character-only counts, thanks to cotijelucie for the idea.
 
 ## [2.3.11] - 2026-11-15
 

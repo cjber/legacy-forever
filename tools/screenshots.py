@@ -725,7 +725,7 @@ def render_account_quests(ui, data, live):
         MenuCheckbox(f"{icon(ui, key, 14)} {label}", key in {"areas", "dungeons", "raids", "legacy"})
         for key, label in zip(keys, labels, strict=True)
     ]
-    counts.append(MenuCheckbox("Count account-completed quests", False))
+    counts.append(MenuCheckbox("Count account quests", False))
     child, cx, cy, _ = menu_at(ui, counts, left=rx + rw, top=ry)
     return scene(ui, [(canvas, 0, 0), (menu, x, y), (child, cx, cy)])
 

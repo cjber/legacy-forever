@@ -15,7 +15,7 @@ ns.L["Shades each undiscovered area's real ground, with a pin at its edge. Areas
 ns.L["Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."] =
 	"Routes keep working with Shortest Path Forever when its shared leaderboard features are removed."
 
-ns.L["Count account-completed quests"] = "Count account-completed quests"
+ns.L["Count account quests"] = "Count account quests"
 
 ns.L["Count quests completed by any character. The quests counted still match this character's race and class."] =
 	"Count quests completed by any character. The quests counted still match this character's race and class."
