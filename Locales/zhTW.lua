@@ -4,8 +4,7 @@ if GetLocale() ~= "zhTW" then
 	return
 end
 local L = ns.L
-L["A collapsed tracker section no longer keeps its progress bar."] =
-	"收合的追蹤器區段不再保留其進度條。"
+L["Count quests finished by your other characters."] = "統計你其他角色完成的任務。" -- mt
 
 L["%d Legacy objective left"] = "剩餘%d個傳承目標"
 L["%d Legacy objectives left"] = "剩餘%d個傳承目標"

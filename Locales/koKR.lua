@@ -4,8 +4,7 @@ if GetLocale() ~= "koKR" then
 	return
 end
 local L = ns.L
-L["A collapsed tracker section no longer keeps its progress bar."] =
-	"접힌 추적기 섹션에서 진행 표시줄이 더 이상 남지 않습니다."
+L["Count quests finished by your other characters."] = "다른 캐릭터가 완료한 퀘스트도 셉니다." -- mt
 
 L["%d Legacy objective left"] = "남은 유산 목표 %d개"
 L["%d Legacy objectives left"] = "남은 유산 목표 %d개"

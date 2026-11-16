@@ -4,8 +4,7 @@ if GetLocale() ~= "esMX" then
 	return
 end
 local L = ns.L
-L["A collapsed tracker section no longer keeps its progress bar."] =
-	"Una sección plegada del rastreador ya no mantiene visible su barra de progreso."
+L["Count quests finished by your other characters."] = "Cuenta las misiones completadas por tus otros personajes." -- mt
 
 L["%d Legacy objective left"] = "Queda %d objetivo de legado"
 L["%d Legacy objectives left"] = "Quedan %d objetivos de legado"

@@ -22,5 +22,4 @@ ns.L["Count quests completed by any character. The quests counted still match th
 
 ns.L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"Account quest completion is unavailable on this client. Only this character's quests count."
-ns.L["A collapsed tracker section no longer keeps its progress bar."] =
-	"A collapsed tracker section no longer keeps its progress bar."
+ns.L["Count quests finished by your other characters."] = "Count quests finished by your other characters."
