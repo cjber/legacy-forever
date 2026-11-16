@@ -16,7 +16,7 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 <!-- forever-core-sync -->
 
-- **Tells you how to fix a missing ForeverCore.** Legacy Forever now loads without ForeverCore and shows one line on screen when ForeverCore is missing, turned off or out of date, saying what to do. The line is translated into every language the addon ships.
+- Legacy Forever now loads without ForeverCore and shows one line on screen when ForeverCore is missing, turned off or out of date, saying what to do. The line is translated into every language the addon ships.
 - Ships with the same shared code as your other Forever addons, so they keep working together.
 
 ## [2.4.1] - 2026-11-16
