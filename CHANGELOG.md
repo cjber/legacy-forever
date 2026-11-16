@@ -12,7 +12,17 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-11-16
+
+<!-- discord-image: docs/screenshots/account-quests.png -->
+
 - **Count quests finished by your other characters.** The optional "Count account quests" switch beside Quests uses account progress while keeping the quests eligible for your current character. It starts off, and clients without account quest progress keep character-only counts, thanks to cotijelucie for the idea.
+
+- **A collapsed tracker section no longer keeps its progress bar.** Collapsing a region left the bar drawn under the heading, over the rows beneath it, until the section was expanded again. It now hides with the rest of the section. Thanks to kowakowa93 for the report (#516).
+
+<!-- forever-core-sync -->
+
+- Ships with the same shared code as your other Forever addons, so they keep working together.
 
 ## [2.3.11] - 2026-11-15
 

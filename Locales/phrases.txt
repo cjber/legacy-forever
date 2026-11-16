@@ -31,8 +31,6 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
 	"/lf issue - report a bug or request a feature with a ready-made GitHub issue link"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - show a report to copy into a bug report"
-L["A collapsed tracker section no longer keeps its progress bar."] =
-	"A collapsed tracker section no longer keeps its progress bar."
 L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"Account quest completion is unavailable on this client. Only this character's quests count."
 L["Adventure Guide Forever routes the quests left in this zone."] =
@@ -50,6 +48,7 @@ L["Click to travel here with Shortest Path Forever."] = "Click to travel here wi
 L["Count account quests"] = "Count account quests"
 L["Count quests completed by any character. The quests counted still match this character's race and class."] =
 	"Count quests completed by any character. The quests counted still match this character's race and class."
+L["Count quests finished by your other characters."] = "Count quests finished by your other characters."
 L["Defeat"] = "Defeat"
 L["Dungeon or raid"] = "Dungeon or raid"
 L["Dungeons, raids and Legacy objectives count your progress on any character."] =

@@ -4,8 +4,8 @@ if GetLocale() ~= "ruRU" then
 	return
 end
 local L = ns.L
-L["A collapsed tracker section no longer keeps its progress bar."] =
-	"Свёрнутый раздел трекера больше не оставляет полосу прогресса."
+L["Count quests finished by your other characters."] =
+	"Учитывайте задания, выполненные другими вашими персонажами." -- mt
 
 L["%d Legacy objective left"] = "Осталось целей старинных испытаний: %d"
 L["%d Legacy objectives left"] = "Осталось целей старинных испытаний: %d"
