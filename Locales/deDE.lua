@@ -16,11 +16,17 @@ L["%s complete. %s"] = "%s abgeschlossen. %s"
 L["%s could not start. Reinstall %s to fix this."] = "%s konnte nicht starten. Installiere %s neu, um das zu beheben."
 L["%s is at %s in %s."] = "%s befindet sich bei %s in %s."
 L["%s is at %s."] = "%s befindet sich bei %s."
+L["%s needs ForeverCore. Install it from CurseForge, or choose Reinstall on ForeverCore in the CurseForge app."] =
+	"%s benötigt ForeverCore. Installiere es von CurseForge oder wähle in der CurseForge-App bei ForeverCore „Neu installieren“."
 L["%s: %d left"] = "%s: noch %d"
 L["%s: %d of %d areas left"] = "%s: noch %d von %d Gebieten"
 L["%s: %d of %d zones complete (%d%%)"] = "%s: %d von %d Zonen abgeschlossen (%d%%)"
 L["%s: %s are out of date. Update them to fix this."] = "%s: %s sind veraltet. Aktualisiere sie, um das zu beheben."
 L["%s: %s is out of date. Update it to fix this."] = "%s: %s ist veraltet. Aktualisiere es, um das zu beheben."
+L["%s: ForeverCore is turned off. Enable it in the AddOns list to fix this."] =
+	"%s: ForeverCore ist deaktiviert. Aktiviere es in der AddOn-Liste, um das zu beheben."
+L["%s: the installed ForeverCore is another addon (%s). Remove it and install ForeverCore from CurseForge."] =
+	"%s: Das installierte ForeverCore ist ein anderes Addon (%s). Entferne es und installiere ForeverCore von CurseForge."
 L["/lf - open the world map and its Legacy menu"] = "/lf - öffnet die Weltkarte mit ihrem Vermächtnismenü"
 L["/lf audit - check the bundled data against the game"] =
 	"/lf audit - gleicht die mitgelieferten Daten mit dem Spiel ab"

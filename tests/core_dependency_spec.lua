@@ -12,6 +12,13 @@ local messages = {}
 local addons = {
 	{ name = "LegacyForever", title = "Legacy Forever", tag = "v1.5.0", loaded = true, enabled = 2 },
 	{ name = "OtherForever", title = "Other Forever", tag = "v1.4.1", loaded = true, enabled = 2 },
+	{
+		name = "ForeverCore",
+		title = "ForeverCore",
+		website = "https://github.com/cjber/forever-core",
+		loaded = true,
+		enabled = 2,
+	},
 }
 
 _G.C_AddOns = {
@@ -22,9 +29,20 @@ _G.C_AddOns = {
 		return addons[index] and addons[index].name
 	end,
 	GetAddOnMetadata = function(target, field)
-		local item = type(target) == "number" and addons[target] or (target == "LegacyForever" and addons[1])
+		local item = type(target) == "number" and addons[target] or nil
+		if type(target) == "string" then
+			for _, addon in ipairs(addons) do
+				if addon.name == target then
+					item = addon
+					break
+				end
+			end
+		end
 		if not item then
 			return nil
+		end
+		if field == "X-Website" then
+			return item.website
 		end
 		if field == "Title" then
 			return item.title
@@ -78,5 +96,30 @@ check(
 local complete = Run({ API = 1, APIKit = { Hub = function() end } })
 check(complete.broken == nil, "a complete core leaves the addon unbroken")
 check(#messages == 0, "a complete core shows nothing")
+
+-- Installation and enablement have distinct recovery instructions.
+local coreAddon = table.remove(addons)
+local missing = Run(nil)
+check(missing.broken == true, "a missing core marks the addon broken")
+check(#messages == 1, "a missing core shows exactly one line")
+check(
+	messages[1]
+		== (
+			"Legacy Forever needs ForeverCore. Install it from CurseForge, "
+			.. "or choose Reinstall on ForeverCore in the CurseForge app."
+		),
+	"a missing core asks to install ForeverCore and names Legacy Forever"
+)
+
+coreAddon.loaded = false
+coreAddon.enabled = 0
+addons[#addons + 1] = coreAddon
+local disabled = Run(nil)
+check(disabled.broken == true, "a disabled core marks the addon broken")
+check(#messages == 1, "a disabled core shows exactly one line")
+check(
+	messages[1] == "Legacy Forever: ForeverCore is turned off. Enable it in the AddOns list to fix this.",
+	"a disabled core asks to enable ForeverCore"
+)
 
 print(("core_dependency_spec: %d checks passed"):format(checks))

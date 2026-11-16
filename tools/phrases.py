@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PHRASE = re.compile(r'\bL\["((?:\\.|[^"\\])*)"\]')
 # A shared Forever file may choose its English text with a helper, `phrase("%s is out of date.", name)`, and read
 # ns.L by that same key, so those strings are phrases too.
-PHRASE_HELPER = re.compile(r'\bphrase\("((?:\\.|[^"\\])*)"')
+PHRASE_HELPER = re.compile(r'\bphrase\(\s*"((?:\\.|[^"\\])*)"')
 # A shared window may choose a phrase in a bracket expression: `L[count == 1 and "board" or "boards"]` uses both,
 # so each string alternative is a phrase too.
 ALTERNATIVE = re.compile(r"\bL\[([^\]]*)\]")
