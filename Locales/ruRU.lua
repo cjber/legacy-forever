@@ -21,6 +21,8 @@ L["%s could not start. Reinstall %s to fix this."] =
 	"%s не удалось запустить. Переустановите %s, чтобы исправить это."
 L["%s is at %s in %s."] = "%s: координаты %s (%s)."
 L["%s is at %s."] = "%s: координаты %s."
+L["%s needs ForeverCore. Install it from CurseForge, or choose Reinstall on ForeverCore in the CurseForge app."] =
+	"%s требуется ForeverCore. Установите его с CurseForge или выберите «Переустановить» для ForeverCore в приложении CurseForge."
 L["%s: %d left"] = "%s: осталось %d"
 L["%s: %d of %d areas left"] = "%s: осталось областей: %d из %d"
 L["%s: %d of %d zones complete (%d%%)"] = "%s: пройдено зон: %d из %d (%d%%)"
@@ -28,6 +30,10 @@ L["%s: %s are out of date. Update them to fix this."] =
 	"%s: %s устарели. Обновите их, чтобы исправить это."
 L["%s: %s is out of date. Update it to fix this."] =
 	"%s: %s устарел. Обновите его, чтобы исправить это."
+L["%s: ForeverCore is turned off. Enable it in the AddOns list to fix this."] =
+	"%s: ForeverCore отключен. Включите его в списке модификаций, чтобы исправить это."
+L["%s: the installed ForeverCore is another addon (%s). Remove it and install ForeverCore from CurseForge."] =
+	"%s: установленный ForeverCore является другой модификацией (%s). Удалите ее и установите ForeverCore с CurseForge."
 L["/lf - open the world map and its Legacy menu"] =
 	"/lf - открыть карту мира и меню старинных испытаний"
 L["/lf audit - check the bundled data against the game"] =

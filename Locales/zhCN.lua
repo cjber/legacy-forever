@@ -17,11 +17,17 @@ L["%s complete. %s"] = "%s已完成。%s"
 L["%s could not start. Reinstall %s to fix this."] = "%s 无法启动。请重新安装 %s 以解决此问题。"
 L["%s is at %s in %s."] = "%s位于%s（%s）。"
 L["%s is at %s."] = "%s位于%s。"
+L["%s needs ForeverCore. Install it from CurseForge, or choose Reinstall on ForeverCore in the CurseForge app."] =
+	"%s 需要 ForeverCore。请从 CurseForge 安装，或在 CurseForge 应用中为 ForeverCore 选择重新安装。"
 L["%s: %d left"] = "%s：剩余%d"
 L["%s: %d of %d areas left"] = "%s：剩余%d/%d个区域"
 L["%s: %d of %d zones complete (%d%%)"] = "%s：已完成%d/%d个地区（%d%%）"
 L["%s: %s are out of date. Update them to fix this."] = "%s：%s 已过期。请更新它们以解决此问题。"
 L["%s: %s is out of date. Update it to fix this."] = "%s：%s 已过期。请更新它以解决此问题。"
+L["%s: ForeverCore is turned off. Enable it in the AddOns list to fix this."] =
+	"%s：ForeverCore 已被禁用。请在插件列表中启用它以解决此问题。"
+L["%s: the installed ForeverCore is another addon (%s). Remove it and install ForeverCore from CurseForge."] =
+	"%s：已安装的 ForeverCore 是另一个插件（%s）。请移除它并从 CurseForge 安装 ForeverCore。"
 L["/lf - open the world map and its Legacy menu"] = "/lf - 打开世界地图及其传承菜单"
 L["/lf audit - check the bundled data against the game"] = "/lf audit - 将内置数据与游戏核对"
 L["/lf criteria 684 - list what the game reports for one achievement"] =

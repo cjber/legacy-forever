@@ -19,6 +19,8 @@ L["%s complete. %s"] = "%s complete. %s"
 L["%s could not start. Reinstall %s to fix this."] = "%s could not start. Reinstall %s to fix this."
 L["%s is at %s in %s."] = "%s is at %s in %s."
 L["%s is at %s."] = "%s is at %s."
+L["%s needs ForeverCore. Install it from CurseForge, or choose Reinstall on ForeverCore in the CurseForge app."] =
+	"%s needs ForeverCore. Install it from CurseForge, or choose Reinstall on ForeverCore in the CurseForge app."
 L["%s: %d left"] = "%s: %d left"
 L["%s: %d of %d areas left"] = "%s: %d of %d areas left"
 L["%s: %d of %d zones complete (%d%%)"] = "%s: %d of %d zones complete (%d%%)"
@@ -26,6 +28,8 @@ L["%s: %s are out of date. Update them to fix this."] = "%s: %s are out of date.
 L["%s: %s is out of date. Update it to fix this."] = "%s: %s is out of date. Update it to fix this."
 L["%s: ForeverCore is turned off. Enable it in the AddOns list to fix this."] =
 	"%s: ForeverCore is turned off. Enable it in the AddOns list to fix this."
+L["%s: the installed ForeverCore is another addon (%s). Remove it and install ForeverCore from CurseForge."] =
+	"%s: the installed ForeverCore is another addon (%s). Remove it and install ForeverCore from CurseForge."
 L["/lf - open the world map and its Legacy menu"] = "/lf - open the world map and its Legacy menu"
 L["/lf audit - check the bundled data against the game"] = "/lf audit - check the bundled data against the game"
 L["/lf criteria 684 - list what the game reports for one achievement"] =

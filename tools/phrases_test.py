@@ -40,17 +40,19 @@ class PhraseRuntimeTest(unittest.TestCase):
             self.assertIn("2nd", found)
 
     def test_a_shared_files_phrase_helper_is_found(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            (root / "Addon.toc").write_text("ForeverRequire.lua\n")
-            (root / "ForeverRequire.lua").write_text(
-                "local function phrase(key, ...)\n"
-                "\treturn string.format((ns.L or {})[key] or key, ...)\n"
-                "end\n"
-                'text = phrase("%s is out of date. Update it to fix this.", name)\n'
-            )
+        for whitespace in ("", " ", "\n\t"):
+            with self.subTest(whitespace=whitespace):
+                with tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory)
+                    (root / "Addon.toc").write_text("ForeverRequire.lua\n")
+                    (root / "ForeverRequire.lua").write_text(
+                        "local function phrase(key, ...)\n"
+                        "\treturn string.format((ns.L or {})[key] or key, ...)\n"
+                        "end\n"
+                        f'text = phrase({whitespace}"%s is out of date. Update it to fix this.", name)\n'
+                    )
 
-            self.assertIn("%s is out of date. Update it to fix this.", phrases(root))
+                    self.assertIn("%s is out of date. Update it to fix this.", phrases(root))
 
 
 if __name__ == "__main__":
