@@ -44,8 +44,6 @@ L["Attach to quest tracker"] = "Prender ao rastreador de missões"
 L["Click the zone to see where."] = "Clique na zona para ver onde."
 L["Click to collapse."] = "Clique para recolher."
 L["Click to expand."] = "Clique para expandir."
-L["Click to open the map. Right-click for options."] =
-	"Clique para abrir o mapa. Clique com o botão direito para opções."
 L["Click to set a waypoint here."] = "Clique para pôr um marcador de mapa aqui."
 L["Click to track, with live progress."] = "Clique para rastrear, com o progresso ao vivo."
 L["Click to travel here with Shortest Path Forever."] = "Clique para viajar até aqui com o Shortest Path Forever."
@@ -59,7 +57,6 @@ L["Flight paths"] = "Rotas de voo"
 L["Forever addons"] = "AddOns Forever"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Sombreia o terreno real de cada área não descoberta, com um marcador na borda. Áreas sem dados de terreno mantêm o sombreamento."
-L["Hide from the tracker"] = "Ocultar do rastreador"
 L["In the objective tracker"] = "No rastreador de objetivos"
 L["Install AtlasLoot for recommended levels."] = "Instale AtlasLoot para ver os níveis recomendados."
 L["Install Shortest Path Forever to have the route plotted for you."] =
@@ -134,3 +131,10 @@ L["Count quests completed by any character. The quests counted still match this 
 
 L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"A conclusão de missões da conta não está disponível neste cliente. Apenas as missões deste personagem contam." -- mt
+
+L["Tracked Legacy challenges"] = "Desafios Legacy rastreados" -- mt
+L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
+	"Ative novamente em Configurações > AddOns > Legacy Forever > Rastreador de objetivos." -- mt
+L["open the Legacy panel"] = "abrir o painel de Legacy" -- mt
+L["open the map"] = "abrir o mapa" -- mt
+L["The current zone is not known yet."] = "A zona atual ainda não é conhecida." -- mt

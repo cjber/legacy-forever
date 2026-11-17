@@ -152,7 +152,7 @@ function Live.LockPanelEntry(button)
 end
 
 -- Opens Blizzard's Legacy panel on this challenge.
----@param achievementID number
+---@param achievementID? number
 function Live.ShowInLegacyPanel(achievementID)
 	if Live.PanelLocked() then
 		UIErrorsFrame:AddMessage(LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP, RED_FONT_COLOR:GetRGB())
@@ -162,7 +162,7 @@ function Live.ShowInLegacyPanel(achievementID)
 		ToggleLegacySystemUI()
 	end
 	EventRegistry:TriggerEvent("Legacy.SelectPage", CHALLENGES_PAGE)
-	if AchievementFrame_SelectAchievement then
+	if achievementID and AchievementFrame_SelectAchievement then
 		AchievementFrame_SelectAchievement(achievementID, true)
 	end
 end

@@ -123,10 +123,8 @@ local function CountsText(result, iconSize)
 end
 
 ---@param tooltip GameTooltip
----@param name string
 ---@param result LegacyZoneResult
-local function AddTooltip(tooltip, name, result)
-	GameTooltip_SetTitle(tooltip, ("%s  %s"):format(name, PercentText(result)))
+local function AddTooltipDetails(tooltip, result)
 	for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 		local category = result[key]
 		if category then
@@ -167,6 +165,14 @@ local function AddTooltip(tooltip, name, result)
 	then
 		GameTooltip_AddDisabledLine(tooltip, L["Adventure Guide Forever routes the quests left in this zone."])
 	end
+end
+
+---@param tooltip GameTooltip
+---@param name string
+---@param result LegacyZoneResult
+local function AddTooltip(tooltip, name, result)
+	GameTooltip_SetTitle(tooltip, ("%s  %s"):format(name, PercentText(result)))
+	AddTooltipDetails(tooltip, result)
 end
 
 -- The objective tracker's own progress bar (Blizzard_ObjectiveTrackerShared.xml's
@@ -235,39 +241,54 @@ function TrackerMixin:LayoutContents()
 	self:LayoutBlock(block)
 end
 
----@param block LegacyTrackerBlock
-function TrackerMixin:OnBlockHeaderEnter(block)
+local trackerShow = {
+	get = function()
+		return IsShown("tracker")
+	end,
+	set = function(value)
+		ns.Saved.Set("tracker", value)
+	end,
+	where = L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."],
+}
+
+---@param target ForeverTrackerTarget
+local function OpenZone(target)
+	local id = target.id or ns.Live.CurrentZone()
+	if id then
+		return ForeverCore.OpenMap(id)
+	end
+	return false, L["The current zone is not known yet."]
+end
+
+local trackerContract = {
+	menu = function(target, menu)
+		local id = target.id or ns.Live.CurrentZone()
+		local info = id and C_Map.GetMapInfo(id)
+		menu:Title(info and info.name or L["Zone completion"])
+		menu:Open(L["Open the map"], function()
+			return OpenZone(target)
+		end)
+	end,
+	click = OpenZone,
+	clickHint = function()
+		return L["open the map"]
+	end,
+}
+
+ForeverCore.TrackerLine.SetHeaderTooltip(TrackerMixin, function(block)
 	local result = Zones.Of(block.id)
 	if result then
-		GameTooltip:SetOwner(block, "ANCHOR_LEFT")
-		AddTooltip(GameTooltip, C_Map.GetMapInfo(block.id).name, result)
-		GameTooltip_AddInstructionLine(GameTooltip, L["Click to open the map. Right-click for options."])
+		return { title = ("%s  %s"):format(C_Map.GetMapInfo(block.id).name, PercentText(result)) }
+	end
+end)
+local headerEnter = TrackerMixin.OnBlockHeaderEnter
+function TrackerMixin:OnBlockHeaderEnter(block)
+	headerEnter(self, block)
+	local result = Zones.Of(block.id)
+	if result then
+		AddTooltipDetails(GameTooltip, result)
 		GameTooltip:Show()
 	end
-end
-
-function TrackerMixin:OnBlockHeaderLeave()
-	GameTooltip:Hide()
-end
-
--- Right-click opens a menu, as on the Legacy section.
----@param block LegacyTrackerBlock
----@param mouseButton string
-function TrackerMixin:OnBlockHeaderClick(block, mouseButton)
-	if mouseButton ~= "RightButton" then
-		-- Through the shared opener: the client refuses its own map opener from addon code (cjber/forever-core#333).
-		ForeverCore.OpenMap(block.id)
-		return
-	end
-	ForeverCore.ContextMenu(self:GetContextMenuParent(), function(_, root)
-		root:CreateTitle(C_Map.GetMapInfo(block.id).name)
-		root:CreateButton(L["Open the map"], function()
-			ForeverCore.OpenMap(block.id)
-		end)
-		root:CreateButton(L["Hide from the tracker"], function()
-			Toggle("tracker")
-		end)
-	end)
 end
 
 -- -5 is the next free family tracker slot and puts the zone above every other Forever section. The shared
@@ -275,7 +296,7 @@ end
 -- whole when its one block does not fit: at -1 this section came after Adventure Guide Forever's story and journey
 -- sections and never drew when they filled the column below the quests. It still sorts above the tracked
 -- challenges' blocks, which are 0.
-local trackerModule = ns.Tracker.AddModule("LegacyForeverZoneTracker", TrackerMixin, -5)
+local trackerModule = ns.Tracker.AddModule("LegacyForeverZoneTracker", TrackerMixin, -5, trackerShow, trackerContract)
 if trackerModule then
 	local header = trackerModule.Header
 	-- The bar's own row under the header band, then the counts row; the module's layout places the first block

@@ -43,7 +43,6 @@ L["Attach to quest tracker"] = "附加到任务追踪栏"
 L["Click the zone to see where."] = "点击该地区查看位置。"
 L["Click to collapse."] = "点击收起。"
 L["Click to expand."] = "点击展开。"
-L["Click to open the map. Right-click for options."] = "点击打开地图。右键点击打开选项。"
 L["Click to set a waypoint here."] = "点击在此处放置地图标记。"
 L["Click to track, with live progress."] = "点击追踪，实时显示进度。"
 L["Click to travel here with Shortest Path Forever."] = "点击使用Shortest Path Forever前往此处。"
@@ -57,7 +56,6 @@ L["Flight paths"] = "飞行路线"
 L["Forever addons"] = "Forever插件"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"以阴影显示每个未探索区域的真实地形，并在边缘放置图钉。没有地形数据的区域仍然使用阴影。"
-L["Hide from the tracker"] = "从追踪栏中隐藏"
 L["In the objective tracker"] = "在目标追踪栏中"
 L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。"
 L["Install Shortest Path Forever to have the route plotted for you."] =
@@ -131,3 +129,10 @@ L["Count quests completed by any character. The quests counted still match this 
 
 L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"此客户端无法获取账号任务完成信息。仅统计当前角色的任务。" -- mt
+
+L["Tracked Legacy challenges"] = "追踪的Legacy挑战" -- mt
+L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
+	"在设置 > 插件 > Legacy Forever > 目标追踪中重新开启。" -- mt
+L["open the Legacy panel"] = "打开Legacy面板" -- mt
+L["open the map"] = "打开地图" -- mt
+L["The current zone is not known yet."] = "当前区域尚不明确。" -- mt

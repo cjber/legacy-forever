@@ -45,7 +45,6 @@ L["Attach to quest tracker"] = "Anclar al rastreador de misiones"
 L["Click the zone to see where."] = "Haz clic en la zona para ver dónde."
 L["Click to collapse."] = "Clic para contraer."
 L["Click to expand."] = "Clic para desplegar."
-L["Click to open the map. Right-click for options."] = "Clic para abrir el mapa. Clic derecho para opciones."
 L["Click to set a waypoint here."] = "Clic para poner una marca de mapa aquí."
 L["Click to track, with live progress."] = "Clic para seguir, con el progreso en directo."
 L["Click to travel here with Shortest Path Forever."] = "Clic para viajar aquí con Shortest Path Forever."
@@ -59,7 +58,6 @@ L["Flight paths"] = "Rutas de vuelo"
 L["Forever addons"] = "Addons Forever"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Sombrea el terreno real de cada zona sin descubrir, con un marcador en su borde. Las zonas sin datos del terreno mantienen el sombreado."
-L["Hide from the tracker"] = "Ocultar del rastreador"
 L["In the objective tracker"] = "En el rastreador de objetivos"
 L["Install AtlasLoot for recommended levels."] = "Instala AtlasLoot para ver los niveles recomendados."
 L["Install Shortest Path Forever to have the route plotted for you."] =
@@ -134,3 +132,10 @@ L["Count quests completed by any character. The quests counted still match this 
 
 L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"La finalización de misiones de la cuenta no está disponible en este cliente. Solo cuentan las misiones de este personaje." -- mt
+
+L["Tracked Legacy challenges"] = "Desafíos Legacy seguidos" -- mt
+L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
+	"Vuelve a activarlo en Ajustes > AddOns > Legacy Forever > Seguimiento de objetivos." -- mt
+L["open the Legacy panel"] = "abrir el panel de Legacy" -- mt
+L["open the map"] = "abrir el mapa" -- mt
+L["The current zone is not known yet."] = "Aún no se conoce la zona actual." -- mt

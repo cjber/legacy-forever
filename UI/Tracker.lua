@@ -118,28 +118,49 @@ end
 ---@class LegacyChallengeTracker : LegacyTrackerModule
 local ModuleMixin = { headerText = L["Legacy"] }
 
----@param block LegacyTrackerBlock
----@param mouseButton string
-function ModuleMixin:OnBlockHeaderClick(block, mouseButton)
-	if mouseButton ~= "RightButton" then
-		ns.Live.ShowInLegacyPanel(block.id)
-		return
+local show = {
+	get = function()
+		return ns.Saved.Get("showTracker")
+	end,
+	set = function(value)
+		ns.Saved.Set("showTracker", value)
+	end,
+	where = L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."],
+}
+
+---@param target ForeverTrackerTarget
+local function OpenChallenge(target)
+	if ns.Live.PanelLocked() then
+		return false, LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP
 	end
-	ForeverCore.ContextMenu(self:GetContextMenuParent(), function(_, root)
-		root:CreateTitle(ns.Live.Name(block.id))
-		ns.Live.LockPanelEntry(root:CreateButton(L["Open in the Legacy panel"], function()
-			ns.Live.ShowInLegacyPanel(block.id)
-		end))
-		root:CreateButton(L["Stop tracking"], function()
-			StopTracking(block.id)
-		end)
-	end)
+	ns.Live.ShowInLegacyPanel(target.id)
 end
+
+local contract = {
+	menu = function(target, menu)
+		menu:Title(target.kind == "block" and ns.Live.Name(target.id) or L["Legacy"])
+		menu:Open(L["Open in the Legacy panel"], function()
+			return OpenChallenge(target)
+		end)
+		if target.kind == "block" then
+			menu:End(L["Stop tracking"], function()
+				StopTracking(target.id)
+			end)
+		end
+	end,
+	click = OpenChallenge,
+	clickHint = function()
+		return L["open the Legacy panel"]
+	end,
+}
 
 -- The challenge as the block header, then quest-style lines: "12/20 Reach level 20",
 -- "0/12 Explore Felwood". A challenge the game no longer lists (earned, or not this
 -- character's variant) is skipped but stays tracked.
 function ModuleMixin:LayoutContents()
+	if not show.get() then
+		return
+	end
 	local blocks = ns.Model.TrackedBlocks(ns.Data, Tracked(), ns.Live.Visible(), ns.Live.Criteria, ns.Live.Name)
 	for _, tracked in ipairs(blocks) do
 		local block = self:GetBlock(tracked.challenge)
@@ -169,7 +190,7 @@ local modules = {}
 local function Attach(trackerModule)
 	trackerModule.legacySettings = ns.Saved.LegacyTrackerSettings()
 	trackerModule.safeCall = ns.core.SafeCall
-	ForeverCore.TrackerHost.Attach(trackerModule)
+	ForeverCore.TrackerHost.Attach(trackerModule, trackerModule.trackerShow, trackerModule.trackerContract)
 	ns.Saved.ClearLegacyTrackerSettings()
 end
 
@@ -204,8 +225,10 @@ end
 ---@param name string
 ---@param mixin LegacyTrackerModule
 ---@param uiOrder number
+---@param trackerShow? ForeverTrackerShowSetting
+---@param trackerContract? ForeverTrackerMenuContract
 ---@return LegacyTrackerModule?
-function Tracker.AddModule(name, mixin, uiOrder)
+function Tracker.AddModule(name, mixin, uiOrder, trackerShow, trackerContract)
 	if not Available() then
 		return nil
 	end
@@ -213,12 +236,19 @@ function Tracker.AddModule(name, mixin, uiOrder)
 	---@field Header LegacyTrackerHeader
 	---@field headerText? string
 	---@field uiOrder number
+	---@field trackerShow? ForeverTrackerShowSetting
+	---@field trackerContract? ForeverTrackerMenuContract
 	---@field fromHeaderOffsetY? number The native module's gap from the header to its first block.
 	---@field GetBlock fun(self: LegacyTrackerModule, id: number): LegacyTrackerBlock
 	local trackerModule = CreateFrame("Frame", name, UIParent, "ObjectiveTrackerModuleTemplate")
 	Mixin(trackerModule, mixin)
 	trackerModule:SetHeader(mixin.headerText or "")
 	trackerModule.uiOrder = uiOrder
+	trackerModule.trackerShow = trackerShow
+	trackerModule.trackerContract = trackerContract
+	trackerModule.OnBlockHeaderClick = function(self, block, button)
+		ForeverCore.TrackerHost.HandleBlockHeaderClick(self, block, button)
+	end
 	if #modules == 0 then
 		EventUtil.ContinueAfterAllEvents(function()
 			C_Timer.After(0, AttachAll)
@@ -245,7 +275,7 @@ local function Register()
 		ns.Print(L["the objective tracker isn't available, so tracked challenges can't be shown."])
 		return
 	end
-	module = Tracker.AddModule("LegacyForeverObjectiveTracker", ModuleMixin, 0)
+	module = Tracker.AddModule("LegacyForeverObjectiveTracker", ModuleMixin, 0, show, contract)
 	EventUtil.ContinueAfterAllEvents(function()
 		C_Timer.After(5, WarnIfUnattached)
 	end, "PLAYER_ENTERING_WORLD", "VARIABLES_LOADED")
@@ -253,3 +283,8 @@ end
 
 Register()
 ns.Live.OnChange(Tracker.Refresh)
+ns.Saved.OnChange(function(key)
+	if key == "showTracker" then
+		Tracker.Refresh()
+	end
+end)

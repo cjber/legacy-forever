@@ -354,6 +354,30 @@ ForeverCore.Family = {
 		return Settings.RegisterVerticalLayoutSubcategory(category, "Forever addons")
 	end,
 }
+-- Load the tracker with real saved notifications, so both settings and the host hide use its listener.
+local trackerRefreshes, trackerSection = 0, nil
+local trackerEnv = setmetatable({
+	ObjectiveTrackerManager = {},
+	ObjectiveTrackerFrame = {},
+	CreateFrame = function()
+		trackerSection = {
+			SetHeader = function() end,
+			MarkDirty = function()
+				trackerRefreshes = trackerRefreshes + 1
+			end,
+		}
+		return trackerSection
+	end,
+	Mixin = function(target, source)
+		for key, value in pairs(source) do
+			target[key] = value
+		end
+	end,
+	EventUtil = { ContinueAfterAllEvents = function() end },
+}, { __index = _G })
+ForeverCore.TrackerHost.Attach = function() end
+ns.Live.OnChange = function() end
+setfenv(assert(loadfile("UI/Tracker.lua")), trackerEnv)("LegacyForever", ns)
 assert(loadfile("UI/Settings.lua"))("LegacyForever", ns)
 check(LegacyForeverDB == nil or next(LegacyForeverDB.zoneCompletion or {}) == nil, "building the page saves nothing")
 
@@ -371,6 +395,7 @@ local kinds, expectedKinds =
 		"checkbox@World map",
 		"checkbox@World map",
 		"button@Legacy Forever",
+		"checkbox@Objective tracker",
 		"checkbox@Objective tracker",
 		"checkbox@Objective tracker",
 		"checkbox@Objective tracker",
@@ -395,7 +420,16 @@ for _, entry in ipairs(registered) do
 		byKey[setting.key] = setting
 	end
 end
+byKey.showTracker:SetValue(false)
+check(trackerRefreshes == 1, "Settings checkbox refreshes the tracker exactly once")
+byKey.showTracker:SetValue(true)
+check(trackerRefreshes == 2, "Settings checkbox restores the section with one refresh")
+trackerSection.trackerShow.set(false)
+check(trackerRefreshes == 3 and not Saved.Get("showTracker"), "menu hide refreshes the section exactly once")
+byKey.showTracker:SetValue(true)
+
 local expected = {
+	showTracker = true,
 	trackerAttached = true,
 	trackerLocked = false,
 	showAreas = true,
@@ -437,7 +471,7 @@ check(
 -- Quests grey out without Questie, as the map menu's box does, and the name and tooltip are translated.
 local quests = byKey.count_quests
 check(quests.name == "quests", "a category row is named by its label")
-check(#registered[11].initializer.modify == 0, "a row with nothing to gate carries no predicate")
+check(#registered[12].initializer.modify == 0, "a row with nothing to gate carries no predicate")
 local questsRow
 for _, entry in ipairs(registered) do
 	if entry.initializer.setting == quests then

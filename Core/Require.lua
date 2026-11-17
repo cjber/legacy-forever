@@ -13,5 +13,9 @@ local ready = ForeverCore ~= nil
 	and (ForeverCore.API or 0) >= 1
 	and ForeverCore.APIKit ~= nil
 	and type(ForeverCore.APIKit.Hub) == "function"
+	and ForeverCore.TrackerHost ~= nil
+	and type(ForeverCore.TrackerHost.HandleBlockHeaderClick) == "function"
+	and ForeverCore.TrackerLine ~= nil
+	and type(ForeverCore.TrackerLine.SetHeaderTooltip) == "function"
 
 ns.ForeverRequire(ready)

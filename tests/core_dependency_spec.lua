@@ -93,7 +93,15 @@ check(
 )
 
 -- A core with every member this addon calls: the addon loads and nothing is shown.
-local complete = Run({ API = 1, APIKit = { Hub = function() end } })
+local complete = Run({
+	API = 1,
+	APIKit = { Hub = function() end },
+	TrackerHost = { HandleBlockHeaderClick = function() end },
+	TrackerLine = { SetHeaderTooltip = function() end },
+})
+local noContract = Run({ API = 1, APIKit = { Hub = function() end } })
+check(noContract.broken == true, "a core without the tracker contract stops before UI files load")
+messages = {}
 check(complete.broken == nil, "a complete core leaves the addon unbroken")
 check(#messages == 0, "a complete core shows nothing")
 

@@ -1,23 +1,34 @@
 {
-  "input_digest": "8d0801063ebcb9a36e10991d3740a772d2f0aa0ddaa718c4d79a4fee5cd5deee",
-  "runtime_sha256": "8d0801063ebcb9a36e10991d3740a772d2f0aa0ddaa718c4d79a4fee5cd5deee",
-  "candidate": "a11da1afc9f57544d85d843690291e4fd7e73730607cf09ad58f8a39fd6233e8",
+  "input_digest": "a1062c09d92ae34ddb42c51ffcd02455bce675d932b1b2af4c4694d5afc11ece",
+  "runtime_sha256": "a1062c09d92ae34ddb42c51ffcd02455bce675d932b1b2af4c4694d5afc11ece",
+  "candidate": "508753d349f930fd90def16ea209f00d1b10cfb5539d8f054d017ad41120619e",
   "client_build": "1.60.1.70938 (Interface 16001)",
   "tested_artifact": "source-tree",
-  "source_commit": "e6d158adfa3a8f663ce7df32fbe0c03b3108cb56",
+  "source_commit": "5ae2660206a4115f58eae501a719971e37083441",
   "flows": [
     {
-      "name": "what counts",
+      "name": "section menu",
       "steps": [
-        "legacy-counts.lua sha256:b236e0175bd2dc4fddb5ea22932bad091d7a8e3786736628aa2e35cc81510423"
+        "section-menu.lua sha256:094bc69e5b6b1e97959c6cff2c8ca7b088383c1ccb54224909042790ca6612ce"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "challenge menu",
+      "steps": [
+        "block-menu.lua sha256:1c721ad37e5c306a3f563913f97c2c3ea93865b677798128ab2928e7364c935c"
       ],
       "result": "pass"
     }
   ],
   "images": [
     {
-      "url": "https://gist.githubusercontent.com/cjber/d6bc5f9c752029b16a48a569853851e5/raw/37783402c8c1347de85d629b1f75a951ce2d25ff/1-what-counts.png",
-      "sha256": "b8e4cc6e36fcabc3aeeb272a5cfee9e787166948589d50c122f1421ed7cb4d41"
+      "url": "https://gist.githubusercontent.com/cjber/c96ebd428e12e0e2d5ef4ed7e86777c6/raw/f92f30934b74d7d2d72aa0d61bc5a4493150fe35/1-section-menu.png",
+      "sha256": "1ea3b36a29ac2df57c0a117ec92ba9475915d39af8a6a8bf6eadcbca63bd6418"
+    },
+    {
+      "url": "https://gist.githubusercontent.com/cjber/c96ebd428e12e0e2d5ef4ed7e86777c6/raw/f92f30934b74d7d2d72aa0d61bc5a4493150fe35/2-challenge-menu.png",
+      "sha256": "d71c62c0b27d1085fa285cbf6ded3981e92460a05da130f464a9c765d367c54c"
     }
   ]
 }

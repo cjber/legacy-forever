@@ -47,7 +47,6 @@ L["Attach to quest tracker"] = "Attach to quest tracker"
 L["Click the zone to see where."] = "Click the zone to see where."
 L["Click to collapse."] = "Click to collapse."
 L["Click to expand."] = "Click to expand."
-L["Click to open the map. Right-click for options."] = "Click to open the map. Right-click for options."
 L["Click to set a waypoint here."] = "Click to set a waypoint here."
 L["Click to track, with live progress."] = "Click to track, with live progress."
 L["Click to travel here with Shortest Path Forever."] = "Click to travel here with Shortest Path Forever."
@@ -63,7 +62,6 @@ L["Every quest this character can take in the zone, from Questie."] =
 	"Every quest this character can take in the zone, from Questie."
 L["Flight paths"] = "Flight paths"
 L["Forever addons"] = "Forever addons"
-L["Hide from the tracker"] = "Hide from the tracker"
 L["In the objective tracker"] = "In the objective tracker"
 L["Install AtlasLoot for recommended levels."] = "Install AtlasLoot for recommended levels."
 L["Install Shortest Path Forever to have the route plotted for you."] =
@@ -104,12 +102,16 @@ L["Show undiscovered areas"] = "Show undiscovered areas"
 L["Show where to discover areas"] = "Show where to discover areas"
 L["Stop tracking"] = "Stop tracking"
 L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
+L["The current zone is not known yet."] = "The current zone is not known yet."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"The zone you're viewing in the map's corner, and a badge on each zone of a continent map."
 L["This menu needs mouse and keyboard."] = "This menu needs mouse and keyboard."
 L["This version of QuestieDB isn't supported."] = "This version of QuestieDB isn't supported."
+L["Tracked Legacy challenges"] = "Tracked Legacy challenges"
+L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
+	"Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"Turn this off if another addon already marks them. The Legacy map menu still lists them."
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
@@ -127,6 +129,8 @@ L["Zone completion in the tracker"] = "Zone completion in the tracker"
 L["and %d more"] = "and %d more"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"couldn't add a section to the objective tracker; please report /lf audit."
+L["open the Legacy panel"] = "open the Legacy panel"
+L["open the map"] = "open the map"
 L["the objective tracker isn't available, so tracked challenges can't be shown."] =
 	"the objective tracker isn't available, so tracked challenges can't be shown."
 L["updated to %s. %s"] = "updated to %s. %s"
