@@ -8,12 +8,13 @@ Free, with nothing locked behind it. If it saves you time, you can [sponsor me o
 
 The game does not give addons everything, so a few things are out of reach for now.
 
-- Kills, quests and reputations have no spot on the map, because the game gives addons no spawn or encounter data for them: track the challenge to follow its progress.
-- Some areas have no shape on the map, so they count towards a zone but are never shaded.
-- Of the raids, only Onyxia's Lair has an entrance marker in the game's data so far, so other raid entrances get no pin.
-- Flight paths count once you have opened a flight master on that continent, and show as "?" until then, because the game only says which ones you know there.
-- Zone completion leaves out rares, because the game does not say which belong to a zone, and counts quests only with Questie or QuestieDB installed.
-- Quest counts are for the character you are playing, and skip quests behind a profession, reputation, spell or an exclusive choice.
+- Kills have no spot on the map, because the game gives addons no spawn data for them: track the challenge to follow its progress.
+- Some areas have no outline in the game's map art, so they count towards the zone's percent but are never shaded.
+- Of the raids, only Onyxia's Lair has an entrance in the game's data so far, so other raids get no map pin and do not count towards a zone's percent.
+- Flight paths count once you have talked to a flight master on that continent, because the game only says which ones you know there. Until then the flight path count shows "?".
+- Zone completion leaves out rares, because the game does not say which belong to a zone.
+- Zone completion counts quests only when Questie or QuestieDB is installed and you tick the quest category.
+- Quest counts are for the character you are playing, unless you turn on Count account quests. They skip quests behind a profession, reputation or spell, and quests after a choice that could shut them, because the addon cannot tell whether you can take them.
 
 ![Ashenvale on the world map as two areas are found, then the Legacy menu](https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif)
 
