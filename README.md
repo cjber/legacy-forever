@@ -61,7 +61,7 @@ Progress comes from the game each time, so it matches the Legacy panel and follo
 
 ## Install
 
-Install it from [CurseForge](https://www.curseforge.com/wow/addons/legacy-forever) or [Wago Addons](https://addons.wago.io/addons/legacy-forever), or download the zip from [Releases](https://github.com/cjber/legacy-forever/releases). To install the zip by hand, extract it into the WoW: Forever client's `Interface/AddOns/` folder (`_forever_` on the live client, `_classic_beta_` on the beta) so you end up with `AddOns/LegacyForever/LegacyForever.toc`.
+Install it from [CurseForge](https://www.curseforge.com/wow/addons/legacy-forever), or download the zip from [Releases](https://github.com/cjber/legacy-forever/releases). To install the zip by hand, extract it into the WoW: Forever client's `Interface/AddOns/` folder (`_forever_` on the live client, `_classic_beta_` on the beta) so you end up with `AddOns/LegacyForever/LegacyForever.toc`.
 
 ## Usage
 
@@ -148,7 +148,7 @@ See [the tooling notes](tools/README.md#type-checking) for the multi-value rule.
 
 CI runs these checks on main pushes and pull requests. Each day a scheduled job checks wago.tools for a newer Forever build and, if the Legacy data differs, opens a pull request with the regenerated `Data/Legacy.lua`.
 
-**Releasing:** run `python3 tools/changelog.py release X.Y.Z` to gather the `changes/*.md` notes into `## [X.Y.Z] - YYYY-MM-DD`, then `git tag -s vX.Y.Z && git push --tags`, or run the Release workflow on main with `version` set. The [BigWigs packager](https://github.com/BigWigsMods/packager) builds the zip and uploads it to GitHub Releases, CurseForge and Wago, with that version's entry (`tools/changelog.py`) as the release notes.
+**Releasing:** run `python3 tools/changelog.py release X.Y.Z` to gather the `changes/*.md` notes into `## [X.Y.Z] - YYYY-MM-DD`, then `git tag -s vX.Y.Z && git push --tags`, or run the Release workflow on main with `version` set. The [BigWigs packager](https://github.com/BigWigsMods/packager) builds the zip and uploads it to GitHub Releases, CurseForge, with that version's entry (`tools/changelog.py`) as the release notes.
 
 **Contributing:** read [CONTRIBUTING.md](https://github.com/cjber/.github/blob/main/CONTRIBUTING.md) and this repository's [AGENTS.md](AGENTS.md). Report security problems privately, as [SECURITY.md](https://github.com/cjber/.github/blob/main/SECURITY.md) describes.
 
