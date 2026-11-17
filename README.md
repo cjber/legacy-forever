@@ -12,6 +12,17 @@ Your unfinished WoW: Forever Legacy challenges, on the world map, for the zone y
 
 Legacy Forever shows unfinished challenges on the world map and tracks the ones you choose.
 
+## Known limitations
+
+The game does not give addons everything, so a few things are out of reach for now.
+
+- Kills, quests and reputations have no spot on the map, because the game gives addons no spawn or encounter data for them: track the challenge to follow its progress.
+- Some areas have no shape on the map, so they count towards a zone but are never shaded.
+- Of the raids, only Onyxia's Lair has an entrance marker in the game's data so far, so other raid entrances get no pin.
+- Flight paths count once you have opened a flight master on that continent, and show as "?" until then, because the game only says which ones you know there.
+- Zone completion leaves out rares, because the game does not say which belong to a zone, and counts quests only with Questie or QuestieDB installed.
+- Quest counts are for the character you are playing, and skip quests behind a profession, reputation, spell or an exclusive choice.
+
 <p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif" width="640" alt="Ashenvale on the world map as two areas are found, then the Legacy menu"></p>
 
 Discover an area and its shading lifts. The Legacy menu tracks the challenges behind it.
