@@ -31,6 +31,10 @@ python3 tools/check_api_docs.py   # docs/api.md names every published API functi
 python3 tools/repo_rules.py   # rules no linter covers; CI runs it in project-rules
 ```
 
+A change's player-facing notes go in `changes/<issue>.md` as bold-lead bullets, with an optional `### For addon
+authors` section after them. The release commit gathers them with `python3 tools/changelog.py release X.Y.Z`; no
+other pull request edits `CHANGELOG.md`, and CI's `--check --base` fails one that does.
+
 `FOREVER_CORE` names the cjber/forever-core checkout the specs load, defaulting to the sibling `../forever-core`.
 `tools/forever-core.txt` holds the git ref CI checks out for them: `v1.3.2`, the release whose API kit lists every
 addon's published API.
