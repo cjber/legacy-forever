@@ -861,9 +861,8 @@ def render_continent(ui, data, live):
 
 
 def render_tracker(ui, data, live):
-    """The shared column as the host lays it out: the game's All Objectives header, then Ashenvale's
-    completion and the tracked challenges. The quests below are the native frame's own and are not part
-    of this crop."""
+    """The shared Forever column as the host lays it out: Ashenvale's completion, then the tracked challenges.
+    The column is a frame of its own beside the game's quest tracker, so no All Objectives header sits over it."""
     result = live.model.completion[ASHENVALE]
     legacy = []
     for block in live.model.tracked:
@@ -873,7 +872,7 @@ def render_tracker(ui, data, live):
         legacy.append(TrackerBlock(live.name(block["challenge"]), shown))
     # The zone section's header on a canvas of its own: the tracker's own bar and the counts sit in the row
     # UI/Completion.lua reserves below the header, so the tracked challenges start after that row.
-    canvas, rects = objective_tracker(ui, [TrackerModule("Ashenvale", [])], container=True)
+    canvas, rects = objective_tracker(ui, [TrackerModule("Ashenvale", [])], container=False)
     hx, hy, hw, hh = rects["modules"][0]
     line_font, percent_font = FONTS["ObjectiveTrackerLineFont"], FONTS["GameFontHighlightMedium"]
     # The bar canvas starts at the caps' overhang and centres the percent on the 15-unit fill.
