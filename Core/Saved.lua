@@ -76,9 +76,10 @@ local function Root()
 	LegacyForeverDB = LegacyForeverDB or {}
 	local root = LegacyForeverDB
 	-- The family suggestions are gone, so their switch and dismissed list are dead data.
-	root.companions = nil
-	root.suggestFamily = nil
-	root.familyDismissed = nil
+	-- Checked before it is written: Root runs on every read, and the bench regressed with three unconditional writes.
+	if root.companions ~= nil or root.suggestFamily ~= nil or root.familyDismissed ~= nil then
+		root.companions, root.suggestFamily, root.familyDismissed = nil, nil, nil
+	end
 	-- Forever Leaderboards is gone, so the peer tables it kept are dead data.
 	root.peerStats = nil
 	root.sharedStats = nil
