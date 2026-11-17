@@ -1,10 +1,10 @@
 {
-  "input_digest": "a05385f19c57b34070f96ea160e2d0cb2005c5dfab83f713dd2aca2b1119916d",
-  "runtime_sha256": "a05385f19c57b34070f96ea160e2d0cb2005c5dfab83f713dd2aca2b1119916d",
-  "candidate": "0941c99e29ee05e3f3b1bd1bb0cd09bba6c4a744e69c1886678a9c53bae1301b",
+  "input_digest": "8d0801063ebcb9a36e10991d3740a772d2f0aa0ddaa718c4d79a4fee5cd5deee",
+  "runtime_sha256": "8d0801063ebcb9a36e10991d3740a772d2f0aa0ddaa718c4d79a4fee5cd5deee",
+  "candidate": "a11da1afc9f57544d85d843690291e4fd7e73730607cf09ad58f8a39fd6233e8",
   "client_build": "1.60.1.70938 (Interface 16001)",
   "tested_artifact": "source-tree",
-  "source_commit": "d1fc6fe04c6063c66624a36b3fb0a084c611ff08",
+  "source_commit": "e6d158adfa3a8f663ce7df32fbe0c03b3108cb56",
   "flows": [
     {
       "name": "what counts",
@@ -16,8 +16,8 @@
   ],
   "images": [
     {
-      "url": "https://gist.githubusercontent.com/cjber/f084aea0186d65c7704b33047cc4c341/raw/3c9ad1ec802a25a8cd7a986b40479ce94af1ebd9/1-what-counts.png",
-      "sha256": "c3903d2c0845805d7bf3dfca4568b28a15aa867615cbeb254a0ea135185854d4"
+      "url": "https://gist.githubusercontent.com/cjber/d6bc5f9c752029b16a48a569853851e5/raw/37783402c8c1347de85d629b1f75a951ce2d25ff/1-what-counts.png",
+      "sha256": "b8e4cc6e36fcabc3aeeb272a5cfee9e787166948589d50c122f1421ed7cb4d41"
     }
   ]
 }
