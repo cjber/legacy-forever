@@ -14,7 +14,7 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ### Changed
 
-- **Tracker menus match the Forever column.** Right-click a section or block for its actions and a Tracker submenu, including Hide this section. Both sections can be restored in the Objective tracker settings.
+- Tracker menus match the Forever column: right-click a section or block for its actions and a Tracker submenu, including Hide this section. Both sections can be restored in the Objective tracker settings.
 - Ships with the same shared code as your other Forever addons, so they keep working together.
 
 ## [2.4.3] - 2026-11-17
