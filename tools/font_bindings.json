@@ -1,0 +1,59 @@
+{
+  "policy": "Only reviewed text producers with exact widget FontObjects are checked. Source changes invalidate the whole mapping, including aliases, callbacks and font overrides. Review source and callers before updating sha256. Tooltips, menus, chat output, dynamic game text and uncertain consumer fonts have no coverage claim. Empty bindings record reviewed exclusions, not glyph coverage.",
+  "producers": [
+    {
+      "source": "UI/Tracker.lua",
+      "sha256": "9e7ab50a5cb58ef10376ca289dc4149ed8afb2c68d4f78ac9c6e4ae6bfcc31ac",
+      "review": "Read module construction, LayoutContents, AddModule, Attach and their callers in Completion.lua. Pinned client Blizzard_ObjectiveTrackerModule.xml gives ObjectiveTrackerModuleTemplate.Header the ObjectiveTrackerModuleHeaderTemplate, whose Text inherits ObjectiveTrackerHeaderFont; Blizzard_ObjectiveTrackerModule.lua SetHeader only sets that Text. TrackerHost attachment does not set its font. Legacy is the sole localized header phrase; block names and objective text come from live game data. Menus and chat warnings are excluded. Coverage uses the pinned native FontObject; client tracker text-size settings and external addon font overrides are outside this contract.",
+      "bindings": [
+        {
+          "font": "ObjectiveTrackerHeaderFont",
+          "widget": "ModuleMixin.headerText via Tracker.AddModule / SetHeader to module.Header.Text",
+          "phrase": "Legacy"
+        }
+      ]
+    },
+    {
+      "source": "UI/Completion.lua",
+      "sha256": "3024b2155646e1bf2b3b4ee460d0b978aee486fa8222bc737ed4310c98ed7fef",
+      "review": "Read tracker LayoutContents, overlay creation and Refresh, LABELS and their Settings.lua callers, tooltip and menu builders, ContinentText and SetUpToast. Pinned client Blizzard_FrameXML/Mainline/AlertFrameSystems.xml CriteriaAlertFrameTemplate declares Unlocked with GameFontBlackTiny; its AlertFrameTemplate inheritance and queued alert setup introduce no Unlocked font override. SetUpToast sets Zone complete on Unlocked without a later font change. Name is a game zone name. Overlay Title and Counts use Completion.xml fonts but contain game names, percentages and numeric counts, not localized labels. Tracker text is also dynamic. LABELS flow to tooltips, menus and settings helper arguments and are excluded, as are status tooltips and chat output.",
+      "bindings": [
+        {
+          "font": "GameFontBlackTiny",
+          "widget": "SetUpToast frame.Unlocked via CriteriaAlertFrameTemplate",
+          "phrase": "Zone complete"
+        }
+      ]
+    },
+    {
+      "source": "UI/Completion.xml",
+      "sha256": "baacfa812480e4ed8865df6986c5d154aa32e89b4681620a0e0fb8f779ee9b76",
+      "review": "Read both FontStrings and Completion.lua OnLoad, Refresh and AttachMap callers. LegacyForeverZoneOverlayTemplate.Title inherits GameFontNormalLarge and Counts inherits GameFontHighlight without overrides. These show dynamic game names and numeric counts, not localized phrases; no bindings claimed for them. The bound completion toast uses the separate pinned client CriteriaAlertFrameTemplate.",
+      "bindings": []
+    },
+    {
+      "source": "UI/Map.lua",
+      "sha256": "54a20bdc5f90d040994fc85c84e139c8ef53e4e983dc9e9ba9bf72e20fcbd55c",
+      "review": "Read map menu and tooltip builders, map-button OnLoad and Refresh, pin creation and hover paths. Localized phrases flow into menus, tooltips or UIErrorsFrame output, all excluded. Count is a dynamic objective number, and Refresh changes its FontObject among GameFontNormalTiny, GameFontNormalSmall and GameFontNormal. No locale phrase is assigned to Count and no single font is claimed for it.",
+      "bindings": []
+    },
+    {
+      "source": "UI/Map.xml",
+      "sha256": "c381973fc889d492500b6e72f6675bc2ad572a6cd327bd7f499b89569f47b238",
+      "review": "Read pin and map-button templates and Map.lua consumers. Count inherits GameFontNormal but Refresh later selects among three FontObjects based on the dynamic number. Pins declare textures only. No localized phrase is set in this XML and no binding is claimed for Count.",
+      "bindings": []
+    },
+    {
+      "source": "UI/Settings.lua",
+      "sha256": "f1cba2c6546dbba0f736a52523c45319fb03a40033b37372079fa979d5c7f22f",
+      "review": "Read AddCheckbox, IndexButton, Section, every registration and Completion.Label/status callers. Labels and Open are arguments to Blizzard settings initializers; this file creates no FontString and establishes no exact widget FontObject. Shared family text delegates to ForeverCore.Family.Register. These helper arguments, delegated family text and tooltip descriptions are excluded rather than assigned an assumed settings font.",
+      "bindings": []
+    },
+    {
+      "source": "UI/WhatsNew.lua",
+      "sha256": "235e0b5afea5d6e8f0fbe1e2293a747bf98b8262ce2d0def7b6a10f4334cee70",
+      "review": "Read WhatsNew and its PLAYER_LOGIN callback. The localized update format and Core-provided headline are sent only to ns.Print chat output, which is excluded. No FontString or widget font is established here.",
+      "bindings": []
+    }
+  ]
+}
