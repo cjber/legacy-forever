@@ -112,10 +112,10 @@ L["This version of QuestieDB isn't supported."] = "This version of QuestieDB isn
 L["Tracked Legacy challenges"] = "Tracked Legacy challenges"
 L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
 	"Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."
-L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
-	"Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"Turn this off to drag the shared Forever tracker anywhere on screen."
+L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
+	"Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."
 L["Undiscovered area"] = "Undiscovered area"
 L["Updates"] = "Updates"
 L["Waiting for Questie and your quest log."] = "Waiting for Questie and your quest log."
