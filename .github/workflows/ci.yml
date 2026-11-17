@@ -129,8 +129,16 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      # A release publishes its changelog entry, so every tagged version needs one.
-      - run: python3 tools/changelog.py --check
+      # Changelog fragments are checked on every push, and direct changelog edits are checked on pull requests.
+      - name: Check changelog
+        env:
+          CHANGELOG_BASE: ${{ github.base_ref }}
+        run: |
+          if [ -n "$CHANGELOG_BASE" ]; then
+            python3 tools/changelog.py --check --base "origin/$CHANGELOG_BASE"
+          else
+            python3 tools/changelog.py --check
+          fi
       # docs/api.md names every function Core/API.lua publishes and its minor history.
       - run: python3 tools/check_api_docs.py
       - env:
