@@ -103,8 +103,8 @@ L["The zone you're viewing in the map's corner, and a badge on each zone of a co
 	"A zona exibida, no canto do mapa, e um selo em cada zona do mapa de um continente."
 L["This menu needs mouse and keyboard."] = "Este menu precisa de mouse e teclado."
 L["This version of QuestieDB isn't supported."] = "Esta versão do QuestieDB não é compatível."
-L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
-	"Desative se outro addon já as marca. O menu de Legado do mapa continua listando-as."
+L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
+	"Desative para ocultar os marcadores de Legado nas entradas de masmorras e raides. O menu de Legado do mapa continua listando-as."
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"Desative para arrastar o rastreador Forever compartilhado para qualquer lugar da tela."
 L["Undiscovered area"] = "Área não descoberta"

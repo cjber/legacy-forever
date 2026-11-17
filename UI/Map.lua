@@ -178,7 +178,8 @@ end
 -- the whole challenge. The tracker's challenge names open the Legacy panel.
 local TRACK_HINT = L["Click to track, with live progress."]
 -- The same line as the switch's row on the Settings page.
-local ENTRANCES_TOOLTIP = L["Turn this off if another addon already marks them. The Legacy map menu still lists them."]
+local ENTRANCES_TOOLTIP =
+	L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."]
 local OUTLINES_TOOLTIP =
 	L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."]
 

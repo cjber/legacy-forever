@@ -92,7 +92,7 @@ AddCheckbox(
 	map,
 	"showEntrances",
 	L["Show dungeon and raid entrances"],
-	L["Turn this off if another addon already marks them. The Legacy map menu still lists them."]
+	L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."]
 )
 AddCheckbox(
 	map,
