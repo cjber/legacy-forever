@@ -37,7 +37,6 @@ L["/lf issue - report a bug or request a feature with a ready-made GitHub issue 
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 顯示可複製到錯誤回報中的報告"
 L["Already complete"] = "已完成"
 L["Areas explored"] = "已探索區域"
-L["Attach to quest tracker"] = "附加到任務追蹤器"
 L["Click the zone to see where."] = "點擊該地區查看位置。"
 L["Click to collapse."] = "點擊收起。"
 L["Click to expand."] = "點擊展開。"
@@ -95,8 +94,6 @@ L["This menu needs mouse and keyboard."] = "此選單需要滑鼠和鍵盤。"
 L["This version of QuestieDB isn't supported."] = "不支援此版本的QuestieDB。"
 L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
 	"關閉後將隱藏傳承在地城和團隊副本入口上的標記。地圖的傳承選單仍會列出它們。"
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"關閉後可將共用的Forever追蹤器拖到畫面上任意位置。"
 L["Undiscovered area"] = "未發現的區域"
 L["Waiting for Questie and your quest log."] = "正在等待Questie和你的任務日誌。"
 L["Waiting for Questie to finish loading."] = "正在等待Questie載入完畢。"

@@ -380,7 +380,6 @@ local kinds, expectedKinds =
 		"checkbox@Objective tracker",
 		"checkbox@Objective tracker",
 		"checkbox@Objective tracker",
-		"checkbox@Objective tracker",
 		"button@Legacy Forever",
 	}
 for _ = 1, 8 do
@@ -411,7 +410,6 @@ byKey.showTracker:SetValue(true)
 
 local expected = {
 	showTracker = true,
-	trackerAttached = true,
 	trackerLocked = false,
 	showAreas = true,
 	showOutlines = false,
@@ -449,7 +447,7 @@ check(table.concat(opened, " ") == "World map Objective tracker What counts", "e
 -- Quests grey out without Questie, as the map menu's box does, and the name and tooltip are translated.
 local quests = byKey.count_quests
 check(quests.name == "quests", "a category row is named by its label")
-check(#registered[12].initializer.modify == 0, "a row with nothing to gate carries no predicate")
+check(#registered[11].initializer.modify == 0, "a row with nothing to gate carries no predicate")
 local questsRow
 for _, entry in ipairs(registered) do
 	if entry.initializer.setting == quests then
@@ -494,15 +492,9 @@ byKey.showEntrances:SetValue(false)
 check(LegacyForeverDB.showEntrances == false and not Saved.Get("showEntrances"), "the entrances row saves")
 check(heard[#heard] == "second showEntrances", "and tells the listeners, which redraw the map")
 
-check(byKey.trackerAttached:GetValue() == true, "shared tracker starts attached")
-byKey.trackerAttached:SetValue(false)
-check(not byKey.trackerAttached:GetValue(), "toggle detaches shared tracker")
-check(notified[#notified] == "LegacyForever_trackerAttached", "change notifies proxy")
-trackerState.attached = true
-attachmentChanged()
-check(byKey.trackerAttached:GetValue(), "other addon updates same shared state")
+check(byKey.trackerAttached == nil, "no attach row: the shared tracker always pins beside the game's")
 
--- Lock starts off, sits under the attach row, and drives the shared host rather than a copy of its own.
+-- Lock starts off, drives the shared host rather than a copy of its own.
 check(byKey.trackerLocked:GetValue() == false, "shared tracker starts unlocked")
 byKey.trackerLocked:SetValue(true)
 check(trackerState.locked == true and byKey.trackerLocked:GetValue(), "locking writes the shared host state")

@@ -102,57 +102,30 @@ AddCheckbox(
 local tracker = Section(category, L["Objective tracker"])
 AddCheckbox(tracker, "showTracker", L["Tracked Legacy challenges"])
 local host = ForeverCore.TrackerHost
-if host and host.GetSettings and host.SetAttached and host.OnAttachmentChanged then
-	local variable = PREFIX .. "trackerAttached"
-	local attachment = Settings.RegisterProxySetting(
+if host and host.GetSettings and host.SetLocked then
+	-- Lock keeps the detached column where it is: the grip ignores drag while it is on. It only writes the saved
+	-- switch, so it is safe to toggle in combat.
+	local lock = Settings.RegisterProxySetting(
 		tracker,
-		variable,
+		PREFIX .. "trackerLocked",
 		Settings.VarType.Boolean,
-		L["Attach to quest tracker"],
-		true,
+		L["Lock the tracker"],
+		false,
 		function()
-			return host.GetSettings().attached
+			return host.GetSettings().locked == true
 		end,
 		function(value)
-			host.SetAttached(value)
+			host.SetLocked(value == true)
 		end
 	)
 	Settings.RegisterInitializer(
 		tracker,
 		Settings.CreateCheckboxInitializer(
-			attachment,
+			lock,
 			nil,
-			L["Turn this off to drag the shared Forever tracker anywhere on screen."]
+			L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."]
 		)
 	)
-	host.OnAttachmentChanged(function()
-		Settings.NotifyUpdate(variable)
-	end)
-	-- Lock keeps the detached column where it is: the grip ignores drag while it is on. It only writes the saved
-	-- switch, so it is safe to toggle in combat.
-	if host.SetLocked then
-		local lock = Settings.RegisterProxySetting(
-			tracker,
-			PREFIX .. "trackerLocked",
-			Settings.VarType.Boolean,
-			L["Lock the tracker"],
-			false,
-			function()
-				return host.GetSettings().locked == true
-			end,
-			function(value)
-				host.SetLocked(value == true)
-			end
-		)
-		Settings.RegisterInitializer(
-			tracker,
-			Settings.CreateCheckboxInitializer(
-				lock,
-				nil,
-				L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."]
-			)
-		)
-	end
 end
 
 -- Named in full: this page has no "Zone completion" title above the row, as the map menu has, and the Legacy

@@ -41,7 +41,6 @@ L["Account quest completion is unavailable on this client. Only this character's
 	"Account quest completion is unavailable on this client. Only this character's quests count."
 L["Already complete"] = "Already complete"
 L["Areas explored"] = "Areas explored"
-L["Attach to quest tracker"] = "Attach to quest tracker"
 L["Click the zone to see where."] = "Click the zone to see where."
 L["Click to collapse."] = "Click to collapse."
 L["Click to expand."] = "Click to expand."
@@ -104,8 +103,6 @@ L["This version of QuestieDB isn't supported."] = "This version of QuestieDB isn
 L["Tracked Legacy challenges"] = "Tracked Legacy challenges"
 L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
 	"Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"Turn this off to drag the shared Forever tracker anywhere on screen."
 L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
 	"Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."
 L["Undiscovered area"] = "Undiscovered area"

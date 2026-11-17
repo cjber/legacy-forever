@@ -6,4 +6,5 @@
 
 ### Removed
 
+- **The "Attach to quest tracker" switch.** The Forever tracker column always sits beside the game's tracker now, so the switch did nothing. "Lock the tracker" stays.
 - **The Forever addons page and the suggestions to install my other addons.** The page, its "Suggest my other Forever addons" switch (settings and map menu), and the grey lines on pins and zone completion tooltips are gone.

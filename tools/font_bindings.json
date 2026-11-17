@@ -45,7 +45,7 @@
     },
     {
       "source": "UI/Settings.lua",
-      "sha256": "119019b0fee5c64efd90a091b5e8c0a23825ec5966635e421ba4e67a36809f7c",
+      "sha256": "b9d4a7f8c5142b2226cdfa954a6a4a49cf0ddd2923e6654ab23a8f2e370eef5c",
       "review": "Read AddCheckbox, IndexButton, Section, every registration and Completion.Label/status callers. Labels and Open are arguments to Blizzard settings initializers; this file creates no FontString and establishes no exact widget FontObject. These helper arguments and tooltip descriptions are excluded rather than assigned an assumed settings font.",
       "bindings": []
     },
