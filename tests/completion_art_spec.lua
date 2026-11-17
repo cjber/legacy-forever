@@ -268,6 +268,11 @@ local ns = {
 	},
 }
 ForeverCore = {
+	TrackerLine = {
+		SetHeaderTooltip = function(module)
+			module.OnBlockHeaderEnter = function() end
+		end,
+	},
 	Family = { Hint = function() end },
 	OpenMap = function() end,
 	ContextMenu = function() end,

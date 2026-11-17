@@ -44,7 +44,6 @@ L["Attach to quest tracker"] = "An Questverfolgung anheften"
 L["Click the zone to see where."] = "Klickt auf die Zone, um zu sehen, wo."
 L["Click to collapse."] = "Klicken zum Einklappen."
 L["Click to expand."] = "Klicken zum Ausklappen."
-L["Click to open the map. Right-click for options."] = "Klicken öffnet die Karte. Rechtsklick für Optionen."
 L["Click to set a waypoint here."] = "Klicken setzt hier eine Kartenmarkierung."
 L["Click to track, with live progress."] = "Klicken zum Verfolgen, mit aktuellem Fortschritt."
 L["Click to travel here with Shortest Path Forever."] = "Klicken, um mit Shortest Path Forever hierher zu reisen."
@@ -60,7 +59,6 @@ L["Shades each undiscovered area's real ground, with a pin at its edge. Areas wi
 	"Schattiert den echten Boden jedes unentdeckten Gebiets, mit einer Markierung am Rand. Gebiete ohne Geländedaten behalten die Schattierung."
 L["Count quests finished by your other characters."] =
 	"Zähle Quests, die deine anderen Charaktere abgeschlossen haben." -- mt
-L["Hide from the tracker"] = "In der Verfolgung ausblenden"
 L["In the objective tracker"] = "In der Questzielverfolgung"
 L["Install AtlasLoot for recommended levels."] = "Installiert AtlasLoot für empfohlene Stufen."
 L["Install Shortest Path Forever to have the route plotted for you."] =
@@ -135,3 +133,10 @@ L["Count quests completed by any character. The quests counted still match this 
 
 L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"Accountweiter Questabschluss ist auf diesem Client nicht verfügbar. Nur die Quests dieses Charakters zählen." -- mt
+
+L["Tracked Legacy challenges"] = "Verfolgte Legacy-Herausforderungen" -- mt
+L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
+	"Unter Einstellungen > AddOns > Legacy Forever > Zielverfolgung wieder einschalten." -- mt
+L["open the Legacy panel"] = "das Legacy-Fenster öffnen" -- mt
+L["open the map"] = "die Karte öffnen" -- mt
+L["The current zone is not known yet."] = "Die aktuelle Zone ist noch nicht bekannt." -- mt

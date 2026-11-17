@@ -75,9 +75,17 @@ ForeverCore.ContextMenu = function(owner, generator)
 	return menu
 end
 ForeverCore.TrackerHost = {
-	Attach = noop,
+	Attach = function(module, show, contract)
+		module.show = show
+		module.contract = contract
+	end,
 	IsAttached = function()
 		return true
+	end,
+}
+ForeverCore.TrackerLine = {
+	SetHeaderTooltip = function(module)
+		module.OnBlockHeaderEnter = noop
 	end,
 }
 ForeverCore.Family = {
@@ -235,6 +243,7 @@ trackerEnv._G = trackerEnv
 
 local trackerNs = BaseNamespace()
 trackerNs.Saved = {
+	OnChange = noop,
 	LegacyTrackerSettings = function()
 		return nil
 	end,
@@ -244,6 +253,9 @@ trackerNs.SavedTable = function()
 	return {}
 end
 trackerNs.Model = {
+	TrackedChallenge = function()
+		return 10
+	end,
 	TrackedBlocks = function()
 		return {}
 	end,
@@ -255,22 +267,50 @@ trackerNs.Live = {
 	end,
 	ShowInLegacyPanel = noop,
 	LockPanelEntry = noop,
+	Visible = function()
+		return {}
+	end,
 }
 setfenv(assert(loadfile("UI/Tracker.lua")), trackerEnv)("LegacyForever", trackerNs)
 local legacyTracker = trackerModules[1]
 check(legacyTracker ~= nil, "the Legacy tracker section is made")
 
-local block = { id = 10 }
-Reset()
-legacyTracker:OnBlockHeaderClick(block, "RightButton")
-check(
-	#menus == 1 and menus[1].owner == legacyTracker,
-	"the Legacy tracker opens its menu through ForeverCore on the tracker"
-)
-check(#errors == 0, "and says nothing")
+local function CheckContract(module, title, open, ending, id)
+	local slots, callbacks = {}, {}
+	local builder = {}
+	for _, slot in ipairs({ "Title", "Open", "End" }) do
+		builder[slot] = function(_, label, callback)
+			slots[#slots + 1] = slot .. ":" .. label
+			callbacks[slot] = callback
+		end
+	end
+	module.contract.menu({ kind = "block", id = id, module = module }, builder)
+	check(
+		table.concat(slots, "|") == "Title:" .. title .. "|Open:" .. open .. (ending and "|End:" .. ending or ""),
+		"block menu declares ordered actions"
+	)
+	if callbacks.End then
+		callbacks.End()
+	end
+	slots = {}
+	module.contract.menu({ kind = "section", module = module }, builder)
+	check(slots[1]:match("^Title:"), "section menu has a title")
+	check(
+		type(module.contract.click) == "function" and type(module.contract.clickHint) == "function",
+		"click contract is complete"
+	)
+	check(type(module.show.where) == "string", "hide explains where to restore the section")
+end
+CheckContract(legacyTracker, "Challenge", "Open in the Legacy panel", "Stop tracking", 10)
 
 local completionModule
+local zoneShown = true
 local completionEnv = setmetatable({
+	C_Map = {
+		GetMapInfo = function()
+			return { name = "Test map" }
+		end,
+	},
 	DUNGEONS = "Dungeons",
 	RAIDS = "Raids",
 	QUESTS_LABEL = "Quests",
@@ -326,9 +366,12 @@ completionNs.ZoneCompletion = {
 }
 completionNs.Saved = {
 	Get = function()
-		return true
+		return zoneShown
 	end,
-	Set = noop,
+	Set = function(key, value)
+		assert(key == "tracker")
+		zoneShown = value
+	end,
 }
 completionNs.Live = {
 	Visible = function()
@@ -347,8 +390,8 @@ completionNs.Quests = {
 	end,
 }
 completionNs.Tracker = {
-	AddModule = function(name, mixin, uiOrder)
-		local module = { name = name, uiOrder = uiOrder, Header = {} }
+	AddModule = function(name, mixin, uiOrder, show, contract)
+		local module = { name = name, uiOrder = uiOrder, Header = {}, show = show, contract = contract }
 		for key, value in pairs(mixin) do
 			module[key] = value
 		end
@@ -364,13 +407,15 @@ completionNs.Tracker = {
 setfenv(assert(loadfile("UI/Completion.lua")), completionEnv)("LegacyForever", completionNs)
 check(completionModule ~= nil, "the zone tracker section is made")
 
-Reset()
-completionModule:OnBlockHeaderClick(block, "RightButton")
+CheckContract(completionModule, "Test map", "Open the map", nil, 10)
+completionModule.show.set(false)
+completionModule.show.set(false)
+check(not zoneShown, "hiding twice does not show the zone section")
+local accepted, reason = completionModule.contract.click({ kind = "section" }, "LeftButton")
 check(
-	#menus == 1 and menus[1].owner == completionModule,
-	"the zone tracker opens its menu through ForeverCore on the tracker"
+	accepted == false and reason == "The current zone is not known yet.",
+	"an unknown zone explains a refused map open"
 )
-check(#errors == 0, "and says nothing")
 
 --[[ The source guard: no addon file opens a Blizzard menu directly, and the map button wraps its own OpenMenu ]]
 
@@ -397,9 +442,6 @@ for _, path in ipairs(AddonFiles()) do
 	end
 end
 check(#menusOutsideCore == 0, "no addon file opens a context menu directly: " .. table.concat(menusOutsideCore, ", "))
-for _, path in ipairs({ "UI/Completion.lua", "UI/Tracker.lua" }) do
-	check(Code(Read(path)):find("ForeverCore.ContextMenu(", 1, true) ~= nil, path .. " uses ForeverCore's menu")
-end
 local mapSource = Code(Read("UI/Map.lua"))
 check(mapSource:find("local open = self.OpenMenu", 1, true) ~= nil, "the map button captures the client's OpenMenu")
 check(mapSource:find("self.OpenMenu = function(", 1, true) ~= nil, "and replaces it with the gamepad-aware wrapper")

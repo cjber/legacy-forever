@@ -91,6 +91,7 @@ ForeverCore = dofile("tests/forever_core.lua").install(_G, {
 	"UI/ContextMenu.lua",
 	"UI/Credits.lua",
 	"UI/MapCanvas.lua",
+	"UI/TrackerSection.lua",
 	"Expose.lua",
 })
 -- A core from before the kit's minor 2: APIKit has no Publish, so the API's guard leaves it unpublished rather than
@@ -177,7 +178,10 @@ function ns.Print(msg)
 end
 local zoneTracker
 ns.Tracker = {
-	AddModule = function(_, mixin)
+	AddModule = function(_, mixin, _, _, contract)
+		mixin.OnBlockHeaderClick = function(_, block, button)
+			contract.click({ kind = "block", id = block.id }, button)
+		end
 		zoneTracker = mixin
 		return nil
 	end,
@@ -797,7 +801,7 @@ local function ZoneTooltip(source)
 	for index, line in ipairs(drawn) do
 		if line == AGF_LINE then
 			found = found + 1
-			check(index == #drawn - 1, "the line sits under the counts, above the click hint")
+			check(index == #drawn - (source == "corner" and 1 or 0), "the suggestion stays under the counts")
 		end
 	end
 	return found

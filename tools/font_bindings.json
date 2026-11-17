@@ -3,7 +3,7 @@
   "producers": [
     {
       "source": "UI/Tracker.lua",
-      "sha256": "9e7ab50a5cb58ef10376ca289dc4149ed8afb2c68d4f78ac9c6e4ae6bfcc31ac",
+      "sha256": "a9017d8ba740c7d9a0d3d4ad15eb991b5d0d9cae61dbbe3c1173305138b93688",
       "review": "Read module construction, LayoutContents, AddModule, Attach and their callers in Completion.lua. Pinned client Blizzard_ObjectiveTrackerModule.xml gives ObjectiveTrackerModuleTemplate.Header the ObjectiveTrackerModuleHeaderTemplate, whose Text inherits ObjectiveTrackerHeaderFont; Blizzard_ObjectiveTrackerModule.lua SetHeader only sets that Text. TrackerHost attachment does not set its font. Legacy is the sole localized header phrase; block names and objective text come from live game data. Menus and chat warnings are excluded. Coverage uses the pinned native FontObject; client tracker text-size settings and external addon font overrides are outside this contract.",
       "bindings": [
         {
@@ -15,7 +15,7 @@
     },
     {
       "source": "UI/Completion.lua",
-      "sha256": "3024b2155646e1bf2b3b4ee460d0b978aee486fa8222bc737ed4310c98ed7fef",
+      "sha256": "824e9b678882f6a5875411c00556bf6123b157b011c28981408e36f7cc64934b",
       "review": "Read tracker LayoutContents, overlay creation and Refresh, LABELS and their Settings.lua callers, tooltip and menu builders, ContinentText and SetUpToast. Pinned client Blizzard_FrameXML/Mainline/AlertFrameSystems.xml CriteriaAlertFrameTemplate declares Unlocked with GameFontBlackTiny; its AlertFrameTemplate inheritance and queued alert setup introduce no Unlocked font override. SetUpToast sets Zone complete on Unlocked without a later font change. Name is a game zone name. Overlay Title and Counts use Completion.xml fonts but contain game names, percentages and numeric counts, not localized labels. Tracker text is also dynamic. LABELS flow to tooltips, menus and settings helper arguments and are excluded, as are status tooltips and chat output.",
       "bindings": [
         {
@@ -45,7 +45,7 @@
     },
     {
       "source": "UI/Settings.lua",
-      "sha256": "f1cba2c6546dbba0f736a52523c45319fb03a40033b37372079fa979d5c7f22f",
+      "sha256": "fc11f5ee660ff8fe191644b0e7fc34ca5abfed085c298cb98313fd10518909da",
       "review": "Read AddCheckbox, IndexButton, Section, every registration and Completion.Label/status callers. Labels and Open are arguments to Blizzard settings initializers; this file creates no FontString and establishes no exact widget FontObject. Shared family text delegates to ForeverCore.Family.Register. These helper arguments, delegated family text and tooltip descriptions are excluded rather than assigned an assumed settings font.",
       "bindings": []
     },

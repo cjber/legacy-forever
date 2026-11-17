@@ -52,8 +52,6 @@ L["Attach to quest tracker"] = "Прикрепить к отслеживанию
 L["Click the zone to see where."] = "Щелкните по зоне, чтобы увидеть где."
 L["Click to collapse."] = "Щелкните, чтобы свернуть."
 L["Click to expand."] = "Щелкните, чтобы развернуть."
-L["Click to open the map. Right-click for options."] =
-	"Щелкните, чтобы открыть карту. Правый щелчок – настройки."
 L["Click to set a waypoint here."] =
 	"Щелкните, чтобы поставить здесь точку на карте."
 L["Click to track, with live progress."] =
@@ -70,7 +68,6 @@ L["Flight paths"] = "Маршруты полетов"
 L["Forever addons"] = "Модификации Forever"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Затеняет настоящую землю каждой неоткрытой области и ставит метку на её краю. Области без данных о местности сохраняют затемнение."
-L["Hide from the tracker"] = "Скрыть из отслеживания"
 L["In the objective tracker"] = "В отслеживании целей"
 L["Install AtlasLoot for recommended levels."] =
 	"Установите AtlasLoot, чтобы увидеть рекомендуемые уровни."
@@ -148,3 +145,10 @@ L["Count quests completed by any character. The quests counted still match this 
 
 L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"Данные о выполнении заданий на учётной записи недоступны в этом клиенте. Учитываются только задания этого персонажа." -- mt
+
+L["Tracked Legacy challenges"] = "Отслеживаемые испытания Legacy" -- mt
+L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
+	"Включите снова в настройках: Модификации > Legacy Forever > Отслеживание заданий." -- mt
+L["open the Legacy panel"] = "открыть панель Legacy" -- mt
+L["open the map"] = "открыть карту" -- mt
+L["The current zone is not known yet."] = "Текущая зона пока неизвестна." -- mt

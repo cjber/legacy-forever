@@ -46,7 +46,6 @@ L["Attach to quest tracker"] = "Attacher au suivi des quêtes"
 L["Click the zone to see where."] = "Cliquez sur la zone pour voir où."
 L["Click to collapse."] = "Cliquez pour réduire."
 L["Click to expand."] = "Cliquez pour développer."
-L["Click to open the map. Right-click for options."] = "Cliquez pour ouvrir la carte. Clic droit pour les options."
 L["Click to set a waypoint here."] = "Cliquez pour placer un point de repère ici."
 L["Click to track, with live progress."] = "Cliquez pour suivre, avec progression en direct."
 L["Click to travel here with Shortest Path Forever."] = "Cliquez pour voyager ici avec Shortest Path Forever."
@@ -60,7 +59,6 @@ L["Flight paths"] = "Points de vol"
 L["Forever addons"] = "Addons Forever"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Ombre le terrain réel de chaque zone non découverte, avec un repère à son bord. Les zones sans données de terrain gardent l'ombrage." -- mt
-L["Hide from the tracker"] = "Masquer du suivi"
 L["In the objective tracker"] = "Dans le suivi des objectifs"
 L["Install AtlasLoot for recommended levels."] = "Installez AtlasLoot pour afficher les niveaux recommandés."
 L["Install Shortest Path Forever to have the route plotted for you."] =
@@ -135,3 +133,10 @@ L["Count quests completed by any character. The quests counted still match this 
 
 L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"La progression des quêtes du compte est indisponible sur ce client. Seules les quêtes de ce personnage comptent." -- mt
+
+L["Tracked Legacy challenges"] = "Défis Legacy suivis" -- mt
+L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
+	"Réactivez cette section dans Options > AddOns > Legacy Forever > Suivi des objectifs." -- mt
+L["open the Legacy panel"] = "ouvrir le panneau Legacy" -- mt
+L["open the map"] = "ouvrir la carte" -- mt
+L["The current zone is not known yet."] = "La zone actuelle n’est pas encore connue." -- mt

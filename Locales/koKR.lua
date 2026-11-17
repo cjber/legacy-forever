@@ -49,8 +49,6 @@ L["Attach to quest tracker"] = "퀘스트 추적기에 붙이기"
 L["Click the zone to see where."] = "지역을 클릭하면 위치를 볼 수 있습니다."
 L["Click to collapse."] = "클릭하여 접기"
 L["Click to expand."] = "클릭하여 펼치기"
-L["Click to open the map. Right-click for options."] =
-	"클릭하면 지도를 엽니다. 오른쪽 클릭하면 설정을 엽니다."
 L["Click to set a waypoint here."] = "클릭하여 여기에 지도 핀을 꽂습니다."
 L["Click to track, with live progress."] =
 	"클릭하여 추적합니다. 진행 상황이 실시간으로 표시됩니다."
@@ -66,7 +64,6 @@ L["Flight paths"] = "비행 경로"
 L["Forever addons"] = "Forever 애드온"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"미발견 지역의 실제 지형을 음영으로 표시하고 가장자리에 핀을 표시합니다. 지형 데이터가 없는 지역은 음영 표시를 유지합니다."
-L["Hide from the tracker"] = "추적기에서 숨기기"
 L["In the objective tracker"] = "목표 추적기에서"
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요."
 L["Install Shortest Path Forever to have the route plotted for you."] =
@@ -142,3 +139,10 @@ L["Count quests completed by any character. The quests counted still match this 
 
 L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"이 클라이언트에서는 계정 퀘스트 완료 정보를 사용할 수 없습니다. 이 캐릭터의 퀘스트만 집계합니다." -- mt
+
+L["Tracked Legacy challenges"] = "추적 중인 Legacy 도전" -- mt
+L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
+	"설정 > 애드온 > Legacy Forever > 목표 추적기에서 다시 켤 수 있습니다." -- mt
+L["open the Legacy panel"] = "Legacy 창 열기" -- mt
+L["open the map"] = "지도 열기" -- mt
+L["The current zone is not known yet."] = "현재 지역을 아직 알 수 없습니다." -- mt

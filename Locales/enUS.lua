@@ -23,3 +23,10 @@ ns.L["Count quests completed by any character. The quests counted still match th
 ns.L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"Account quest completion is unavailable on this client. Only this character's quests count."
 ns.L["Count quests finished by your other characters."] = "Count quests finished by your other characters."
+
+ns.L["Tracked Legacy challenges"] = "Tracked Legacy challenges"
+ns.L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
+	"Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."
+ns.L["open the Legacy panel"] = "open the Legacy panel"
+ns.L["open the map"] = "open the map"
+ns.L["The current zone is not known yet."] = "The current zone is not known yet."

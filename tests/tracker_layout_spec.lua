@@ -42,6 +42,10 @@ env.ForeverCore = {
 local lines = {}
 local ns = {
 	Saved = {
+		OnChange = noop,
+		Get = function()
+			return true
+		end,
 		LegacyTrackerSettings = function()
 			return nil
 		end,

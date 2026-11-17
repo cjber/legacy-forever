@@ -19,6 +19,7 @@ ns.Saved = Saved
 
 -- Every switch's saved key: the top-level switches, then the ones under zoneCompletion (DEFAULTS below).
 ---@alias LegacySwitchKey
+---| 'showTracker'
 ---| 'showAreas'
 ---| 'showOutlines'
 ---| 'showEntrances'
@@ -43,6 +44,7 @@ ns.Saved = Saved
 local DEFAULTS = {
 	-- The shading is the quickest way to see what a zone still hides.
 	showAreas = true,
+	showTracker = true,
 	-- The terrain fill names each area's real ground, but only where the client's terrain has it, so it waits
 	-- to be asked for.
 	showOutlines = false,

@@ -102,6 +102,7 @@ AddCheckbox(
 )
 
 local tracker = Section(category, L["Objective tracker"])
+AddCheckbox(tracker, "showTracker", L["Tracked Legacy challenges"])
 local host = ForeverCore.TrackerHost
 if host and host.GetSettings and host.SetAttached and host.OnAttachmentChanged then
 	local variable = PREFIX .. "trackerAttached"

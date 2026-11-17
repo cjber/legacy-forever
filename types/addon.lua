@@ -178,6 +178,7 @@
 ---@alias LegacySettings table<string, boolean>
 
 ---@class LegacyDefaults
+---@field showTracker boolean
 ---@field showAreas boolean
 ---@field showEntrances boolean
 ---@field whatsNew boolean
@@ -191,6 +192,7 @@
 ---@field tracked? LegacyTrackingKey[]
 ---@field zoneCompletion? LegacySettings
 ---@field flightPaths? table<string, LegacyFlightRecord>
+---@field showTracker? boolean
 ---@field showAreas? boolean
 ---@field showEntrances? boolean
 ---@field whatsNew? boolean
