@@ -36,8 +36,6 @@ L["/lf issue - report a bug or request a feature with a ready-made GitHub issue 
 	"/lf issue - erstellt einen fertigen GitHub-Issue-Link für Fehlermeldungen und Funktionswünsche"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - zeigt einen Bericht zum Kopieren in eine Fehlermeldung"
-L["Adventure Guide Forever routes the quests left in this zone."] =
-	"Adventure Guide Forever plant eine Route durch die übrigen Quests dieser Zone."
 L["Already complete"] = "Bereits abgeschlossen"
 L["Areas explored"] = "Erkundete Gebiete"
 L["Attach to quest tracker"] = "An Questverfolgung anheften"
@@ -54,15 +52,12 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"Jede Quest dieser Zone, die dieser Charakter annehmen kann, laut Questie."
 L["Flight paths"] = "Flugrouten"
-L["Forever addons"] = "Forever-Addons"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Schattiert den echten Boden jedes unentdeckten Gebiets, mit einer Markierung am Rand. Gebiete ohne Geländedaten behalten die Schattierung."
 L["Count quests finished by your other characters."] =
 	"Zähle Quests, die deine anderen Charaktere abgeschlossen haben." -- mt
 L["In the objective tracker"] = "In der Questzielverfolgung"
 L["Install AtlasLoot for recommended levels."] = "Installiert AtlasLoot für empfohlene Stufen."
-L["Install Shortest Path Forever to have the route plotted for you."] =
-	"Installiert Shortest Path Forever, damit die Route für Euch geplant wird."
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"Hält die gemeinsame Forever-Verfolgung dort, wo Ihr sie hingelegt habt. Der Griff oben zieht sie nicht mehr."
 L["Legacy"] = "Vermächtnis"
@@ -92,13 +87,10 @@ L["Recommended levels: %s (AtlasLoot)"] = "Empfohlene Stufen: %s (AtlasLoot)"
 L["Repeatable, holiday and profession quests are left out."] =
 	"Wiederholbare, Feiertags- und Berufsquests zählen nicht."
 L["Reputations (Friendly)"] = "Ruf (Freundlich)"
-L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
-	"Zeigt eine unauffällige Zeile, wo eines meiner anderen Forever-Addons helfen würde. Nur für Addons, die Ihr nicht habt."
 L["Show dungeon and raid entrances"] = "Dungeon- und Schlachtzugseingänge anzeigen"
 L["Show undiscovered areas"] = "Unentdeckte Gebiete anzeigen"
 L["Show where to discover areas"] = "Zeige, wo Gebiete zu entdecken sind"
 L["Stop tracking"] = "Nicht mehr verfolgen"
-L["Suggest my other Forever addons"] = "Meine anderen Forever-Addons vorschlagen"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Eure aktuelle Zone und was dort noch zu tun ist. Verfolgte Herausforderungen behalten ihren eigenen Vermächtnisbereich."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
@@ -110,7 +102,6 @@ L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"Deaktiviert dies, um die gemeinsame Forever-Verfolgung frei auf dem Bildschirm zu verschieben."
 L["Undiscovered area"] = "Unentdecktes Gebiet"
-L["Updates"] = "Aktualisierungen"
 L["Waiting for Questie and your quest log."] = "Warte auf Questie und Euer Questlog."
 L["Waiting for Questie to finish loading."] = "Warte, bis Questie fertig geladen ist."
 L["What counts"] = "Was zählt"
@@ -118,6 +109,7 @@ L["What's new after an update"] = "Neuerungen nach einem Update"
 L["World map"] = "Weltkarte"
 L["Zone complete"] = "Zone abgeschlossen"
 L["Zone completion"] = "Zonenfortschritt"
+L["Zone completion on the map"] = "Zonenfortschritt auf der Karte"
 L["Zone completion in the tracker"] = "Zonenfortschritt in der Verfolgung"
 L["and %d more"] = "und %d weitere"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =

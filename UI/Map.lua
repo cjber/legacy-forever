@@ -95,10 +95,6 @@ local function AddOutlineTooltip(tooltip, area, yards, clickable)
 	end
 	if clickable then
 		GameTooltip_AddInstructionLine(tooltip, ns.NavigateHint())
-		local companion = ns.CompanionHint()
-		if companion then
-			GameTooltip_AddDisabledLine(tooltip, companion)
-		end
 	end
 end
 
@@ -310,15 +306,6 @@ local function BuildMenu(root, uiMapID)
 	ns.Live.LockPanelEntry(root:CreateButton(L["Open the Legacy panel"], ToggleLegacySystemUI))
 	root:CreateDivider()
 	root:CreateCheckbox(L["What's new after an update"], ns.Saved.Get, ToggleSetting, "whatsNew")
-	local family =
-		root:CreateCheckbox(L["Suggest my other Forever addons"], ns.Saved.Get, ToggleSetting, "suggestFamily")
-	family:SetTooltip(function(tooltip)
-		GameTooltip_SetTitle(tooltip, L["Suggest my other Forever addons"])
-		GameTooltip_AddNormalLine(
-			tooltip,
-			L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."]
-		)
-	end)
 end
 
 ---@class LegacyForeverMapButtonMixin : DropdownButton
@@ -515,10 +502,6 @@ function ObjectivePin:OnMouseEnter()
 		AddPinTooltip(GameTooltip, self.group, self.objective)
 		if self:Destination() then
 			GameTooltip_AddInstructionLine(GameTooltip, ns.NavigateHint())
-			local companion = ns.CompanionHint()
-			if companion then
-				GameTooltip_AddDisabledLine(GameTooltip, companion)
-			end
 		end
 	end
 	GameTooltip:Show()

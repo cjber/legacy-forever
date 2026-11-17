@@ -41,8 +41,6 @@ L["/lf issue - report a bug or request a feature with a ready-made GitHub issue 
 	"/lf issue - 오류 제보나 기능 요청에 바로 쓸 수 있는 GitHub 이슈 링크를 만듭니다"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - 오류 제보에 붙여 넣을 보고서를 표시합니다"
-L["Adventure Guide Forever routes the quests left in this zone."] =
-	"Adventure Guide Forever는 이 지역에 남은 퀘스트의 경로를 짜 줍니다."
 L["Already complete"] = "이미 완료됨"
 L["Areas explored"] = "탐험한 구역"
 L["Attach to quest tracker"] = "퀘스트 추적기에 붙이기"
@@ -61,13 +59,10 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"이 캐릭터가 이 지역에서 받을 수 있는 모든 퀘스트(Questie 기준)."
 L["Flight paths"] = "비행 경로"
-L["Forever addons"] = "Forever 애드온"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"미발견 지역의 실제 지형을 음영으로 표시하고 가장자리에 핀을 표시합니다. 지형 데이터가 없는 지역은 음영 표시를 유지합니다."
 L["In the objective tracker"] = "목표 추적기에서"
 L["Install AtlasLoot for recommended levels."] = "권장 레벨을 보려면 AtlasLoot를 설치하세요."
-L["Install Shortest Path Forever to have the route plotted for you."] =
-	"Shortest Path Forever를 설치하면 경로를 대신 짜 줍니다."
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"공유 Forever 추적기를 놓은 자리에 유지합니다. 위쪽 손잡이로 더 이상 끌 수 없습니다."
 L["Legacy"] = "유산"
@@ -98,13 +93,10 @@ L["Recommended levels: %s (AtlasLoot)"] = "권장 레벨: %s (AtlasLoot)"
 L["Repeatable, holiday and profession quests are left out."] =
 	"반복 가능, 축제, 전문 기술 퀘스트는 제외됩니다."
 L["Reputations (Friendly)"] = "평판 (약간 우호적)"
-L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
-	"제 다른 Forever 애드온이 도움이 될 만한 곳에 조용히 한 줄을 표시합니다. 설치하지 않은 애드온만 해당됩니다."
 L["Show dungeon and raid entrances"] = "던전 및 공격대 입구 표시"
 L["Show undiscovered areas"] = "발견하지 않은 구역 표시"
 L["Show where to discover areas"] = "발견할 지역 위치 표시"
 L["Stop tracking"] = "추적 해제"
-L["Suggest my other Forever addons"] = "제 다른 Forever 애드온 추천"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
@@ -116,7 +108,6 @@ L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"끄면 공용 Forever 추적기를 화면 어디로든 끌어 옮길 수 있습니다."
 L["Undiscovered area"] = "발견하지 않은 구역"
-L["Updates"] = "업데이트"
 L["Waiting for Questie and your quest log."] = "Questie와 퀘스트 목록을 기다리는 중입니다."
 L["Waiting for Questie to finish loading."] = "Questie 불러오기가 끝나기를 기다리는 중입니다."
 L["What counts"] = "집계 항목"
@@ -124,6 +115,7 @@ L["What's new after an update"] = "업데이트 후 신규 내용"
 L["World map"] = "세계 지도"
 L["Zone complete"] = "지역 완료"
 L["Zone completion"] = "지역 완료도"
+L["Zone completion on the map"] = "지도에 지역 진행도 표시"
 L["Zone completion in the tracker"] = "추적기에 지역 완료도 표시"
 L["and %d more"] = "외 %d개"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =

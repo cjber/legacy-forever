@@ -35,8 +35,6 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
 	"/lf issue - 生成可直接使用的 GitHub issue 链接，用于报告错误或提出功能建议"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 显示可复制到错误报告中的报告"
-L["Adventure Guide Forever routes the quests left in this zone."] =
-	"Adventure Guide Forever会为此地区剩余的任务规划路线。"
 L["Already complete"] = "已完成"
 L["Areas explored"] = "已探索区域"
 L["Attach to quest tracker"] = "附加到任务追踪栏"
@@ -53,13 +51,10 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"此角色在该地区可接的所有任务，数据来自Questie。"
 L["Flight paths"] = "飞行路线"
-L["Forever addons"] = "Forever插件"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"以阴影显示每个未探索区域的真实地形，并在边缘放置图钉。没有地形数据的区域仍然使用阴影。"
 L["In the objective tracker"] = "在目标追踪栏中"
 L["Install AtlasLoot for recommended levels."] = "安装AtlasLoot以查看推荐等级。"
-L["Install Shortest Path Forever to have the route plotted for you."] =
-	"安装Shortest Path Forever即可为你规划路线。"
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"将共享的 Forever 追踪器保持在您放置的位置。顶部的拖拽手柄不再移动它。"
 L["Legacy"] = "传承"
@@ -88,13 +83,10 @@ L["Quest"] = "任务"
 L["Recommended levels: %s (AtlasLoot)"] = "推荐等级：%s（AtlasLoot）"
 L["Repeatable, holiday and profession quests are left out."] = "不计入可重复、节日和专业任务。"
 L["Reputations (Friendly)"] = "声望（友善）"
-L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
-	"在我的其他Forever插件能帮上忙的地方显示一行不显眼的提示。仅限你尚未安装的插件。"
 L["Show dungeon and raid entrances"] = "显示地下城和团队副本入口"
 L["Show undiscovered areas"] = "显示未发现的区域"
 L["Show where to discover areas"] = "显示可探索区域的位置"
 L["Stop tracking"] = "取消追踪"
-L["Suggest my other Forever addons"] = "推荐我的其他Forever插件"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地区以及那里剩余的事项。你追踪的挑战保留在各自的传承区块中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
@@ -106,7 +98,6 @@ L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"关闭后可将共用的Forever追踪栏拖到屏幕上任意位置。"
 L["Undiscovered area"] = "未发现的区域"
-L["Updates"] = "更新"
 L["Waiting for Questie and your quest log."] = "正在等待Questie和你的任务日志。"
 L["Waiting for Questie to finish loading."] = "正在等待Questie加载完毕。"
 L["What counts"] = "计入内容"
@@ -114,6 +105,7 @@ L["What's new after an update"] = "更新后的新内容"
 L["World map"] = "世界地图"
 L["Zone complete"] = "地区已完成"
 L["Zone completion"] = "地区完成度"
+L["Zone completion on the map"] = "地图上的区域完成度"
 L["Zone completion in the tracker"] = "在追踪栏中显示地区完成度"
 L["and %d more"] = "以及另外%d个"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =

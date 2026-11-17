@@ -18,10 +18,8 @@ Things reached indirectly: none of them is dead code, even when no file calls it
   `Core/Require.lua`, `Data/Legacy.lua, Data/Explore.lua, Core, Art, Saved, WhatsNew, Model, Live, Quests, Navigate,
   ZoneCompletion, Tracker, Completion, Settings, MapContents, Shading, UI/Map.xml, Map, API, Report`; never reorder as formatting.
 - `## SavedVariables: LegacyForeverDB`: persisted keys `tracked`, `zoneCompletion`,
-  `flightPaths`, `showAreas`, `showOutlines`, `showEntrances`, `whatsNew`, `lastVersion`, named only in `Core/Saved.lua`, and `suggestFamily` (default
-  in `Core/Saved.lua`) and `familyDismissed`, which ForeverCore's family page also reads and writes through `ns.FamilyDB()`;
-  old keys in players' saved data are compatibility obligations (`companions`, pre-0.8, is migrated to `suggestFamily` once
-  and dropped, `trackerHost` is offered once to ForeverCore's tracker host and then dropped, and `peerStats` and
+  `flightPaths`, `showAreas`, `showOutlines`, `showEntrances`, `whatsNew`, `lastVersion`, named only in `Core/Saved.lua`;
+  old keys in players' saved data are compatibility obligations (`companions`, `suggestFamily` and `familyDismissed`, the family suggestions' old keys, are dropped once, `trackerHost` is offered once to ForeverCore's tracker host and then dropped, and `peerStats` and
   `sharedStats` are dropped once because Forever Leaderboards is gone).
 - `## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick`: global called by the client.
 - `SLASH_LEGACYFOREVER1/2` + `SlashCmdList.LEGACYFOREVER` (Core/Core.lua): `/lf`, `/lf audit`, `/lf criteria`.

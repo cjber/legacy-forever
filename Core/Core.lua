@@ -13,7 +13,6 @@ end
 ---@field POINTS_ICON string
 ---@field WHATS_NEW string the headline of the release WHATS_NEW_VERSION names
 ---@field WHATS_NEW_VERSION string the newest release in CHANGELOG.md with a bold headline
----@field CompanionHint fun(): string?
 ---@field WhatsNew fun()
 ---@field ForeverRequire fun(ready: boolean): boolean
 ---@field L table<string, string>
@@ -25,7 +24,6 @@ end
 ---@field Model LegacyModel
 ---@field Live LegacyLive
 ---@field Quests LegacyQuests
----@field FamilyDB fun(): LegacySavedVariables
 ---@field Tracker LegacyTracker
 ---@field ZoneCompletion LegacyZoneCompletion
 ---@field Completion LegacyCompletion

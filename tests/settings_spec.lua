@@ -53,10 +53,7 @@ end
 LegacyForeverDB = nil
 check(Saved.Get("showAreas") == true, "areas are shaded out of the box")
 check(Saved.Get("showEntrances") == true, "entrances are pinned out of the box")
-check(
-	Saved.Get("whatsNew") == true and Saved.Get("suggestFamily") == true,
-	"update line and family hints on out of the box"
-)
+check(Saved.Get("whatsNew") == true, "the update line is on out of the box")
 check(Saved.Get("map") == true and Saved.Get("tracker") == false, "on the map, not in the tracker")
 check(not Saved.Get("mapCollapsed") and not Saved.Get("trackerCollapsed"), "expanded out of the box")
 for _, category in ipairs({ "areas", "dungeons", "raids", "legacy" }) do
@@ -88,24 +85,21 @@ check(Saved.Default("showAreas") == true and Saved.Default("map") == true, "a sa
 LegacyForeverDB = { showAreas = true }
 check(Saved.Get("showAreas") == true, "a saved on stays on")
 
--- The pre-0.8 "Suggest companion addons" switch: turned off, it turns the family suggestions off once and
--- goes; on or unset, it just goes.
-LegacyForeverDB = { companions = false }
-check(Saved.Get("suggestFamily") == false, "an old off turns the family suggestions off")
-check(LegacyForeverDB.companions == nil and LegacyForeverDB.suggestFamily == false, "the old switch is gone")
-Saved.Set("suggestFamily", true)
-check(Saved.Get("suggestFamily") == true, "turning them back on sticks: the migration ran once")
-LegacyForeverDB = { companions = true }
-check(Saved.Get("suggestFamily") == true and LegacyForeverDB.suggestFamily == nil, "an old on keeps the default")
-check(LegacyForeverDB.companions == nil, "an old on is dropped too")
-LegacyForeverDB = { companions = false }
-check(ns.FamilyDB() == LegacyForeverDB and LegacyForeverDB.suggestFamily == false, "the family table is migrated")
+-- The family suggestions are gone: their old switches and dismissed list are dropped from a save, once.
+LegacyForeverDB = { companions = false, suggestFamily = false, familyDismissed = { a = true } }
+check(Saved.Get("showAreas") == true, "a read loads the save")
+check(
+	LegacyForeverDB.companions == nil
+		and LegacyForeverDB.suggestFamily == nil
+		and LegacyForeverDB.familyDismissed == nil,
+	"the family suggestions' old keys are dropped"
+)
 
 -- Writes keep the shape save files already have: four switches at the top, the rest under zoneCompletion
 -- by the same keys, beside the data tables and untouched by them.
 local tracked = { "a:1" }
 LegacyForeverDB = { tracked = tracked, lastVersion = "0.6.0", zoneCompletion = { count_taxis = true } }
-for _, key in ipairs({ "showAreas", "showEntrances", "whatsNew", "suggestFamily" }) do
+for _, key in ipairs({ "showAreas", "showEntrances", "whatsNew" }) do
 	Saved.Set(key, false)
 	check(LegacyForeverDB[key] == false and Saved.Get(key) == false, key .. " is saved at the top level")
 	check(LegacyForeverDB.zoneCompletion[key] == nil, key .. " stays out of zone completion")
@@ -342,18 +336,6 @@ ns.Completion = {
 		return "a quest source"
 	end,
 }
--- The shared Forever addons page builds its rows the first time it shows; until then it is one empty frame.
-function CreateFrame(kind)
-	check(kind == "Frame", "the page is built when it first shows")
-	return { SetScript = function() end, Hide = function() end }
-end
-local panelArgs = {}
-ForeverCore.Family = {
-	Register = function(category, db, current, safeCall)
-		panelArgs.category, panelArgs.db, panelArgs.current, panelArgs.safeCall = category, db, current, safeCall
-		return Settings.RegisterVerticalLayoutSubcategory(category, "Forever addons")
-	end,
-}
 -- Load the tracker with real saved notifications, so both settings and the host hide use its listener.
 local trackerRefreshes, trackerSection = 0, nil
 local trackerEnv = setmetatable({
@@ -382,8 +364,8 @@ assert(loadfile("UI/Settings.lua"))("LegacyForever", ns)
 check(LegacyForeverDB == nil or next(LegacyForeverDB.zoneCompletion or {}) == nil, "building the page saves nothing")
 
 -- Every section is a subpage; the index holds one button per subpage, in order.
-check(#subcategories == 5, "five subcategory groups")
-local names = { "World map", "Objective tracker", "What counts", "Updates", "Forever addons" }
+check(#subcategories == 3, "three subpages: no Updates page, no Forever addons page")
+local names = { "World map", "Objective tracker", "What counts" }
 for index, name in ipairs(names) do
 	check(subcategories[index].category.name == name, name .. " is a subcategory")
 end
@@ -404,9 +386,8 @@ local kinds, expectedKinds =
 for _ = 1, 8 do
 	expectedKinds[#expectedKinds + 1] = "checkbox@What counts"
 end
-expectedKinds[#expectedKinds + 1] = "button@Legacy Forever"
-expectedKinds[#expectedKinds + 1] = "checkbox@Updates"
-expectedKinds[#expectedKinds + 1] = "button@Legacy Forever"
+-- The update switch sits on the index page itself, under the buttons.
+expectedKinds[#expectedKinds + 1] = "checkbox@Legacy Forever"
 for index, entry in ipairs(registered) do
 	kinds[index] = (entry.initializer.button and "button" or "checkbox") .. "@" .. entry.category.name
 end
@@ -463,10 +444,7 @@ end
 for _, name in ipairs(names) do
 	buttons[name].click()
 end
-check(
-	table.concat(opened, " ") == "World map Objective tracker What counts Updates Forever addons",
-	"each button opens its subpage"
-)
+check(table.concat(opened, " ") == "World map Objective tracker What counts", "each button opens its subpage")
 
 -- Quests grey out without Questie, as the map menu's box does, and the name and tooltip are translated.
 local quests = byKey.count_quests
@@ -531,17 +509,20 @@ check(trackerState.locked == true and byKey.trackerLocked:GetValue(), "locking w
 byKey.trackerLocked:SetValue(false)
 check(trackerState.locked == false and not byKey.trackerLocked:GetValue(), "unlocking writes it back")
 
--- The Forever addons page carries "Suggest my other Forever addons": it reads and writes suggestFamily in
--- Legacy's own saved table (migrated from the old switch, as ns.FamilyDB returns it), and the map menu reads the
--- same key. Legacy's own row says "This addon".
-check(byKey.suggestFamily == nil and byKey.companions == nil, "the family switch is the shared page's, not a row")
-check(
-	panelArgs.category.name == "Legacy Forever" and panelArgs.db == ns.FamilyDB and panelArgs.current == "LegacyForever",
-	"the page is registered with the category and Legacy's saved table"
-)
-check(panelArgs.safeCall == ns.core.SafeCall, "the page runs in Legacy's own SafeCall")
-LegacyForeverDB = { companions = false }
-check(panelArgs.db().suggestFamily == false and LegacyForeverDB.companions == nil, "read through the migration")
+-- No family page and no family switch: nothing of ForeverCore.Family is called.
+check(byKey.suggestFamily == nil and byKey.companions == nil, "no family row")
+check(ForeverCore.Family == nil, "the settings never reach for ForeverCore.Family")
+
+-- The update switch is on the index page, in the category itself.
+local whatsNewRow
+for _, entry in ipairs(registered) do
+	if entry.initializer.setting == byKey.whatsNew then
+		whatsNewRow = entry
+	end
+end
+check(whatsNewRow and whatsNewRow.category.name == "Legacy Forever", "the update switch is on the index page")
+check(byKey.whatsNew.name == "What's new after an update", "and says what it does")
+check(byKey.map.name == "Zone completion on the map", "the map badge row pairs with the tracker's zone completion row")
 
 -- The account switch sits under Quests with a label short enough for the column: the page draws a row's name up
 -- to 85 px left of its centre and cuts the rest, so "Count account-completed quests" was cut to "Count

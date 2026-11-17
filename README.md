@@ -75,7 +75,7 @@ Open the world map, click the addon's icon in the addon compartment, or type `/l
 | `/lf audit` | Compare the bundled data with what the game reports, and list any objective the game doesn't know |
 | `/lf criteria 684` | List every criterion the game reports for one achievement (useful alongside an audit's unknown IDs) |
 
-Translated into French by Brainc3ll, and into German, Spanish, Korean, Brazilian Portuguese, Russian and Chinese by machine. French lines added since, such as the Forever addons page, are machine translated too. Corrections are welcome as a pull request or a [translation issue](https://github.com/cjber/legacy-forever/issues/new?template=translation.yml): [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has the template.
+Translated into French by Brainc3ll, and into German, Spanish, Korean, Brazilian Portuguese, Russian and Chinese by machine. French lines added since are machine translated too. Corrections are welcome as a pull request or a [translation issue](https://github.com/cjber/legacy-forever/issues/new?template=translation.yml): [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has the template.
 
 ## Where the locations come from
 
@@ -92,7 +92,7 @@ Turn off **Attach to quest tracker** in Settings to drag the shared Forever colu
 
 ## Works alongside
 
-All optional: [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever) plans the journey when you click a map pin, and [Questie](https://www.curseforge.com/wow/addons/questie) supplies the quests zone completion can count (its [QuestieDB](https://github.com/Questie/QuestieDB/releases) addon on its own works too). A pin's tooltip carries a grey line suggesting Shortest Path Forever while you don't have it, and the zone completion tooltip one suggesting Adventure Guide Forever; "Suggest my other Forever addons", on the Forever addons page in the settings, turns them off. Other addons can read zone completion through `LegacyForever.API` ([docs/api.md](docs/api.md)); [Adventure Guide Forever](https://www.curseforge.com/wow/addons/adventure-guide-forever) does. The entrance icons and unexplored-area tint from [Tweaks Forever](https://www.curseforge.com/wow/addons/tweaks-forever) step aside where Legacy marks the map. Tracked challenges share one tracker column with the Shortest Path, Adventure Guide and SkillUp sections.
+All optional: [Shortest Path Forever](https://www.curseforge.com/wow/addons/shortest-path-forever) plans the journey when you click a map pin, and [Questie](https://www.curseforge.com/wow/addons/questie) supplies the quests zone completion can count (its [QuestieDB](https://github.com/Questie/QuestieDB/releases) addon on its own works too). Other addons can read zone completion through `LegacyForever.API` ([docs/api.md](docs/api.md)); [Adventure Guide Forever](https://www.curseforge.com/wow/addons/adventure-guide-forever) does. The entrance icons and unexplored-area tint from [Tweaks Forever](https://www.curseforge.com/wow/addons/tweaks-forever) step aside where Legacy marks the map. Tracked challenges share one tracker column with the Shortest Path, Adventure Guide and SkillUp sections.
 
 <!-- forever-family:start -->
 

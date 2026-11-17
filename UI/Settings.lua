@@ -1,5 +1,5 @@
 ---@type string, LegacyForeverNamespace
-local addonName, ns = ...
+local _, ns = ...
 local L = ns.L
 
 if ns.broken then
@@ -11,9 +11,7 @@ end
 -- delegate: Settings.CreateCheckbox inserts from our code instead, and the settings search reads every layout,
 -- so that tainted it, and a restricted button in its results (Social's Discord Sign In) was then blocked and
 -- blamed on this addon.
--- The Legacy map menu keeps its own toggles. Both ends go through ns.Saved, so the two never disagree; the one
--- exception is "Suggest my other Forever addons", which the shared Forever addons page writes in the saved
--- table itself and the map menu reads each time it opens.
+-- The Legacy map menu keeps its own toggles. Both ends go through ns.Saved, so the two never disagree.
 
 local PREFIX = "LegacyForever_"
 
@@ -97,7 +95,7 @@ AddCheckbox(
 AddCheckbox(
 	map,
 	"map",
-	L["On the world map"],
+	L["Zone completion on the map"],
 	L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."]
 )
 
@@ -188,15 +186,7 @@ for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 	end
 end
 
-local updates = Section(category, L["Updates"])
-AddCheckbox(updates, "whatsNew", L["What's new after an update"])
-
--- The Forever addons page is shared by every Forever addon (ForeverCore's UI/ForeverFamily.lua), with "Suggest my
--- other Forever addons" on it. ForeverCore draws it in Legacy's own L, so the page reads in Legacy's translations
--- whichever Forever addon is installed. It reads and writes suggestFamily in the saved table itself; the map menu
--- reads it on opening. With the gamepad interface on, the page is the client's own rows, so the Options navigation can
--- enter it (cjber/tweaks-forever#382).
-local familyName = L["Forever addons"]
-IndexButton(category, ForeverCore.Family.Register(category, ns.FamilyDB, addonName, ns.core.SafeCall), familyName)
+-- On the index page, below the subpage buttons: one switch does not need a page of its own.
+AddCheckbox(category, "whatsNew", L["What's new after an update"])
 
 Settings.RegisterAddOnCategory(category)

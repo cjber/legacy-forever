@@ -44,8 +44,6 @@ L["/lf issue - report a bug or request a feature with a ready-made GitHub issue 
 	"/lf issue - создает ссылку на issue GitHub для сообщения об ошибке или предложения улучшения"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - показать отчет для сообщения об ошибке"
-L["Adventure Guide Forever routes the quests left in this zone."] =
-	"Adventure Guide Forever проложит маршрут по оставшимся заданиям этой зоны."
 L["Already complete"] = "Уже завершено"
 L["Areas explored"] = "Исследованные области"
 L["Attach to quest tracker"] = "Прикрепить к отслеживанию заданий"
@@ -65,14 +63,11 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"Все задания зоны, доступные этому персонажу, по данным Questie."
 L["Flight paths"] = "Маршруты полетов"
-L["Forever addons"] = "Модификации Forever"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Затеняет настоящую землю каждой неоткрытой области и ставит метку на её краю. Области без данных о местности сохраняют затемнение."
 L["In the objective tracker"] = "В отслеживании целей"
 L["Install AtlasLoot for recommended levels."] =
 	"Установите AtlasLoot, чтобы увидеть рекомендуемые уровни."
-L["Install Shortest Path Forever to have the route plotted for you."] =
-	"Установите Shortest Path Forever, чтобы маршрут прокладывался за вас."
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"Оставляет общий трекер Forever там, где вы его поставили. Ручка сверху больше его не перетаскивает."
 L["Legacy"] = "Старинные испытания"
@@ -104,13 +99,10 @@ L["Recommended levels: %s (AtlasLoot)"] = "Рекомендуемые уровн
 L["Repeatable, holiday and profession quests are left out."] =
 	"Повторяемые, праздничные задания и задания профессий не учитываются."
 L["Reputations (Friendly)"] = "Репутация (Дружелюбие)"
-L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
-	"Показывать неприметную строку там, где помогла бы другая моя модификация Forever. Только для тех, что у вас не установлены."
 L["Show dungeon and raid entrances"] = "Показывать входы в подземелья и рейды"
 L["Show undiscovered areas"] = "Показывать неоткрытые области"
 L["Show where to discover areas"] = "Показывать места для обнаружения областей"
 L["Stop tracking"] = "Не отслеживать"
-L["Suggest my other Forever addons"] = "Предлагать другие мои модификации Forever"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
@@ -122,7 +114,6 @@ L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"Отключите, чтобы перетаскивать общее отслеживание Forever в любое место экрана."
 L["Undiscovered area"] = "Неоткрытая область"
-L["Updates"] = "Обновления"
 L["Waiting for Questie and your quest log."] = "Ожидание Questie и журнала заданий."
 L["Waiting for Questie to finish loading."] = "Ожидание окончания загрузки Questie."
 L["What counts"] = "Что учитывается"
@@ -130,6 +121,7 @@ L["What's new after an update"] = "Что нового после обновле
 L["World map"] = "Карта мира"
 L["Zone complete"] = "Зона пройдена"
 L["Zone completion"] = "Прохождение зоны"
+L["Zone completion on the map"] = "Прогресс зоны на карте"
 L["Zone completion in the tracker"] = "Прохождение зоны в отслеживании"
 L["and %d more"] = "и еще %d"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =

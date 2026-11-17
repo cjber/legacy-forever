@@ -5,8 +5,7 @@ function ns.Print(msg)
 	printed[#printed + 1] = msg
 end
 
--- Shortest Path Forever's install state as the addon list reports it ("on", "off" or "missing"), and the saved
--- table the shared family suggestions (ForeverCore.Family) read.
+-- Shortest Path Forever's install state as the addon list reports it ("on", "off" or "missing").
 local state = "missing"
 C_AddOns = {
 	IsAddOnLoaded = function(name)
@@ -16,10 +15,6 @@ C_AddOns = {
 		return name ~= "ShortestPathForever" or state ~= "missing"
 	end,
 }
-local db = {}
-ns.FamilyDB = function()
-	return db
-end
 
 -- The player's place on the map the map canvas is showing, for the outline's route estimates.
 local playerMap, playerPosition = 1440, { 0.1, 0.2 }
@@ -116,7 +111,6 @@ ForeverCore = core.install(coreEnv, {
 	"Core/Log.lua",
 	"UI/Report.lua",
 	"UI/Credits.lua",
-	"UI/ForeverFamily.lua",
 	"UI/MapCanvas.lua",
 	"Expose.lua",
 })
@@ -174,22 +168,8 @@ check(#waypoints == 5, "Shortest Path loaded without its API falls back to the n
 ShortestPathForever, canSet = nil, false
 ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
 check(#waypoints == 5 and printed[1] == "Blackfathom Deeps is at 25.0, 50.0 in Ashenvale.", "the place goes to chat")
--- The companion hint, behind the shared family switch: install while missing, nothing once installed (on or
--- turned off: the player chose that), switched off or dismissed.
-local INSTALL = "Install Shortest Path Forever to have the route plotted for you."
-check(ns.CompanionHint() == INSTALL, "missing: install, on by default")
-state = "off"
-check(ns.CompanionHint() == nil, "installed but turned off: nothing")
-state = "on"
-check(ns.CompanionHint() == nil, "on: nothing")
-state = "missing"
-db.suggestFamily = false
-check(ns.CompanionHint() == nil, "switched off: nothing")
-db.suggestFamily = true
-db.familyDismissed = { ["LegacyForever.pinShortestPath"] = true }
-check(ns.CompanionHint() == nil, "dismissed: nothing")
-db.familyDismissed = { ["LegacyForever.zoneAdventureGuide"] = true }
-check(ns.CompanionHint() == INSTALL, "another dismissed suggestion leaves this one")
+-- No suggestion to install Shortest Path Forever, whatever its state.
+check(ns.CompanionHint == nil, "pins carry no install suggestion")
 
 -- An outlined area's click: Shortest Path estimates every vertex of its ground and heads for the quickest
 -- route, not the nearest point.

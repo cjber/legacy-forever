@@ -39,8 +39,6 @@ L["/lf issue - report a bug or request a feature with a ready-made GitHub issue 
 L["/lf report - show a report to copy into a bug report"] = "/lf report - show a report to copy into a bug report"
 L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"Account quest completion is unavailable on this client. Only this character's quests count."
-L["Adventure Guide Forever routes the quests left in this zone."] =
-	"Adventure Guide Forever routes the quests left in this zone."
 L["Already complete"] = "Already complete"
 L["Areas explored"] = "Areas explored"
 L["Attach to quest tracker"] = "Attach to quest tracker"
@@ -61,11 +59,8 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"Every quest this character can take in the zone, from Questie."
 L["Flight paths"] = "Flight paths"
-L["Forever addons"] = "Forever addons"
 L["In the objective tracker"] = "In the objective tracker"
 L["Install AtlasLoot for recommended levels."] = "Install AtlasLoot for recommended levels."
-L["Install Shortest Path Forever to have the route plotted for you."] =
-	"Install Shortest Path Forever to have the route plotted for you."
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."
 L["Legacy"] = "Legacy"
@@ -95,13 +90,10 @@ L["Repeatable, holiday and profession quests are left out."] = "Repeatable, holi
 L["Reputations (Friendly)"] = "Reputations (Friendly)"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."
-L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
-	"Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."
 L["Show dungeon and raid entrances"] = "Show dungeon and raid entrances"
 L["Show undiscovered areas"] = "Show undiscovered areas"
 L["Show where to discover areas"] = "Show where to discover areas"
 L["Stop tracking"] = "Stop tracking"
-L["Suggest my other Forever addons"] = "Suggest my other Forever addons"
 L["The current zone is not known yet."] = "The current zone is not known yet."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
@@ -117,7 +109,6 @@ L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
 	"Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."
 L["Undiscovered area"] = "Undiscovered area"
-L["Updates"] = "Updates"
 L["Waiting for Questie and your quest log."] = "Waiting for Questie and your quest log."
 L["Waiting for Questie to finish loading."] = "Waiting for Questie to finish loading."
 L["What counts"] = "What counts"
@@ -126,6 +117,7 @@ L["World map"] = "World map"
 L["Zone complete"] = "Zone complete"
 L["Zone completion"] = "Zone completion"
 L["Zone completion in the tracker"] = "Zone completion in the tracker"
+L["Zone completion on the map"] = "Zone completion on the map"
 L["and %d more"] = "and %d more"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"couldn't add a section to the objective tracker; please report /lf audit."
