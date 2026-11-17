@@ -11,7 +11,7 @@
 ## X-Wago-ID: b6mzA7KP
 ## IconTexture: Interface\AddOns\LegacyForever\media\Icon
 ## X-Forever-Icon: Interface\Icons\Achievement_General
-## X-Forever-Core: v1.14.4
+## X-Forever-Core: v1.14.5
 ## OptionalDeps: ShortestPathForever, QuestieDB, Questie, AtlasLootClassic, ForeverCore
 ## SavedVariables: LegacyForeverDB
 ## LoadSavedVariablesFirst: 1
