@@ -103,8 +103,10 @@ L["The zone you're viewing in the map's corner, and a badge on each zone of a co
 	"지도 모서리에 보고 있는 지역을, 대륙 지도에는 각 지역에 배지를 표시합니다."
 L["This menu needs mouse and keyboard."] = "이 메뉴는 마우스와 키보드가 필요합니다."
 L["This version of QuestieDB isn't supported."] = "이 버전의 QuestieDB는 지원하지 않습니다."
-L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
-	"다른 애드온이 이미 표시한다면 끄세요. 지도의 유산 메뉴에는 계속 표시됩니다."
+L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
+	"던전과 공격대 입구에 표시되는 유산 핀을 숨기려면 끄세요. 지도의 유산 메뉴에는 계속 표시됩니다."
+L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
+	"끄면 공용 Forever 추적기를 화면 어디로든 끌어 옮길 수 있습니다."
 L["Undiscovered area"] = "발견하지 않은 구역"
 L["Updates"] = "업데이트"
 L["Waiting for Questie and your quest log."] = "Questie와 퀘스트 목록을 기다리는 중입니다."
