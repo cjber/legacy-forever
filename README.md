@@ -75,7 +75,7 @@ Open the world map, click the addon's icon in the addon compartment, or type `/l
 | `/lf audit` | Compare the bundled data with what the game reports, and list any objective the game doesn't know |
 | `/lf criteria 684` | List every criterion the game reports for one achievement (useful alongside an audit's unknown IDs) |
 
-Translated into French by Brainc3ll, and into German, Spanish, Korean, Brazilian Portuguese, Russian and Chinese by machine. French lines added since, such as the Forever addons page, are machine translated too. Corrections are welcome as a pull request or a [translation issue](https://github.com/cjber/legacy-forever/issues/new?template=translation.yml): [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has the template.
+Translated into French by Brainc3ll, and into German, Spanish, Korean, Brazilian Portuguese, Russian and Chinese by machine. French lines added since are machine translated too. Corrections are welcome as a pull request or a [translation issue](https://github.com/cjber/legacy-forever/issues/new?template=translation.yml): [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has the template.
 
 ## Where the locations come from
 
@@ -88,7 +88,7 @@ Everything is generated from the Forever client's own data (via [wago.tools](htt
 
 **Found a wrong or missing objective?** Type `/lf report` and paste what it shows into a [wrong objective issue](https://github.com/cjber/legacy-forever/issues/new?template=wrong_objective.yml).
 
-Turn off **Attach to quest tracker** in Settings to drag the shared Forever column. Its position survives `/reload`; turn the setting back on to attach it to the objective tracker.
+The shared Forever column sits to the left of the game's quest tracker and follows it when you move that tracker in Edit Mode. Drag a section's heading to put it anywhere; it stays there after `/reload`. Right-click a heading for **Lock** and **Reset position**.
 
 ## Works alongside
 
@@ -123,7 +123,7 @@ already marks the map.
 
 With Leatrix Maps revealing unexplored ground, Legacy leaves the map clear and keeps its exploration tooltips on hover.
 
-Tracked challenges share one tracker column with the other addons' tracker sections, above your quests.
+Tracked challenges share one tracker column with the other addons' tracker sections, beside the game's quest tracker.
 
 ## Development
 
