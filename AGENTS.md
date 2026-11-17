@@ -5,7 +5,7 @@ world map and in the objective tracker. Players install the zip the BigWigs pack
 
 It requires ForeverCore (`## Dependencies: ForeverCore`), the standalone addon that owns the shared tracker column,
 report window, error journal and debug log, the minimap button, the quest log side tabs, the
-settings-page chrome, the family page and the map canvas. CurseForge and Wago install ForeverCore with it through
+settings-page chrome, the family page and the map canvas. CurseForge installs ForeverCore with it through
 `.pkgmeta`'s `required-dependencies`; nothing shared is vendored here.
 
 ## Commands
@@ -70,7 +70,7 @@ request against its base and fails on a regression. Every version needs a
 - `Locales/`: `enUS.lua` sets `ns.L`, keyed by the English phrase; a translation is `Locales/<locale>.lua`, listed in
   the TOC after it (`Locales/README.md` has the steps). `Locales/phrases.txt` is `tools/phrases.py`'s template for one. No packager localization keyword: CurseForge's export is gone.
 - `types/`: editor/checker declarations, never loaded by the TOC or shipped.
-- `docs/curseforge.md`: the store description, pasted into CurseForge and Wago by hand.
+- `docs/curseforge.md`: the store description, pasted into CurseForge by hand.
 
 ## Rules
 

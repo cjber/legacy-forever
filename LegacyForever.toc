@@ -8,7 +8,6 @@
 ## X-Website: https://github.com/cjber/legacy-forever
 ## X-Donate: https://github.com/sponsors/cjber
 ## X-Curse-Project-ID: 1705879
-## X-Wago-ID: b6mzA7KP
 ## IconTexture: Interface\AddOns\LegacyForever\media\Icon
 ## X-Forever-Icon: Interface\Icons\Achievement_General
 ## X-Forever-Core: v1.14.5
