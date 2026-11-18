@@ -1,127 +1,64 @@
 # AGENTS.md
 
-Legacy Forever is a WoW: Forever addon (Interface 16001) that puts unfinished Legacy challenges on the
-world map and in the objective tracker. Players install the zip the BigWigs packager builds on a `v*` tag.
-
-It requires ForeverCore (`## Dependencies: ForeverCore`), the standalone addon that owns the shared tracker column,
-report window, error journal and debug log, the minimap button, the quest log side tabs, the
-settings-page chrome, the family page and the map canvas. CurseForge installs ForeverCore with it through
-`.pkgmeta`'s `required-dependencies`; nothing shared is vendored here.
+Legacy Forever is a WoW: Forever addon (Interface 16001) that puts unfinished Legacy challenges on the world map and
+in the objective tracker. It needs ForeverCore (declared in `## OptionalDeps`; the release pinned in `tools/forever-core.txt`
+ships in the zip), which owns the shared tracker column, error journal, report window, settings chrome and the map canvas. `Core/ForeverRequire.lua` is copied byte for byte
+from ForeverCore: never edit it. Players install the zip the BigWigs packager builds on a `v*` tag.
 
 ## Commands
 
 ```sh
-python3 tools/doctor.py   # first on a new machine: every tool pin in tools/toolchain.json and tools/pyproject.toml, with a fix for each problem
-stylua --check .
-ruff format --check . && ruff check .
-luacheck .
-FOREVER_CORE=../forever-core tools/typecheck.sh   # LuaLS + multi-value lint (Python self-tests included)
-for s in tests/*_spec.lua; do FOREVER_CORE=../forever-core luajit "$s" || exit 1; done
-FOREVER_CORE=../forever-core luajit tools/perf_bench.lua   # load and redraw cost over the headless harness
-python3 tools/gen_legacy.py   # regenerate Data/Legacy.lua after a data change
-python3 tools/gen_explore.py  # retrace Data/Explore.lua after bumping its TERRAIN_BUILD; runs from the tile cache
-python3 tools/check_generated.py   # regenerate in a disposable tree; require fresh, byte-stable Data/Legacy.lua
-python3 tools/check_explore.py   # Data/Explore.lua's zones and area keys still exist in Data/Legacy.lua
-python3 tools/forever_tools/credits.py --check   # Data/Credits.lua and both thanks blocks are current (WFA-31)
-python3 tools/phrases.py > Locales/phrases.txt   # regenerate the translation template after a string change
-python3 tools/changelog.py --check
-python3 tools/check_screenshots.py   # an image older than its sources; --record after tools/screenshots.py
-python3 tools/check_menu_scroll.py # menus built from a list scroll (WFA-36); CI runs it in core-shared
-python3 tools/check_api_docs.py   # docs/api.md names every published API function and its minor
-python3 tools/repo_rules.py   # rules no linter covers; CI runs it in project-rules
+python3 tools/doctor.py             # first on a new machine: every tool pin, with a fix for each problem
+python3 tools/gate.py               # the fast local gate: format, lint, typecheck, specs, generated data, changelog, rules
+python3 tools/gate.py --changed     # only the steps the diff against origin/main reaches
 ```
 
-A change's player-facing notes go in `changes/<issue>.md` as bold-lead bullets, with an optional `### For addon
-authors` section after them. The release commit gathers them with `python3 tools/changelog.py release X.Y.Z`; no
-other pull request edits `CHANGELOG.md`, and CI's `--check --base` fails one that does.
-
-`FOREVER_CORE` names the cjber/forever-core checkout the specs load, defaulting to the sibling `../forever-core`.
-`tools/forever-core.txt` holds the git ref CI checks out for them: `v1.3.2`, the release whose API kit lists every
-addon's published API.
-
-CI's `package` job builds the zip with the release's packager without uploading (`-d -z`) and runs
-`python3 tools/check_package.py` on its output: every loaded file ships, no development folder does, a licence file and
-THIRD_PARTY.md ship with README's `## Credits` and THIRD_PARTY's `## Players` (WFA-10, WFA-31), and the
-specs pass on the packaged files.
-
-The same gate CI runs, plus actionlint, zizmor and gitleaks on the workflows and history. CI installs the Lua, LuaLS,
-StyLua and gitleaks pins from `tools/toolchain.json` through cjber/forever-core's toolchain action, and the Python
-tools (ruff, ty, zizmor, actionlint) from `tools/pyproject.toml` with `uv run --project tools --frozen --group dev`.
-CI's jobs are `deadcode`, `check`, `typecheck`, `generated`, `project-rules`, `workflows`, `secrets` and `package`,
-and each runs on every pull request. `.github/workflows/speedpatrol.yml` times `tools/perf_bench.lua` (Speedpatrol's `harness.perf`) on the pull
-request against its base and fails on a regression. Every version needs a
-`CHANGELOG.md` entry (prose, bold-lead bullets) before its `v*` tag: the release publishes it as the notes.
+`gate.py` loads ForeverCore from `$FOREVER_CORE`, else `../forever-core`: set it in a worktree. CI adds the simulator,
+`tools/perf_bench.lua` (timed by Speedpatrol against the base), the package build, actionlint, zizmor and gitleaks.
+A change's player-facing notes go in `changes/<issue>.md`; only the release commit edits `CHANGELOG.md`
+(`python3 tools/changelog.py release X.Y.Z`). Release: `.agents/skills/release/SKILL.md`.
 
 ## Layout
 
-- `Data/Legacy.lua`: generated by `tools/gen_legacy.py` from wago.tools DB2 exports; never hand-edit.
-  A daily workflow (`.github/workflows/refresh-data.yml`) regenerates it on a new client build, opens a data
-  PR, and when a failed run also fails its one re-run (`.github/workflows/retry-refresh.yml`) opens or comments on the "Data refresh
-  failed" issue; `tools/README.md` has the detail.
-- `Data/Explore.lua`: generated by `tools/gen_explore.py` from the client's own ADT terrain chunks at its own
-  pinned `TERRAIN_BUILD`, never hand-edit. It is not part of the daily refresh: that refresh moves `BUILD` and can
-  move completion area keys, so CI's `generated` job runs `tools/check_explore.py`, and when it names missing keys,
-  bump `TERRAIN_BUILD` in `tools/gen_explore.py`, run `python3 tools/gen_explore.py` locally and commit the result.
-  Tiles are cached under the ignored `tools/.cache/adt/<TERRAIN_BUILD>` by FileDataID, so only a new
-  `TERRAIN_BUILD` downloads them.
-- `Core/`: lifecycle, public API, pure challenge logic and live-state reads.
-- `Integrations/`: quest-state reads and navigation through companion addons.
-- `UI/`: map pins, completion panel, settings and the Legacy tracker section.
-- `Locales/`: `enUS.lua` sets `ns.L`, keyed by the English phrase; a translation is `Locales/<locale>.lua`, listed in
-  the TOC after it (`Locales/README.md` has the steps). `Locales/phrases.txt` is `tools/phrases.py`'s template for one. No packager localization keyword: CurseForge's export is gone.
-- `types/`: editor/checker declarations, never loaded by the TOC or shipped.
-- `docs/curseforge.md`: the store description, pasted into CurseForge by hand.
+- `Data/Legacy.lua`: generated by `tools/gen_legacy.py` from wago.tools DB2 exports; never hand-edit. A daily
+  workflow (`refresh-data.yml`, with `retry-refresh.yml`) regenerates it on a new client build and opens a data PR;
+  `tools/README.md` has the detail.
+- `Data/Explore.lua`: generated by `tools/gen_explore.py` from the client's ADT terrain chunks at its own pinned
+  `TERRAIN_BUILD`; not part of the daily refresh. When CI's `check_explore.py` names missing area keys, bump
+  `TERRAIN_BUILD`, run `python3 tools/gen_explore.py` (tiles cache under the ignored `tools/.cache/adt/`) and commit.
+- `Core/` lifecycle, public API, pure challenge logic, live-state reads. `Integrations/` quest state and navigation
+  through companion addons. `UI/` map pins, completion panel, settings, the Legacy tracker section.
+- `Locales/enUS.lua` sets `ns.L` keyed by the English phrase; `python3 tools/phrases.py > Locales/phrases.txt`
+  regenerates the translation template after a string change (`Locales/README.md` has the steps).
+- `types/` holds checker declarations, never loaded by the TOC. `docs/curseforge.md` is the store description.
+- `tools/forever_tools/` and `tools/forever_sim/` are vendored from forever-core: never edit them here.
 
 ## Rules
 
-- Lua 5.1 in the game's sandbox: no `require`. The client loads the files `LegacyForever.toc` lists, in
-  that order, each receiving `local addonName, ns = ...`; a new file goes in the TOC or never runs.
-- The specs are a headless harness with stubbed client APIs. Anything they cannot reach (frames,
-  menus, tooltips, the tracker) is checked in game: check them in the headless client (forever-core's `wow-forever-addon/in-game.md`) and list in the PR what was checked; what waits on the player's own session goes in the PR as `/reload` tests for the user.
-- Runtime globals must be allowed by `.luacheckrc` and typed by the pinned WoW annotations or
-  `types/forever.lua` for missing Forever APIs. Addon types belong in `types/addon.lua` or beside
-  their definitions; do not restore a LuaLS globals whitelist.
-- `tools/typecheck.sh` fetches pinned WoW API/FrameXML annotations into an ignored types cache and
-  rejects every LuaLS diagnostic, including Information. All TOC Lua files, including generated
-  data, are checked. Install LuaLS at `tools/toolchain.json`'s pin locally; CI verifies its release checksum. `Core/ForeverRequire.lua` is
-  copied byte for byte from ForeverCore and is never edited here.
-- A final `select(...)` argument, table element or return must be parenthesized to keep one value,
-  or carry a trailing `-- multi-value: <reason>` when expansion is intentional.
-- Commits are signed (`git commit -S`) with the personal email.
-- Release: load `.agents/skills/release/SKILL.md` when preparing or publishing a release.
-  A cloud session cannot push tags: once the version's PR is merged and `.github/workflows/ci.yml` passed on main, start the Release
-  workflow on main with `version` (and `commit` for an older main commit); it tags that commit and publishes.
-- Quality: read the live roots and settled shapes in `.sloppatrol/instructions.md` before cleanup, dead-code or
-  refactoring work.
-- Progress is read from the game each time, so it matches the Legacy panel; the bundled data only
-  says where objectives are.
-- Never stretch art: an icon, atlas or texture is drawn at its native aspect, through `Core/Art.lua` (`Art.Fit`,
-  `Art.Markup`); only nine-slice pieces, bars and fills stretch by design. `tools/lint_art.py` refuses a raw
-  `SetAtlas`, `SetTexture`, button atlas or `|A`/`|T` markup anywhere else unless its line says why its shape is
-  right (`-- art-ok: reason`).
-- Store copy, README and posts pitch the addon as looking like it came with the game, in cjber's
-  own voice, never AI marketing: `wow-forever-addon` WFA-23/24, checked before every store paste.
+- Lua 5.1 in the game's sandbox: no `require`; a new file goes in `LegacyForever.toc` or never runs.
+- Progress is read from the game each time, so it matches the Legacy panel; the bundled data only says where
+  objectives are.
+- Draw on the world map only through the core map canvas (`ns.core.MapCanvas`): frames of our own, made with no parent
+  and then set on the canvas, never `AddDataProvider`, `AcquirePin`, `AddOverlayFrame` or a `MapCanvasPinMixin` (the
+  gamepad interface walks them from secure code). `tests/legacy_map_spec.lua` enforces it.
+- Keep addon tracker sections and pools in the Legacy tracker section (`UI/Tracker.lua`), outside Blizzard's registry,
+  attached through `ForeverCore.TrackerHost`. Render only after `PLAYER_ENTERING_WORLD` and `VARIABLES_LOADED`,
+  deferred one frame; this supersedes WFA-5's native registration guidance, and the native manager is forbidden in
+  the integration harness. Test event ordering and reuse, not just method existence.
+- Never touch Blizzard's Lua state (WFA-38); restyle a Blizzard element by drawing on top of it.
+- Never stretch art: draw at native aspect through `Core/Art.lua` (`Art.Fit`, `Art.Markup`); `tools/lint_art.py`
+  refuses a raw `SetAtlas`/`SetTexture` elsewhere unless its line says `-- art-ok: reason`.
+- New host globals go in `.luacheckrc`, with types in `types/forever.lua` or `types/addon.lua`. Never add a LuaLS
+  globals allowlist. A final `select(...)` as an argument, element or return is parenthesized or carries
+  `-- multi-value: reason`.
+- Specs are a headless harness with stubbed client APIs. Frames, menus, tooltips and the tracker are checked in the
+  headless client (`wow-forever-addon` `in-game.md`); the PR lists what was checked.
+
+- Before cleanup, dead-code or refactoring work, read the live roots and settled shapes in `.sloppatrol/instructions.md`.
 
 ## Standards
 
-- `wow-forever-addon`: https://github.com/cjber/forever-core/tree/main/.agents/skills/wow-forever-addon (UI look,
-  icon, README and store page, CI and release requirements shared by every WoW: Forever addon)
-- `wow-retail-ui-style`: https://github.com/cjber/forever-core/tree/main/.agents/skills/wow-retail-ui-style (native host integration, compact layout rhythm, and asset blacklist)
-- `repo-standards`: the RS-* requirements every cjber repo meets (repo, Actions and security settings, rulesets, CI hardening, community files), a skill in cjber/skills whose `audit.py` checks this repo
-
-## Secure UI regression checks
-
-`tools/typecheck.sh` checks the TOC/XML load graph, LuaLS coverage, `tools/lint_art.py`, `tools/lint_secret.py` (secret values through `ns.Readable`, tooltip hooks behind `ns.Usable`), `tools/check_editorconfig.py` and `tools/check_family.py` (the shared family block between the `forever-family` markers in README.md and docs/curseforge.md).
-`tools/forever_tools/` is the shared tooling (cjber/forever-core, https://github.com/cjber/forever-core/tree/main/.agents/skills/wow-forever-addon/tooling), vendored byte for byte: never edit it here.
-`python3 tools/forever_tools/sync.py check` verifies it offline; `sync.py update --source <checkout>` is the only way to refresh it.
-Never touch Blizzard's Lua state: WFA-38 in `wow-forever-addon` lists what addon code may do to Blizzard's
-frames, how to restyle one by drawing on top, and when a `taint-ok` exception holds.
-Draw on the world map only through the core map canvas (`ns.core.MapCanvas`, `ForeverCore.MapCanvas`): frames of our
-own, made with no parent and then set on the canvas or map, never `AddDataProvider`, `AcquirePin`, `AddOverlayFrame`
-or a `MapCanvasPinMixin` (the gamepad interface walks the map's providers, pins and overlay frames from secure code).
-`tests/legacy_map_spec.lua` runs the map files against a map that fails on any write.
-Keep addon tracker sections and pools in the Legacy tracker section (`UI/Tracker.lua`), outside Blizzard's registry;
-attach them through `ForeverCore.TrackerHost`.
-Render only after `PLAYER_ENTERING_WORLD` and `VARIABLES_LOADED`, deferred one frame.
-This supersedes WFA-5's native registration guidance. The native manager is forbidden in the integration harness.
-Test event ordering and reuse, not just method existence.
+- `wow-forever-addon`: https://github.com/cjber/forever-core/tree/main/.agents/skills/wow-forever-addon (the WFA-*
+  requirements every WoW: Forever addon meets: UI look, assets, README and store page, CI and releases)
+- `wow-retail-ui-style`: https://github.com/cjber/forever-core/tree/main/.agents/skills/wow-retail-ui-style
+- `repo-standards`: the RS-* requirements every cjber and agent-labs-dev repo meets; its `audit.py` checks this repo.
