@@ -462,7 +462,6 @@ def main_menu(ui, live):
         MenuButton("Open the Legacy panel"),
         MenuDivider(),
         MenuCheckbox("What's new after an update", True),
-        MenuCheckbox("Suggest my other Forever addons", True),
     ]
     return entries
 
