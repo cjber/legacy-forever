@@ -15,7 +15,7 @@ luals=${pins#* }
 library=.types/vscode-wow-api
 server=${LUA_LANGUAGE_SERVER:-lua-language-server}
 
-if (( run_luals )) && [[ $("$server" --version) != "$luals" ]]; then
+if ((run_luals)) && [[ $("$server" --version) != "$luals" ]]; then
     echo "typecheck: lua-language-server $luals is required" >&2
     exit 1
 fi
@@ -54,7 +54,7 @@ python3 tools/typecheck_coverage.py
 python3 tools/lint_multivalue.py
 
 # --no-luals (gate --changed): the checks above run, and the whole-repo LuaLS run is left to CI.
-if (( ! run_luals )); then
+if ((! run_luals)); then
     echo "typecheck: LuaLS left to CI (--no-luals)"
     exit 0
 fi
