@@ -51,7 +51,6 @@ L["Click to travel here with Shortest Path Forever."] = "Click to travel here wi
 L["Count account quests"] = "Count account quests"
 L["Count quests completed by any character. The quests counted still match this character's race and class."] =
 	"Count quests completed by any character. The quests counted still match this character's race and class."
-L["Count quests finished by your other characters."] = "Count quests finished by your other characters."
 L["Defeat"] = "Defeat"
 L["Dungeon or raid"] = "Dungeon or raid"
 L["Dungeons, raids and Legacy objectives count your progress on any character."] =
@@ -71,6 +70,7 @@ L["Levels, skills, ranks and anything without a fixed place."] =
 L["Lock the tracker"] = "Lock the tracker"
 L["Needs QuestieDB, which lists each zone's quests."] = "Needs QuestieDB, which lists each zone's quests."
 L["No fixed location"] = "No fixed location"
+L["No more suggestions for my other addons."] = "No more suggestions for my other addons."
 L["No unfinished Legacy objectives with a place on this map."] =
 	"No unfinished Legacy objectives with a place on this map."
 L["Nothing left to do here"] = "Nothing left to do here"

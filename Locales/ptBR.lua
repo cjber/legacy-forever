@@ -4,7 +4,7 @@ if GetLocale() ~= "ptBR" then
 	return
 end
 local L = ns.L
-L["Count quests finished by your other characters."] = "Conte as missões concluídas pelos seus outros personagens." -- mt
+L["No more suggestions for my other addons."] = "Chega de sugestões dos meus outros addons." -- mt
 
 L["%d Legacy objective left"] = "Falta %d objetivo de Legado"
 L["%d Legacy objectives left"] = "Faltam %d objetivos de Legado"

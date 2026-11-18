@@ -10,18 +10,21 @@ Each version's entry is also its release notes on GitHub, CurseForge and Wago. O
 verbatim rather than rewritten as the addon moves. API changes other addons' authors need go under an
 optional `### For addon authors` subsection after a version's player bullets.
 
-## [2.4.5] - 2026-11-17
+## [2.5.0] - 2026-11-18
 
-<!-- forever-core-sync -->
-
-- Ships with the same shared code as your other Forever addons, so they keep working together.
-
-## [2.4.4] - 2026-11-17
+<!-- discord-image: docs/screenshots/tracker.png -->
 
 ### Changed
 
+- **No more suggestions for my other addons.** The Forever addons settings page, the "Suggest my other Forever addons" map menu entry and the Shortest Path and Adventure Guide lines in pin and zone tooltips are gone, following ForeverCore 1.15.0.
+- **Needs ForeverCore 1.15.0**, where the shared column sits left of the game's quest tracker. Drag a section heading to move it; right-click a heading for "Lock the tracker".
 - Tracker menus match the Forever column: right-click a section or block for its actions and a Tracker submenu, including Hide this section. Both sections can be restored in the Objective tracker settings.
-- Ships with the same shared code as your other Forever addons, so they keep working together.
+- **Updates are published on CurseForge and GitHub.** Wago publishing has ended, so install and update from CurseForge. (cjber/forever-core#649)
+
+### Fixed
+
+- **A turned-off ForeverCore is named as the problem.** With ForeverCore turned off, Legacy Forever now says so at login, instead of naming every other Forever addon as out of date. (cjber/forever-core#816)
+- **The addon compartment entry says why Legacy Forever stopped.** While Legacy Forever cannot start, clicking its entry repeats the line naming the fix instead of raising a Lua error.
 
 ## [2.4.3] - 2026-11-17
 

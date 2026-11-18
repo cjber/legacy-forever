@@ -4,7 +4,7 @@ if GetLocale() ~= "zhTW" then
 	return
 end
 local L = ns.L
-L["Count quests finished by your other characters."] = "統計你其他角色完成的任務。" -- mt
+L["No more suggestions for my other addons."] = "不再推薦我的其他插件。" -- mt
 
 L["%d Legacy objective left"] = "剩餘%d個傳承目標"
 L["%d Legacy objectives left"] = "剩餘%d個傳承目標"
