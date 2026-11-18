@@ -190,9 +190,6 @@ local ns = {
 	NavigateHint = function()
 		return "Click to travel there."
 	end,
-	CompanionHint = function()
-		return nil
-	end,
 	Navigate = function(uiMapID, x, y, title)
 		navigated[#navigated + 1] = { uiMapID, x, y, title }
 	end,

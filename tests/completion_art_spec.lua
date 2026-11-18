@@ -273,12 +273,10 @@ ForeverCore = {
 			module.OnBlockHeaderEnter = function() end
 		end,
 	},
-	Family = { Hint = function() end },
 	OpenMap = function() end,
 	ContextMenu = function() end,
 }
 ns.core = { MapCanvas = {} }
-ns.FamilyDB = function() end
 ns.Live = { Visible = function() end, Criteria = function() end }
 local alerts = {
 	AddAlert = function() end,

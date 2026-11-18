@@ -24,7 +24,6 @@ ns.Saved = Saved
 ---| 'showOutlines'
 ---| 'showEntrances'
 ---| 'whatsNew'
----| 'suggestFamily'
 ---| 'map'
 ---| 'tracker'
 ---| 'mapCollapsed'
@@ -52,9 +51,6 @@ local DEFAULTS = {
 	showEntrances = true,
 	-- One chat line after an update, never on a first install.
 	whatsNew = true,
-	-- A grey line where one of the other Forever addons, not installed, would do more for you. The shared
-	-- Forever addons page (ForeverCore's UI/ForeverFamily.lua) reads it from the saved table by this name.
-	suggestFamily = true,
 	zoneCompletion = {
 		-- The map is on so the feature is visible; the tracker takes screen space, so it waits to be asked.
 		map = true,
@@ -79,25 +75,14 @@ local DEFAULTS = {
 local function Root()
 	LegacyForeverDB = LegacyForeverDB or {}
 	local root = LegacyForeverDB
-	-- Before 0.8 the Shortest Path line had its own switch, "Suggest companion addons". A player who turned it
-	-- off has every family suggestion off, once: the old key goes, so turning the new one back on sticks.
-	if root.companions ~= nil then
-		if root.companions == false then
-			root.suggestFamily = false
-		end
-		root.companions = nil
-	end
+	-- The addon suggestions and their switches are gone, so what they kept is dead data.
+	root.companions = nil
+	root.suggestFamily = nil
+	root.familyDismissed = nil
 	-- Forever Leaderboards is gone, so the peer tables it kept are dead data.
 	root.peerStats = nil
 	root.sharedStats = nil
 	return root
-end
-
--- The saved table itself, for the shared Forever addons code, which reads suggestFamily and keeps the
--- dismissed suggestions (familyDismissed) in it.
----@return LegacySavedVariables
-function ns.FamilyDB()
-	return Root()
 end
 
 -- A table of the addon's own data in the saved variables. Its owner (the tracked list, the flight path

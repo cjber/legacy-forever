@@ -32,21 +32,6 @@ local function ShortestPath()
 	return api and type(api.Navigate) == "function" and api.Navigate or nil
 end
 
--- The addon folder the TOC's OptionalDeps names.
-local SHORTEST_PATH = "ShortestPathForever"
-
--- A grey suggestion under a pin's click hint: Shortest Path Forever plots the whole route, flights and boats
--- included, where the game's waypoint is a straight line. Only while it isn't installed and the shared
--- "Suggest my other Forever addons" switch is on (ForeverCore's family page); one installed but turned off was the
--- player's choice.
----@return string?
-function ns.CompanionHint()
-	if ForeverCore.Family.Hint(ns.FamilyDB(), "LegacyForever.pinShortestPath", SHORTEST_PATH) then
-		return L["Install Shortest Path Forever to have the route plotted for you."]
-	end
-	return nil
-end
-
 -- Names what a click tries first; Navigate still falls back when Shortest Path declines.
 ---@return string
 function ns.NavigateHint()
