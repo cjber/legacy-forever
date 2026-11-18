@@ -89,7 +89,7 @@ Everything is generated from the Forever client's own data (via [wago.tools](htt
 
 **Found a wrong or missing objective?** Type `/lf report` and paste what it shows into a [wrong objective issue](https://github.com/cjber/legacy-forever/issues/new?template=wrong_objective.yml).
 
-The shared Forever column sits to the left of the game's quest tracker and follows it when you move that tracker in Edit Mode. Drag a section's heading to put it anywhere; it stays there after `/reload`. Right-click a heading for **Lock** and **Reset position**.
+The shared Forever column sits to the left of the game's quest tracker and follows it when you move that tracker in Edit Mode. Drag a section's heading to put it anywhere; it stays there after `/reload`. Right-click a heading for **Lock the tracker**, which stops dragging.
 
 ## Works alongside
 
