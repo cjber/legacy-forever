@@ -87,7 +87,6 @@ ForeverCore = dofile("tests/forever_core.lua").install(_G, {
 	"Core/OpenMap.lua",
 	"Core/Log.lua",
 	"UI/Report.lua",
-	"UI/ForeverFamily.lua",
 	"UI/ContextMenu.lua",
 	"UI/Credits.lua",
 	"UI/MapCanvas.lua",
@@ -770,8 +769,7 @@ check(scans == scansCold + 1 and not ns.Quests.Cold(), "the next frame builds th
 check(assert(ns.ZoneCompletion.Of(100)).quests.total == 2, "and the next draw counts the zone's quests")
 settings.tracker, settings.count_quests = nil, nil
 
--- The zone completion tooltip: a grey Adventure Guide Forever line while it isn't installed, behind the shared
--- family switch, and never for one that is on, turned off, switched off or dismissed.
+-- The zone completion tooltip counts what is left in the zone and suggests no other addon.
 local agf = "missing"
 C_AddOns = {
 	IsAddOnLoaded = function(folder)
@@ -798,34 +796,14 @@ local function ZoneTooltip(source)
 		zoneTracker:OnBlockHeaderEnter({ id = 100 })
 	end
 	local found = 0
-	for index, line in ipairs(drawn) do
+	for _, line in ipairs(drawn) do
 		if line == AGF_LINE then
 			found = found + 1
-			check(index == #drawn - (source == "corner" and 1 or 0), "the suggestion stays under the counts")
 		end
 	end
 	return found
 end
-check(ZoneTooltip("corner") == 1, "the map corner: Adventure Guide missing, one grey line, on by default")
-check(ZoneTooltip() == 1, "the tracker: Adventure Guide missing, one grey line, on by default")
-agf = "off"
-check(ZoneTooltip() == 0, "installed but turned off: no line, the player chose that")
-agf = "on"
-check(ZoneTooltip() == 0, "on: no line")
-agf = "missing"
-LegacyForeverDB.suggestFamily = false
-check(ZoneTooltip() == 0, "switched off: no line")
-LegacyForeverDB.suggestFamily = nil
-LegacyForeverDB.familyDismissed = { ["LegacyForever.zoneAdventureGuide"] = true }
-check(ZoneTooltip() == 0, "dismissed: no line")
-LegacyForeverDB.familyDismissed = nil
-settings.count_areas, criteria[900] = false, { { completed = true } }
-ns.Live.Invalidate()
-check(assert(ns.ZoneCompletion.Of(100)).complete and ZoneTooltip() == 0, "a zone with nothing left: no line")
-settings.count_areas, criteria[900] = nil, nil
-ns.Live.Invalidate()
-LegacyForeverDB.companions = false
-check(ZoneTooltip() == 0, "an old Suggest companion addons off carries over")
-check(LegacyForeverDB.suggestFamily == false and LegacyForeverDB.companions == nil, "and is migrated once")
+check(ZoneTooltip("corner") == 0, "the map corner never suggests another Forever addon, even with it missing")
+check(ZoneTooltip() == 0, "the tracker never suggests another Forever addon, even with it missing")
 
 print(("api_spec: %d checks passed"):format(checks))

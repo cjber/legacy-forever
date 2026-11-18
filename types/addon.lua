@@ -182,10 +182,9 @@
 ---@field showAreas boolean
 ---@field showEntrances boolean
 ---@field whatsNew boolean
----@field suggestFamily boolean
 ---@field zoneCompletion LegacySettings
 
----@class LegacySavedVariables : ForeverFamilyDB
+---@class LegacySavedVariables
 ---@field errors? ForeverCaughtError[] the shared error journal, kept by ForeverCore
 ---@field log? ForeverDebugLogStore the shared debug log ring, kept by ForeverCore
 ---@field trackerHost? ForeverTrackerLegacySettings the old tracker table, offered once to ForeverCore
@@ -196,8 +195,6 @@
 ---@field showAreas? boolean
 ---@field showEntrances? boolean
 ---@field whatsNew? boolean
----@field suggestFamily? boolean
----@field companions? boolean Before 0.8; Saved migrates it to suggestFamily.
 ---@field peerStats? table<string, table> Forever Leaderboards' old per-character peer table, dropped once by Saved.
 ---@field sharedStats? table<string, table> Forever Leaderboards' older shared cache, dropped once by Saved.
 ---@field lastVersion? string

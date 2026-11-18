@@ -88,11 +88,6 @@ ForeverCore.TrackerLine = {
 		module.OnBlockHeaderEnter = noop
 	end,
 }
-ForeverCore.Family = {
-	Hint = function()
-		return false
-	end,
-}
 ForeverCore.OpenMap = function()
 	return true
 end
@@ -151,9 +146,6 @@ ns.MapContents = {
 ns.Completion = { AddSummary = noop, AddMenu = noop }
 ns.NavigateHint = function()
 	return "Click to travel there."
-end
-ns.CompanionHint = function()
-	return nil
 end
 ns.Navigate = noop
 ns.ZoneCompletion = { OnChange = noop }
@@ -381,9 +373,6 @@ completionNs.Live = {
 	CurrentZone = noop,
 	ContinentOf = noop,
 }
-completionNs.FamilyDB = function()
-	return {}
-end
 completionNs.Quests = {
 	Status = function()
 		return "ready"
