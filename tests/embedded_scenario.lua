@@ -13,10 +13,7 @@ scenario("embedded ForeverCore boots without the standalone addon", function(sim
 	assert(selected.folder == "LegacyForever", "folder " .. tostring(selected.folder))
 	assert(G.ForeverCore ~= nil, "the facade is published")
 	assert(loader.CallbackError() == nil, tostring(loader.CallbackError()))
-	assert(
-		type(G.LegacyForeverDB) == "table" and type(G.LegacyForeverDB.ForeverCoreStore) == "table",
-		"mirror"
-	)
+	assert(type(G.LegacyForeverDB) == "table" and type(G.LegacyForeverDB.ForeverCoreStore) == "table", "mirror")
 	sim:reload()
 	assert(sim.G.ForeverCoreLoader.Selected().mode == "elected", "elected after reload")
 end)
