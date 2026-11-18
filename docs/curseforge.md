@@ -65,7 +65,7 @@ Open the world map, or click the addon's icon in the addon compartment: the Lega
 
 For a bug report, paste `/lf report`. The report includes errors and log lines from earlier sessions; for a wrong or missing objective, paste it into a [wrong objective issue](https://github.com/cjber/legacy-forever/issues/new?template=wrong_objective.yml).
 
-Translated into French by Brainc3ll, and into German, Spanish, Korean, Brazilian Portuguese, Russian and Chinese by machine; French lines added since, such as the Forever addons page, are machine translated too. Corrections are welcome as a pull request or through the [translation form](https://github.com/cjber/legacy-forever/issues/new?template=translation.yml), and [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has the template.
+Translated into French by Brainc3ll, and into German, Spanish, Korean, Brazilian Portuguese, Russian and Chinese by machine; French lines added since are machine translated too. Corrections are welcome as a pull request or through the [translation form](https://github.com/cjber/legacy-forever/issues/new?template=translation.yml), and [Locales](https://github.com/cjber/legacy-forever/tree/main/Locales) has the template.
 
 <!-- forever-family:start -->
 
@@ -90,7 +90,7 @@ For help, ideas and each day's release notes, join [cjber's Workshop on Discord]
 
 <!-- forever-family:end -->
 
-With Shortest Path Forever, clicking a dungeon or raid pin plans the trip there. Adventure Guide Forever shows your zone completion in its guide. Tweaks Forever's dungeon entrance icons and unexplored-area tint step aside where Legacy already marks the map. Tracked challenges share one tracker column with the other addons' tracker sections, above your quests.
+With Shortest Path Forever, clicking a dungeon or raid pin plans the trip there. Adventure Guide Forever shows your zone completion in its guide. Tweaks Forever's dungeon entrance icons and unexplored-area tint step aside where Legacy already marks the map. Tracked challenges share one tracker column with the other addons' tracker sections, beside the game's quest tracker.
 
 <!-- forever-credits:start -->
 
