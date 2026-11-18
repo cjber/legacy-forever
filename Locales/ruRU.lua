@@ -4,8 +4,7 @@ if GetLocale() ~= "ruRU" then
 	return
 end
 local L = ns.L
-L["Count quests finished by your other characters."] =
-	"Учитывайте задания, выполненные другими вашими персонажами." -- mt
+L["No more suggestions for my other addons."] = "Больше никаких предложений моих других аддонов." -- mt
 
 L["%d Legacy objective left"] = "Осталось целей старинных испытаний: %d"
 L["%d Legacy objectives left"] = "Осталось целей старинных испытаний: %d"

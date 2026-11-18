@@ -54,8 +54,7 @@ L["Every quest this character can take in the zone, from Questie."] =
 L["Flight paths"] = "Flugrouten"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Schattiert den echten Boden jedes unentdeckten Gebiets, mit einer Markierung am Rand. Gebiete ohne Geländedaten behalten die Schattierung."
-L["Count quests finished by your other characters."] =
-	"Zähle Quests, die deine anderen Charaktere abgeschlossen haben." -- mt
+L["No more suggestions for my other addons."] = "Keine Vorschläge mehr für meine anderen Addons." -- mt
 L["In the objective tracker"] = "In der Questzielverfolgung"
 L["Install AtlasLoot for recommended levels."] = "Installiert AtlasLoot für empfohlene Stufen."
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
