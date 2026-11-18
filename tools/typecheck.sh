@@ -2,6 +2,11 @@
 set -euo pipefail
 
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
+# --no-luals runs every check here but LuaLS itself, which holds gigabytes; CI always runs it.
+run_luals=1
+if [[ ${1:-} == --no-luals ]]; then
+    run_luals=0
+fi
 # The annotation checkout and the LuaLS version come from tools/toolchain.json, synced from ForeverCore: the one
 # place either is pinned, and the file CI installs LuaLS from.
 pins=$(python3 -c 'import json; t = json.load(open("tools/toolchain.json"))["tools"]; print(t["annotations"]["commit"], t["luals"]["version"])')
@@ -10,7 +15,7 @@ luals=${pins#* }
 library=.types/vscode-wow-api
 server=${LUA_LANGUAGE_SERVER:-lua-language-server}
 
-if [[ $("$server" --version) != "$luals" ]]; then
+if (( run_luals )) && [[ $("$server" --version) != "$luals" ]]; then
     echo "typecheck: lua-language-server $luals is required" >&2
     exit 1
 fi
@@ -48,6 +53,11 @@ python3 tools/check_store_page.py
 python3 tools/typecheck_coverage.py
 python3 tools/lint_multivalue.py
 
+# --no-luals (gate --changed): the checks above run, and the whole-repo LuaLS run is left to CI.
+if (( ! run_luals )); then
+    echo "typecheck: LuaLS left to CI (--no-luals)"
+    exit 0
+fi
 # A fresh output file prevents a failed/crashed server from reusing an earlier clean report.
 report=$(mktemp .types/diagnostics.XXXXXX.json)
 trap 'rm -f -- "$report"' EXIT
