@@ -13,6 +13,7 @@
 ## X-Forever-Core: v1.14.5
 ## OptionalDeps: ShortestPathForever, QuestieDB, Questie, AtlasLootClassic, ForeverCore
 ## SavedVariables: LegacyForeverDB
+## X-Forever-Core-Embed: 1
 ## LoadSavedVariablesFirst: 1
 ## AddonCompartmentFunc: LegacyForever_OnAddonCompartmentClick
 
