@@ -1,34 +1,34 @@
 {
-  "input_digest": "a1062c09d92ae34ddb42c51ffcd02455bce675d932b1b2af4c4694d5afc11ece",
-  "runtime_sha256": "a1062c09d92ae34ddb42c51ffcd02455bce675d932b1b2af4c4694d5afc11ece",
-  "candidate": "508753d349f930fd90def16ea209f00d1b10cfb5539d8f054d017ad41120619e",
+  "input_digest": "551af430f9fcd3ef753f980f3efa5a441ffc7501339947b2dc5ca00ec94244bd",
+  "runtime_sha256": "551af430f9fcd3ef753f980f3efa5a441ffc7501339947b2dc5ca00ec94244bd",
+  "candidate": "17e0d59f812f6bb495f186e279d3bb8ce9af916372ae58affd657ee07eaee006",
   "client_build": "1.60.1.70938 (Interface 16001)",
   "tested_artifact": "source-tree",
-  "source_commit": "5ae2660206a4115f58eae501a719971e37083441",
+  "source_commit": "dbbb1631ed46ce1bbcd80552c2bda0a4b027c663",
   "flows": [
     {
-      "name": "section menu",
+      "name": "core-off",
       "steps": [
-        "section-menu.lua sha256:094bc69e5b6b1e97959c6cff2c8ca7b088383c1ccb54224909042790ca6612ce"
+        "sha256:7a97d2d7d8e316db43364800d15033bda3103efd7331b897032fcc5ec8f4c46b noop.lua"
       ],
       "result": "pass"
     },
     {
-      "name": "challenge menu",
+      "name": "compartment",
       "steps": [
-        "block-menu.lua sha256:1c721ad37e5c306a3f563913f97c2c3ea93865b677798128ab2928e7364c935c"
+        "sha256:66b69acf0b97ad948d269db573d66aeeeb3a81ec9ec08d78eee5373f62dc6c45 legacy-forever.lua"
       ],
       "result": "pass"
     }
   ],
   "images": [
     {
-      "url": "https://gist.githubusercontent.com/cjber/c96ebd428e12e0e2d5ef4ed7e86777c6/raw/f92f30934b74d7d2d72aa0d61bc5a4493150fe35/1-section-menu.png",
-      "sha256": "1ea3b36a29ac2df57c0a117ec92ba9475915d39af8a6a8bf6eadcbca63bd6418"
+      "url": "https://gist.githubusercontent.com/cjber/bf781ac4babb456a7b216497599665e6/raw/eb61b7367abd0c07087e51ad7eb81d1a1e8d5bd1/1-core-off.png",
+      "sha256": "517206920553bca51e0efa7761bc6354519d0f247d4db43097ec6212e3cbc850"
     },
     {
-      "url": "https://gist.githubusercontent.com/cjber/c96ebd428e12e0e2d5ef4ed7e86777c6/raw/f92f30934b74d7d2d72aa0d61bc5a4493150fe35/2-challenge-menu.png",
-      "sha256": "d71c62c0b27d1085fa285cbf6ded3981e92460a05da130f464a9c765d367c54c"
+      "url": "https://gist.githubusercontent.com/cjber/bf781ac4babb456a7b216497599665e6/raw/eb61b7367abd0c07087e51ad7eb81d1a1e8d5bd1/2-compartment.png",
+      "sha256": "cd98a582031acd8089d50bc7a3fb1fa24a7bc56a5d50b37d6e0d9db5794aecb2"
     }
   ]
 }

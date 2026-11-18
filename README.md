@@ -16,12 +16,13 @@ Legacy Forever shows unfinished challenges on the world map and tracks the ones 
 
 The game does not give addons everything, so a few things are out of reach for now.
 
-- Kills, quests and reputations have no spot on the map, because the game gives addons no spawn or encounter data for them: track the challenge to follow its progress.
-- Some areas have no shape on the map, so they count towards a zone but are never shaded.
-- Of the raids, only Onyxia's Lair has an entrance marker in the game's data so far, so other raid entrances get no pin.
-- Flight paths count once you have opened a flight master on that continent, and show as "?" until then, because the game only says which ones you know there.
-- Zone completion leaves out rares, because the game does not say which belong to a zone, and counts quests only with Questie or QuestieDB installed.
-- Quest counts are for the character you are playing, and skip quests behind a profession, reputation, spell or an exclusive choice.
+- Kills have no spot on the map, because the game gives addons no spawn data for them: track the challenge to follow its progress.
+- Some areas have no outline in the game's map art, so they count towards the zone's percent but are never shaded.
+- Of the raids, only Onyxia's Lair has an entrance in the game's data so far, so other raids get no map pin and do not count towards a zone's percent.
+- Flight paths count once you have talked to a flight master on that continent, because the game only says which ones you know there. Until then the flight path count shows "?".
+- Zone completion leaves out rares, because the game does not say which belong to a zone.
+- Zone completion counts quests only when Questie or QuestieDB is installed and you tick the quest category.
+- Quest counts are for the character you are playing, unless you turn on Count account quests. They skip quests behind a profession, reputation or spell, and quests after a choice that could shut them, because the addon cannot tell whether you can take them.
 
 <p align="center"><img src="https://raw.githubusercontent.com/cjber/legacy-forever/main/docs/screenshots/demo.gif" width="640" alt="Ashenvale on the world map as two areas are found, then the Legacy menu"></p>
 
@@ -60,7 +61,7 @@ Progress comes from the game each time, so it matches the Legacy panel and follo
 
 ## Install
 
-Install it from [CurseForge](https://www.curseforge.com/wow/addons/legacy-forever) or [Wago Addons](https://addons.wago.io/addons/legacy-forever), or download the zip from [Releases](https://github.com/cjber/legacy-forever/releases). To install the zip by hand, extract it into the WoW: Forever client's `Interface/AddOns/` folder (`_forever_` on the live client, `_classic_beta_` on the beta) so you end up with `AddOns/LegacyForever/LegacyForever.toc`.
+Install it from [CurseForge](https://www.curseforge.com/wow/addons/legacy-forever), or download the zip from [Releases](https://github.com/cjber/legacy-forever/releases). To install the zip by hand, extract it into the WoW: Forever client's `Interface/AddOns/` folder (`_forever_` on the live client, `_classic_beta_` on the beta) so you end up with `AddOns/LegacyForever/LegacyForever.toc`.
 
 ## Usage
 
@@ -147,7 +148,7 @@ See [the tooling notes](tools/README.md#type-checking) for the multi-value rule.
 
 CI runs these checks on main pushes and pull requests. Each day a scheduled job checks wago.tools for a newer Forever build and, if the Legacy data differs, opens a pull request with the regenerated `Data/Legacy.lua`.
 
-**Releasing:** run `python3 tools/changelog.py release X.Y.Z` to gather the `changes/*.md` notes into `## [X.Y.Z] - YYYY-MM-DD`, then `git tag -s vX.Y.Z && git push --tags`, or run the Release workflow on main with `version` set. The [BigWigs packager](https://github.com/BigWigsMods/packager) builds the zip and uploads it to GitHub Releases, CurseForge and Wago, with that version's entry (`tools/changelog.py`) as the release notes.
+**Releasing:** run `python3 tools/changelog.py release X.Y.Z` to gather the `changes/*.md` notes into `## [X.Y.Z] - YYYY-MM-DD`, then `git tag -s vX.Y.Z && git push --tags`, or run the Release workflow on main with `version` set. The [BigWigs packager](https://github.com/BigWigsMods/packager) builds the zip and uploads it to GitHub Releases, CurseForge, with that version's entry (`tools/changelog.py`) as the release notes.
 
 **Contributing:** read [CONTRIBUTING.md](https://github.com/cjber/.github/blob/main/CONTRIBUTING.md) and this repository's [AGENTS.md](AGENTS.md). Report security problems privately, as [SECURITY.md](https://github.com/cjber/.github/blob/main/SECURITY.md) describes.
 
