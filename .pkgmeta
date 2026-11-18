@@ -36,5 +36,7 @@ externals:
 move-folders:
   LegacyForever/ForeverCore: ForeverCore
 
-required-dependencies:
+# ForeverCore is embedded under Libs/ForeverCore, so it is listed as an embedded library: the CurseForge app links
+# it on the project page but never installs it as a required dependency.
+embedded-libraries:
   - forevercore
