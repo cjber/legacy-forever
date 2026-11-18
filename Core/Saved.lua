@@ -72,16 +72,22 @@ local DEFAULTS = {
 }
 
 ---@return LegacySavedVariables
+---@type LegacySavedVariables?
+local cleared
 local function Root()
 	LegacyForeverDB = LegacyForeverDB or {}
 	local root = LegacyForeverDB
-	-- The addon suggestions and their switches are gone, so what they kept is dead data.
-	root.companions = nil
-	root.suggestFamily = nil
-	root.familyDismissed = nil
-	-- Forever Leaderboards is gone, so the peer tables it kept are dead data.
-	root.peerStats = nil
-	root.sharedStats = nil
+	-- Every switch read comes through here, so the dead keys are cleared once per saved table, not per read.
+	if cleared ~= root then
+		cleared = root
+		-- The addon suggestions and their switches are gone, so what they kept is dead data.
+		root.companions = nil
+		root.suggestFamily = nil
+		root.familyDismissed = nil
+		-- Forever Leaderboards is gone, so the peer tables it kept are dead data.
+		root.peerStats = nil
+		root.sharedStats = nil
+	end
 	return root
 end
 
