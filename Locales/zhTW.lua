@@ -4,7 +4,7 @@ if GetLocale() ~= "zhTW" then
 	return
 end
 local L = ns.L
-L["Count quests finished by your other characters."] = "統計你其他角色完成的任務。" -- mt
+L["No more suggestions for my other addons."] = "不再推薦我的其他插件。" -- mt
 
 L["%d Legacy objective left"] = "剩餘%d個傳承目標"
 L["%d Legacy objectives left"] = "剩餘%d個傳承目標"
@@ -35,8 +35,6 @@ L["/lf criteria 684 - list what the game reports for one achievement"] =
 L["/lf issue - report a bug or request a feature with a ready-made GitHub issue link"] =
 	"/lf issue - 產生可直接使用的 GitHub issue 連結，用於回報錯誤或提出功能建議"
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 顯示可複製到錯誤回報中的報告"
-L["Adventure Guide Forever routes the quests left in this zone."] =
-	"Adventure Guide Forever會為此地區剩餘的任務規劃路線。"
 L["Already complete"] = "已完成"
 L["Areas explored"] = "已探索區域"
 L["Attach to quest tracker"] = "附加到任務追蹤器"
@@ -53,13 +51,10 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"此角色在該地區可接的所有任務，資料來自Questie。"
 L["Flight paths"] = "飛行路線"
-L["Forever addons"] = "Forever插件"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"以陰影顯示每個未探索區域的真實地形，並在邊緣放置圖釘。沒有地形資料的區域仍然使用陰影。"
 L["In the objective tracker"] = "在目標追蹤器中"
 L["Install AtlasLoot for recommended levels."] = "安裝AtlasLoot以查看建議等級。"
-L["Install Shortest Path Forever to have the route plotted for you."] =
-	"安裝Shortest Path Forever即可為你規劃路線。"
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"將共用的 Forever 追蹤器保持在您放置的位置。頂部的拖曳握把不再移動它。"
 L["Legacy"] = "傳承"
@@ -88,13 +83,10 @@ L["Quest"] = "任務"
 L["Recommended levels: %s (AtlasLoot)"] = "建議等級：%s（AtlasLoot）"
 L["Repeatable, holiday and profession quests are left out."] = "不計入可重複、節日和專業任務。"
 L["Reputations (Friendly)"] = "聲望（友好）"
-L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
-	"在我的其他Forever插件能幫上忙的地方顯示一行不顯眼的提示。僅限你尚未安裝的插件。"
 L["Show dungeon and raid entrances"] = "顯示地城和團隊入口"
 L["Show undiscovered areas"] = "顯示未發現的區域"
 L["Show where to discover areas"] = "顯示可探索區域的位置"
 L["Stop tracking"] = "停止追蹤"
-L["Suggest my other Forever addons"] = "推薦我的其他Forever插件"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地區以及那裡剩餘的事項。你追蹤的挑戰保留在各自的傳承區塊中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

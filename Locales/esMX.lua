@@ -4,7 +4,7 @@ if GetLocale() ~= "esMX" then
 	return
 end
 local L = ns.L
-L["Count quests finished by your other characters."] = "Cuenta las misiones completadas por tus otros personajes." -- mt
+L["No more suggestions for my other addons."] = "Se acabaron las sugerencias de mis otros addons." -- mt
 
 L["%d Legacy objective left"] = "Queda %d objetivo de legado"
 L["%d Legacy objectives left"] = "Quedan %d objetivos de legado"
@@ -37,8 +37,6 @@ L["/lf issue - report a bug or request a feature with a ready-made GitHub issue 
 	"/lf issue - crea un enlace de issue de GitHub listo para reportar un error o sugerir una mejora"
 L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - muestra un informe para copiar en un reporte de error"
-L["Adventure Guide Forever routes the quests left in this zone."] =
-	"Adventure Guide Forever traza una ruta por las misiones que quedan en esta zona."
 L["Already complete"] = "Ya completado"
 L["Areas explored"] = "Áreas exploradas"
 L["Attach to quest tracker"] = "Anclar al rastreador de misiones"
@@ -55,13 +53,10 @@ L["Dungeons, raids and Legacy objectives count your progress on any character."]
 L["Every quest this character can take in the zone, from Questie."] =
 	"Todas las misiones que este personaje puede aceptar en la zona, según Questie."
 L["Flight paths"] = "Rutas de vuelo"
-L["Forever addons"] = "Addons Forever"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Sombrea el terreno real de cada zona sin descubrir, con un marcador en su borde. Las zonas sin datos del terreno mantienen el sombreado."
 L["In the objective tracker"] = "En el rastreador de objetivos"
 L["Install AtlasLoot for recommended levels."] = "Instala AtlasLoot para ver los niveles recomendados."
-L["Install Shortest Path Forever to have the route plotted for you."] =
-	"Instala Shortest Path Forever para que te trace la ruta."
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"Mantiene el rastreador compartido Forever donde lo pones. El tirador de arriba ya no lo arrastra."
 L["Legacy"] = "Legado"
@@ -91,13 +86,10 @@ L["Recommended levels: %s (AtlasLoot)"] = "Niveles recomendados: %s (AtlasLoot)"
 L["Repeatable, holiday and profession quests are left out."] =
 	"No se cuentan las misiones repetibles, de festividades ni de profesión."
 L["Reputations (Friendly)"] = "Reputaciones (Amistoso)"
-L["Show a quiet line where one of my other Forever addons would help. Only for addons you don't have."] =
-	"Muestra una línea discreta donde otro de mis addons Forever te ayudaría. Solo para addons que no tienes."
 L["Show dungeon and raid entrances"] = "Mostrar entradas de calabozos y bandas"
 L["Show undiscovered areas"] = "Mostrar áreas sin descubrir"
 L["Show where to discover areas"] = "Mostrar dónde descubrir zonas"
 L["Stop tracking"] = "Cancelar seguimiento"
-L["Suggest my other Forever addons"] = "Sugerir mis otros addons Forever"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"La zona en la que estás y lo que queda por hacer. Los desafíos que sigues mantienen su propia sección de legado."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

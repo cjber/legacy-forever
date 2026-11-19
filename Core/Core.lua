@@ -13,7 +13,6 @@ end
 ---@field POINTS_ICON string
 ---@field WHATS_NEW string the headline of the release WHATS_NEW_VERSION names
 ---@field WHATS_NEW_VERSION string the newest release in CHANGELOG.md with a bold headline
----@field CompanionHint fun(): string?
 ---@field WhatsNew fun()
 ---@field ForeverRequire fun(ready: boolean): boolean
 ---@field L table<string, string>
@@ -25,7 +24,6 @@ end
 ---@field Model LegacyModel
 ---@field Live LegacyLive
 ---@field Quests LegacyQuests
----@field FamilyDB fun(): LegacySavedVariables
 ---@field Tracker LegacyTracker
 ---@field ZoneCompletion LegacyZoneCompletion
 ---@field Completion LegacyCompletion
@@ -67,8 +65,8 @@ ns.POINTS_ICON = "UI-Legacy-Points-icon-c60"
 -- One sentence for the chat line after an update (WhatsNew.lua): the newest release's headline, and the version whose
 -- release carries it. A core sync's maintenance entry has no headline, so this stays on the release before it and
 -- WhatsNew stays quiet for that maintenance version while still remembering it.
-ns.WHATS_NEW_VERSION = "2.4.0"
-ns.WHATS_NEW = L["Count quests finished by your other characters."]
+ns.WHATS_NEW_VERSION = "2.5.0"
+ns.WHATS_NEW = L["No more suggestions for my other addons."]
 
 ---@param msg string
 function ns.Print(msg)
