@@ -46,7 +46,6 @@ L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - показать отчет для сообщения об ошибке"
 L["Already complete"] = "Уже завершено"
 L["Areas explored"] = "Исследованные области"
-L["Attach to quest tracker"] = "Прикрепить к отслеживанию заданий"
 L["Click the zone to see where."] = "Щелкните по зоне, чтобы увидеть где."
 L["Click to collapse."] = "Щелкните, чтобы свернуть."
 L["Click to expand."] = "Щелкните, чтобы развернуть."
@@ -111,8 +110,6 @@ L["This menu needs mouse and keyboard."] = "Для этого меню нужн�
 L["This version of QuestieDB isn't supported."] = "Эта версия QuestieDB не поддерживается."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"Отключите, если их уже отмечает другая модификация. Меню старинных испытаний на карте по-прежнему их показывает."
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"Отключите, чтобы перетаскивать общее отслеживание Forever в любое место экрана."
 L["Undiscovered area"] = "Неоткрытая область"
 L["Updates"] = "Обновления"
 L["Waiting for Questie and your quest log."] = "Ожидание Questie и журнала заданий."

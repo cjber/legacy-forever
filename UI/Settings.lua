@@ -103,31 +103,11 @@ local tracker = Section(category, L["Objective tracker"])
 AddCheckbox(tracker, "showTracker", L["Tracked Legacy challenges"])
 local host = ForeverCore.TrackerHost
 if host and host.GetSettings and host.SetAttached and host.OnAttachmentChanged then
-	local variable = PREFIX .. "trackerAttached"
-	local attachment = Settings.RegisterProxySetting(
-		tracker,
-		variable,
-		Settings.VarType.Boolean,
-		L["Attach to quest tracker"],
-		true,
-		function()
-			return host.GetSettings().attached
-		end,
-		function(value)
-			host.SetAttached(value)
-		end
-	)
-	Settings.RegisterInitializer(
-		tracker,
-		Settings.CreateCheckboxInitializer(
-			attachment,
-			nil,
-			L["Turn this off to drag the shared Forever tracker anywhere on screen."]
-		)
-	)
-	host.OnAttachmentChanged(function()
-		Settings.NotifyUpdate(variable)
-	end)
+	-- The shared column's attach choice, the same row and words in every Forever addon (forever-core#910).
+	local sections = ForeverCore.SettingsSections
+	if sections and sections.RegisterTrackerAttach then
+		sections.RegisterTrackerAttach(tracker, PREFIX .. "trackerAttached")
+	end
 	-- Lock keeps the detached column where it is: the grip ignores drag while it is on. It only writes the saved
 	-- switch, so it is safe to toggle in combat.
 	if host.SetLocked then
