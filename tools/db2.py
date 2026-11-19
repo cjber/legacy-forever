@@ -11,6 +11,8 @@ USER_AGENT = "LegacyForever/1.0"
 # (Asset), the other leaves Asset 0 and lets a ModifierTree say which creatures count.
 CRITERIA_KILL_CREATURE = 0
 CRITERIA_KILL_ANY_CREATURE = 78
+# Asset is a DungeonEncounter ID: the boss fight, not one creature.
+CRITERIA_DUNGEON_ENCOUNTER = 165
 CRITERIA_KINDS = {
     CRITERIA_KILL_CREATURE: "kill",
     5: "level",
@@ -19,7 +21,7 @@ CRITERIA_KINDS = {
     27: "quest",
     43: "explore",
     CRITERIA_KILL_ANY_CREATURE: "kill",
-    165: "instance",
+    CRITERIA_DUNGEON_ENCOUNTER: "instance",
     243: "reputation",
     261: "rank",
 }

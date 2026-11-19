@@ -8,6 +8,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from db2 import (
+    CRITERIA_DUNGEON_ENCOUNTER,
     CRITERIA_KILL_ANY_CREATURE,
     CRITERIA_KILL_CREATURE,
     CRITERIA_KINDS,
@@ -20,8 +21,8 @@ from db2 import (
 from legacy_render import COMPLETION_CATEGORIES, render
 from locations import BATTLEGROUNDS, curated_locations
 
-BUILD = "1.60.1.70938"
-SOURCE_DATE = "2026-11-13"
+BUILD = "1.60.1.70959"
+SOURCE_DATE = "2026-11-19"
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "tools" / ".cache"
 OUTPUT = ROOT / "Data" / "Legacy.lua"
@@ -541,6 +542,11 @@ def completion_wings(tables, graph, curated, compounds, completion, counts):
     wings = {}
     seen_refs = set()
     used_compounds = set()
+    # An encounter step names the fight, so the reviewed wing that lists it says which boss it is.
+    encounter_bosses = {
+        fact["encounter"]: boss for boss, fact in curated["dungeonWings"].items() if "encounter" in fact
+    }
+    used_encounters = set()
     for achievement in SPELUNKER:
         root = required(tables["Achievement"], achievement, "Spelunker")["Criteria_tree"]
         for step in graph.walk(root, set()):
@@ -556,9 +562,21 @@ def completion_wings(tables, graph, curated, compounds, completion, counts):
                 # Validated OR objectives get Legacy pins, never single-boss wings.
                 used_compounds.add(ref)
                 continue
-            if criterion["Type"] != CRITERIA_KILL_CREATURE or criterion["Asset"] <= 0 or step["Amount"] != 1:
-                raise ValueError(f"Spelunker {cid}: expected a single-boss kill step")
-            boss = criterion["Asset"]
+            if step["Amount"] != 1:
+                raise ValueError(f"Spelunker {cid}: expected a single-boss step")
+            if criterion["Type"] == CRITERIA_KILL_CREATURE and criterion["Asset"] > 0:
+                boss = criterion["Asset"]
+            elif criterion["Type"] == CRITERIA_DUNGEON_ENCOUNTER:
+                encounter = criterion["Asset"]
+                boss = encounter_bosses.get(encounter)
+                if boss is None:
+                    raise ValueError(
+                        f"Spelunker {cid}: DungeonEncounter {encounter} has no reviewed wing; "
+                        "add its encounter to a dungeonWings entry in tools/locations.json"
+                    )
+                used_encounters.add(encounter)
+            else:
+                raise ValueError(f"Spelunker {cid}: expected a single-boss kill or encounter step")
             name = step["Description_lang"]
             wing = wings.setdefault(boss, {"name": name, "refs": []})
             if not name.strip() or wing["name"] != name:
@@ -566,6 +584,10 @@ def completion_wings(tables, graph, curated, compounds, completion, counts):
             wing["refs"].append(ref)
     if used_compounds != compounds.keys():
         raise ValueError("Spelunker: stale compound-step references")
+    if used_encounters != encounter_bosses.keys():
+        raise ValueError(
+            f"Curated wing encounters no longer in Spelunker: {sorted(encounter_bosses.keys() - used_encounters)}"
+        )
     stale = curated["dungeonWings"].keys() - wings.keys()
     if stale:
         raise ValueError(f"Curated dungeon bosses no longer in Spelunker: {sorted(stale)}")
