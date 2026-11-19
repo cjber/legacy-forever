@@ -87,6 +87,7 @@ L["Show dungeon and raid entrances"] = "顯示地城和團隊入口"
 L["Show undiscovered areas"] = "顯示未發現的區域"
 L["Show where to discover areas"] = "顯示可探索區域的位置"
 L["Stop tracking"] = "停止追蹤"
+L["Stop tracking all"] = "全部停止追蹤"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地區以及那裡剩餘的事項。你追蹤的挑戰保留在各自的傳承區塊中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

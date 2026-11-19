@@ -103,6 +103,7 @@ L["Show dungeon and raid entrances"] = "Показывать входы в по�
 L["Show undiscovered areas"] = "Показывать неоткрытые области"
 L["Show where to discover areas"] = "Показывать места для обнаружения областей"
 L["Stop tracking"] = "Не отслеживать"
+L["Stop tracking all"] = "Не отслеживать все"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =

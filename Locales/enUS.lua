@@ -8,6 +8,7 @@ ns.L = setmetatable({}, {
 	end,
 })
 ns.L["This menu needs mouse and keyboard."] = "This menu needs mouse and keyboard."
+ns.L["Stop tracking all"] = "Stop tracking all"
 ns.L["Show where to discover areas"] = "Show where to discover areas"
 ns.L["%d yards away"] = "%d yards away"
 ns.L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =

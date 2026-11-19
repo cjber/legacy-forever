@@ -115,6 +115,19 @@ local function StopTracking(challenge)
 	end
 end
 
+-- The section header's end action: every tracked challenge and zone share at once.
+local function StopTrackingAll()
+	local tracked = Tracked()
+	if #tracked == 0 then
+		return
+	end
+	for index = #tracked, 1, -1 do
+		tracked[index] = nil
+	end
+	Tracker.Refresh()
+	Changed()
+end
+
 ---@class LegacyChallengeTracker : LegacyTrackerModule
 local ModuleMixin = { headerText = L["Legacy"] }
 
@@ -146,6 +159,8 @@ local contract = {
 			menu:End(L["Stop tracking"], function()
 				StopTracking(target.id)
 			end)
+		elseif #Tracked() > 0 then
+			menu:End(L["Stop tracking all"], StopTrackingAll)
 		end
 	end,
 	click = OpenChallenge,

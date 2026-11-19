@@ -158,6 +158,12 @@ for _, readyAtLoad in ipairs({ false, true }) do
 		table.concat(slots, "|") == "Title:Legacy|Open:Open in the Legacy panel",
 		"section header supplies its title"
 	)
+	tracked[1], tracked[2] = 10, 11
+	slots = {}
+	section.contract.menu({ kind = "section" }, menu)
+	assert(slots[3] == "End:Stop tracking all", "a section with tracked challenges offers Stop tracking all")
+	actions.End()
+	assert(#tracked == 0, "Stop tracking all clears every tracked challenge")
 	checks = checks + 1
 end
 print("tracker_lifecycle_spec: " .. checks .. " load-order cases passed")
