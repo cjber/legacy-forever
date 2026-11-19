@@ -4,7 +4,7 @@ if GetLocale() ~= "esMX" then
 	return
 end
 local L = ns.L
-L["No more suggestions for my other addons."] = "Se acabaron las sugerencias de mis otros addons." -- mt
+L["Stratholme: Live tracks again."] = "Stratholme: Live vuelve a seguirse." -- mt
 
 L["%d Legacy objective left"] = "Queda %d objetivo de legado"
 L["%d Legacy objectives left"] = "Quedan %d objetivos de legado"

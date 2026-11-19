@@ -18,4 +18,5 @@ local ready = ForeverCore ~= nil
 	and ForeverCore.TrackerLine ~= nil
 	and type(ForeverCore.TrackerLine.SetHeaderTooltip) == "function"
 
-ns.ForeverRequire(ready)
+-- The slash words Core/Core.lua registers, so a stopped addon still answers /lf with the line that names the fix.
+ns.ForeverRequire(ready, { key = "LEGACYFOREVER", "/lf", "/legacyforever" })
