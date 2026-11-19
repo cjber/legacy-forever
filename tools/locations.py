@@ -69,6 +69,9 @@ def validate_completion_row(tables, geography, section, key, row):
         raise ValueError(f"{label}: invalid ID")
     fields = {"uiMap", "name", "evidence"}
     optional = {"area", "instance"} if section in ("dungeonWings", "questInstances") else set()
+    if section == "dungeonWings":
+        # A Spelunker step that names the boss fight (DungeonEncounter) rather than the creature.
+        optional.add("encounter")
     if section == "questInstances":
         fields |= {"instance", "encounter"}
     elif section == "compoundInstances":
@@ -109,6 +112,12 @@ def validate_completion_row(tables, geography, section, key, row):
         encounter = required(tables["DungeonEncounter"], row["encounter"], label)
         if encounter["MapID"] != row["instance"] or encounter["Name_lang"] != row["name"]:
             raise ValueError(f"{label}: stale encounter name/instance")
+    elif section == "dungeonWings" and "encounter" in row:
+        if type(row["encounter"]) is not int or "instance" not in row:
+            raise ValueError(f"{label}: an encounter needs an int ID and the wing's instance")
+        encounter = required(tables["DungeonEncounter"], row["encounter"], label)
+        if encounter["MapID"] != row["instance"]:
+            raise ValueError(f"{label}: encounter {row['encounter']} is no longer in Map {row['instance']}")
     elif section == "reputations":
         validate_reputation(tables, key, row, label)
 

@@ -289,7 +289,8 @@
       "name": "Stratholme: Live",
       "area": 2279,
       "instance": 329,
-      "evidence": "Build 1.60.1.69913: Achievement 62033, CriteriaTree 230790, Criteria 550 (Type 0, Asset 10813). Exterior AreaTable 2279 (Stratholme) -> 139; UiMapAssignment 46733 -> UiMap 1423 (Eastern Plaguelands). Map 329 (Stratholme), CorpseMapID 0, Corpse (3392.3169, -3378.4832)."
+      "encounter": 478,
+      "evidence": "Build 1.60.1.70959: Achievement 62033, CriteriaTree 230790, Criteria 119884 (Type 165, Asset 478): DungeonEncounter 478 (Balnazzar, Map 329); build 1.60.1.69913 had Criteria 550 (Type 0, Asset 10813, Balnazzar). Exterior AreaTable 2279 (Stratholme) -> 139; UiMapAssignment 46733 -> UiMap 1423 (Eastern Plaguelands). Map 329 (Stratholme), CorpseMapID 0, Corpse (3392.3169, -3378.4832)."
     },
     "11492": {
       "uiMap": 1444,
