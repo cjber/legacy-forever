@@ -4,8 +4,7 @@ if GetLocale() ~= "ruRU" then
 	return
 end
 local L = ns.L
-L["No more suggestions for my other addons."] =
-	"Больше никаких предложений моих других аддонов." -- mt
+L["Stratholme: Live tracks again."] = "Стратхольм: Live снова отслеживается." -- mt
 
 L["%d Legacy objective left"] = "Осталось целей старинных испытаний: %d"
 L["%d Legacy objectives left"] = "Осталось целей старинных испытаний: %d"

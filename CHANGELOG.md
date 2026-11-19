@@ -10,6 +10,17 @@ Each version's entry is also its release notes on GitHub, CurseForge and Wago. O
 verbatim rather than rewritten as the addon moves. API changes other addons' authors need go under an
 optional `### For addon authors` subsection after a version's player bullets.
 
+## [2.5.2] - 2026-11-19
+
+### Fixed
+
+- **Stratholme: Live tracks again.** The Spelunker challenge's Stratholme: Live wing shows and tracks on the current WoW: Forever client, which now counts the Balnazzar encounter instead of the creature kill.
+
+### Changed
+
+- **Needs ForeverCore 1.15.3**, where every tracker section fits its lines and the column lays itself out again when Edit Mode moves the game's quest tracker.
+- When ForeverCore is missing or out of date, /lf answers with the line that says how to fix it instead of "Unknown command".
+
 ## [2.5.1] - 2026-11-18
 
 <!-- forever-core-sync -->

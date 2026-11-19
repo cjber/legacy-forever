@@ -70,7 +70,6 @@ L["Levels, skills, ranks and anything without a fixed place."] =
 L["Lock the tracker"] = "Lock the tracker"
 L["Needs QuestieDB, which lists each zone's quests."] = "Needs QuestieDB, which lists each zone's quests."
 L["No fixed location"] = "No fixed location"
-L["No more suggestions for my other addons."] = "No more suggestions for my other addons."
 L["No unfinished Legacy objectives with a place on this map."] =
 	"No unfinished Legacy objectives with a place on this map."
 L["Nothing left to do here"] = "Nothing left to do here"
@@ -94,6 +93,7 @@ L["Show dungeon and raid entrances"] = "Show dungeon and raid entrances"
 L["Show undiscovered areas"] = "Show undiscovered areas"
 L["Show where to discover areas"] = "Show where to discover areas"
 L["Stop tracking"] = "Stop tracking"
+L["Stratholme: Live tracks again."] = "Stratholme: Live tracks again."
 L["The current zone is not known yet."] = "The current zone is not known yet."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."

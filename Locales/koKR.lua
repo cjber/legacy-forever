@@ -4,7 +4,7 @@ if GetLocale() ~= "koKR" then
 	return
 end
 local L = ns.L
-L["No more suggestions for my other addons."] = "제 다른 애드온 추천이 더 이상 나오지 않습니다." -- mt
+L["Stratholme: Live tracks again."] = "스트라솔름: Live를 다시 추적합니다." -- mt
 
 L["%d Legacy objective left"] = "남은 유산 목표 %d개"
 L["%d Legacy objectives left"] = "남은 유산 목표 %d개"
