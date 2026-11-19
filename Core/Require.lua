@@ -18,4 +18,8 @@ local ready = ForeverCore ~= nil
 	and ForeverCore.TrackerLine ~= nil
 	and type(ForeverCore.TrackerLine.SetHeaderTooltip) == "function"
 
-ns.ForeverRequire(ready)
+-- Core/Core.lua's slash words; the pin gate (forever_tools.require_slash) keeps the two lists equal. A
+-- stopped addon still answers them with the line that names the fix, as its addon compartment entry does.
+ns.Slash = { key = "LEGACYFOREVER", "/lf", "/legacyforever" }
+
+ns.ForeverRequire(ready, ns.Slash)
