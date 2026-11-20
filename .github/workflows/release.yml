@@ -175,6 +175,12 @@ jobs:
           persist-credentials: false
       - name: Embed ForeverCore
         run: python3 -m tools.forever_tools.embed --core forever-core
+      # Hold until every Forever addon embeds ForeverCore: while any still ships the shared top-level folder,
+      # removing it rolls core back under the others (cjber/forever-core#448).
+      - name: Hold for the embed fleet
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 -m tools.forever_tools.fleet
       - uses: BigWigsMods/packager@01e8631a69c69d7654c788d152630d5fed9e3812 # v2.7.0
         env:
           CF_API_KEY: ${{ secrets.CF_API_KEY }}

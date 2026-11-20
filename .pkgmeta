@@ -28,16 +28,8 @@ optional-dependencies:
   - questie
   - atlasloot-forever
 
-# ForeverCore ships inside this zip as its own folder, at the release tools/forever-core.txt pins, so an
-# update brings it along: players who updated did not get it as a required dependency.
-externals:
-  ForeverCore: https://github.com/cjber/forever-core/releases/download/v1.15.4/ForeverCore-v1.15.4-forever.zip
-
-move-folders:
-  LegacyForever/ForeverCore: ForeverCore
-
-# ForeverCore is listed as an embedded library: the CurseForge app links it on the project page but never installs it
-# as a required dependency. The addon also carries the pinned core under Libs/ForeverCore, so it runs with the
-# standalone folder turned off or removed.
+# ForeverCore ships only under Libs/ForeverCore (the embed step), never as a shared top-level folder, so removing or
+# downgrading this addon cannot delete or roll back core under the others (cjber/forever-core#448). It is listed as an
+# embedded library: the CurseForge app links it on the project page but never installs it as a required dependency.
 embedded-libraries:
   - forevercore
