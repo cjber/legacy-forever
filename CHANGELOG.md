@@ -10,6 +10,21 @@ Each version's entry is also its release notes on GitHub, CurseForge and Wago. O
 verbatim rather than rewritten as the addon moves. API changes other addons' authors need go under an
 optional `### For addon authors` subsection after a version's player bullets.
 
+## [2.5.3] - 2026-11-20
+
+### Changed
+
+- **Legacy Forever carries ForeverCore inside itself.** It now works with ForeverCore turned off or uninstalled, and your ForeverCore settings carry over. You no longer need to install ForeverCore separately. If you have it installed, you can keep it or remove it. (cjber/forever-core#801)
+- **The dungeon and raid entrance row now says what it does.** "Show dungeon and raid entrances" (World map settings and the Legacy map menu) hides Legacy's pins on entrances when you turn it off, and the Legacy map menu still lists them.
+- **"What's new after an update" sits on the Legacy settings page itself.** Its one-row Updates page is gone.
+- **The World map page's zone completion row reads "Zone completion on the map"**, pairing with "Zone completion in the tracker".
+
+### Fixed
+
+- **Stop tracking all from the Legacy header.** Right-clicking the Legacy section header in the objective tracker now offers Stop tracking all when challenges are tracked, so the whole section can be cleared without opening each challenge.
+- **Attach to quest tracker says what it does.** Its tooltip now explains that on keeps the shared Forever tracker under the quest tracker and off moves it to the left, the same words every Forever addon shows (cjber/forever-core#910).
+- **/lf says why Legacy Forever stopped.** While Legacy Forever cannot start, typing /lf repeats the line naming the fix instead of reading "Unknown command".
+
 ## [2.5.2] - 2026-11-19
 
 ### Fixed

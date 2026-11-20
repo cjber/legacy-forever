@@ -4,7 +4,7 @@ if GetLocale() ~= "koKR" then
 	return
 end
 local L = ns.L
-L["Stratholme: Live tracks again."] = "스트라솔름: Live를 다시 추적합니다." -- mt
+L["Legacy Forever carries ForeverCore inside itself."] = "Legacy Forever에 이제 ForeverCore가 들어 있습니다." -- mt
 
 L["%d Legacy objective left"] = "남은 유산 목표 %d개"
 L["%d Legacy objectives left"] = "남은 유산 목표 %d개"

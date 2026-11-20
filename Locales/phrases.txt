@@ -62,6 +62,7 @@ L["Install AtlasLoot for recommended levels."] = "Install AtlasLoot for recommen
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."
 L["Legacy"] = "Legacy"
+L["Legacy Forever carries ForeverCore inside itself."] = "Legacy Forever carries ForeverCore inside itself."
 L["Legacy Forever report"] = "Legacy Forever report"
 L["Legacy objectives"] = "Legacy objectives"
 L["Levels, skills, ranks and anything without a fixed place."] =
@@ -93,7 +94,6 @@ L["Show undiscovered areas"] = "Show undiscovered areas"
 L["Show where to discover areas"] = "Show where to discover areas"
 L["Stop tracking"] = "Stop tracking"
 L["Stop tracking all"] = "Stop tracking all"
-L["Stratholme: Live tracks again."] = "Stratholme: Live tracks again."
 L["The current zone is not known yet."] = "The current zone is not known yet."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."
