@@ -16,6 +16,7 @@ end
 ---@field WhatsNew fun()
 ---@field ForeverRequire fun(ready: boolean): boolean
 ---@field OnFilesLoaded fun(callback: fun()) calls back once every file of the addon has run (Core/ForeverRequire.lua)
+---@field AfterEvents fun(callback: fun(), ...: string) calls back once the named loading events have fired
 ---@field L table<string, string>
 ---@field Art LegacyArt
 ---@field Saved LegacySaved

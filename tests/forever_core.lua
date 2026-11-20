@@ -33,7 +33,10 @@ end
 ---@param names string[]?
 ---@return table<string, boolean>
 local function wanted(names)
-	local set = { ["Core.lua"] = true, ["Locales/enUS.lua"] = true }
+	-- Core/API.lua holds the version Expose.lua publishes (ForeverCore 1.15.6 and later) and builds it with
+	-- Core/APIKit.lua, so every spec gets both.
+	local set =
+		{ ["Core.lua"] = true, ["Core/APIKit.lua"] = true, ["Core/API.lua"] = true, ["Locales/enUS.lua"] = true }
 	for _, name in ipairs(names or {}) do
 		set[name] = true
 	end

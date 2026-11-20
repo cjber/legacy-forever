@@ -228,13 +228,13 @@ local trackerEnv = setmetatable({
 			target[key] = value
 		end
 	end,
-	EventUtil = { ContinueAfterAllEvents = noop },
 	C_Timer = { After = noop },
 	hooksecurefunc = noop,
 }, { __index = _G })
 trackerEnv._G = trackerEnv
 
 local trackerNs = BaseNamespace()
+trackerNs.AfterEvents = noop
 trackerNs.Saved = {
 	OnChange = noop,
 	LegacyTrackerSettings = function()

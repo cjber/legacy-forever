@@ -10,6 +10,17 @@ Each version's entry is also its release notes on GitHub, CurseForge and Wago. O
 verbatim rather than rewritten as the addon moves. API changes other addons' authors need go under an
 optional `### For addon authors` subsection after a version's player bullets.
 
+## [2.5.6] - 2026-11-20
+
+### Fixed
+
+- The Legacy section in the objective tracker attaches again at login. After the latest ForeverCore update, Legacy's files ran after the game's loading signals they were waiting for, so the tracker's deferred attach pass and its "couldn't add a section" check never ran. They now wait only for the signals still to come (cjber/forever-core#980).
+- Ships with ForeverCore 1.15.6, the same shared code as your other Forever addons, so they keep working together.
+
+### For addon authors
+
+- `ZoneSummary` and `Targets` answer the standard reason `"none"` for a map with no Legacy data, where they answered `"unsupported"`, and a wrong argument answers through `ForeverCore.APIKit.Invalid()` (still `nil, "invalid"`).
+
 ## [2.5.5] - 2026-11-20
 
 ### Fixed
