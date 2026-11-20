@@ -3,7 +3,7 @@
   "source": {
     "repository": "https://github.com/cjber/forever-core",
     "path": ".agents/skills/wow-forever-addon/tooling/forever_tools",
-    "revision": "170c861eeca27c0853178da558f32cda57e1f1d1"
+    "revision": "e173bafdcadc05bbe1e018e60d2e38ece51be31f"
   },
   "files": {
     "__init__.py": "845dbed90ad519817771603e96839d1ba970007d5a6d997a4a13fef416b8bcd1",
@@ -38,7 +38,7 @@
     "lua51.py": "04bc4bf59b2f64c7adef42ece6a5a86fc7154fc899c1d235df3799b63b20ca5a",
     "luadata.py": "d2621f31d1ddfa8c338d3305d3dbfb74020555f512c96b5991484404632c598e",
     "multivalue.py": "39815c69ae1518e1f847a8043837ca48f096d626b05d49a7bc9b6052521c639f",
-    "package.py": "445218be18b316b1280e0fc2bb9eddbfc6d9a0124329b4a9cd879b611e5eadbf",
+    "package.py": "3d1738508e595c7f7b44677481d2b2245a89b4702803d1f120e643d79422584c",
     "pkgmeta.py": "5d5e04bd5ba4c23ac0034c699e5679ff0b533f5c0730e725b43d104e182f84c4",
     "readable.py": "5f41e691066830727e3218bd958c07c05a442f3b7e311150c9e2cbffefb567d4",
     "release_check.py": "e98c14875747a552187a254d0cd32d020efd46c165a6cc507a8eb707276f00d1",
@@ -49,6 +49,7 @@
     "store_page.py": "d1a571e37e47db81b4639142efcaa7c45ad4debc55eba9fe21f6be82a162f7d2",
     "sync.py": "5f9c593dc5f17457332487cb6f3ce4546eacb0d5b6f1b852fbeb1d992cde0d2a",
     "toc.py": "d5a0969b7fc9cdf096d33138f4b002991bc97f08bb59c2800bc4f3b43b5cbc61",
+    "toc_version.py": "9f67f74b37ddaa86da5bf518b049fa972cf194516d837983d7fad7f218be042b",
     "visual_proof.py": "0cc68df9e659fdf7ae05747b8666f4e7c7726d195fee6667ec82c9cb3074c5c5",
     "wago.py": "907a90aa7ef7e6bc2540efab121b6976aa6431accc226650105d3ead7e8a5d40",
     "widget_handlers.py": "ab6936fe510220bb0bd40be18a5b3d835cd4f31d08231490667ba9f383916ae9",
