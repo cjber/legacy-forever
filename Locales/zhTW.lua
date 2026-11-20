@@ -4,7 +4,7 @@ if GetLocale() ~= "zhTW" then
 	return
 end
 local L = ns.L
-L["Stratholme: Live tracks again."] = "斯坦索姆：Live 又能追蹤了。" -- mt
+L["Legacy Forever carries ForeverCore inside itself."] = "Legacy Forever 現已內建 ForeverCore。" -- mt
 
 L["%d Legacy objective left"] = "剩餘%d個傳承目標"
 L["%d Legacy objectives left"] = "剩餘%d個傳承目標"

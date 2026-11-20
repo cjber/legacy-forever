@@ -23,7 +23,7 @@ ns.L["Count quests completed by any character. The quests counted still match th
 
 ns.L["Account quest completion is unavailable on this client. Only this character's quests count."] =
 	"Account quest completion is unavailable on this client. Only this character's quests count."
-ns.L["Stratholme: Live tracks again."] = "Stratholme: Live tracks again."
+ns.L["Legacy Forever carries ForeverCore inside itself."] = "Legacy Forever carries ForeverCore inside itself."
 
 ns.L["Tracked Legacy challenges"] = "Tracked Legacy challenges"
 ns.L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =

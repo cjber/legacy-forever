@@ -4,7 +4,8 @@ if GetLocale() ~= "ruRU" then
 	return
 end
 local L = ns.L
-L["Stratholme: Live tracks again."] = "Стратхольм: Live снова отслеживается." -- mt
+L["Legacy Forever carries ForeverCore inside itself."] =
+	"Legacy Forever теперь содержит ForeverCore внутри себя." -- mt
 
 L["%d Legacy objective left"] = "Осталось целей старинных испытаний: %d"
 L["%d Legacy objectives left"] = "Осталось целей старинных испытаний: %d"

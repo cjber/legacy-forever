@@ -4,7 +4,7 @@ if GetLocale() ~= "esMX" then
 	return
 end
 local L = ns.L
-L["Stratholme: Live tracks again."] = "Stratholme: Live vuelve a seguirse." -- mt
+L["Legacy Forever carries ForeverCore inside itself."] = "Legacy Forever ahora incluye ForeverCore." -- mt
 
 L["%d Legacy objective left"] = "Queda %d objetivo de legado"
 L["%d Legacy objectives left"] = "Quedan %d objetivos de legado"
