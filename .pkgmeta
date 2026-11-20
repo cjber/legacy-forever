@@ -36,5 +36,8 @@ externals:
 move-folders:
   LegacyForever/ForeverCore: ForeverCore
 
-required-dependencies:
+# The CurseForge app must not install or remove that folder on its own (cjber/forever-core#922), so ForeverCore is listed
+# as an embedded library: linked on the project page, never installed as a required dependency. The addon also
+# carries the pinned core under Libs/ForeverCore and runs with the standalone folder turned off or removed.
+embedded-libraries:
   - forevercore

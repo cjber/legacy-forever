@@ -21,13 +21,13 @@ ROOT = Path(__file__).resolve().parent.parent
 # which does not ship.
 REPO_ONLY = {"tests/locale_spec.lua"}
 POLICY = package.Policy(
-    addons=("LegacyForever", "ForeverCore"),
+    addons=("LegacyForever",),
     specs=tuple(
         spec
         for spec in sorted(p.relative_to(ROOT).as_posix() for p in ROOT.glob("tests/*_spec.lua"))
         if spec not in REPO_ONLY
     )
-    + ("tests/sim/exercise_scenario.lua",),
+    + ("tests/sim/exercise_scenario.lua", "tests/embedded_scenario.lua"),
     support=("tests", "tools/forever_sim"),
 )
 

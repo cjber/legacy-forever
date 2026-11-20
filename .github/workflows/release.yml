@@ -161,6 +161,20 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 -m tools.forever_tools.core_pin --latest
+      # The TOC sets X-Forever-Core-Embed, so the zip carries the pinned core inside the addon at Libs/ForeverCore/
+      # and runs without the standalone addon. The embed step plans that copy from a core checkout at the pin.
+      - name: Read the ForeverCore ref
+        id: forever-core-ref
+        run: echo "ref=$(cat tools/forever-core.txt)" >> "$GITHUB_OUTPUT"
+      - name: Check out ForeverCore
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: cjber/forever-core
+          ref: ${{ steps.forever-core-ref.outputs.ref }}
+          path: forever-core
+          persist-credentials: false
+      - name: Embed ForeverCore
+        run: python3 -m tools.forever_tools.embed --core forever-core
       - uses: BigWigsMods/packager@01e8631a69c69d7654c788d152630d5fed9e3812 # v2.7.0
         env:
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
