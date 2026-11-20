@@ -37,7 +37,6 @@ L["/lf issue - report a bug or request a feature with a ready-made GitHub issue 
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 显示可复制到错误报告中的报告"
 L["Already complete"] = "已完成"
 L["Areas explored"] = "已探索区域"
-L["Attach to quest tracker"] = "附加到任务追踪栏"
 L["Click the zone to see where."] = "点击该地区查看位置。"
 L["Click to collapse."] = "点击收起。"
 L["Click to expand."] = "点击展开。"
@@ -87,18 +86,16 @@ L["Show dungeon and raid entrances"] = "显示地下城和团队副本入口"
 L["Show undiscovered areas"] = "显示未发现的区域"
 L["Show where to discover areas"] = "显示可探索区域的位置"
 L["Stop tracking"] = "取消追踪"
+L["Stop tracking all"] = "全部取消追踪"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地区以及那里剩余的事项。你追踪的挑战保留在各自的传承区块中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"地图角落显示当前查看的地区，大陆地图上的每个地区显示一个徽章。"
 L["This menu needs mouse and keyboard."] = "此菜单需要鼠标和键盘。"
 L["This version of QuestieDB isn't supported."] = "不支持此版本的QuestieDB。"
-L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
-	"如果其他插件已经标记了入口，请关闭此项。地图的传承菜单仍会列出它们。"
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"关闭后可将共用的Forever追踪栏拖到屏幕上任意位置。"
+L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
+	"关闭后将隐藏传承在地下城和团队副本入口上的标记。地图的传承菜单仍会列出它们。"
 L["Undiscovered area"] = "未发现的区域"
-L["Updates"] = "更新"
 L["Waiting for Questie and your quest log."] = "正在等待Questie和你的任务日志。"
 L["Waiting for Questie to finish loading."] = "正在等待Questie加载完毕。"
 L["What counts"] = "计入内容"
@@ -107,6 +104,7 @@ L["World map"] = "世界地图"
 L["Zone complete"] = "地区已完成"
 L["Zone completion"] = "地区完成度"
 L["Zone completion in the tracker"] = "在追踪栏中显示地区完成度"
+L["Zone completion on the map"] = "地图上的区域完成度"
 L["and %d more"] = "以及另外%d个"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"无法向目标追踪栏添加区块；请报告/lf audit的结果。"

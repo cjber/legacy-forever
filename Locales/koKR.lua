@@ -43,7 +43,6 @@ L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - 오류 제보에 붙여 넣을 보고서를 표시합니다"
 L["Already complete"] = "이미 완료됨"
 L["Areas explored"] = "탐험한 구역"
-L["Attach to quest tracker"] = "퀘스트 추적기에 붙이기"
 L["Click the zone to see where."] = "지역을 클릭하면 위치를 볼 수 있습니다."
 L["Click to collapse."] = "클릭하여 접기"
 L["Click to expand."] = "클릭하여 펼치기"
@@ -97,18 +96,16 @@ L["Show dungeon and raid entrances"] = "던전 및 공격대 입구 표시"
 L["Show undiscovered areas"] = "발견하지 않은 구역 표시"
 L["Show where to discover areas"] = "발견할 지역 위치 표시"
 L["Stop tracking"] = "추적 해제"
+L["Stop tracking all"] = "모두 추적 해제"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"현재 지역과 그곳에서 남은 할 일. 추적 중인 도전은 별도의 유산 항목에 남습니다."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"지도 모서리에 보고 있는 지역을, 대륙 지도에는 각 지역에 배지를 표시합니다."
 L["This menu needs mouse and keyboard."] = "이 메뉴는 마우스와 키보드가 필요합니다."
 L["This version of QuestieDB isn't supported."] = "이 버전의 QuestieDB는 지원하지 않습니다."
-L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
-	"다른 애드온이 이미 표시한다면 끄세요. 지도의 유산 메뉴에는 계속 표시됩니다."
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"끄면 공용 Forever 추적기를 화면 어디로든 끌어 옮길 수 있습니다."
+L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
+	"던전과 공격대 입구에 표시되는 유산 핀을 숨기려면 끄세요. 지도의 유산 메뉴에는 계속 표시됩니다."
 L["Undiscovered area"] = "발견하지 않은 구역"
-L["Updates"] = "업데이트"
 L["Waiting for Questie and your quest log."] = "Questie와 퀘스트 목록을 기다리는 중입니다."
 L["Waiting for Questie to finish loading."] = "Questie 불러오기가 끝나기를 기다리는 중입니다."
 L["What counts"] = "집계 항목"
@@ -117,6 +114,7 @@ L["World map"] = "세계 지도"
 L["Zone complete"] = "지역 완료"
 L["Zone completion"] = "지역 완료도"
 L["Zone completion in the tracker"] = "추적기에 지역 완료도 표시"
+L["Zone completion on the map"] = "지도에 지역 진행도 표시"
 L["and %d more"] = "외 %d개"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"목표 추적기에 항목을 추가하지 못했습니다. /lf audit 결과를 제보해 주세요."

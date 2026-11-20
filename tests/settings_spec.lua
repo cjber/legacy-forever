@@ -30,7 +30,9 @@ local coreEnv = setmetatable({
 		return { RegisterEvent = function() end, SetScript = function() end }
 	end,
 }, { __index = _G })
-ForeverCore = dofile("tests/forever_core.lua").install(coreEnv, {
+-- Core's namespace is kept so the shared attach row reads the same host the spec stubs below.
+local coreNs = {}
+dofile("tests/forever_core.lua").load({
 	"Core/SafeCall.lua",
 	"Core/Log.lua",
 	"Core/OpenMap.lua",
@@ -38,8 +40,11 @@ ForeverCore = dofile("tests/forever_core.lua").install(coreEnv, {
 	"UI/Report.lua",
 	"UI/Credits.lua",
 	"UI/MapCanvas.lua",
+	"UI/SettingsPage.lua",
+	"UI/SettingsSections.lua",
 	"Expose.lua",
-})
+}, coreNs, coreEnv)
+ForeverCore = assert(coreEnv.ForeverCore or _G.ForeverCore, "ForeverCore did not publish its global")
 assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Model.lua"))("LegacyForever", ns)
@@ -239,6 +244,7 @@ ForeverCore.TrackerHost = {
 		attachmentChanged = callback
 	end,
 }
+coreNs.TrackerHost = ForeverCore.TrackerHost
 Settings = {
 	-- As ProxySettingMixin: no value of its own, and a set only when the value differs.
 	RegisterProxySetting = function(_, variable, varType, name, default, get, set)
@@ -364,8 +370,8 @@ assert(loadfile("UI/Settings.lua"))("LegacyForever", ns)
 check(LegacyForeverDB == nil or next(LegacyForeverDB.zoneCompletion or {}) == nil, "building the page saves nothing")
 
 -- Every section is a subpage; the index holds one button per subpage, in order.
-check(#subcategories == 4, "four subcategory groups")
-local names = { "World map", "Objective tracker", "What counts", "Updates" }
+check(#subcategories == 3, "three subpages: no Updates page")
+local names = { "World map", "Objective tracker", "What counts" }
 for index, name in ipairs(names) do
 	check(subcategories[index].category.name == name, name .. " is a subcategory")
 end
@@ -386,8 +392,8 @@ local kinds, expectedKinds =
 for _ = 1, 8 do
 	expectedKinds[#expectedKinds + 1] = "checkbox@What counts"
 end
-expectedKinds[#expectedKinds + 1] = "button@Legacy Forever"
-expectedKinds[#expectedKinds + 1] = "checkbox@Updates"
+-- The update switch sits on the index page itself, under the buttons.
+expectedKinds[#expectedKinds + 1] = "checkbox@Legacy Forever"
 for index, entry in ipairs(registered) do
 	kinds[index] = (entry.initializer.button and "button" or "checkbox") .. "@" .. entry.category.name
 end
@@ -444,7 +450,7 @@ end
 for _, name in ipairs(names) do
 	buttons[name].click()
 end
-check(table.concat(opened, " ") == "World map Objective tracker What counts Updates", "each button opens its subpage")
+check(table.concat(opened, " ") == "World map Objective tracker What counts", "each button opens its subpage")
 
 -- Quests grey out without Questie, as the map menu's box does, and the name and tooltip are translated.
 local quests = byKey.count_quests

@@ -33,7 +33,7 @@ end
 ---@param names string[]?
 ---@return table<string, boolean>
 local function wanted(names)
-	local set = { ["Locales/enUS.lua"] = true }
+	local set = { ["Core.lua"] = true, ["Locales/enUS.lua"] = true }
 	for _, name in ipairs(names or {}) do
 		set[name] = true
 	end

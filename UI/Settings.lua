@@ -90,12 +90,12 @@ AddCheckbox(
 	map,
 	"showEntrances",
 	L["Show dungeon and raid entrances"],
-	L["Turn this off if another addon already marks them. The Legacy map menu still lists them."]
+	L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."]
 )
 AddCheckbox(
 	map,
 	"map",
-	L["On the world map"],
+	L["Zone completion on the map"],
 	L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."]
 )
 
@@ -103,31 +103,11 @@ local tracker = Section(category, L["Objective tracker"])
 AddCheckbox(tracker, "showTracker", L["Tracked Legacy challenges"])
 local host = ForeverCore.TrackerHost
 if host and host.GetSettings and host.SetAttached and host.OnAttachmentChanged then
-	local variable = PREFIX .. "trackerAttached"
-	local attachment = Settings.RegisterProxySetting(
-		tracker,
-		variable,
-		Settings.VarType.Boolean,
-		L["Attach to quest tracker"],
-		true,
-		function()
-			return host.GetSettings().attached
-		end,
-		function(value)
-			host.SetAttached(value)
-		end
-	)
-	Settings.RegisterInitializer(
-		tracker,
-		Settings.CreateCheckboxInitializer(
-			attachment,
-			nil,
-			L["Turn this off to drag the shared Forever tracker anywhere on screen."]
-		)
-	)
-	host.OnAttachmentChanged(function()
-		Settings.NotifyUpdate(variable)
-	end)
+	-- The shared column's attach choice, the same row and words in every Forever addon (forever-core#910).
+	local sections = ForeverCore.SettingsSections
+	if sections and sections.RegisterTrackerAttach then
+		sections.RegisterTrackerAttach(tracker, PREFIX .. "trackerAttached")
+	end
 	-- Lock keeps the detached column where it is: the grip ignores drag while it is on. It only writes the saved
 	-- switch, so it is safe to toggle in combat.
 	if host.SetLocked then
@@ -186,7 +166,7 @@ for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 	end
 end
 
-local updates = Section(category, L["Updates"])
-AddCheckbox(updates, "whatsNew", L["What's new after an update"])
+-- On the index page, below the subpage buttons: one switch does not need a page of its own.
+AddCheckbox(category, "whatsNew", L["What's new after an update"])
 
 Settings.RegisterAddOnCategory(category)

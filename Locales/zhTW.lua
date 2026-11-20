@@ -37,7 +37,6 @@ L["/lf issue - report a bug or request a feature with a ready-made GitHub issue 
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 顯示可複製到錯誤回報中的報告"
 L["Already complete"] = "已完成"
 L["Areas explored"] = "已探索區域"
-L["Attach to quest tracker"] = "附加到任務追蹤器"
 L["Click the zone to see where."] = "點擊該地區查看位置。"
 L["Click to collapse."] = "點擊收起。"
 L["Click to expand."] = "點擊展開。"
@@ -87,18 +86,16 @@ L["Show dungeon and raid entrances"] = "顯示地城和團隊入口"
 L["Show undiscovered areas"] = "顯示未發現的區域"
 L["Show where to discover areas"] = "顯示可探索區域的位置"
 L["Stop tracking"] = "停止追蹤"
+L["Stop tracking all"] = "全部停止追蹤"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"你所在的地區以及那裡剩餘的事項。你追蹤的挑戰保留在各自的傳承區塊中。"
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"地圖角落顯示目前查看的地區，大陸地圖上的每個地區顯示一個徽章。"
 L["This menu needs mouse and keyboard."] = "此選單需要滑鼠和鍵盤。"
 L["This version of QuestieDB isn't supported."] = "不支援此版本的QuestieDB。"
-L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
-	"如果其他插件已經標記了入口，請關閉此項。地圖的傳承選單仍會列出它們。"
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"關閉後可將共用的Forever追蹤器拖到畫面上任意位置。"
+L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
+	"關閉後將隱藏傳承在地城和團隊副本入口上的標記。地圖的傳承選單仍會列出它們。"
 L["Undiscovered area"] = "未發現的區域"
-L["Updates"] = "更新"
 L["Waiting for Questie and your quest log."] = "正在等待Questie和你的任務日誌。"
 L["Waiting for Questie to finish loading."] = "正在等待Questie載入完畢。"
 L["What counts"] = "計入內容"
@@ -107,6 +104,7 @@ L["World map"] = "世界地圖"
 L["Zone complete"] = "地區已完成"
 L["Zone completion"] = "地區完成度"
 L["Zone completion in the tracker"] = "在追蹤器中顯示地區完成度"
+L["Zone completion on the map"] = "地圖上的區域完成度"
 L["and %d more"] = "以及另外%d個"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"無法向目標追蹤器新增區塊；請回報/lf audit的結果。"

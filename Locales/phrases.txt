@@ -41,7 +41,6 @@ L["Account quest completion is unavailable on this client. Only this character's
 	"Account quest completion is unavailable on this client. Only this character's quests count."
 L["Already complete"] = "Already complete"
 L["Areas explored"] = "Areas explored"
-L["Attach to quest tracker"] = "Attach to quest tracker"
 L["Click the zone to see where."] = "Click the zone to see where."
 L["Click to collapse."] = "Click to collapse."
 L["Click to expand."] = "Click to expand."
@@ -93,6 +92,7 @@ L["Show dungeon and raid entrances"] = "Show dungeon and raid entrances"
 L["Show undiscovered areas"] = "Show undiscovered areas"
 L["Show where to discover areas"] = "Show where to discover areas"
 L["Stop tracking"] = "Stop tracking"
+L["Stop tracking all"] = "Stop tracking all"
 L["Stratholme: Live tracks again."] = "Stratholme: Live tracks again."
 L["The current zone is not known yet."] = "The current zone is not known yet."
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
@@ -104,12 +104,9 @@ L["This version of QuestieDB isn't supported."] = "This version of QuestieDB isn
 L["Tracked Legacy challenges"] = "Tracked Legacy challenges"
 L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] =
 	"Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."
-L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
-	"Turn this off if another addon already marks them. The Legacy map menu still lists them."
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"Turn this off to drag the shared Forever tracker anywhere on screen."
+L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
+	"Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."
 L["Undiscovered area"] = "Undiscovered area"
-L["Updates"] = "Updates"
 L["Waiting for Questie and your quest log."] = "Waiting for Questie and your quest log."
 L["Waiting for Questie to finish loading."] = "Waiting for Questie to finish loading."
 L["What counts"] = "What counts"
@@ -118,6 +115,7 @@ L["World map"] = "World map"
 L["Zone complete"] = "Zone complete"
 L["Zone completion"] = "Zone completion"
 L["Zone completion in the tracker"] = "Zone completion in the tracker"
+L["Zone completion on the map"] = "Zone completion on the map"
 L["and %d more"] = "and %d more"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"couldn't add a section to the objective tracker; please report /lf audit."

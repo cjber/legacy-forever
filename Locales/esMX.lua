@@ -39,7 +39,6 @@ L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - muestra un informe para copiar en un reporte de error"
 L["Already complete"] = "Ya completado"
 L["Areas explored"] = "Áreas exploradas"
-L["Attach to quest tracker"] = "Anclar al rastreador de misiones"
 L["Click the zone to see where."] = "Haz clic en la zona para ver dónde."
 L["Click to collapse."] = "Clic para contraer."
 L["Click to expand."] = "Clic para desplegar."
@@ -90,18 +89,16 @@ L["Show dungeon and raid entrances"] = "Mostrar entradas de calabozos y bandas"
 L["Show undiscovered areas"] = "Mostrar áreas sin descubrir"
 L["Show where to discover areas"] = "Mostrar dónde descubrir zonas"
 L["Stop tracking"] = "Cancelar seguimiento"
+L["Stop tracking all"] = "Cancelar todo el seguimiento"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"La zona en la que estás y lo que queda por hacer. Los desafíos que sigues mantienen su propia sección de legado."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"La zona que ves, en la esquina del mapa, y una insignia en cada zona del mapa de un continente."
 L["This menu needs mouse and keyboard."] = "Este menú necesita ratón y teclado."
 L["This version of QuestieDB isn't supported."] = "Esta versión de QuestieDB no es compatible."
-L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
-	"Desactívalo si otro accesorio ya las marca. El menú de legado del mapa sigue mostrándolas."
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"Desactívalo para arrastrar el rastreador Forever compartido a cualquier parte de la pantalla."
+L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
+	"Desactívalo para ocultar las marcas de Legado en las entradas de mazmorras y bandas. El menú de legado del mapa sigue mostrándolas."
 L["Undiscovered area"] = "Área sin descubrir"
-L["Updates"] = "Actualizaciones"
 L["Waiting for Questie and your quest log."] = "Esperando a Questie y a tu registro de misiones."
 L["Waiting for Questie to finish loading."] = "Esperando a que Questie termine de cargar."
 L["What counts"] = "Qué cuenta"
@@ -110,6 +107,7 @@ L["World map"] = "Mapa del mundo"
 L["Zone complete"] = "Zona completada"
 L["Zone completion"] = "Progreso de la zona"
 L["Zone completion in the tracker"] = "Progreso de la zona en el rastreador"
+L["Zone completion on the map"] = "Progreso de la zona en el mapa"
 L["and %d more"] = "y %d más"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"no se pudo agregar una sección al rastreador de objetivos; reporta el resultado de /lf audit."

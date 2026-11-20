@@ -45,7 +45,6 @@ L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - показать отчет для сообщения об ошибке"
 L["Already complete"] = "Уже завершено"
 L["Areas explored"] = "Исследованные области"
-L["Attach to quest tracker"] = "Прикрепить к отслеживанию заданий"
 L["Click the zone to see where."] = "Щелкните по зоне, чтобы увидеть где."
 L["Click to collapse."] = "Щелкните, чтобы свернуть."
 L["Click to expand."] = "Щелкните, чтобы развернуть."
@@ -102,18 +101,16 @@ L["Show dungeon and raid entrances"] = "Показывать входы в по�
 L["Show undiscovered areas"] = "Показывать неоткрытые области"
 L["Show where to discover areas"] = "Показывать места для обнаружения областей"
 L["Stop tracking"] = "Не отслеживать"
+L["Stop tracking all"] = "Не отслеживать все"
 L["The zone you're in and what is left to do there. Challenges you track keep their own Legacy section."] =
 	"Текущая зона и что в ней осталось сделать. Отслеживаемые испытания остаются в своем разделе."
 L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."] =
 	"Просматриваемая зона в углу карты и значок на каждой зоне карты континента."
 L["This menu needs mouse and keyboard."] = "Для этого меню нужны мышь и клавиатура."
 L["This version of QuestieDB isn't supported."] = "Эта версия QuestieDB не поддерживается."
-L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
-	"Отключите, если их уже отмечает другая модификация. Меню старинных испытаний на карте по-прежнему их показывает."
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"Отключите, чтобы перетаскивать общее отслеживание Forever в любое место экрана."
+L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
+	"Отключите, чтобы скрыть метки наследия у входов в подземелья и рейды. Меню старинных испытаний на карте по-прежнему их показывает."
 L["Undiscovered area"] = "Неоткрытая область"
-L["Updates"] = "Обновления"
 L["Waiting for Questie and your quest log."] = "Ожидание Questie и журнала заданий."
 L["Waiting for Questie to finish loading."] = "Ожидание окончания загрузки Questie."
 L["What counts"] = "Что учитывается"
@@ -122,6 +119,7 @@ L["World map"] = "Карта мира"
 L["Zone complete"] = "Зона пройдена"
 L["Zone completion"] = "Прохождение зоны"
 L["Zone completion in the tracker"] = "Прохождение зоны в отслеживании"
+L["Zone completion on the map"] = "Прогресс зоны на карте"
 L["and %d more"] = "и еще %d"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"не удалось добавить раздел в отслеживание целей; сообщите результат /lf audit."
