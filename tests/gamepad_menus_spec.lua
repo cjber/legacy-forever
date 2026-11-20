@@ -191,6 +191,7 @@ OneErrorLine(line)
 
 local function BaseNamespace()
 	return {
+		OnFilesLoaded = function() end,
 		L = ns.L,
 		GamepadUI = ns.GamepadUI,
 		core = {
