@@ -15,6 +15,7 @@ end
 ---@field WHATS_NEW_VERSION string the newest release in CHANGELOG.md with a bold headline
 ---@field WhatsNew fun()
 ---@field ForeverRequire fun(ready: boolean): boolean
+---@field OnFilesLoaded fun(callback: fun()) calls back once every file of the addon has run (Core/ForeverRequire.lua)
 ---@field L table<string, string>
 ---@field Art LegacyArt
 ---@field Saved LegacySaved

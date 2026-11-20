@@ -198,6 +198,9 @@ local saved = {}
 
 local trackerModule
 local ns = {
+	OnFilesLoaded = function(callback)
+		addonLoaded = addonLoaded or callback
+	end,
 	L = setmetatable({}, {
 		__index = function(_, key)
 			return key

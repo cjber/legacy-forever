@@ -1,5 +1,5 @@
 ---@type string, LegacyForeverNamespace
-local addonName, ns = ...
+local _, ns = ...
 local L = ns.L
 
 if ns.broken then
@@ -296,7 +296,7 @@ if trackerModule then
 	header.Progress:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -BAR_TOP)
 	header.Progress:SetPoint("TOPRIGHT", header, "BOTTOMRIGHT", 0, -BAR_TOP)
 	-- Deferred so the collapse state is restored even on a client that ignores LoadSavedVariablesFirst.
-	EventUtil.ContinueOnAddOnLoaded(addonName, function()
+	ns.OnFilesLoaded(function()
 		trackerModule:SetCollapsed(ns.Saved.Get("trackerCollapsed"))
 		-- The bar lives on the header, which the collapse keeps drawing, so it has to be hidden by hand
 		-- (kowakowa93 on cjber/forever-core#602, tracked as #516).
