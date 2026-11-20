@@ -108,7 +108,6 @@ L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"끄면 공용 Forever 추적기를 화면 어디로든 끌어 옮길 수 있습니다."
 L["Undiscovered area"] = "발견하지 않은 구역"
-L["Updates"] = "업데이트"
 L["Waiting for Questie and your quest log."] = "Questie와 퀘스트 목록을 기다리는 중입니다."
 L["Waiting for Questie to finish loading."] = "Questie 불러오기가 끝나기를 기다리는 중입니다."
 L["What counts"] = "집계 항목"
@@ -117,6 +116,7 @@ L["World map"] = "세계 지도"
 L["Zone complete"] = "지역 완료"
 L["Zone completion"] = "지역 완료도"
 L["Zone completion in the tracker"] = "추적기에 지역 완료도 표시"
+L["Zone completion on the map"] = "지도에 지역 진행도 표시"
 L["and %d more"] = "외 %d개"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"목표 추적기에 항목을 추가하지 못했습니다. /lf audit 결과를 제보해 주세요."

@@ -98,7 +98,6 @@ L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"關閉後可將共用的Forever追蹤器拖到畫面上任意位置。"
 L["Undiscovered area"] = "未發現的區域"
-L["Updates"] = "更新"
 L["Waiting for Questie and your quest log."] = "正在等待Questie和你的任務日誌。"
 L["Waiting for Questie to finish loading."] = "正在等待Questie載入完畢。"
 L["What counts"] = "計入內容"
@@ -107,6 +106,7 @@ L["World map"] = "世界地圖"
 L["Zone complete"] = "地區已完成"
 L["Zone completion"] = "地區完成度"
 L["Zone completion in the tracker"] = "在追蹤器中顯示地區完成度"
+L["Zone completion on the map"] = "地圖上的區域完成度"
 L["and %d more"] = "以及另外%d個"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"無法向目標追蹤器新增區塊；請回報/lf audit的結果。"

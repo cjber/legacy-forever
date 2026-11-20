@@ -100,7 +100,6 @@ L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"Desative para arrastar o rastreador Forever compartilhado para qualquer lugar da tela."
 L["Undiscovered area"] = "Área não descoberta"
-L["Updates"] = "Atualizações"
 L["Waiting for Questie and your quest log."] = "Aguardando o Questie e seu registro de missões."
 L["Waiting for Questie to finish loading."] = "Aguardando o Questie terminar de carregar."
 L["What counts"] = "O que conta"
@@ -109,6 +108,7 @@ L["World map"] = "Mapa-múndi"
 L["Zone complete"] = "Zona concluída"
 L["Zone completion"] = "Progresso da zona"
 L["Zone completion in the tracker"] = "Progresso da zona no rastreador"
+L["Zone completion on the map"] = "Progresso da zona no mapa"
 L["and %d more"] = "e mais %d"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"não foi possível adicionar uma seção ao rastreador de objetivos; relate o resultado de /lf audit."

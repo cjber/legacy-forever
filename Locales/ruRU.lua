@@ -113,7 +113,6 @@ L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy
 L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
 	"Отключите, чтобы перетаскивать общее отслеживание Forever в любое место экрана."
 L["Undiscovered area"] = "Неоткрытая область"
-L["Updates"] = "Обновления"
 L["Waiting for Questie and your quest log."] = "Ожидание Questie и журнала заданий."
 L["Waiting for Questie to finish loading."] = "Ожидание окончания загрузки Questie."
 L["What counts"] = "Что учитывается"
@@ -122,6 +121,7 @@ L["World map"] = "Карта мира"
 L["Zone complete"] = "Зона пройдена"
 L["Zone completion"] = "Прохождение зоны"
 L["Zone completion in the tracker"] = "Прохождение зоны в отслеживании"
+L["Zone completion on the map"] = "Прогресс зоны на карте"
 L["and %d more"] = "и еще %d"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"не удалось добавить раздел в отслеживание целей; сообщите результат /lf audit."

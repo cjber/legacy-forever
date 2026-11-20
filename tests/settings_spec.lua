@@ -371,7 +371,7 @@ check(LegacyForeverDB == nil or next(LegacyForeverDB.zoneCompletion or {}) == ni
 
 -- Every section is a subpage; the index holds one button per subpage, in order.
 check(#subcategories == 4, "four subcategory groups")
-local names = { "World map", "Objective tracker", "What counts", "Updates" }
+local names = { "World map", "Objective tracker", "What counts" }
 for index, name in ipairs(names) do
 	check(subcategories[index].category.name == name, name .. " is a subcategory")
 end

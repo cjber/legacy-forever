@@ -95,7 +95,7 @@ AddCheckbox(
 AddCheckbox(
 	map,
 	"map",
-	L["On the world map"],
+	L["Zone completion on the map"],
 	L["The zone you're viewing in the map's corner, and a badge on each zone of a continent map."]
 )
 
@@ -166,7 +166,7 @@ for _, key in ipairs(ns.Model.COMPLETION_CATEGORIES) do
 	end
 end
 
-local updates = Section(category, L["Updates"])
-AddCheckbox(updates, "whatsNew", L["What's new after an update"])
+-- On the index page, below the subpage buttons: one switch does not need a page of its own.
+AddCheckbox(category, "whatsNew", L["What's new after an update"])
 
 Settings.RegisterAddOnCategory(category)

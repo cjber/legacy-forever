@@ -107,7 +107,6 @@ L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."] 
 L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
 	"Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."
 L["Undiscovered area"] = "Undiscovered area"
-L["Updates"] = "Updates"
 L["Waiting for Questie and your quest log."] = "Waiting for Questie and your quest log."
 L["Waiting for Questie to finish loading."] = "Waiting for Questie to finish loading."
 L["What counts"] = "What counts"
@@ -116,6 +115,7 @@ L["World map"] = "World map"
 L["Zone complete"] = "Zone complete"
 L["Zone completion"] = "Zone completion"
 L["Zone completion in the tracker"] = "Zone completion in the tracker"
+L["Zone completion on the map"] = "Zone completion on the map"
 L["and %d more"] = "and %d more"
 L["couldn't add a section to the objective tracker; please report /lf audit."] =
 	"couldn't add a section to the objective tracker; please report /lf audit."
