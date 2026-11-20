@@ -41,7 +41,7 @@ jobs:
       - uses: cjber/forever-core/.github/actions/toolchain@2596f68e68f9a727496a19f3f801c8a7039357d2 # main
         with:
           tools: lua
-      - uses: agent-labs-dev/speedpatrol@d8c515794af1d551863ecd2cbbd768619a9f3ad0 # v0
+      - uses: agent-labs-dev/speedpatrol@cca7609cfbe447214470e2699ea980e9fd3681d5 # v0
         with:
           benchmarks: harness.perf
           fail-on-regression: true
