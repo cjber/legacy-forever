@@ -10,6 +10,12 @@ Each version's entry is also its release notes on GitHub, CurseForge and Wago. O
 verbatim rather than rewritten as the addon moves. API changes other addons' authors need go under an
 optional `### For addon authors` subsection after a version's player bullets.
 
+## [2.5.5] - 2026-11-20
+
+### Fixed
+
+- The zone section in the tracker remembers whether you collapsed it, with or without a separate ForeverCore. With only Legacy's own ForeverCore, the saved state was applied before Legacy had finished loading (#606).
+
 ## [2.5.4] - 2026-11-20
 
 <!-- forever-core-sync -->
