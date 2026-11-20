@@ -30,7 +30,9 @@ local coreEnv = setmetatable({
 		return { RegisterEvent = function() end, SetScript = function() end }
 	end,
 }, { __index = _G })
-ForeverCore = dofile("tests/forever_core.lua").install(coreEnv, {
+-- Core's namespace is kept so the shared attach row reads the same host the spec stubs below.
+local coreNs = {}
+dofile("tests/forever_core.lua").load({
 	"Core/SafeCall.lua",
 	"Core/Log.lua",
 	"Core/OpenMap.lua",
@@ -38,8 +40,11 @@ ForeverCore = dofile("tests/forever_core.lua").install(coreEnv, {
 	"UI/Report.lua",
 	"UI/Credits.lua",
 	"UI/MapCanvas.lua",
+	"UI/SettingsPage.lua",
+	"UI/SettingsSections.lua",
 	"Expose.lua",
-})
+}, coreNs, coreEnv)
+ForeverCore = assert(coreEnv.ForeverCore or _G.ForeverCore, "ForeverCore did not publish its global")
 assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Saved.lua"))("LegacyForever", ns)
 assert(loadfile("Core/Model.lua"))("LegacyForever", ns)
@@ -239,6 +244,7 @@ ForeverCore.TrackerHost = {
 		attachmentChanged = callback
 	end,
 }
+coreNs.TrackerHost = ForeverCore.TrackerHost
 Settings = {
 	-- As ProxySettingMixin: no value of its own, and a set only when the value differs.
 	RegisterProxySetting = function(_, variable, varType, name, default, get, set)

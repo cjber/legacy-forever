@@ -38,7 +38,6 @@ L["/lf report - show a report to copy into a bug report"] =
 	"/lf report - zeigt einen Bericht zum Kopieren in eine Fehlermeldung"
 L["Already complete"] = "Bereits abgeschlossen"
 L["Areas explored"] = "Erkundete Gebiete"
-L["Attach to quest tracker"] = "An Questverfolgung anheften"
 L["Click the zone to see where."] = "Klickt auf die Zone, um zu sehen, wo."
 L["Click to collapse."] = "Klicken zum Einklappen."
 L["Click to expand."] = "Klicken zum Ausklappen."
@@ -99,8 +98,6 @@ L["This menu needs mouse and keyboard."] = "Dieses Menü braucht Maus und Tastat
 L["This version of QuestieDB isn't supported."] = "Diese Version von QuestieDB wird nicht unterstützt."
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"Schaltet dies aus, wenn ein anderes Addon sie bereits markiert. Das Vermächtnismenü der Karte listet sie weiterhin auf."
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"Deaktiviert dies, um die gemeinsame Forever-Verfolgung frei auf dem Bildschirm zu verschieben."
 L["Undiscovered area"] = "Unentdecktes Gebiet"
 L["Updates"] = "Aktualisierungen"
 L["Waiting for Questie and your quest log."] = "Warte auf Questie und Euer Questlog."

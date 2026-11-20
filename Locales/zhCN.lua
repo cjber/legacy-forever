@@ -37,7 +37,6 @@ L["/lf issue - report a bug or request a feature with a ready-made GitHub issue 
 L["/lf report - show a report to copy into a bug report"] = "/lf report - 显示可复制到错误报告中的报告"
 L["Already complete"] = "已完成"
 L["Areas explored"] = "已探索区域"
-L["Attach to quest tracker"] = "附加到任务追踪栏"
 L["Click the zone to see where."] = "点击该地区查看位置。"
 L["Click to collapse."] = "点击收起。"
 L["Click to expand."] = "点击展开。"
@@ -96,8 +95,6 @@ L["This menu needs mouse and keyboard."] = "此菜单需要鼠标和键盘。"
 L["This version of QuestieDB isn't supported."] = "不支持此版本的QuestieDB。"
 L["Turn this off if another addon already marks them. The Legacy map menu still lists them."] =
 	"如果其他插件已经标记了入口，请关闭此项。地图的传承菜单仍会列出它们。"
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"关闭后可将共用的Forever追踪栏拖到屏幕上任意位置。"
 L["Undiscovered area"] = "未发现的区域"
 L["Updates"] = "更新"
 L["Waiting for Questie and your quest log."] = "正在等待Questie和你的任务日志。"
