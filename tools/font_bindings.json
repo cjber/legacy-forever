@@ -33,7 +33,7 @@
     },
     {
       "source": "UI/Map.lua",
-      "sha256": "abe9103a705afb5a658deb96d6f287ee2527d595aa5fc2f1d30877af3af91dc3",
+      "sha256": "731d70fbf54810f10e231e19ea41e9c4e25d15fb1cc266adf3f0b7931df76283",
       "review": "Read map menu and tooltip builders, map-button OnLoad and Refresh, pin creation and hover paths. Localized phrases flow into menus, tooltips or UIErrorsFrame output, all excluded. Count is a dynamic objective number, and Refresh changes its FontObject among GameFontNormalTiny, GameFontNormalSmall and GameFontNormal. No locale phrase is assigned to Count and no single font is claimed for it.",
       "bindings": []
     },
@@ -45,7 +45,7 @@
     },
     {
       "source": "UI/Settings.lua",
-      "sha256": "66ce8193797211b0230c8aba4782331a73ea0ae56fc58a74ba022a93064ac410",
+      "sha256": "17b23a970189322d861989746232764b7422ae734e7bcbf354dcf49a210a51c1",
       "review": "Read AddCheckbox, IndexButton, Section, every registration and Completion.Label/status callers. Labels and Open are arguments to Blizzard settings initializers; this file creates no FontString and establishes no exact widget FontObject. These helper arguments and tooltip descriptions are excluded rather than assigned an assumed settings font.",
       "bindings": []
     },

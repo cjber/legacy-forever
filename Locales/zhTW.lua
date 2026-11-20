@@ -95,8 +95,6 @@ L["This menu needs mouse and keyboard."] = "此選單需要滑鼠和鍵盤。"
 L["This version of QuestieDB isn't supported."] = "不支援此版本的QuestieDB。"
 L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
 	"關閉後將隱藏傳承在地城和團隊副本入口上的標記。地圖的傳承選單仍會列出它們。"
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"關閉後可將共用的Forever追蹤器拖到畫面上任意位置。"
 L["Undiscovered area"] = "未發現的區域"
 L["Waiting for Questie and your quest log."] = "正在等待Questie和你的任務日誌。"
 L["Waiting for Questie to finish loading."] = "正在等待Questie載入完畢。"

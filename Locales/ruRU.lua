@@ -110,8 +110,6 @@ L["This menu needs mouse and keyboard."] = "Для этого меню нужн�
 L["This version of QuestieDB isn't supported."] = "Эта версия QuestieDB не поддерживается."
 L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
 	"Отключите, чтобы скрыть метки наследия у входов в подземелья и рейды. Меню старинных испытаний на карте по-прежнему их показывает."
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"Отключите, чтобы перетаскивать общее отслеживание Forever в любое место экрана."
 L["Undiscovered area"] = "Неоткрытая область"
 L["Waiting for Questie and your quest log."] = "Ожидание Questie и журнала заданий."
 L["Waiting for Questie to finish loading."] = "Ожидание окончания загрузки Questie."

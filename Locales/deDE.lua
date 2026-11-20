@@ -98,8 +98,6 @@ L["This menu needs mouse and keyboard."] = "Dieses Menü braucht Maus und Tastat
 L["This version of QuestieDB isn't supported."] = "Diese Version von QuestieDB wird nicht unterstützt."
 L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
 	"Schaltet dies aus, um die Legacy-Markierungen an Dungeon- und Schlachtzugseingängen auszublenden. Das Vermächtnismenü der Karte listet sie weiterhin auf."
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"Deaktiviert dies, um die gemeinsame Forever-Verfolgung frei auf dem Bildschirm zu verschieben."
 L["Undiscovered area"] = "Unentdecktes Gebiet"
 L["Waiting for Questie and your quest log."] = "Warte auf Questie und Euer Questlog."
 L["Waiting for Questie to finish loading."] = "Warte, bis Questie fertig geladen ist."

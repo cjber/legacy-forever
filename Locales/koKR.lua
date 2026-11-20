@@ -105,8 +105,6 @@ L["This menu needs mouse and keyboard."] = "이 메뉴는 마우스와 키보드
 L["This version of QuestieDB isn't supported."] = "이 버전의 QuestieDB는 지원하지 않습니다."
 L["Turn this off to hide Legacy's pins on dungeon and raid entrances. The Legacy map menu still lists them."] =
 	"던전과 공격대 입구에 표시되는 유산 핀을 숨기려면 끄세요. 지도의 유산 메뉴에는 계속 표시됩니다."
-L["Turn this off to drag the shared Forever tracker anywhere on screen."] =
-	"끄면 공용 Forever 추적기를 화면 어디로든 끌어 옮길 수 있습니다."
 L["Undiscovered area"] = "발견하지 않은 구역"
 L["Waiting for Questie and your quest log."] = "Questie와 퀘스트 목록을 기다리는 중입니다."
 L["Waiting for Questie to finish loading."] = "Questie 불러오기가 끝나기를 기다리는 중입니다."
