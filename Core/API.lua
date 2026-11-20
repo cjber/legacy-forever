@@ -77,10 +77,10 @@ function API.ZoneSummary(map)
 		end
 	end
 	if not IsInteger(map) then
-		return nil, "invalid"
+		return APIKit.Invalid()
 	end
 	if not ns.Data.completion[map] then
-		return nil, "unsupported"
+		return nil, "none"
 	end
 	-- Flight paths and reputations are filtered by side, which the game reports once the player exists.
 	if not Ready() then
@@ -155,10 +155,10 @@ function API.Targets(map, limit)
 		end
 	end
 	if not IsInteger(map) or (limit ~= nil and (type(limit) ~= "number" or limit ~= limit)) then
-		return nil, "invalid"
+		return APIKit.Invalid()
 	end
 	if not KnownMap(map) then
-		return nil, "unsupported"
+		return nil, "none"
 	end
 	-- Before the player exists the game lists no challenge for this character, so an empty answer would be a guess.
 	if not Ready() then
@@ -259,14 +259,14 @@ end
 ---@return LFReadError?
 function API.IsTracked(key)
 	if type(key) ~= "string" or not key:find("^%d+:%d+$") then
-		return nil, "invalid"
+		return APIKit.Invalid()
 	end
 	if not Ready() then
 		return NotReady("loading")
 	end
 	local trackingKey = TrackingKey(key)
 	if trackingKey == nil then
-		return nil, "invalid"
+		return APIKit.Invalid()
 	end
 	return ns.Tracker.IsTracked(trackingKey)
 end

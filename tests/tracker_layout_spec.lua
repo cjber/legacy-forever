@@ -23,7 +23,6 @@ local env = setmetatable({
 			target[key] = value
 		end
 	end,
-	EventUtil = { ContinueAfterAllEvents = noop },
 	C_Timer = { After = noop },
 	hooksecurefunc = function()
 		error("native methods must stay unhooked")
@@ -62,6 +61,7 @@ local ns = {
 		end,
 	}),
 	Data = {},
+	AfterEvents = noop,
 	SavedTable = function()
 		return { 1 }
 	end,

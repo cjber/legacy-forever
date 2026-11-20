@@ -3,9 +3,9 @@
 -- LegacyForever.API, version 2, minor 0: the contract other addons read (docs/api.md). API.lua implements it.
 
 ---@alias LFCategory "areas"|"taxis"|"dungeons"|"raids"|"legacy"|"reputations"|"quests"
--- `"loading"` is ForeverCore.APIKit's not-ready reason; `"none"` is a call with no map and no current zone; the
--- other two are wrong arguments or an unsupported map.
----@alias LFReadError "invalid"|"loading"|"unsupported"|"none"
+-- `"loading"` is ForeverCore.APIKit's not-ready reason; `"none"` is a map with no Legacy data, or a call with no
+-- map and no current zone; `"invalid"` is a wrong argument (ForeverCore.APIKit.Invalid).
+---@alias LFReadError "invalid"|"loading"|"none"
 ---@alias LFNavError "invalid"|"stale"|"unlocated"|"combat"|"unavailable"
 -- The names Subscribe's changes table sets, as docs/api.md lists them.
 ---@alias LFAPIChange "zone"|"summary"|"targets"|"tracked"

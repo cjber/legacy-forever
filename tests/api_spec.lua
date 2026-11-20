@@ -437,7 +437,7 @@ check(again.done == 1 and Category(again, "areas").done == 1, "a summary is a de
 check(select(2, API.ZoneSummary("100")) == "invalid", "a string map is invalid")
 check(select(2, API.ZoneSummary(100.5)) == "invalid", "a fractional map is invalid")
 check(select(2, API.ZoneSummary(0 / 0)) == "invalid", "NaN is invalid")
-check(select(2, API.ZoneSummary(999)) == "unsupported", "a map without data is unsupported")
+check(select(2, API.ZoneSummary(999)) == "none", "a map without data answers none")
 faction = nil
 check(select(2, API.ZoneSummary(100)) == "loading", "no faction yet is loading")
 check(select(2, API.ZoneSummary(nil)) == "loading", "the current zone is loading too")
@@ -657,7 +657,7 @@ check(assert(API.Targets(100, 5))[1].place.x == 0.1 and data.zones[100][1].x == 
 check(#assert(API.Targets(100, 0)) == 1 and #assert(API.Targets(100, 1.7)) == 1, "the limit is clamped up to 1")
 check(#assert(API.Targets(100, 99)) == 2, "the limit is clamped to 5")
 check(#assert(API.Targets(200, 5)) == 0, "a zone with nothing unfinished known is empty")
-check(select(2, API.Targets(999, 5)) == "unsupported", "a map without data is unsupported")
+check(select(2, API.Targets(999, 5)) == "none", "a map without data answers none")
 check(select(2, API.Targets(100, "5")) == "invalid", "a string limit is invalid")
 
 -- Navigate: re-validated, and only a journey or waypoint is success.

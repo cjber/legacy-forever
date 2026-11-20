@@ -265,7 +265,7 @@ function Tracker.AddModule(name, mixin, uiOrder, trackerShow, trackerContract)
 		ForeverCore.TrackerHost.HandleBlockHeaderClick(self, block, button)
 	end
 	if #modules == 0 then
-		EventUtil.ContinueAfterAllEvents(function()
+		ns.AfterEvents(function()
 			C_Timer.After(0, AttachAll)
 		end, "PLAYER_ENTERING_WORLD", "VARIABLES_LOADED")
 	end
@@ -291,7 +291,7 @@ local function Register()
 		return
 	end
 	module = Tracker.AddModule("LegacyForeverObjectiveTracker", ModuleMixin, 0, show, contract)
-	EventUtil.ContinueAfterAllEvents(function()
+	ns.AfterEvents(function()
 		C_Timer.After(5, WarnIfUnattached)
 	end, "PLAYER_ENTERING_WORLD", "VARIABLES_LOADED")
 end

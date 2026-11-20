@@ -361,10 +361,10 @@ local trackerEnv = setmetatable({
 			target[key] = value
 		end
 	end,
-	EventUtil = { ContinueAfterAllEvents = function() end },
 }, { __index = _G })
 ForeverCore.TrackerHost.Attach = function() end
 ns.Live.OnChange = function() end
+ns.AfterEvents = function() end
 setfenv(assert(loadfile("UI/Tracker.lua")), trackerEnv)("LegacyForever", ns)
 assert(loadfile("UI/Settings.lua"))("LegacyForever", ns)
 check(LegacyForeverDB == nil or next(LegacyForeverDB.zoneCompletion or {}) == nil, "building the page saves nothing")

@@ -1,8 +1,25 @@
--- Initialization must tolerate either native event order and an addon loaded after login.
+-- Initialization must tolerate an ordinary load and the files running after the loading events, as they do when the
+-- bundled ForeverCore activates at PLAYER_LOGIN or later (cjber/forever-core#980). The EventUtil stub waits as the
+-- client does: only an event fired after the wait was asked counts toward it.
 local checks = 0
 local function noop() end
-for _, readyAtLoad in ipairs({ false, true }) do
-	local callbacks, timers, modules, owners = {}, {}, {}, {}
+local cases = {
+	{ label = "ordinary load", seen = {}, fire = { "PLAYER_ENTERING_WORLD", "VARIABLES_LOADED" } },
+	{
+		label = "files run at login, world entry to come",
+		deferred = true,
+		seen = {},
+		fire = { "PLAYER_ENTERING_WORLD", "VARIABLES_LOADED" },
+	},
+	{
+		label = "files run after every loading event",
+		deferred = true,
+		seen = { PLAYER_ENTERING_WORLD = true, VARIABLES_LOADED = true },
+		fire = {},
+	},
+}
+for _, case in ipairs(cases) do
+	local waits, timers, warnings, modules, owners = {}, {}, {}, {}, {}
 	local native = {}
 	local function region()
 		return { SetHeader = noop }
@@ -27,19 +44,24 @@ for _, readyAtLoad in ipairs({ false, true }) do
 			end
 		end,
 		EventUtil = {
-			ContinueAfterAllEvents = function(fn, first, second)
-				assert(first == "PLAYER_ENTERING_WORLD" and second == "VARIABLES_LOADED")
-				if readyAtLoad then
-					fn()
-				else
-					callbacks[#callbacks + 1] = fn
-				end
+			ContinueAfterAllEvents = function(fn, ...)
+				waits[#waits + 1] = { fn = fn, events = { ... }, seen = {} }
+			end,
+		},
+		IsLoggedIn = function()
+			return case.deferred == true
+		end,
+		ForeverCoreLoader = {
+			Seen = function(event)
+				return case.seen[event] == true
 			end,
 		},
 		C_Timer = {
 			After = function(delay, fn)
 				if delay == 0 then
 					timers[#timers + 1] = fn
+				elseif delay == 5 then
+					warnings[#warnings + 1] = fn
 				end
 			end,
 		},
@@ -117,13 +139,37 @@ for _, readyAtLoad in ipairs({ false, true }) do
 			end,
 		},
 	}
+	env._G = env
+	setfenv(assert(loadfile("Core/ForeverRequire.lua")), env)("Addon", ns)
+	if case.deferred then
+		ns.ForeverCoreHostAfter, ns.ForeverCoreHostDeferred = {}, true
+	end
 	setfenv(assert(loadfile("UI/Tracker.lua")), env)("Addon", ns)
-	if not readyAtLoad then
-		assert(owners[modules[1]] == native, "private host attachment is independent of Blizzard")
-		for _, fn in ipairs(callbacks) do
+	assert(owners[modules[1]] == native, "private host attachment is independent of Blizzard")
+	if case.deferred then
+		local after = ns.ForeverCoreHostAfter
+		ns.ForeverCoreHostAfter = nil
+		for _, fn in ipairs(after) do
 			fn()
 		end
 	end
+	for _, event in ipairs(case.fire) do
+		for index = #waits, 1, -1 do
+			local waiting = waits[index]
+			waiting.seen[event] = true
+			local ready = true
+			for _, name in ipairs(waiting.events) do
+				ready = ready and waiting.seen[name] == true
+			end
+			if ready then
+				table.remove(waits, index)
+				waiting.fn()
+			end
+		end
+	end
+	assert(#waits == 0, case.label .. ": no wait is left for an event that already fired")
+	assert(#timers == 1, case.label .. ": the attach pass is scheduled")
+	assert(#warnings == 1, case.label .. ": the unattached check is scheduled")
 	for _, fn in ipairs(timers) do
 		fn()
 	end

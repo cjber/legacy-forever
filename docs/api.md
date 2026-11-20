@@ -24,7 +24,7 @@ in, and coordinates run from 0 to 1.
 - version 1, `minor` 3: IsTracked, SetTracked, tracked change, nil map means the current zone, achievementName and
   points on targets.
 - version 2, `minor` 0: `Leaderboard(limit)` is removed with Forever Leaderboards. Every other member keeps its
-  contract.
+  contract. A map with no Legacy data now answers the standard reason `"none"` rather than `"unsupported"`.
 
 ## Not ready
 
@@ -35,7 +35,7 @@ whether to ask again.
 |---|---|
 | `"loading"` | Legacy Forever is still reading the game, so ask again later |
 | `"disabled"` | the player turned the feature off |
-| `"none"` | there is nothing to answer: no map was given and the player is not in a zone Legacy Forever has data for |
+| `"none"` | there is nothing to answer: the map has no Legacy data, or no map was given and the player is not in a zone Legacy Forever has data for |
 
 `ZoneSummary` and `Targets` answer `nil, "loading"` until the game has reported the player, which is when this
 character's progress exists. Neither answers `"disabled"`: a category the player turned off is left out of
@@ -62,8 +62,8 @@ it cold schedules the build, which runs a slice a frame, and subscribers hear wh
 `map` may be left out, which reads the zone the player is in, the same one Legacy Forever's map corner and tracker
 show.
 
-Errors: `"invalid"` for a map that isn't an integer, `"unsupported"` for a map Legacy Forever has no completion
-data for, and `"none"` for a call with no map and no current zone. Before the game has reported the player it
+Errors: `"invalid"` for a map that isn't an integer, and `"none"` for a map Legacy Forever has no completion data
+for or a call with no map and no current zone. Before the game has reported the player it
 answers `nil, "loading"` (see Not ready).
 
 ## `Targets(map, limit) -> LFTarget[]?, LFReadError?`
@@ -77,8 +77,8 @@ only for counted criteria such as "3/10".
 
 `map` may be left out, which reads the zone the player is in.
 
-Errors: `"invalid"` for a non-integer map or non-number limit, `"unsupported"` for a map with no Legacy data, and
-`"none"` for a call with no map and no current zone. Before the game has reported the player, whose challenge list
+Errors: `"invalid"` for a non-integer map or non-number limit, and `"none"` for a map with no Legacy data or a call
+with no map and no current zone. Before the game has reported the player, whose challenge list
 is empty until it does, it answers `nil, "loading"` (see Not ready).
 
 ## `IsTracked(key) -> boolean?, LFReadError?`
