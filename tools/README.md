@@ -118,7 +118,7 @@ project through UiMapAssignment **46764** to Orgrimmar **1454**, at
 have `kind = "instance"`, `instance = 389`, and the same pin; runtime treats
 them as one shared objective. They leave "No fixed location" but do not create
 Orgrimmar completion or a dungeon wing. Hall of Thanes remains an unresolved
-alternative: Map **3065**, interior Area **16919**, encounters **3493–3496**,
+alternative: Map **3065**, interior Area **16919**, encounters **3493-3496**,
 has CorpseMapID **-1** and no verified exterior entrance. Do not pin that option.
 
 ## Verified locations
@@ -224,7 +224,7 @@ runtime supplies progress and applies eligibility filters.
   `key`, `hit` or `tiles`, so runtime can read its live progress without drawing it. Current-art
   overlays without an exploration criterion are still listed and drawn, so every area the game
   reveals there remains. Exclude Zephras Isle (2521, colliding zero keys) and battleground maps
-  1459–1461. Duplicate keys within a zone or duplicate phase-0 art fail generation.
+  1459-1461. Duplicate keys within a zone or duplicate phase-0 art fail generation.
   A drawn area's key is exactly
   `OffsetX:OffsetY:TextureWidth:TextureHeight`, formatted as four decimal integers.
   Empty hit rectangles still count; zero-size textures do not, since they never draw on the map.
@@ -257,7 +257,7 @@ runtime supplies progress and applies eligibility filters.
   (for example Ironforge belongs to Dun Morogh). The emitted name drops the
   `", Zone"` suffix, since it is always listed under a zone. Runtime filters own faction
   plus Neutral; these strings are not the differently numbered live taxi enum.
-- **Dungeons:** walk all six Spelunker achievements (62031–62033, 64016–64018),
+- **Dungeons:** walk all six Spelunker achievements (62031-62033, 64016-64018),
   retaining single-boss Type-0 kill steps. Group by Criteria.Asset (boss ID),
   keep the wing's CriteriaTree description, and collect every sorted
   `{achievement, criteria}` reference across variants and tiers. Separate wings
