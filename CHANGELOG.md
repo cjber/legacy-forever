@@ -10,7 +10,7 @@ Each version's entry is also its release notes on GitHub, CurseForge and Wago. O
 verbatim rather than rewritten as the addon moves. API changes other addons' authors need go under an
 optional `### For addon authors` subsection after a version's player bullets.
 
-## [2.5.7] - 2026-11-20
+## [2.5.8] - 2026-11-21
 
 <!-- forever-core-sync -->
 
