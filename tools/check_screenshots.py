@@ -5,7 +5,7 @@ tools/screenshots.py draws every scene from wowmock and asks the addon's Core/Mo
 (tools/screenshots_model.lua) what to show, porting the map badges and tracker lines from UI/.
 Each image's dump is those files' hashes, so a change to any of them needs a fresh render. Generated `Data/` is left
 out: the daily data refresh moves it and cannot render, and the release re-renders every image (the release skill).
-docs/screenshots/scenes.sha256 holds each image's hash beside its dump's; after a render, `--record` rewrites it
+docs/screenshots/scenes/<image>.sha256 holds each image's hash beside its dump's; after a render, `--record` rewrites it
 (with `--force` for an image that came out the same).
 
     python3 tools/check_screenshots.py           # CI: fail on a stale image
