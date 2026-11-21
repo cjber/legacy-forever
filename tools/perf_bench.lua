@@ -1,4 +1,4 @@
--- Headless cost bench for the frame-free half of Legacy Forever (run from the repository root:
+-- Offline cost bench for the frame-free half of Legacy Forever (run from the repository root:
 -- luajit tools/perf_bench.lua). It loads the real Data, Saved, Model, Live, Quests, ZoneCompletion
 -- and MapContents over a stubbed client and reports CPU time and game-API call counts for load, the
 -- login read, each event burst and each map/tracker build. UI files need frames and are not measured

@@ -1,7 +1,7 @@
 version: 1
 
 # Bugpatrol profile for Legacy Forever, a WoW: Forever addon. The game client cannot run here,
-# so the "app" is the addon's headless Lua harness: the specs stub the client API and load the
+# so the "app" is the addon's offline Lua spec harness: the specs stub the client API and load the
 # addon files in TOC order.
 app:
   platform: cli
