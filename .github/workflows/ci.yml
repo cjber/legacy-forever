@@ -68,7 +68,7 @@ jobs:
       - run: luajit tools/forever_sim/run.lua
       # The load and redraw cost bench: it fails on a Lua error in any file it loads.
       - run: luajit tools/perf_bench.lua
-      # A screenshot older than the code it is drawn from (docs/screenshots/scenes.sha256).
+      # A screenshot older than the code it is drawn from (docs/screenshots/scenes/<image>.sha256).
       - run: python3 tools/check_screenshots.py
       - run: stylua --check .
 
