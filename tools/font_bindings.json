@@ -3,7 +3,7 @@
   "producers": [
     {
       "source": "UI/Tracker.lua",
-      "sha256": "0a1f10df5cdb4380a5476a1beaae347d6c94184db9399a38bb9f84c38ac9e680",
+      "sha256": "73af998c2438d243515b4ce0c08f4d3c51ccfa609e09bd8ee18477425cde1226",
       "review": "Read module construction, LayoutContents, AddModule, Attach and their callers in Completion.lua. Pinned client Blizzard_ObjectiveTrackerModule.xml gives ObjectiveTrackerModuleTemplate.Header the ObjectiveTrackerModuleHeaderTemplate, whose Text inherits ObjectiveTrackerHeaderFont; Blizzard_ObjectiveTrackerModule.lua SetHeader only sets that Text. TrackerHost attachment does not set its font. Legacy is the sole localized header phrase; block names and objective text come from live game data. Menus and chat warnings are excluded. Coverage uses the pinned native FontObject; client tracker text-size settings and external addon font overrides are outside this contract.",
       "bindings": [
         {
