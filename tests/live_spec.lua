@@ -153,16 +153,22 @@ seterrorhandler = function() end
 strtrim = function(text)
 	return (text:gsub("^%s+", ""):gsub("%s+$", ""))
 end
-ns.L = {}
+assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 SlashCmdList = {}
-local ForeverCore = dofile("tests/forever_core.lua").install(_G, {
+_G.ObjectiveTrackerFrame = {}
+_G.EventUtil = { ContinueAfterAllEvents = function() end }
+local core = dofile("tests/forever_core.lua").load({
 	"Core/SafeCall.lua",
 	"Core/Log.lua",
+	"UI/ContextMenu.lua",
+	"UI/TrackerHost.lua",
 	"UI/Report.lua",
 	"UI/Credits.lua",
 	"UI/MapCanvas.lua",
 	"Expose.lua",
-})
+}, { copy = {} }, _G)
+local ForeverCore = core.ForeverCore
+_G.ForeverCore = ForeverCore
 local register = ForeverCore.Register
 local opener
 ForeverCore.Register = function(addon, spec)
@@ -420,5 +426,72 @@ check(not Live.AccountQuestsUsable(), "missing native account API is unsupported
 check(Live.ZoneSnapshot(2).accountCompleted == nil, "missing API uses character completion only")
 accountQuests = false
 savedChanged("accountQuests")
+
+-- Exercise the real tracker dispatch and menu description without starting the column or drawing menu frames.
+local section = {
+	SetHeader = function() end,
+	GetContextMenuParent = function()
+		return _G.ObjectiveTrackerFrame
+	end,
+}
+CreateFrame = function()
+	return section
+end
+_G.Mixin = function(target, source)
+	for key, value in pairs(source) do
+		target[key] = value
+	end
+end
+_G.ObjectiveTrackerManager = {}
+ns.AfterEvents = function() end
+ns.Saved.LegacyTrackerSettings = function() end
+ns.Saved.ClearLegacyTrackerSettings = function() end
+assert(loadfile("UI/Tracker.lua"))("LegacyForever", ns)
+
+local root
+core.ContextMenu = function(owner, generate)
+	root = core.NewMenuDescription("root")
+	generate(owner, root)
+end
+local block = { id = 100 }
+section:OnBlockHeaderClick(block, "RightButton")
+local openEntry
+for _, entry in ipairs(root.entries) do
+	if entry.text == ns.L["Open in the Legacy panel"] then
+		openEntry = entry
+		break
+	end
+end
+check(openEntry and type(openEntry.onClick) == "function", "the tracker menu has an Open action")
+
+for _, action in ipairs({
+	{
+		label = "tracker click",
+		run = function()
+			section:OnBlockHeaderClick(block, "LeftButton")
+		end,
+	},
+	{ label = "tracker menu Open", run = openEntry.onClick },
+}) do
+	local chatBefore = #chat
+	renown, combat, shown = 0, false, false
+	action.run()
+	check(
+		#chat == chatBefore + 1 and chat[chatBefore + 1] == LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP and not shown,
+		action.label .. " reports the locked panel exactly once"
+	)
+	renown, combat = 1, true
+	action.run()
+	check(
+		#chat == chatBefore + 2 and chat[chatBefore + 2] == core.L["Unavailable in combat"] and not shown,
+		action.label .. " reports combat exactly once"
+	)
+	combat, selectedPage, selectedAchievement = false, nil, nil
+	action.run()
+	check(
+		#chat == chatBefore + 2 and shown and selectedPage == 2 and selectedAchievement == block.id,
+		action.label .. " opens the selected challenge silently"
+	)
+end
 
 print(("live_spec: %d checks passed"):format(checks))
