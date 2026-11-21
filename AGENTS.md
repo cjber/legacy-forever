@@ -51,8 +51,8 @@ A change's player-facing notes go in `changes/<issue>.md`; only the release comm
 - New host globals go in `.luacheckrc`, with types in `types/forever.lua` or `types/addon.lua`. Never add a LuaLS
   globals allowlist. A final `select(...)` as an argument, element or return is parenthesized or carries
   `-- multi-value: reason`.
-- Specs are a headless harness with stubbed client APIs. Frames, menus, tooltips and the tracker are checked in the
-  headless client (`wow-forever-addon` `in-game.md`); the PR lists what was checked.
+- Specs are an offline harness with stubbed client APIs. Frames, menus, tooltips and the tracker are checked in game
+  by hand; the PR lists what was checked.
 
 - Before cleanup, dead-code or refactoring work, read the live roots and settled shapes in `.sloppatrol/instructions.md`.
 

@@ -1,7 +1,7 @@
 version: 1
 
 # Speedpatrol profile for Legacy Forever, a WoW: Forever addon. The game client cannot run here, so
-# every benchmark is a command over the headless Lua harness the specs use. `speedpatrol init`
+# every benchmark is a command over the offline Lua spec harness the specs use. `speedpatrol init`
 # reads a repo without package.json as an HTTP API, so this file is written by hand.
 project:
   name: legacy-forever
