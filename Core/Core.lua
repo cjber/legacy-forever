@@ -53,6 +53,10 @@ ns.core = ForeverCore.Register(addonName, {
 	lines = function()
 		return ns.ReportLines()
 	end,
+	open = function(where)
+		return ns.Live.ShowInLegacyPanel(where)
+	end,
+	openSecure = true,
 })
 
 -- Hands the generated player credits to the shared Thanks page (WFA-31). An older core has no Credits module, and the

@@ -153,6 +153,8 @@ seterrorhandler = function() end
 strtrim = function(text)
 	return (text:gsub("^%s+", ""):gsub("%s+$", ""))
 end
+ns.L = {}
+SlashCmdList = {}
 local ForeverCore = dofile("tests/forever_core.lua").install(_G, {
 	"Core/SafeCall.lua",
 	"Core/Log.lua",
@@ -161,13 +163,83 @@ local ForeverCore = dofile("tests/forever_core.lua").install(_G, {
 	"UI/MapCanvas.lua",
 	"Expose.lua",
 })
-ns.core = ForeverCore.Register("LegacyForever", {})
+local register = ForeverCore.Register
+local opener
+ForeverCore.Register = function(addon, spec)
+	assert(addon == "LegacyForever")
+	opener = spec.open
+	return register(addon, spec)
+end
+assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
+ForeverCore.Register = register
 
 for event in pairs(registered) do
 	registered[event] = nil
 end
 assert(loadfile("Core/Live.lua"))("LegacyForever", ns)
 local Live = ns.Live
+
+local renown, combat = 0, false
+local chat, errors = {}, {}
+local shown, selectedPage, selectedAchievement
+_G.Constants = { LegacyConsts = { LEGACY_REWARD_TRACK_FACTION_ID = 1 } }
+_G.C_MajorFactions = {
+	GetCurrentRenownLevel = function(id)
+		assert(id == 1)
+		return renown
+	end,
+}
+_G.LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP = "Panel locked"
+_G.InCombatLockdown = function()
+	return combat
+end
+_G.DEFAULT_CHAT_FRAME = {
+	AddMessage = function(_, message)
+		chat[#chat + 1] = message
+	end,
+}
+_G.UIErrorsFrame = {
+	AddMessage = function(_, message)
+		errors[#errors + 1] = message
+	end,
+}
+_G.ToggleLegacySystemUI = function()
+	shown = true
+end
+_G.EventRegistry = {
+	TriggerEvent = function(_, event, page)
+		assert(event == "Legacy.SelectPage")
+		selectedPage = page
+	end,
+}
+_G.AchievementFrame_SelectAchievement = function(id, force)
+	assert(force)
+	selectedAchievement = id
+end
+check(type(opener) == "function", "Core registers the Legacy panel opener")
+local accepted, reason = opener(100)
+check(accepted == false and reason == LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP, "the locked opener returns the game tooltip")
+check(#chat == 0 and #errors == 0 and not shown, "the locked opener leaves the panel closed and reports nothing")
+accepted, reason = ForeverCore.Open("LegacyForever", 100)
+check(
+	accepted == false and #chat == 1 and chat[1] == reason and #errors == 0,
+	"ForeverCore reports the locked refusal once in chat"
+)
+renown, combat = 1, true
+accepted = ForeverCore.Open("LegacyForever", 100)
+check(accepted == false and #chat == 2 and not shown, "ForeverCore refuses to open in combat")
+combat = false
+accepted = ForeverCore.Open("LegacyForever", 100)
+check(
+	accepted == true and shown and selectedPage == 2 and selectedAchievement == 100,
+	"the opener selects the challenge"
+)
+check(#chat == 2 and #errors == 0, "a successful open reports nothing")
+selectedAchievement = nil
+check(
+	ForeverCore.Open("LegacyForever") == true and selectedAchievement == nil,
+	"opening the section selects no challenge"
+)
 
 -- Flight paths are recorded per character, from a flight master's own list.
 local snapshot = Live.ZoneSnapshot(2)

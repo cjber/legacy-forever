@@ -71,8 +71,7 @@ for _, case in ipairs(cases) do
 	}, { __index = _G })
 	local shown, tracked = true, { 10 }
 	local savedListener, refreshes = nil, 0
-	local panelLocked, opened = false, {}
-	env.LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP = "Panel locked"
+	local opened = {}
 	local ns = {
 		SavedTable = function()
 			return tracked
@@ -116,15 +115,13 @@ for _, case in ipairs(cases) do
 			Name = function()
 				return "Challenge"
 			end,
-			PanelLocked = function()
-				return panelLocked
-			end,
-			ShowInLegacyPanel = function(id)
-				opened[#opened + 1] = id or "section"
-			end,
 		},
 	}
 	env.ForeverCore = {
+		Open = function(addon, where)
+			opened[#opened + 1] = { addon = addon, where = where }
+			return false, "Panel locked"
+		end,
 		TrackerHost = {
 			Attach = function(module, show, contract)
 				module.show = show
@@ -140,11 +137,11 @@ for _, case in ipairs(cases) do
 		},
 	}
 	env._G = env
-	setfenv(assert(loadfile("Core/ForeverRequire.lua")), env)("Addon", ns)
+	setfenv(assert(loadfile("Core/ForeverRequire.lua")), env)("LegacyForever", ns)
 	if case.deferred then
 		ns.ForeverCoreHostAfter, ns.ForeverCoreHostDeferred = {}, true
 	end
-	setfenv(assert(loadfile("UI/Tracker.lua")), env)("Addon", ns)
+	setfenv(assert(loadfile("UI/Tracker.lua")), env)("LegacyForever", ns)
 	assert(owners[modules[1]] == native, "private host attachment is independent of Blizzard")
 	if case.deferred then
 		local after = ns.ForeverCoreHostAfter
@@ -180,12 +177,19 @@ for _, case in ipairs(cases) do
 	assert(shown == false, "hide writes the saved section switch")
 	assert(refreshes == 1, "menu hide refreshes exactly once")
 	section:LayoutContents() -- hidden challenges must not read or render the model
-	section.contract.click({ kind = "block", id = 10 }, "LeftButton")
+	local accepted, reason = section.contract.click({ kind = "block", id = 10 }, "LeftButton")
+	assert(accepted == nil and reason == nil, "click leaves refusal reporting to ForeverCore.Open")
 	section.contract.click({ kind = "section" }, "LeftButton")
-	assert(opened[1] == 10 and opened[2] == "section", "click opens the challenge or panel")
+	assert(opened[1].addon == "LegacyForever" and opened[1].where == 10, "block click opens the named challenge")
+	assert(opened[2].addon == "LegacyForever" and opened[2].where == nil, "section click opens the named panel")
 	local slots, actions = {}, {}
+	local openAddon, openWhere
 	local menu = {}
-	for _, slot in ipairs({ "Title", "Open", "End" }) do
+	function menu:Open(label, addon, where)
+		slots[#slots + 1] = "Open:" .. label
+		openAddon, openWhere = addon, where
+	end
+	for _, slot in ipairs({ "Title", "End" }) do
 		menu[slot] = function(_, label, action)
 			slots[#slots + 1] = slot .. ":" .. label
 			actions[slot] = action
@@ -193,9 +197,7 @@ for _, case in ipairs(cases) do
 	end
 	section.contract.menu({ kind = "block", id = 10 }, menu)
 	assert(table.concat(slots, "|") == "Title:Challenge|Open:Open in the Legacy panel|End:Stop tracking")
-	panelLocked = true
-	local accepted, reason = actions.Open()
-	assert(accepted == false and reason == "Panel locked", "Open reports why the panel refused")
+	assert(openAddon == "LegacyForever" and openWhere == 10, "block menu opens the named challenge")
 	actions.End()
 	assert(#tracked == 0, "End stops tracking the challenge")
 	slots = {}
@@ -204,6 +206,7 @@ for _, case in ipairs(cases) do
 		table.concat(slots, "|") == "Title:Legacy|Open:Open in the Legacy panel",
 		"section header supplies its title"
 	)
+	assert(openAddon == "LegacyForever" and openWhere == nil, "section menu opens the named panel")
 	tracked[1], tracked[2] = 10, 11
 	slots = {}
 	section.contract.menu({ kind = "section" }, menu)

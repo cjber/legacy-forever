@@ -11,6 +11,7 @@ local _, ns = ...
 -- guarded by its minor, so an older kit is not a reason to stop.
 local ready = ForeverCore ~= nil
 	and (ForeverCore.API or 0) >= 1
+	and type(ForeverCore.Open) == "function"
 	and ForeverCore.APIKit ~= nil
 	and type(ForeverCore.APIKit.Hub) == "function"
 	and ForeverCore.TrackerHost ~= nil
