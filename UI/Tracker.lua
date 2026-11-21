@@ -1,5 +1,5 @@
 ---@type string, LegacyForeverNamespace
-local _, ns = ...
+local addonName, ns = ...
 local L = ns.L
 
 if ns.broken then
@@ -141,20 +141,10 @@ local show = {
 	where = L["Turn it back on in Settings > AddOns > Legacy Forever > Objective tracker."],
 }
 
----@param target ForeverTrackerTarget
-local function OpenChallenge(target)
-	if ns.Live.PanelLocked() then
-		return false, LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP
-	end
-	ns.Live.ShowInLegacyPanel(target.id)
-end
-
 local contract = {
 	menu = function(target, menu)
 		menu:Title(target.kind == "block" and ns.Live.Name(target.id) or L["Legacy"])
-		menu:Open(L["Open in the Legacy panel"], function()
-			return OpenChallenge(target)
-		end)
+		menu:Open(L["Open in the Legacy panel"], addonName, target.id)
 		if target.kind == "block" then
 			menu:End(L["Stop tracking"], function()
 				StopTracking(target.id)
@@ -163,7 +153,9 @@ local contract = {
 			menu:End(L["Stop tracking all"], StopTrackingAll)
 		end
 	end,
-	click = OpenChallenge,
+	click = function(target)
+		ForeverCore.Open(addonName, target.id)
+	end,
 	clickHint = function()
 		return L["open the Legacy panel"]
 	end,

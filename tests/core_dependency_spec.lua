@@ -93,17 +93,20 @@ check(
 )
 
 -- A core with every member this addon calls: the addon loads and nothing is shown.
-local complete = Run({
+local coreWithTracker = {
 	API = 1,
 	APIKit = { Hub = function() end },
 	TrackerHost = { HandleBlockHeaderClick = function() end },
 	TrackerLine = { SetHeaderTooltip = function() end },
-})
-local noContract = Run({ API = 1, APIKit = { Hub = function() end } })
-check(noContract.broken == true, "a core without the tracker contract stops before UI files load")
-messages = {}
+}
+local noOpener = Run(coreWithTracker)
+check(noOpener.broken == true, "a core without Open stops before UI files load")
+coreWithTracker.Open = function() end
+local complete = Run(coreWithTracker)
 check(complete.broken == nil, "a complete core leaves the addon unbroken")
 check(#messages == 0, "a complete core shows nothing")
+local noContract = Run({ API = 1, APIKit = { Hub = function() end }, Open = function() end })
+check(noContract.broken == true, "a core without the tracker contract stops before UI files load")
 
 -- Installation and enablement have distinct recovery instructions.
 local coreAddon = table.remove(addons)

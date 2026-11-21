@@ -153,21 +153,99 @@ seterrorhandler = function() end
 strtrim = function(text)
 	return (text:gsub("^%s+", ""):gsub("%s+$", ""))
 end
-local ForeverCore = dofile("tests/forever_core.lua").install(_G, {
+assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
+SlashCmdList = {}
+_G.ObjectiveTrackerFrame = {}
+_G.EventUtil = { ContinueAfterAllEvents = function() end }
+local core = dofile("tests/forever_core.lua").load({
 	"Core/SafeCall.lua",
 	"Core/Log.lua",
+	"UI/ContextMenu.lua",
+	"UI/TrackerHost.lua",
 	"UI/Report.lua",
 	"UI/Credits.lua",
 	"UI/MapCanvas.lua",
 	"Expose.lua",
-})
-ns.core = ForeverCore.Register("LegacyForever", {})
+}, { copy = {} }, _G)
+local ForeverCore = core.ForeverCore
+_G.ForeverCore = ForeverCore
+local register = ForeverCore.Register
+local opener
+ForeverCore.Register = function(addon, spec)
+	assert(addon == "LegacyForever")
+	opener = spec.open
+	return register(addon, spec)
+end
+assert(loadfile("Core/Core.lua"))("LegacyForever", ns)
+ForeverCore.Register = register
 
 for event in pairs(registered) do
 	registered[event] = nil
 end
 assert(loadfile("Core/Live.lua"))("LegacyForever", ns)
 local Live = ns.Live
+
+local renown, combat = 0, false
+local chat, errors = {}, {}
+local shown, selectedPage, selectedAchievement
+_G.Constants = { LegacyConsts = { LEGACY_REWARD_TRACK_FACTION_ID = 1 } }
+_G.C_MajorFactions = {
+	GetCurrentRenownLevel = function(id)
+		assert(id == 1)
+		return renown
+	end,
+}
+_G.LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP = "Panel locked"
+_G.InCombatLockdown = function()
+	return combat
+end
+_G.DEFAULT_CHAT_FRAME = {
+	AddMessage = function(_, message)
+		chat[#chat + 1] = message
+	end,
+}
+_G.UIErrorsFrame = {
+	AddMessage = function(_, message)
+		errors[#errors + 1] = message
+	end,
+}
+_G.ToggleLegacySystemUI = function()
+	shown = true
+end
+_G.EventRegistry = {
+	TriggerEvent = function(_, event, page)
+		assert(event == "Legacy.SelectPage")
+		selectedPage = page
+	end,
+}
+_G.AchievementFrame_SelectAchievement = function(id, force)
+	assert(force)
+	selectedAchievement = id
+end
+check(type(opener) == "function", "Core registers the Legacy panel opener")
+local accepted, reason = opener(100)
+check(accepted == false and reason == LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP, "the locked opener returns the game tooltip")
+check(#chat == 0 and #errors == 0 and not shown, "the locked opener leaves the panel closed and reports nothing")
+accepted, reason = ForeverCore.Open("LegacyForever", 100)
+check(
+	accepted == false and #chat == 1 and chat[1] == reason and #errors == 0,
+	"ForeverCore reports the locked refusal once in chat"
+)
+renown, combat = 1, true
+accepted = ForeverCore.Open("LegacyForever", 100)
+check(accepted == false and #chat == 2 and not shown, "ForeverCore refuses to open in combat")
+combat = false
+accepted = ForeverCore.Open("LegacyForever", 100)
+check(
+	accepted == true and shown and selectedPage == 2 and selectedAchievement == 100,
+	"the opener selects the challenge"
+)
+check(#chat == 2 and #errors == 0, "a successful open reports nothing")
+selectedAchievement = nil
+check(
+	ForeverCore.Open("LegacyForever") == true and selectedAchievement == nil,
+	"opening the section selects no challenge"
+)
 
 -- Flight paths are recorded per character, from a flight master's own list.
 local snapshot = Live.ZoneSnapshot(2)
@@ -348,5 +426,72 @@ check(not Live.AccountQuestsUsable(), "missing native account API is unsupported
 check(Live.ZoneSnapshot(2).accountCompleted == nil, "missing API uses character completion only")
 accountQuests = false
 savedChanged("accountQuests")
+
+-- Exercise the real tracker dispatch and menu description without starting the column or drawing menu frames.
+local section = {
+	SetHeader = function() end,
+	GetContextMenuParent = function()
+		return _G.ObjectiveTrackerFrame
+	end,
+}
+CreateFrame = function()
+	return section
+end
+_G.Mixin = function(target, source)
+	for key, value in pairs(source) do
+		target[key] = value
+	end
+end
+_G.ObjectiveTrackerManager = {}
+ns.AfterEvents = function() end
+ns.Saved.LegacyTrackerSettings = function() end
+ns.Saved.ClearLegacyTrackerSettings = function() end
+assert(loadfile("UI/Tracker.lua"))("LegacyForever", ns)
+
+local root
+core.ContextMenu = function(owner, generate)
+	root = core.NewMenuDescription("root")
+	generate(owner, root)
+end
+local block = { id = 100 }
+section:OnBlockHeaderClick(block, "RightButton")
+local openEntry
+for _, entry in ipairs(root.entries) do
+	if entry.text == ns.L["Open in the Legacy panel"] then
+		openEntry = entry
+		break
+	end
+end
+check(openEntry and type(openEntry.onClick) == "function", "the tracker menu has an Open action")
+
+for _, action in ipairs({
+	{
+		label = "tracker click",
+		run = function()
+			section:OnBlockHeaderClick(block, "LeftButton")
+		end,
+	},
+	{ label = "tracker menu Open", run = openEntry.onClick },
+}) do
+	local chatBefore = #chat
+	renown, combat, shown = 0, false, false
+	action.run()
+	check(
+		#chat == chatBefore + 1 and chat[chatBefore + 1] == LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP and not shown,
+		action.label .. " reports the locked panel exactly once"
+	)
+	renown, combat = 1, true
+	action.run()
+	check(
+		#chat == chatBefore + 2 and chat[chatBefore + 2] == core.L["Unavailable in combat"] and not shown,
+		action.label .. " reports combat exactly once"
+	)
+	combat, selectedPage, selectedAchievement = false, nil, nil
+	action.run()
+	check(
+		#chat == chatBefore + 2 and shown and selectedPage == 2 and selectedAchievement == block.id,
+		action.label .. " opens the selected challenge silently"
+	)
+end
 
 print(("live_spec: %d checks passed"):format(checks))

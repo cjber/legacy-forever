@@ -151,12 +151,13 @@ function Live.LockPanelEntry(button)
 	end
 end
 
--- Opens Blizzard's Legacy panel on this challenge.
+-- Opens the Legacy challenges page and optionally selects a challenge. ForeverCore reports any refusal.
 ---@param achievementID? number
+---@return boolean opened
+---@return string? reason
 function Live.ShowInLegacyPanel(achievementID)
 	if Live.PanelLocked() then
-		UIErrorsFrame:AddMessage(LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP, RED_FONT_COLOR:GetRGB())
-		return
+		return false, LEGACY_MICRO_BUTTON_LOCKED_TOOLTIP
 	end
 	if not (LegacySystemFrame and LegacySystemFrame:IsShown()) then
 		ToggleLegacySystemUI()
@@ -165,6 +166,7 @@ function Live.ShowInLegacyPanel(achievementID)
 	if achievementID and AchievementFrame_SelectAchievement then
 		AchievementFrame_SelectAchievement(achievementID, true)
 	end
+	return true
 end
 
 ---@param callback fun()
