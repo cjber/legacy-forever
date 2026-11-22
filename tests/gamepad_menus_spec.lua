@@ -214,7 +214,11 @@ end
 
 local trackerModules = {}
 local trackerEnv = setmetatable({
-	ObjectiveTrackerFrame = {},
+	ObjectiveTrackerFrame = {
+		IsCollapsed = function()
+			return false
+		end,
+	},
 	ObjectiveTrackerManager = {},
 	CreateFrame = function(kind, name)
 		local frame = Frame(kind, name)

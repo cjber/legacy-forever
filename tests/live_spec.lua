@@ -155,7 +155,11 @@ strtrim = function(text)
 end
 assert(loadfile("Locales/enUS.lua"))("LegacyForever", ns)
 SlashCmdList = {}
-_G.ObjectiveTrackerFrame = {}
+_G.ObjectiveTrackerFrame = {
+	IsCollapsed = function()
+		return false
+	end,
+}
 _G.EventUtil = { ContinueAfterAllEvents = function() end }
 local core = dofile("tests/forever_core.lua").load({
 	"Core/SafeCall.lua",
