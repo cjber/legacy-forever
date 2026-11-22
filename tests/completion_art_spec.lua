@@ -403,13 +403,10 @@ LegacyForeverZoneOverlayMixin.OnLoad(overlay)
 local cornerBar = overlay.Progress
 check(cornerBar.kind == "StatusBar", "the corner holds a progress bar")
 check(cornerBar.height == 2, "the bar is the original 2-unit line")
-check(cornerBar.statusBarTexture == "Interface\\Buttons\\WHITE8X8", "the line fills with the flat white texture")
+check(cornerBar.statusBarTexture == "common-stat-bar-white", "the line uses the shared progress fill")
 check(cornerBar.low == 0 and cornerBar.high == 100, "the line counts percent")
 local backing = cornerBar.textures[1]
-check(
-	backing.allPoints and backing.color[1] == 0 and backing.color[2] == 0 and backing.color[4] == 0.45,
-	"a 45% black backing sits under the line"
-)
+check(backing.allPoints and backing.atlas == "common-stat-bar-BG", "the shared track sits under the line")
 check(
 	cornerBar.points[1][1] == "TOPLEFT" and cornerBar.points[1][2] == overlay.Title and cornerBar.points[1][5] == -4,
 	"the line sits 4 under the title"
@@ -463,7 +460,6 @@ end
 local source = Read("UI/Completion.lua")
 check(source:find("LegacyForeverZoneOverlayMixin", 1, true) ~= nil, "the corner overlay is back")
 check(source:find("mapCollapsed", 1, true) ~= nil, "its collapse state is back")
-check(source:find("WHITE8X8", 1, true) ~= nil, "the corner's line is the hand-made bar again")
 local xml = Read("UI/Completion.xml")
 check(xml:find("media\\Shade", 1, true) ~= nil, "the corner's XML paints the shade")
 check(xml:find('alpha="0.6"', 1, true) ~= nil, "the shade keeps its 0.6 alpha")

@@ -315,7 +315,7 @@ end
 --[[ World map: the zone you're viewing, in the corner that covers least of it; on a continent, in each zone
      badge's tooltip ]]
 
--- A thin fill for the percent, black behind it, green once the zone is done.
+-- A thin progress bar, green once the zone is done.
 local OVERLAY_BAR_HEIGHT = 2
 -- Room for the text and the bar, so it never looks boxed.
 local OVERLAY_MIN_WIDTH = 140
@@ -325,11 +325,11 @@ local OVERLAY_MIN_WIDTH = 140
 local function CreateCornerBar(parent)
 	local bar = CreateFrame("StatusBar", nil, parent)
 	bar:SetHeight(OVERLAY_BAR_HEIGHT)
-	bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+	bar:SetStatusBarTexture("common-stat-bar-white")
 	bar:SetMinMaxValues(0, 100)
 	local background = bar:CreateTexture(nil, "BACKGROUND")
 	background:SetAllPoints()
-	background:SetColorTexture(0, 0, 0, 0.45)
+	background:SetAtlas("common-stat-bar-BG") -- art-ok: progress track stretched to the bar
 	return bar
 end
 
