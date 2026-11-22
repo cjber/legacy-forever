@@ -9,7 +9,11 @@ local function noop() end
 
 local modules = {}
 local env = setmetatable({
-	ObjectiveTrackerFrame = {},
+	ObjectiveTrackerFrame = {
+		IsCollapsed = function()
+			return false
+		end,
+	},
 	ObjectiveTrackerManager = {},
 	CreateFrame = function(_, name)
 		local frame = { SetHeader = noop }

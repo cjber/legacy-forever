@@ -20,7 +20,11 @@ local cases = {
 }
 for _, case in ipairs(cases) do
 	local waits, timers, warnings, modules, owners = {}, {}, {}, {}, {}
-	local native = {}
+	local native = {
+		IsCollapsed = function()
+			return false
+		end,
+	}
 	local function region()
 		return { SetHeader = noop }
 	end

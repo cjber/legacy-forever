@@ -346,7 +346,11 @@ ns.Completion = {
 local trackerRefreshes, trackerSection = 0, nil
 local trackerEnv = setmetatable({
 	ObjectiveTrackerManager = {},
-	ObjectiveTrackerFrame = {},
+	ObjectiveTrackerFrame = {
+		IsCollapsed = function()
+			return false
+		end,
+	},
 	CreateFrame = function()
 		trackerSection = {
 			SetHeader = function() end,
