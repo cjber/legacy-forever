@@ -633,9 +633,13 @@ def completion_corner(ui, canvas, rects, art, zone, result, name, pins, collapse
     canvas.text(x, y, title, title_font)
     bar_y = y + title_font.height + 4
     canvas.draw(ui.atlas("common-stat-bar-BG"), x, bar_y, width, 2)
-    fill_width = width * (result["percent"] or 0) / 100
-    fill_color = "GREEN_FONT_COLOR" if result["complete"] else "NORMAL_FONT_COLOR"
-    canvas.draw(ui.atlas("common-stat-bar-white"), x, bar_y, fill_width, 2, ui.global_color(fill_color))
+    fill_width = canvas.px(x + width * (result["percent"] or 0) / 100) - canvas.px(x)
+    if fill_width > 0:
+        color = "GREEN_FONT_COLOR" if result["complete"] else "NORMAL_FONT_COLOR"
+        full_fill = ui.canvas(width, 2)
+        full_fill.draw(ui.atlas("common-stat-bar-white"), 0, 0, width, 2, ui.global_color(color))
+        visible_fill = full_fill.image.crop((0, 0, fill_width, full_fill.image.height))
+        canvas.composite(visible_fill, canvas.px(x), canvas.px(bar_y))
     if not collapsed:
         canvas.text(x, y + title_font.height + 12, counts, counts_font)
 
