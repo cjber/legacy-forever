@@ -315,8 +315,10 @@ end
 --[[ World map: the zone you're viewing, in the corner that covers least of it; on a continent, in each zone
      badge's tooltip ]]
 
--- A thin fill for the percent, black behind it, green once the zone is done.
-local OVERLAY_BAR_HEIGHT = 2
+-- ColoredProgressBarTemplate centers the 15-unit fill in its 67 x 29 track (1.60.1.70124 atlas data).
+local OVERLAY_BAR_HEIGHT = 15
+local OVERLAY_TRACK_WIDTH = 67
+local OVERLAY_TRACK_HEIGHT = 29
 -- Room for the text and the bar, so it never looks boxed.
 local OVERLAY_MIN_WIDTH = 140
 
@@ -324,12 +326,12 @@ local OVERLAY_MIN_WIDTH = 140
 ---@return StatusBar
 local function CreateCornerBar(parent)
 	local bar = CreateFrame("StatusBar", nil, parent)
-	bar:SetHeight(OVERLAY_BAR_HEIGHT)
-	bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+	bar:SetSize(OVERLAY_TRACK_WIDTH, OVERLAY_BAR_HEIGHT)
+	bar:SetStatusBarTexture("common-stat-bar-white")
 	bar:SetMinMaxValues(0, 100)
 	local background = bar:CreateTexture(nil, "BACKGROUND")
-	background:SetAllPoints()
-	background:SetColorTexture(0, 0, 0, 0.45)
+	background:SetPoint("CENTER")
+	ns.Art.Fit(background, "common-stat-bar-BG", OVERLAY_TRACK_WIDTH, OVERLAY_TRACK_HEIGHT)
 	return bar
 end
 
@@ -389,8 +391,7 @@ LegacyForeverZoneOverlayMixin = {}
 
 function LegacyForeverZoneOverlayMixin:OnLoad()
 	self.Progress = CreateCornerBar(self)
-	self.Progress:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT", 0, -4)
-	self.Progress:SetPoint("RIGHT")
+	self.Progress:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT", 0, -4 - (OVERLAY_TRACK_HEIGHT - OVERLAY_BAR_HEIGHT) / 2)
 end
 
 -- Called as the world map opens or changes map.
@@ -413,7 +414,7 @@ function LegacyForeverZoneOverlayMixin:Refresh()
 	SetCornerProgress(self.Progress, self.result)
 	self.Counts:SetText(CountsText(self.result, 16))
 	self.Counts:SetShown(not collapsed)
-	local height = self.Title:GetStringHeight() + 4 + OVERLAY_BAR_HEIGHT
+	local height = self.Title:GetStringHeight() + 4 + OVERLAY_TRACK_HEIGHT
 	if not collapsed then
 		height = height + 6 + self.Counts:GetStringHeight()
 	end
