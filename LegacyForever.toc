@@ -10,7 +10,7 @@
 ## X-Curse-Project-ID: 1705879
 ## IconTexture: Interface\AddOns\LegacyForever\media\Icon
 ## X-Forever-Icon: Interface\Icons\Achievement_General
-## X-Forever-Core: v1.16.3
+## X-Forever-Core: v1.17.0
 ## OptionalDeps: ShortestPathForever, QuestieDB, Questie, AtlasLootClassic, ForeverCore
 ## SavedVariables: LegacyForeverDB
 ## X-Forever-Core-Embed: 1
