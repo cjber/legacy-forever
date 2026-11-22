@@ -3,7 +3,7 @@
   "source": {
     "repository": "https://github.com/cjber/forever-core",
     "path": ".agents/skills/wow-forever-addon/tooling/forever_tools",
-    "revision": "2f25399f0da76617ef629394385c8f125febfe57"
+    "revision": "3ffe656fdd9d78abd803e1751e742a276cb6522d"
   },
   "files": {
     "__init__.py": "845dbed90ad519817771603e96839d1ba970007d5a6d997a4a13fef416b8bcd1",
