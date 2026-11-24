@@ -10,9 +10,9 @@ entry that lost a reference. A refresh's other effects are only reported: gained
 references, moved zones and pins, changed counts, and rewards, objectives and entries added or dropped. Every
 regression prints what forever-db -- the zip at --fdb, or the release pinned in tools/fdb_pin.py fetched into
 tools/.cache when --fdb is omitted -- says about the ids the entry carries (its zone's ui_map record and its
-instance's spawn coverage), so the reader can tell whether the second source has facts for it at all; its spawn
-table stops at the Classic continents' maps and its quest table carries none of Forever's quests, so it
-normally has none. The zip is checked against the pin's FDB_SHA256 before it is read, whatever fetched it.
+instance's spawn coverage), so the reader can tell whether the second source has facts for it at all; the
+guard reads only its ui_map and spawn tables, whose spawn points stop at the Classic continents' maps, so an
+instance pin normally has none. The zip is checked against the pin's FDB_SHA256 before it is read, whatever fetched it.
 """
 
 import argparse
@@ -110,6 +110,12 @@ def fetch_fdb(path):
     name = f"fdb-{fdb_pin.FDB_SHA256}.zip"
     if path.is_file():
         content = path.read_bytes()
+        if path.parent == CACHE and path.name == name:
+            try:
+                verify_fdb(content, path)
+            except ValueError:
+                # A changed or corrupted cached zip: redownload once, then hold the pin.
+                content = download(fdb_pin.FDB_URL, name)
     elif path.parent == CACHE and path.name == name:
         content = download(fdb_pin.FDB_URL, name)
         try:
@@ -208,6 +214,21 @@ def summary(data):
     )
 
 
+def context_for_achievement(book, achievement):
+    """Where an achievement's objectives last stood in `book`, for a dropped link's or ref's forever-db
+    lookups; None when the old data never placed it."""
+    zones = [
+        (zone, record)
+        for (ach, _criteria), placed in book["objectives"].items()
+        if ach == achievement
+        for zone, record in placed.items()
+    ]
+    if not zones:
+        return None
+    zone, record = zones[-1]
+    return zone, (record["instance"],) if record.get("instance") else ()
+
+
 def context_of(record):
     """A regression's forever-db lookups: the entry's zone and its instance map."""
     return record["zone"], (record["instance"],) if record.get("instance") else ()
@@ -217,6 +238,7 @@ def compare(old, new):
     """The refresh's regressions, which fail it, and its other changes, which are only reported. A regression
     carries the context its forever-db evidence reads; None means forever-db has no ids to look up."""
     regressions, reports = [], []
+    dropped_feed_links, dropped_refs = [], []
 
     def regression(context, text):
         regressions.append((context, text))
@@ -232,7 +254,7 @@ def compare(old, new):
     for feed_id in sorted(set(old["feeds"]) & set(new["feeds"])):
         had, has = old["feeds"][feed_id], new["feeds"][feed_id]
         for target in sorted(had - has):
-            regression(None, f"feed {feed_id}: dropped its link to reward {target}")
+            dropped_feed_links.append((feed_id, target))
         for target in sorted(has - had):
             report(f"feed {feed_id}: gained its link to reward {target}")
     for feed_id in sorted(set(new["feeds"]) - set(old["feeds"])):
@@ -280,7 +302,10 @@ def compare(old, new):
         if achievement in new["rewards"] or achievement in new["feeds"]:
             # The client still names the challenge, so its objectives' every place going missing is a broken
             # join, not content the build dropped.
-            regression(None, f"{label}: lost every zone it had (the achievement is still a reward or feed)")
+            regression(
+                context_for_achievement(old, achievement),
+                f"{label}: lost every zone it had (the achievement is still a reward or feed)",
+            )
         else:
             report(f"{label} is gone")
 
@@ -332,7 +357,7 @@ def compare(old, new):
             {(ref[0], ref[1]) for ref in now.get("refs") or ()},
         )
         for ref in sorted(had_refs - has_refs):
-            regression((now["zone"], ()), f"{label}: dropped ref {ref[0]}/{ref[1]}")
+            dropped_refs.append((label, now["zone"], ref))
         for ref in sorted(has_refs - had_refs):
             report(f"{label}: gained ref {ref[0]}/{ref[1]}")
     for name in sorted(set(new["wings"]) - set(old["wings"])):
@@ -352,7 +377,7 @@ def compare(old, new):
             {(ref[0], ref[1]) for ref in now.get("refs") or ()},
         )
         for ref in sorted(had_refs - has_refs):
-            regression((now["zone"], ()), f"{label}: dropped ref {ref[0]}/{ref[1]}")
+            dropped_refs.append((label, now["zone"], ref))
         for ref in sorted(has_refs - had_refs):
             report(f"{label}: gained ref {ref[0]}/{ref[1]}")
     for key in sorted(set(new["bosses"]) - set(old["bosses"])):
@@ -368,13 +393,24 @@ def compare(old, new):
             {(ref[0], ref[1]) for ref in now.get("refs") or ()},
         )
         for ref in sorted(had_refs - has_refs):
-            regression((key[0], ()), f"{label}: dropped ref {ref[0]}/{ref[1]}")
+            dropped_refs.append((label, key[0], ref))
         for ref in sorted(has_refs - had_refs):
             report(f"{label}: gained ref {ref[0]}/{ref[1]}")
     for key in sorted(set(new["legacy"]) - set(old["legacy"])):
         report(f"Legacy entry {key[1]} (zone {key[0]}) is new")
     for key in sorted(set(old["legacy"]) - set(new["legacy"])):
         report(f"Legacy entry {key[1]} (zone {key[0]}) is gone")
+
+    for feed_id, target in dropped_feed_links:
+        if target in new["rewards"]:
+            regression(context_for_achievement(old, target), f"feed {feed_id}: dropped its link to reward {target}")
+        else:
+            report(f"feed {feed_id}: dropped its link to reward {target} (the reward is gone from the new data)")
+    for label, _zone, ref in dropped_refs:
+        if ref in new["objectives"]:
+            regression(context_for_achievement(old, ref[0]), f"{label}: dropped ref {ref[0]}/{ref[1]}")
+        else:
+            report(f"{label}: dropped ref {ref[0]}/{ref[1]} (the objective is gone from the new data)")
 
     for faction in sorted(set(old["reputations"]) & set(new["reputations"])):
         was, now = old["reputations"][faction], new["reputations"][faction]
@@ -440,11 +476,9 @@ def main():
         return 0
     if regressions:
         print(f"REGRESSIONS ({len(regressions)}):")
-        shown = set()
         for context, line in regressions:
             print(f"  {line}")
-            if context is not None and context not in shown:
-                shown.add(context)
+            if context is not None:
                 print(f"    forever-db: {evidence(fdb, context)}")
     if reports:
         print(f"REPORTED ({len(reports)}):")
@@ -457,5 +491,5 @@ def main():
 if __name__ == "__main__":
     try:
         sys.exit(main())
-    except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
+    except (OSError, ValueError, KeyError, zipfile.BadZipFile, subprocess.CalledProcessError) as error:
         sys.exit(f"check_refresh: {error}")

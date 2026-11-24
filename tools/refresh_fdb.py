@@ -38,7 +38,7 @@ def github_request(url):
 
 
 def fetch_fdb_releases():
-    request = github_request("https://api.github.com/repos/fitzforge/polestar/releases?per_page=30")
+    request = github_request("https://api.github.com/repos/fitzforge/polestar/releases?per_page=100")
     with urllib.request.urlopen(request, timeout=60) as response:
         return json.load(response)
 
@@ -128,7 +128,6 @@ def main():
     print(summary)
     if "GITHUB_OUTPUT" in os.environ:
         with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-            output.write(f"changed={'true' if tag != fdb_pin.FDB_TAG else 'false'}\n")
             output.write(f"fdb={summary}\n")
 
 

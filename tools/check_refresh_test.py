@@ -42,6 +42,9 @@ WING = [{"kind": "wing", "zone": 1411, "name": "Bazzalan", "refs": [[62031, 1921
 BOSS = [{"kind": "boss", "zone": 1445, "raid": "Onyxia's Lair", "name": "Onyxia", "refs": [[684, 3271]]}]
 LEGACY = [{"kind": "legacy", "zone": 1411, "name": "Ragefire Chasm or Hall of Thanes", "refs": [[62031, 19213]]}]
 REP = [{"kind": "reputation", "zone": 1411, "faction": 21, "name": "Orgrimmar"}]
+WING_REF = [
+    {"kind": "objective", "zone": 1411, "achievement": 62031, "criteria": 19213, "obj": "kill", "x": 0.2, "y": 0.3}
+]
 
 
 def regressions_lines(regressions):
@@ -93,11 +96,21 @@ class Compare(unittest.TestCase):
             reports, ["objective 684/3271: no longer in zone 1445", "objective 684/3271: now also in zone 1454"]
         )
 
-    def test_a_feed_that_dropped_a_link_is_a_regression(self):
+    def test_a_feed_that_dropped_a_link_to_a_living_reward_is_a_regression(self):
         mutated = [{"kind": "feed", "id": 700, "targets": []}]
-        regressions, reports = check_refresh.compare(data(FEEDS), data(mutated))
+        regressions, reports = check_refresh.compare(data(FEEDS + REWARDS), data(mutated + REWARDS))
         self.assertEqual(regressions_lines(regressions), ["feed 700: dropped its link to reward 684"])
         self.assertEqual(reports, [])
+
+    def test_a_feed_whose_link_dropped_with_its_reward_is_a_report(self):
+        # The client dropped the reward, so the feed losing its link is content removal, not a broken join.
+        mutated = [{"kind": "feed", "id": 700, "targets": []}]
+        regressions, reports = check_refresh.compare(data(FEEDS + REWARDS), data(mutated))
+        self.assertEqual(regressions, [])
+        self.assertEqual(
+            reports,
+            ["reward 684 is gone", "feed 700: dropped its link to reward 684 (the reward is gone from the new data)"],
+        )
 
     def test_an_area_that_lost_its_tiles_or_its_key_is_a_regression(self):
         regressions, _ = check_refresh.compare(data(AREA), data([dict(AREA[0], tiles=0)]))
@@ -109,15 +122,25 @@ class Compare(unittest.TestCase):
             regressions_lines(regressions), ["area Orgrimmar (zone 1411): lost its drawn key (244:0:512:256)"]
         )
 
-    def test_a_wing_boss_or_legacy_entry_that_dropped_a_ref_is_a_regression(self):
+    def test_a_wing_boss_or_legacy_entry_that_dropped_a_living_ref_is_a_regression(self):
+        for records, target in ((WING, WING_REF), (BOSS, INSTANCE), (LEGACY, WING_REF)):
+            with self.subTest(records[0]["kind"]):
+                ref = records[0]["refs"][0]
+                mutated = [{key: value for key, value in records[0].items() if key != "refs"}]
+                regressions, reports = check_refresh.compare(data(records + target), data(mutated + target))
+                self.assertEqual(reports, [])
+                self.assertEqual(len(regressions), 1)
+                self.assertIn(f"dropped ref {ref[0]}/{ref[1]}", regressions_lines(regressions)[0])
+
+    def test_a_ref_that_dropped_with_its_objective_is_a_report(self):
         for records in (WING, BOSS, LEGACY):
             with self.subTest(records[0]["kind"]):
                 ref = records[0]["refs"][0]
                 mutated = [{key: value for key, value in records[0].items() if key != "refs"}]
                 regressions, reports = check_refresh.compare(data(records), data(mutated))
-                self.assertEqual(reports, [])
-                self.assertEqual(len(regressions), 1)
-                self.assertIn(f"dropped ref {ref[0]}/{ref[1]}", regressions_lines(regressions)[0])
+                self.assertEqual(regressions, [])
+                self.assertEqual(len(reports), 1)
+                self.assertIn(f"dropped ref {ref[0]}/{ref[1]} (the objective is gone from the new data)", reports[0])
 
     def test_drops_gains_and_moves_of_whole_entries_are_reports(self):
         regressions, reports = check_refresh.compare(data(REP), data([dict(REP[0], zone=1454, side="Horde")]))

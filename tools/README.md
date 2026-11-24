@@ -170,7 +170,7 @@ drawn explore key, a feed link, a drawn completion area's tiles, or a wing, raid
 Gains, moves and drops are only reported, and every regression prints what forever-db -- the Polestar quest
 database pinned in `tools/fdb_pin.py`, moved by `tools/refresh_fdb.py` -- can say about the entry's ids: its
 zone's ui_map record and its instance's spawn coverage. That second source is thin by design: its spawn table
-stops at the Classic continents' maps, so an instance pin has no spawn evidence, and it names no Forever quest.
+stops at the Classic continents' maps, so an instance pin has no spawn evidence; the guard reads its ui_map and spawn tables only.
 It can still name a zone's map, and the guard prints how much of the data's id space it covers on every run.
 
 The generator prints its coverage to stderr on every run: rewards, supporting achievements, zones, pinned and

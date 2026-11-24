@@ -152,7 +152,7 @@ jobs:
         run: |
           body="The data refresh failed: $RUN_URL
 
-          The generator rejects client data it cannot place, so read the error in that run, correct \`tools/locations.json\` or the generator from the new client rows, and close this issue once a run passes."
+          If the failed step is \`Check the refresh for regressions\`, the regenerated data lost something the committed data had: read that step's REGRESSIONS and forever-db's evidence, decide whether the client dropped the content or the guard caught a broken join, and close this issue once a run passes. Re-running fails the same way. Otherwise the generator rejects client data it cannot place: read the error in that run, correct \`tools/locations.json\` or the generator from the new client rows, and close this issue once a run passes."
           issue=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title \"$TITLE\"" \
             --json number,title --jq "[.[] | select(.title == \"$TITLE\")][0].number // empty")
           if [ -n "$issue" ]; then
