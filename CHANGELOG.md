@@ -10,6 +10,12 @@ Each version's entry is also its release notes on GitHub, CurseForge and Wago. O
 verbatim rather than rewritten as the addon moves. API changes other addons' authors need go under an
 optional `### For addon authors` subsection after a version's player bullets.
 
+## [2.5.14] - 2026-11-24
+
+### Fixed
+
+- **World map progress.** The thin zone completion bar is back beneath the zone name.
+
 ## [2.5.13] - 2026-11-24
 
 ### Changed
