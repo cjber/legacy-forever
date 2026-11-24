@@ -14,7 +14,7 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 ### Fixed
 
-- **World map progress.** The thin zone completion bar is back beneath the zone name.
+- Restored the thin zone completion bar beneath the zone name on the world map.
 
 ## [2.5.13] - 2026-11-24
 
