@@ -27,14 +27,21 @@ jobs:
         with:
           # create-pull-request authenticates with its own `token` input.
           persist-credentials: false
-      # Pinned inputs CI already downloaded, such as frozen dumps; each file is keyed by its pin.
+      # Pinned inputs CI already downloaded, such as frozen dumps and the forever-db zip; each file is keyed by
+      # its pin.
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: tools/.cache
-          key: regeneration-${{ runner.os }}-${{ hashFiles('tools/gen_*.py', 'tools/db2.py') }}
+          key: regeneration-${{ runner.os }}-${{ hashFiles('tools/gen_*.py', 'tools/db2.py', 'tools/fdb_pin.py') }}
           restore-keys: regeneration-${{ runner.os }}-
-      - name: Pin the newest Forever build
+      # The regression guard below diffs the data the current pins built against the regenerated one, so set
+      # the committed file aside before the pins move.
+      - name: Snapshot the committed data
+        run: cp Data/Legacy.lua "$RUNNER_TEMP/legacy-prev.lua"
+      - name: Pin the newest Forever build and forever-db release
         id: build
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           build=$(python3 tools/latest_build.py)
           echo "version=$build" >> "$GITHUB_OUTPUT"
@@ -45,15 +52,27 @@ jobs:
           fi
           echo "new=true" >> "$GITHUB_OUTPUT"
           sed -i -E "s/^BUILD = \".*\"/BUILD = \"$build\"/; s/^SOURCE_DATE = \".*\"/SOURCE_DATE = \"$(date -u +%F)\"/" tools/gen_legacy.py
-      - if: steps.build.outputs.new == 'true'
-        run: |
-          python3 tools/gen_legacy.py
-          python3 tools/check_generated.py --offline
-      # Every version lives in tools/toolchain.json; the action installs and verifies each pin from it.
+          # The guard reads forever-db as the second source; its pin follows the newest release.
+          python3 tools/refresh_fdb.py
+      # Every version lives in tools/toolchain.json; the action installs and verifies each pin from it. The
+      # guard's dump runs under luajit, so the toolchain installs before the generator runs.
       - if: steps.build.outputs.new == 'true'
         uses: cjber/forever-core/.github/actions/toolchain@2596f68e68f9a727496a19f3f801c8a7039357d2 # main
         with:
           tools: lua stylua
+      - if: steps.build.outputs.new == 'true'
+        run: |
+          python3 tools/gen_legacy.py
+          python3 tools/check_generated.py --offline
+      # Fails the run on data a player could lose: an objective that lost every zone it had while its
+      # achievement is still a reward or feed, a pin or drawn explore key, a feed link, a drawn area's tiles,
+      # or a wing, raid boss or Legacy entry reference; gains, moves and drops are only reported. The zip is
+      # the one this run's pin names, fetched into tools/.cache under its sha256.
+      - if: steps.build.outputs.new == 'true'
+        name: Check the refresh for regressions
+        run: |
+          fdb="tools/.cache/fdb-$(PYTHONPATH=tools python3 -c 'import fdb_pin; print(fdb_pin.FDB_SHA256)').zip"
+          python3 tools/check_refresh.py --old "$RUNNER_TEMP/legacy-prev.lua" --new Data/Legacy.lua --fdb "$fdb"
       - if: steps.build.outputs.new == 'true'
         name: Read the ForeverCore ref
         id: forever-core
@@ -94,6 +113,8 @@ jobs:
             Regenerated `Data/Legacy.lua` from the achievement, criteria and world map DB2s of Forever build ${{ steps.build.outputs.version }}.
 
             ${{ steps.report.outputs.markdown }}
+
+            The refresh guard diffed the committed data against this one; its report is in the run log. The forever-db pin ${{ steps.build.outputs.fdb }}.
 
             Before merging, read the diff of `Data/Legacy.lua` for renamed or moved objectives, and run `/lf audit` in-game to confirm every located objective is one the client knows.
 
