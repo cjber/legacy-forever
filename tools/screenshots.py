@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Regenerate the offline gallery mocks and demo with wowmock.
+"""Regenerate docs/screenshots/*.png and demo.gif as mocks drawn from the WoW: Forever client's own art and data.
 
-The renderer reproduces the map, menus, and tracker from the client art and
-the addon model, using Data/Legacy.lua, Data/Explore.lua, and the client
-achievement tables for one plausible character.
+No game client is involved: map tiles, atlases, fonts and achievement data come from wago.tools via
+wowmock (the forever-core shared renderer). What the addon draws is reproduced here from
+its Lua: the zone objectives, the menu, the continent badges, an unvisited zone, the terrain shading of the areas
+still to discover, the zone completion tracker section and the Legacy tracker, computed from Data/Legacy.lua,
+Data/Explore.lua and the client's achievement tables for one plausible character.
+
+    python3 tools/screenshots.py            # FOREVER_CORE=/path/to/forever-core to override
 """
 
 import io
@@ -627,20 +631,11 @@ def completion_corner(ui, canvas, rects, art, zone, result, name, pins, collapse
     shade = Image.open(ROOT / "media" / "Shade.tga").convert("RGBA")
     canvas.draw(shade, x - 48, y - 22, width + 48 + 64, height + 44, (1, 1, 1, 0.6))
     canvas.text(x, y, title, title_font)
-    track = ui.atlas("common-stat-bar-BG")
-    fill = ui.atlas("common-stat-bar-white")
-    track_y = y + title_font.height + 4
-    bar_y = track_y + (track.height - fill.height) / 2
-    canvas.draw(track, x, track_y)
-    fill_width = canvas.px(x + track.width * (result["percent"] or 0) / 100) - canvas.px(x)
-    if fill_width > 0:
-        color = "GREEN_FONT_COLOR" if result["complete"] else "NORMAL_FONT_COLOR"
-        full_fill = ui.canvas(track.width, fill.height)
-        full_fill.draw(fill, 0, 0, track.width, fill.height, ui.global_color(color))
-        visible_fill = full_fill.image.crop((0, 0, fill_width, full_fill.image.height))
-        canvas.composite(visible_fill, canvas.px(x), canvas.px(bar_y))
+    bar_y = y + title_font.height + 4
+    canvas.fill(x, bar_y, width, 2, (0, 0, 0, 0.45))
+    canvas.fill(x, bar_y, (width * (result["percent"] or 0)) / 100, 2, ui.global_color("NORMAL_FONT_COLOR"))
     if not collapsed:
-        canvas.text(x, track_y + track.height + 6, counts, counts_font)
+        canvas.text(x, y + title_font.height + 12, counts, counts_font)
 
 
 def corner_size(ui, canvas, result, name, collapsed):
@@ -648,8 +643,7 @@ def corner_size(ui, canvas, result, name, collapsed):
     title_font, counts_font = FONTS["GameFontNormalLarge"], FONTS["GameFontHighlight"]
     title = f"{name}  {result['percent']}%"
     width = max(canvas.text_width(title, title_font), 140)
-    _, track_height = ui.atlas_size("common-stat-bar-BG")
-    height = title_font.height + 4 + track_height
+    height = title_font.height + 4 + 2
     if not collapsed:
         width = max(width, canvas.text_width(counts_text(ui, result, 16), counts_font))
         height += 6 + counts_font.height

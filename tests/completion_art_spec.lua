@@ -1,6 +1,7 @@
 -- Run from the repository root: luajit tests/completion_art_spec.lua
 -- UI/Completion.lua draws the zone's completion in the objective tracker with the tracker's own progress bar
 -- (ObjectiveTrackerProgressBarTemplate's caps, fill, blue and centred percent) and one family of world map icons.
+-- The world map corner overlay is gone; the continent badges keep their tooltip.
 local checks = 0
 local function check(condition, label)
 	checks = checks + 1
@@ -16,8 +17,8 @@ local function Texture()
 	function texture:SetPoint(...)
 		self.points[#self.points + 1] = { ... }
 	end
-	function texture:SetSize(width, height)
-		self.width, self.height = width, height
+	function texture:SetAllPoints()
+		self.allPoints = true
 	end
 	function texture:SetColorTexture(...)
 		self.color = { ... }
@@ -318,16 +319,6 @@ hooksecurefunc = function(object, method, callback) -- luacheck: ignore 121
 	end
 end
 
-local stubMarkup = ns.Art.Markup
-C_Texture = { -- luacheck: ignore 121 122
-	GetAtlasInfo = function(atlas)
-		if atlas == "common-stat-bar-BG" then
-			return { width = 67, height = 29 }
-		end
-	end,
-}
-assert(loadfile("Core/Art.lua"))("LegacyForever", ns)
-ns.Art.Markup = stubMarkup
 assert(loadfile("UI/Completion.lua"))("LegacyForever", ns)
 
 --[[ The tracker section's bar: the objective tracker's own, under the header band ]]
@@ -411,17 +402,19 @@ end
 LegacyForeverZoneOverlayMixin.OnLoad(overlay)
 local cornerBar = overlay.Progress
 check(cornerBar.kind == "StatusBar", "the corner holds a progress bar")
-check(cornerBar.width == 67 and cornerBar.height == 15, "the fill spans the track at its native height")
-check(cornerBar.statusBarTexture == "common-stat-bar-white", "the line uses the shared progress fill")
+check(cornerBar.height == 2, "the bar is the original 2-unit line")
+check(cornerBar.statusBarTexture == "Interface\\Buttons\\WHITE8X8", "the line fills with the flat white texture")
 check(cornerBar.low == 0 and cornerBar.high == 100, "the line counts percent")
 local backing = cornerBar.textures[1]
-check(backing.atlas == "common-stat-bar-BG", "the bar uses the shared progress track")
-check(backing.width == 67 and backing.height == 29, "the track keeps its native dimensions")
-check(backing.points[1][1] == "CENTER", "the track centers behind the fill")
 check(
-	cornerBar.points[1][1] == "TOPLEFT" and cornerBar.points[1][2] == overlay.Title and cornerBar.points[1][5] == -11,
-	"the top of the track sits 4 under the title"
+	backing.allPoints and backing.color[1] == 0 and backing.color[2] == 0 and backing.color[4] == 0.45,
+	"a 45% black backing sits under the line"
 )
+check(
+	cornerBar.points[1][1] == "TOPLEFT" and cornerBar.points[1][2] == overlay.Title and cornerBar.points[1][5] == -4,
+	"the line sits 4 under the title"
+)
+check(cornerBar.points[2][1] == "RIGHT", "the line spans the corner's width")
 
 zones.result.percent, zones.result.complete = 47, false
 LegacyForeverZoneOverlayMixin.Refresh(overlay)
@@ -429,7 +422,7 @@ check(overlay.Title.text == "Ashenvale  47%", "the title names the zone and its 
 check(cornerBar.value == 47, "the line fills to the percent")
 check(cornerBar.color[1] == 1 and cornerBar.color[2] == 0.82, "an unfinished zone keeps the gold")
 check(overlay.Counts.text:find("3/4", 1, true), "the counts row reads under the line")
-check(overlay.width == 140 and overlay.height == 17 + 4 + 29 + 6 + 12, "the corner sizes to its text")
+check(overlay.width == 140 and overlay.height == 17 + 4 + 2 + 6 + 12, "the corner sizes to its text")
 check(
 	overlay.points[1][1] == "TOPLEFT"
 		and overlay.points[1][2] == container
@@ -442,7 +435,7 @@ check(overlay.shown, "the corner shows with a zone to draw")
 
 LegacyForeverZoneOverlayMixin.OnClick(overlay)
 check(saved.mapCollapsed == true and overlay.Counts.shown == false, "a click collapses it and keeps the counts hidden")
-check(overlay.height == 17 + 4 + 29, "collapsed, the corner is its title and line")
+check(overlay.height == 17 + 4 + 2, "collapsed, the corner is its title and line")
 check(cornerBar.value == 47, "the line stays filled when collapsed")
 check(tooltip.owner == overlay and tooltip.shown, "its hover shows the tooltip")
 LegacyForeverZoneOverlayMixin.OnClick(overlay)
@@ -470,6 +463,7 @@ end
 local source = Read("UI/Completion.lua")
 check(source:find("LegacyForeverZoneOverlayMixin", 1, true) ~= nil, "the corner overlay is back")
 check(source:find("mapCollapsed", 1, true) ~= nil, "its collapse state is back")
+check(source:find("WHITE8X8", 1, true) ~= nil, "the corner's line is the hand-made bar again")
 local xml = Read("UI/Completion.xml")
 check(xml:find("media\\Shade", 1, true) ~= nil, "the corner's XML paints the shade")
 check(xml:find('alpha="0.6"', 1, true) ~= nil, "the shade keeps its 0.6 alpha")

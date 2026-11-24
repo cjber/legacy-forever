@@ -15,7 +15,7 @@
     },
     {
       "source": "UI/Completion.lua",
-      "sha256": "5a05043d97d5b86b71132c67ac70cfaddd939c13c16700cc540aae9720369692",
+      "sha256": "decdbe29131949911ab4ba2725451d946442cab834e551ca9de167aec0fe14f3",
       "review": "Read tracker LayoutContents, overlay creation and Refresh, LABELS and their Settings.lua callers, tooltip and menu builders, ContinentText and SetUpToast. Pinned client Blizzard_FrameXML/Mainline/AlertFrameSystems.xml CriteriaAlertFrameTemplate declares Unlocked with GameFontBlackTiny; its AlertFrameTemplate inheritance and queued alert setup introduce no Unlocked font override. SetUpToast sets Zone complete on Unlocked without a later font change. Name is a game zone name. Overlay Title and Counts use Completion.xml fonts but contain game names, percentages and numeric counts, not localized labels. Tracker text is also dynamic. LABELS flow to tooltips, menus and settings helper arguments and are excluded, as are status tooltips and chat output.",
       "bindings": [
         {
@@ -27,7 +27,7 @@
     },
     {
       "source": "UI/Completion.xml",
-      "sha256": "38bf4ef32e6be3da89549bdc39cb6c944cc44061d6fcdb0d743199fb791d6f6d",
+      "sha256": "baacfa812480e4ed8865df6986c5d154aa32e89b4681620a0e0fb8f779ee9b76",
       "review": "Read both FontStrings and Completion.lua OnLoad, Refresh and AttachMap callers. LegacyForeverZoneOverlayTemplate.Title inherits GameFontNormalLarge and Counts inherits GameFontHighlight without overrides. These show dynamic game names and numeric counts, not localized phrases; no bindings claimed for them. The bound completion toast uses the separate pinned client CriteriaAlertFrameTemplate.",
       "bindings": []
     },
