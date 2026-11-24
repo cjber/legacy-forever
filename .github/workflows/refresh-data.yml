@@ -57,7 +57,7 @@ jobs:
       # Every version lives in tools/toolchain.json; the action installs and verifies each pin from it. The
       # guard's dump runs under luajit, so the toolchain installs before the generator runs.
       - if: steps.build.outputs.new == 'true'
-        uses: cjber/forever-core/.github/actions/toolchain@2596f68e68f9a727496a19f3f801c8a7039357d2 # main
+        uses: cjber/forever-core/.github/actions/toolchain@3776350a0b7bd71448ac7a8db8bf58d60303b4d3 # main
         with:
           tools: lua stylua
       - if: steps.build.outputs.new == 'true'
