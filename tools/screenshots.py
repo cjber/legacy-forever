@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
-"""Regenerate docs/screenshots/*.png and demo.gif as mocks drawn from the WoW: Forever client's own art and data.
+"""Regenerate the offline gallery mocks and demo with wowmock.
 
-No game client is involved: map tiles, atlases, fonts and achievement data come from wago.tools via
-wowmock (the forever-core shared renderer). What the addon draws is reproduced here from
-its Lua: the zone objectives, the menu, the continent badges, an unvisited zone, the terrain shading of the areas
-still to discover, the zone completion tracker section and the Legacy tracker, computed from Data/Legacy.lua,
-Data/Explore.lua and the client's achievement tables for one plausible character.
-
-    python3 tools/screenshots.py            # FOREVER_CORE=/path/to/forever-core to override
+The renderer reproduces the map, menus, and tracker from the client art and
+the addon model, using Data/Legacy.lua, Data/Explore.lua, and the client
+achievement tables for one plausible character.
 """
 
 import io
@@ -633,7 +629,8 @@ def completion_corner(ui, canvas, rects, art, zone, result, name, pins, collapse
     canvas.text(x, y, title, title_font)
     bar_y = y + title_font.height + 4
     canvas.fill(x, bar_y, width, 2, (0, 0, 0, 0.45))
-    canvas.fill(x, bar_y, (width * (result["percent"] or 0)) / 100, 2, ui.global_color("NORMAL_FONT_COLOR"))
+    color = "GREEN_FONT_COLOR" if result["complete"] else "NORMAL_FONT_COLOR"
+    canvas.fill(x, bar_y, (width * (result["percent"] or 0)) / 100, 2, ui.global_color(color))
     if not collapsed:
         canvas.text(x, y + title_font.height + 12, counts, counts_font)
 

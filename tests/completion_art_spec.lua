@@ -1,7 +1,7 @@
 -- Run from the repository root: luajit tests/completion_art_spec.lua
 -- UI/Completion.lua draws the zone's completion in the objective tracker with the tracker's own progress bar
 -- (ObjectiveTrackerProgressBarTemplate's caps, fill, blue and centred percent) and one family of world map icons.
--- The world map corner overlay is gone; the continent badges keep their tooltip.
+-- The world map corner keeps its thin progress bar, and the continent badges keep their tooltip.
 local checks = 0
 local function check(condition, label)
 	checks = checks + 1
