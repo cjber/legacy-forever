@@ -157,10 +157,21 @@ regenerates `Data/Legacy.lua`, runs `check_generated.py --offline` (CI's `genera
 the default branch
 is re-run once ten minutes later by `retry-refresh.yml`; if that fails too it
 opens an issue titled "Data refresh failed" linking the run, or comments on the open
-one. The client build is the only pin it moves. `REVISION` in `fetch_tracker_ui.py`
+one. The build is the only pin that changes what the generator reads. `REVISION` in `fetch_tracker_ui.py`
 (native tracker source for the integration spec, with per-file checksums) and
 `revision` in `typecheck.sh` (WoW API annotations) are test and checker inputs, not
 shipped data, and are bumped by hand with the code they check.
+
+Before the pins move, the workflow copies the committed `Data/Legacy.lua` aside; after the generator runs,
+`python3 tools/check_refresh.py --old <snapshot> --new Data/Legacy.lua` diffs the two (dumping the guarded rows
+with `tools/legacy_dump.lua`, one line per reward, feed link, objective and completion entry) and fails on a
+regression: an objective that lost every zone it had while its achievement is still a reward or feed, a pin or
+drawn explore key, a feed link, a drawn completion area's tiles, or a wing, raid boss or Legacy entry reference.
+Gains, moves and drops are only reported, and every regression prints what forever-db -- the Polestar quest
+database pinned in `tools/fdb_pin.py`, moved by `tools/refresh_fdb.py` -- can say about the entry's ids: its
+zone's ui_map record and its instance's spawn coverage. That second source is thin by design: its spawn table
+stops at the Classic continents' maps, so an instance pin has no spawn evidence; the guard reads its ui_map and spawn tables only.
+It can still name a zone's map, and the guard prints how much of the data's id space it covers on every run.
 
 The generator prints its coverage to stderr on every run: rewards, supporting achievements, zones, pinned and
 unpinned entries by kind, remaps, completion counts, unresolved reward criteria by kind and each unplaced
