@@ -63,6 +63,9 @@ A change's player-facing notes go in `changes/<issue>.md`; only the release comm
 
 ## Standards
 
+- The world map corner's thin, full-width zone completion bar is an owner-approved exception to
+  the shared progress-bar styling. Preserve its art, dimensions and placement, including in suite-wide UI work.
+
 - `wow-forever-addon`: https://github.com/cjber/forever-core/tree/main/.agents/skills/wow-forever-addon (the WFA-*
   requirements every WoW: Forever addon meets: UI look, assets, README and store page, CI and releases)
 - `wow-retail-ui-style`: https://github.com/cjber/forever-core/tree/main/.agents/skills/wow-retail-ui-style
