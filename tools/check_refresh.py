@@ -104,6 +104,9 @@ def download(url, name):
 def fetch_fdb(path):
     """The pinned forever-db zip's bytes: `path`'s when it exists, otherwise fetched into tools/.cache under
     the sha256 name the pin's hash is. Checked against the pin's FDB_SHA256 before anything reads it."""
+    # Resolved, so a relative --fdb (the workflow passes tools/.cache/fdb-<sha>.zip) still counts as the cache
+    # path and is fetched when absent, instead of failing as a missing file.
+    path = path.resolve()
     name = f"fdb-{fdb_pin.FDB_SHA256}.zip"
     if path.is_file():
         content = path.read_bytes()
