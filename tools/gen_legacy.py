@@ -9,6 +9,7 @@ from pathlib import Path
 
 from db2 import (
     CRITERIA_DUNGEON_ENCOUNTER,
+    CRITERIA_COMPLETE_QUEST,
     CRITERIA_KILL_ANY_CREATURE,
     CRITERIA_KILL_CREATURE,
     CRITERIA_KINDS,
@@ -21,18 +22,19 @@ from db2 import (
 from legacy_render import COMPLETION_CATEGORIES, render
 from locations import BATTLEGROUNDS, curated_locations
 
-BUILD = "1.60.1.71091"
-SOURCE_DATE = "2026-11-25"
+BUILD = "1.60.1.71139"
+SOURCE_DATE = "2026-11-26"
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "tools" / ".cache"
 OUTPUT = ROOT / "Data" / "Legacy.lua"
+COMPLETE_AT_LEAST = 8
 SPELUNKER = (62031, 62032, 62033, 64016, 64017, 64018)
 SCHEMAS = {
     "TraitCurrencySource": ("TraitCurrencyID", "AchievementID"),
     "Achievement": ("Criteria_tree", "Shares_criteria", "Instance_ID", "Title_lang", "Description_lang"),
     "Criteria": ("Type", "Asset", "Modifier_tree_ID"),
     "ModifierTree": ("Parent", "Operator", "Amount", "Type", "Asset", "SecondaryAsset", "TertiaryAsset"),
-    "CriteriaTree": ("Parent", "CriteriaID", "Description_lang", "Amount"),
+    "CriteriaTree": ("Parent", "CriteriaID", "Description_lang", "Amount", "Operator"),
     "WorldMapOverlay": (
         "UiMapArtID",
         "HitRectTop",
@@ -129,6 +131,20 @@ class Achievements:
             if CRITERIA_KINDS[row["Type"]] == "meta":
                 self.expand(row["Asset"], reward, feeds, active | {achievement})
 
+    def unnamed_quest_alternatives(self, root_id):
+        root = self.trees[root_id]
+        if root["Operator"] != COMPLETE_AT_LEAST or root["Amount"] != 1 or root["CriteriaID"]:
+            return False
+        children = self.children[root_id]
+        return bool(children) and all(
+            not self.children[key]
+            and (row := self.trees[key])["Amount"] == 1
+            and not row["Description_lang"].strip()
+            and row["CriteriaID"]
+            and self.criteria[row["CriteriaID"]]["Type"] == CRITERIA_COMPLETE_QUEST
+            for key in children
+        )
+
     def objective_details(self, achievement, cid):
         owner = self.achievements[achievement]
         steps = {
@@ -141,8 +157,10 @@ class Achievements:
                 f"Achievement {achievement}, criteria {cid}: missing/conflicting objective descriptions or amounts"
             )
         name, amount = next(iter(steps))
-        # Live.WholeAchievement uses the description, then title, for single steps.
-        if not name.strip() and len(self.leaves(achievement)) == 1:
+        # A one-of quest tree with no leaf labels describes one questline in the achievement text.
+        if not name.strip() and (
+            len(self.leaves(achievement)) == 1 or self.unnamed_quest_alternatives(owner["Criteria_tree"])
+        ):
             name = owner["Description_lang"] or owner["Title_lang"]
         if not name.strip() or amount <= 0:
             raise ValueError(f"Achievement {achievement}, criteria {cid}: empty objective name or invalid amount")

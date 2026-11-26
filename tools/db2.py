@@ -13,12 +13,13 @@ CRITERIA_KILL_CREATURE = 0
 CRITERIA_KILL_ANY_CREATURE = 78
 # Asset is a DungeonEncounter ID: the boss fight, not one creature.
 CRITERIA_DUNGEON_ENCOUNTER = 165
+CRITERIA_COMPLETE_QUEST = 27
 CRITERIA_KINDS = {
     CRITERIA_KILL_CREATURE: "kill",
     5: "level",
     7: "skill",
     8: "meta",
-    27: "quest",
+    CRITERIA_COMPLETE_QUEST: "quest",
     43: "explore",
     CRITERIA_KILL_ANY_CREATURE: "kill",
     CRITERIA_DUNGEON_ENCOUNTER: "instance",
