@@ -1,6 +1,6 @@
 ---@meta
 
--- LegacyForever.API, version 2, minor 0: the contract other addons read (docs/api.md). API.lua implements it.
+-- LegacyForever.API, version 2, minor 1: the contract other addons read (docs/api.md). API.lua implements it.
 
 ---@alias LFCategory "areas"|"taxis"|"dungeons"|"raids"|"legacy"|"reputations"|"quests"
 -- `"loading"` is ForeverCore.APIKit's not-ready reason; `"none"` is a map with no Legacy data, or a call with no
@@ -46,7 +46,7 @@
 
 ---@class LFAPI
 ---@field version 2
----@field minor 0
+---@field minor 1
 ---@field ZoneSummary fun(map?: integer): LFZoneSummary?, LFReadError?
 ---@field Targets fun(map?: integer, limit?: number): LFTarget[]?, LFReadError?
 ---@field IsTracked fun(key: string): boolean?, LFReadError?
@@ -54,6 +54,8 @@
 ---@field Navigate fun(map: integer, key: string): boolean, LFNavError?
 ---@field Subscribe fun(callback: fun(changes: LFAPIChanges)): fun() unsubscribes, safe to call twice
 ---@field Stats fun(): LFActivityRecord[] Character flight paths observed from opened flight-master maps.
+---@field SuspendMapPins fun(owner: string): boolean, "invalid"? hides the world map's pins until that owner resumes
+---@field ResumeMapPins fun(owner: string): boolean, "invalid"?
 
 ---@class LFActivityRecord
 ---@field addon "LegacyForever"

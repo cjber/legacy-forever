@@ -32,6 +32,7 @@ end
 ---@field MapContents LegacyMapContents
 ---@field Shading LegacyShading
 ---@field RefreshMap fun()
+---@field HoldMapPins fun(owner: string, held: boolean)
 ---@field OpenMapMenu fun()
 ---@field GamepadUI fun(): boolean whether the gamepad interface is on
 ---@field Navigate fun(uiMapID: number, x: number, y: number, title: string): boolean

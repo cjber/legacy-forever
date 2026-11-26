@@ -12,7 +12,7 @@ end
 -- addition within a version; version 2 drops Leaderboard, and a caller checks a member before using it.
 local API = {
 	version = 2,
-	minor = 0,
+	minor = 1,
 }
 
 -- The shared shape every Forever addon's API follows: the hub that tells callers a frame after a change, and the
@@ -317,6 +317,29 @@ function API.Navigate(map, key)
 		end
 	end
 	return false, "stale"
+end
+
+---@param owner string
+---@param held boolean
+---@return boolean, "invalid"?
+local function HoldMapPins(owner, held)
+	if type(owner) ~= "string" or owner == "" then
+		return false, "invalid"
+	end
+	ns.HoldMapPins(owner, held)
+	return true
+end
+
+-- Holds the world map's pins back for `owner` until ResumeMapPins(owner); they return when the last owner has
+-- resumed. Session-only.
+---@param owner string
+function API.SuspendMapPins(owner)
+	return HoldMapPins(owner, true)
+end
+
+---@param owner string
+function API.ResumeMapPins(owner)
+	return HoldMapPins(owner, false)
 end
 
 -- A flight path is counted only after the player opens a flight master's map, the one source that reliably tells

@@ -446,6 +446,19 @@ _G.LeaMapsDB = nil
 settings.showAreas, settings.showOutlines = true, false
 ns.RefreshMap()
 
+-- Another addon's hold (LegacyForever.API.SuspendMapPins): pins and shading stay off through redraws until the last
+-- owner resumes, and the map button stays.
+check(#Pins() > 0 and #Areas() > 0, "pins and shading are drawn before a hold")
+ns.HoldMapPins("one", true)
+ns.HoldMapPins("two", true)
+ns.RefreshMap()
+check(#Pins() == 0 and #Areas() == 0, "a hold keeps pins and shading off the map through a redraw")
+check(button.shown, "the map button stays")
+ns.HoldMapPins("one", false)
+check(#Pins() == 0 and #Areas() == 0, "one owner resuming leaves the other's hold")
+ns.HoldMapPins("two", false)
+check(#Pins() > 0 and #Areas() > 0, "the last resume brings them back")
+
 -- The terrain shading: the same frame as the tile shading, one fill per triangle of the area's real ground and a
 -- pin at the point nearest the player. No gold glow and no line at all.
 settings.showOutlines = true
