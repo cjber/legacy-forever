@@ -8,8 +8,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from db2 import (
-    CRITERIA_DUNGEON_ENCOUNTER,
     CRITERIA_COMPLETE_QUEST,
+    CRITERIA_DUNGEON_ENCOUNTER,
     CRITERIA_KILL_ANY_CREATURE,
     CRITERIA_KILL_CREATURE,
     CRITERIA_KINDS,
