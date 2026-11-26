@@ -389,7 +389,17 @@ check(#errors == errorsBefore, "the corner draws without an error")
 zoneTracker:OnBlockHeaderClick({ id = 100 }, "LeftButton")
 check(openedMap == 100, "a click on the zone's tracker header asks the game to open its map")
 local API = LegacyForever.API
-check(API.version == 2 and API.minor == 0, "version 2 drops the leaderboard and keeps the other members")
+check(API.version == 2 and API.minor == 1, "version 2 drops the leaderboard, and minor 1 adds the map pin holds")
+local held = {}
+ns.HoldMapPins = function(owner, hold)
+	held[owner] = hold
+end
+check(API.SuspendMapPins("one") == true and held.one == true, "a hold is passed to the map")
+check(API.ResumeMapPins("one") == true and held.one == false, "and so is its release")
+for _, owner in ipairs({ "", 7 }) do
+	local ok, reason = API.SuspendMapPins(owner)
+	check(ok == false and reason == "invalid", "an owner that is not a non-empty string is refused")
+end
 check(type(ForeverCore.APIKit.Hub) == "function", "the API is built on the shared API kit")
 local listed
 for _, entry in ipairs(ForeverCore.APIKit.Addons()) do

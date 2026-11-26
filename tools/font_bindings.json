@@ -33,7 +33,7 @@
     },
     {
       "source": "UI/Map.lua",
-      "sha256": "731d70fbf54810f10e231e19ea41e9c4e25d15fb1cc266adf3f0b7931df76283",
+      "sha256": "df1f570ad9c57da0bec9bb4e9240150ed7dc1b2d45f0a4bfedf1065bb497878f",
       "review": "Read map menu and tooltip builders, map-button OnLoad and Refresh, pin creation and hover paths. Localized phrases flow into menus, tooltips or UIErrorsFrame output, all excluded. Count is a dynamic objective number, and Refresh changes its FontObject among GameFontNormalTiny, GameFontNormalSmall and GameFontNormal. No locale phrase is assigned to Count and no single font is claimed for it.",
       "bindings": []
     },

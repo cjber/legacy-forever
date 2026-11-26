@@ -1,7 +1,7 @@
 # LegacyForever.API
 
 Other addons can read Legacy Forever's zone completion and a zone's unfinished Legacy objectives, send the player
-to one, and track one in the objective tracker, through the global `LegacyForever.API`. It is version 2, minor 0;
+to one, and track one in the objective tracker, through the global `LegacyForever.API`. It is version 2, minor 1;
 check `version == 2` and that each function exists before calling it. The full types are in
 [`types/API.lua`](../types/API.lua). On ForeverCore 1.3.2 or later the same table is listed by
 `ForeverCore.APIKit.Addons()`, so an addon that does not know this one's global can still find it.
@@ -12,7 +12,7 @@ in, and coordinates run from 0 to 1.
 ## Published functions
 
 `ZoneSummary(map)`, `Targets(map, limit)`, `IsTracked(key)`, `SetTracked(key, tracked)`, `Navigate(map, key)`,
-`Subscribe(callback)` and `Stats()`, each described below.
+`Subscribe(callback)`, `Stats()`, `SuspendMapPins(owner)` and `ResumeMapPins(owner)`, each described below.
 
 ## Version and minor history
 
@@ -25,6 +25,7 @@ in, and coordinates run from 0 to 1.
   points on targets.
 - version 2, `minor` 0: `Leaderboard(limit)` is removed with Forever Leaderboards. Every other member keeps its
   contract. A map with no Legacy data now answers the standard reason `"none"` rather than `"unsupported"`.
+- version 2, `minor` 1: `SuspendMapPins` and `ResumeMapPins`.
 
 ## Not ready
 
@@ -139,3 +140,10 @@ Returns one row per flight path currently known in this character's most recentl
 `addon`, `metric`, `subject`, `value`, and `eventUnix` when the client provided a timestamp. Forever's zone
 exploration data marks every taxi node as discovered, so Legacy only records this metric from the flight master's
 own node states. These per-node rows remain local.
+
+## `SuspendMapPins(owner) -> boolean, "invalid"?`, `ResumeMapPins(owner) -> boolean, "invalid"?`
+
+`SuspendMapPins` hides every pin and area drawing Legacy Forever puts on the world map, for the non-empty string
+`owner`, and `ResumeMapPins` releases that owner. Several owners may hold at once and the pins return when the last
+has resumed. The hold lasts the session and is never saved, so a reload clears it. The zone completion bar and the
+map button stay. Both return `true`, or `false, "invalid"` for an owner that is not a non-empty string.

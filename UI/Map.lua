@@ -747,6 +747,19 @@ end
 
 --[[ Wiring ]]
 
+-- Owners holding the map's pins back (LegacyForever.API.SuspendMapPins). Memory only, so a reload clears them.
+---@type table<string, true>
+local holds = {}
+
+---@param owner string
+---@param held boolean
+function ns.HoldMapPins(owner, held)
+	holds[owner] = held or nil
+	if ns.RefreshMap then
+		ns.RefreshMap()
+	end
+end
+
 -- The player's place on this map, or nil when the player is on another one. The client's point is a
 -- vector with GetXY, absent where the map does not cover the player.
 ---@param uiMapID number?
@@ -855,7 +868,7 @@ local function Attach()
 		else
 			areaPin = nil
 		end
-		MapCanvas.SetShown(map, true)
+		MapCanvas.SetShown(map, next(holds) == nil)
 	end
 
 	-- A button of our own in the map's top-right column; Refresh anchors it (see TopRightOffset).
