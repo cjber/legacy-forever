@@ -113,7 +113,7 @@ assert(
 	samples["1445:684:3271"].raid and not spire.raid,
 	"Onyxia's Lair wears the raid portal, the Spire the dungeon one"
 )
-for _, key in ipairs({ "1428:62054:111555", "1428:64014:117727" }) do
+for _, key in ipairs({ "1428:62054:120109", "1428:64014:120140" }) do
 	local valthalak = assert(samples[key], "Valthalak quest variants use the curated Upper Blackrock Spire entrance")
 	assert(
 		valthalak.kind == "instance" and valthalak.instance == 229,
@@ -405,15 +405,15 @@ assert(
 	#data.completion[1434].legacy == 0 and #data.completion[1439].legacy == 0,
 	"Stranglethorn and Darkshore have no remaining located Legacy objectives"
 )
-local valthalak = assert(legacyRefs["1428:62054:111555"], "Valthalak Legacy objective")
+local valthalak = assert(legacyRefs["1428:62054:120109"], "Valthalak Legacy objective")
 assert(
-	valthalak == legacyRefs["1428:64014:117727"] and #valthalak.refs == 2,
+	valthalak == legacyRefs["1428:64014:120140"] and #valthalak.refs == 2,
 	"same Type 27 / Asset 84195 / Amount 1 collapses Valthalak variants"
 )
 assert(
 	valthalak.name
 		== "Complete the questline beginning with An Earnest Proposition, and ending with Saving the Best for Last.",
-	"empty criterion descriptions use the single-step achievement description"
+	"empty criterion descriptions use the questline achievement description"
 )
 assert(#data.completion[1445].legacy == 0, "Dustwallow Marsh counts no Legacy objective")
 local lair = data.completion[1445].raids[1]

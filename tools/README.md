@@ -91,16 +91,17 @@ The journal route cannot be used here: `JournalEncounterCreature`,
 `LFGDungeons` row has MapID and FinalEncounterID zero. They are not generator
 dependencies.
 
-**Valthalak uses reviewed quest curation.** Achievement 62054 → CriteriaTree
-221563/221564 → Criteria 111555 (Type 27) → quest 84195; variant 64014 → trees
-234126/234127 → Criteria 117727 has the same asset. `questInstances[84195]`
+**Valthalak uses reviewed quest curation.** Each variant has a one-of quest
+tree with 18 unnamed alternatives. The achievement description labels the
+questline. Both trees still reference quest 84195 through Type 27 criteria
+120109 and 120140. `questInstances[84195]`
 associates that quest with DungeonEncounter 3070 → Map 229 (Blackrock Spire).
 This association is explicitly reviewed curation, not a quest-table foreign key
 or a generated name match. QuestV2 confirms the quest exists; the generator
 validates the encounter's exact name and MapID, the Map's instance type, exterior
 area ancestry, entrance projection, and reachability from a Legacy criterion.
 Both variants use Burning Steppes (1428), **0.330, 0.252**, reusing the Spire wing
-entrance facts. Their original quest criteria remain the progress identifiers.
+entrance facts. The located criteria use the current build’s progress identifiers.
 
 **Ragefire Chasm or Hall of Thanes is one compound objective.** Spelunker
 refs `{62031, 19213}` and `{64016, 117733}` retain their original Type-78
