@@ -16,6 +16,10 @@ optional `### For addon authors` subsection after a version's player bullets.
 
 - Other addons can hide Legacy Forever's world map pins while they show their own, and bring them back afterwards. Gathering Guide Forever uses this for its calm map.
 
+### Changed
+
+- Ships with the same shared code as your other Forever addons, so they keep working together.
+
 ### Fixed
 
 - Lord Valthalak's two Legacy achievements keep their Upper Blackrock Spire pin on game build 1.60.1.71139, which replaced their objectives.
