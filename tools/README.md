@@ -154,7 +154,7 @@ so a renamed or respelled entry stops the generator, naming both, for a fresh re
 `.github/workflows/refresh-data.yml` runs daily. It sets `BUILD` to the newest
 Forever build `latest_build.py` reads from wago.tools and `SOURCE_DATE` to the day,
 regenerates `Data/Legacy.lua`, runs `check_generated.py --offline` (CI's `generated` job also runs
-`check_explore.py`), luacheck, the specs and StyLua, opens a data PR and dispatches CI on its branch. A failed run on
+`check_explore.py`), luacheck, the specs and StyLua, opens a data PR and approves its held CI runs. A failed run on
 the default branch
 is re-run once ten minutes later by `retry-refresh.yml`; if that fails too it
 opens an issue titled "Data refresh failed" linking the run, or comments on the open
