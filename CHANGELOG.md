@@ -10,6 +10,16 @@ Each version's entry is also its release notes on GitHub, CurseForge and Wago. O
 verbatim rather than rewritten as the addon moves. API changes other addons' authors need go under an
 optional `### For addon authors` subsection after a version's player bullets.
 
+## [2.5.17] - 2026-11-26
+
+### Added
+
+- Other addons can hide Legacy Forever's world map pins while they show their own, and bring them back afterwards. Gathering Guide Forever uses this for its calm map.
+
+### Fixed
+
+- Lord Valthalak's two Legacy achievements keep their Upper Blackrock Spire pin on game build 1.60.1.71139, which replaced their objectives.
+
 ## [2.5.16] - 2026-11-26
 
 <!-- forever-core-sync -->
