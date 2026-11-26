@@ -1,10 +1,10 @@
-"""reward_achievements keeps only TraitCurrencySource 4225 rows the Achievement table defines."""
+"""Focused tests for Legacy rewards and objective metadata."""
 
 import contextlib
 import io
 import unittest
 
-from gen_legacy import reward_achievements
+from gen_legacy import Achievements, reward_achievements
 
 
 def tables(rows, achievements):
@@ -48,6 +48,30 @@ class RewardAchievementTests(unittest.TestCase):
         data = tables([{"TraitCurrencyID": 4225, "AchievementID": 0}], [0])
         with self.assertRaises(ValueError):
             reward_achievements(data)
+
+
+class QuestAlternativeTests(unittest.TestCase):
+    def test_unnamed_quest_alternatives_share_the_achievement_description(self):
+        root = {"Parent": 0, "CriteriaID": 0, "Operator": 8, "Amount": 1, "Description_lang": "Internal label"}
+        leaf = {"Parent": 1, "Operator": 0, "Amount": 1, "Description_lang": ""}
+        data = {
+            "Achievement": {
+                10: {
+                    "Criteria_tree": 1,
+                    "Shares_criteria": 0,
+                    "Description_lang": "Complete the questline.",
+                    "Title_lang": "The Questline",
+                },
+            },
+            "Criteria": {4: {"Type": 27, "Asset": 40}, 5: {"Type": 27, "Asset": 50}},
+            "CriteriaTree": {1: root, 2: dict(leaf, ID=2, CriteriaID=4), 3: dict(leaf, ID=3, CriteriaID=5)},
+        }
+        graph = Achievements(data)
+        self.assertEqual(graph.objective_details(10, 4), ("Complete the questline.", 1))
+        self.assertEqual(graph.objective_details(10, 5), ("Complete the questline.", 1))
+        root["Amount"] = 2
+        with self.assertRaisesRegex(ValueError, "empty objective name"):
+            graph.objective_details(10, 4)
 
 
 if __name__ == "__main__":
