@@ -190,25 +190,24 @@ check(
 	"an estimate starts where the player is and ends on the area's map"
 )
 
--- A long outline asks about the pin's point and five vertices spread around all its rings: each estimate is a
--- whole route search.
+-- A long outline asks about the pin's point and five vertices dealt to its rings in turn, each ring's spread
+-- around it: each estimate is a whole route search, and a small ring is never left out.
 local long = { key = "long", name = "Long area", outline = true, rings = { {}, {} } }
-for i = 1, 60 do
-	local ring = long.rings[i <= 40 and 1 or 2]
-	ring[#ring + 1], ring[#ring + 2] = i, 0
-end
 estimates = {}
 for i = 1, 60 do
-	estimates[i .. ":0"] = 100 - i
+	local ring = long.rings[i <= 58 and 1 or 2]
+	ring[#ring + 1], ring[#ring + 2] = i / 100, 0
+	estimates[i / 100 .. ":0"] = 100 - i
 end
+estimates[0.01 .. ":0"] = 1
 local asked = #estimateCalls
-ns.NavigateOutline(1439, long, 60, 0)
+ns.NavigateOutline(1439, long, 0.01, 0)
 local sampled = {}
 for i = asked + 1, #estimateCalls do
-	sampled[#sampled + 1] = estimateCalls[i][5]
+	sampled[#sampled + 1] = ("%d"):format(estimateCalls[i][5] * 100 + 0.5)
 end
-check(table.concat(sampled, " ") == "60 1 12 24 36 48", "the pin, then five vertices spread around both rings")
-check(journeys[#journeys].x == 60, "a pin quicker than every sample stays the destination")
+check(table.concat(sampled, " ") == "1 2 21 40 59 60", "the pin, then five vertices spread over both rings")
+check(journeys[#journeys].x == 0.01, "a pin quicker than every sample stays the destination")
 
 -- Without an estimate for any vertex (or without Shortest Path's Estimate at all), the nearest vertex is
 -- the destination, as the pin shows it.

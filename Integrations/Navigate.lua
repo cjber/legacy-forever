@@ -88,7 +88,7 @@ local MAX_ESTIMATES = 6
 
 -- The outline point a journey should head for: with Shortest Path installed, the quickest by whole route
 -- (flights, boats and walking) of the point the pin stands on (the nearest) and a few vertices spread evenly
--- around the outline; otherwise the pin's own point.
+-- around each of its rings; otherwise the pin's own point.
 ---@param uiMapID number
 ---@param rings number[][]
 ---@param x number
@@ -115,11 +115,13 @@ local function OutlineStop(uiMapID, rings, x, y)
 	end
 	local others = {}
 	for _, ring in ipairs(rings) do
+		local points = {}
 		for index = 1, #ring, 2 do
 			if ring[index] ~= x or ring[index + 1] ~= y then
-				others[#others + 1] = { ring[index], ring[index + 1] }
+				points[#points + 1] = { ring[index], ring[index + 1] }
 			end
 		end
+		others[#others + 1] = points
 	end
 	local shortest, bestX, bestY = nil, x, y
 	local function Ask(toX, toY)
@@ -129,10 +131,15 @@ local function OutlineStop(uiMapID, rings, x, y)
 		end
 	end
 	Ask(x, y)
-	local spread = math.min(#others, MAX_ESTIMATES - 1)
-	for i = 0, spread - 1 do
-		local point = others[math.floor(i * #others / spread) + 1]
-		Ask(point[1], point[2])
+	-- Each ring takes its part of the estimates left, so none is skipped (an area has at most four rings).
+	local left = MAX_ESTIMATES - 1
+	for ring, points in ipairs(others) do
+		local share = math.min(#points, math.ceil(left / (#others - ring + 1)))
+		left = left - share
+		for i = 0, share - 1 do
+			local point = points[math.floor(i * #points / share) + 1]
+			Ask(point[1], point[2])
+		end
 	end
 	return bestX, bestY
 end
