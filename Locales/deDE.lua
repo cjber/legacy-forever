@@ -53,7 +53,8 @@ L["Every quest this character can take in the zone, from Questie."] =
 L["Flight paths"] = "Flugrouten"
 L["Shades each undiscovered area's real ground, with a pin at its edge. Areas without terrain data keep the shading."] =
 	"Schattiert den echten Boden jedes unentdeckten Gebiets, mit einer Markierung am Rand. Gebiete ohne Geländedaten behalten die Schattierung."
-L["Legacy Forever carries ForeverCore inside itself."] = "Legacy Forever bringt ForeverCore jetzt selbst mit." -- mt
+L["Clicking a large outlined area no longer freezes the game."] =
+	"Ein Klick auf ein großes umrandetes Gebiet friert das Spiel nicht mehr ein." -- mt
 L["In the objective tracker"] = "In der Questzielverfolgung"
 L["Install AtlasLoot for recommended levels."] = "Installiert AtlasLoot für empfohlene Stufen."
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =

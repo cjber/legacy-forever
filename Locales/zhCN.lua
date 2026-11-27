@@ -4,7 +4,7 @@ if GetLocale() ~= "zhCN" then
 	return
 end
 local L = ns.L
-L["Legacy Forever carries ForeverCore inside itself."] = "Legacy Forever 现已内置 ForeverCore。" -- mt
+L["Clicking a large outlined area no longer freezes the game."] = "点击大型轮廓区域不再导致游戏卡死。" -- mt
 
 L["%d Legacy objective left"] = "剩余%d个传承目标"
 L["%d Legacy objectives left"] = "剩余%d个传承目标"

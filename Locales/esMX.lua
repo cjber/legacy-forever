@@ -4,7 +4,8 @@ if GetLocale() ~= "esMX" then
 	return
 end
 local L = ns.L
-L["Legacy Forever carries ForeverCore inside itself."] = "Legacy Forever ahora incluye ForeverCore." -- mt
+L["Clicking a large outlined area no longer freezes the game."] =
+	"Hacer clic en un área delimitada grande ya no congela el juego." -- mt
 
 L["%d Legacy objective left"] = "Queda %d objetivo de legado"
 L["%d Legacy objectives left"] = "Quedan %d objetivos de legado"
