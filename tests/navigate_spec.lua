@@ -168,7 +168,7 @@ check(#waypoints == 5, "Shortest Path loaded without its API falls back to the n
 ShortestPathForever, canSet = nil, false
 ns.Navigate(1440, 0.25, 0.5, "Blackfathom Deeps")
 check(#waypoints == 5 and printed[1] == "Blackfathom Deeps is at 25.0, 50.0 in Ashenvale.", "the place goes to chat")
--- An outlined area's click: Shortest Path estimates every vertex of its ground and heads for the quickest
+-- An outlined area's click: Shortest Path estimates vertices of its ground and heads for the quickest
 -- route, not the nearest point.
 Install()
 accepts = true
@@ -181,7 +181,7 @@ check(
 	route.title == "Tower of Althalaxx" and route.owner == "LegacyForever",
 	"the journey is ours, named after the area"
 )
-check(#estimateCalls == 2, "every outline vertex is estimated")
+check(#estimateCalls == 2, "a small outline asks about each vertex")
 check(
 	estimateCalls[1][1] == 1440
 		and estimateCalls[1][2] == 0.1
@@ -189,6 +189,25 @@ check(
 		and estimateCalls[1][4] == 1439,
 	"an estimate starts where the player is and ends on the area's map"
 )
+
+-- A long outline asks about the pin's point and five vertices dealt to its rings in turn, each ring's spread
+-- around it: each estimate is a whole route search, and a small ring is never left out.
+local long = { key = "long", name = "Long area", outline = true, rings = { {}, {} } }
+estimates = {}
+for i = 1, 60 do
+	local ring = long.rings[i <= 58 and 1 or 2]
+	ring[#ring + 1], ring[#ring + 2] = i / 100, 0
+	estimates[i / 100 .. ":0"] = 100 - i
+end
+estimates[0.01 .. ":0"] = 1
+local asked = #estimateCalls
+ns.NavigateOutline(1439, long, 0.01, 0)
+local sampled = {}
+for i = asked + 1, #estimateCalls do
+	sampled[#sampled + 1] = ("%d"):format(estimateCalls[i][5] * 100 + 0.5)
+end
+check(table.concat(sampled, " ") == "1 2 21 40 59 60", "the pin, then five vertices spread over both rings")
+check(journeys[#journeys].x == 0.01, "a pin quicker than every sample stays the destination")
 
 -- Without an estimate for any vertex (or without Shortest Path's Estimate at all), the nearest vertex is
 -- the destination, as the pin shows it.
