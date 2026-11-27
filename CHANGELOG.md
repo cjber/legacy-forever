@@ -10,6 +10,12 @@ Each version's entry is also its release notes on GitHub, CurseForge and Wago. O
 verbatim rather than rewritten as the addon moves. API changes other addons' authors need go under an
 optional `### For addon authors` subsection after a version's player bullets.
 
+## [2.5.19] - 2026-11-27
+
+### Fixed
+
+- **Clicking a large outlined area no longer freezes the game.** With Shortest Path Forever installed, a click asked it for a travel time to every point of the outline at once. It now asks about the nearest point and five more spread around the area.
+
 ## [2.5.18] - 2026-11-27
 
 <!-- forever-core-sync -->
