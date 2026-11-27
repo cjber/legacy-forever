@@ -82,8 +82,13 @@ function ns.Navigate(uiMapID, x, y, title)
 	return false
 end
 
--- The outline point a journey should head for: with Shortest Path installed, the vertex whose whole route
--- (flights, boats and walking) is quickest; otherwise the nearest one, which the pin already stands on.
+-- How many outline points one click asks Shortest Path about: each estimate is a whole route search, and an
+-- outline has up to hundreds of points.
+local MAX_ESTIMATES = 6
+
+-- The outline point a journey should head for: with Shortest Path installed, the quickest by whole route
+-- (flights, boats and walking) of the point the pin stands on (the nearest) and a few vertices spread evenly
+-- around the outline; otherwise the pin's own point.
 ---@param uiMapID number
 ---@param rings number[][]
 ---@param x number
@@ -108,19 +113,28 @@ local function OutlineStop(uiMapID, rings, x, y)
 	if not px or not py then
 		return x, y
 	end
-	local shortest, bestX, bestY
+	local others = {}
 	for _, ring in ipairs(rings) do
 		for index = 1, #ring, 2 do
-			local seconds = estimate(from, px, py, uiMapID, ring[index], ring[index + 1])
-			if seconds and (not shortest or seconds < shortest) then
-				shortest, bestX, bestY = seconds, ring[index], ring[index + 1]
+			if ring[index] ~= x or ring[index + 1] ~= y then
+				others[#others + 1] = { ring[index], ring[index + 1] }
 			end
 		end
 	end
-	if bestX then
-		return bestX, bestY
+	local shortest, bestX, bestY = nil, x, y
+	local function Ask(toX, toY)
+		local seconds = estimate(from, px, py, uiMapID, toX, toY)
+		if seconds and (not shortest or seconds < shortest) then
+			shortest, bestX, bestY = seconds, toX, toY
+		end
 	end
-	return x, y
+	Ask(x, y)
+	local spread = math.min(#others, MAX_ESTIMATES - 1)
+	for i = 0, spread - 1 do
+		local point = others[math.floor(i * #others / spread) + 1]
+		Ask(point[1], point[2])
+	end
+	return bestX, bestY
 end
 
 -- Discovery is progress: when the area an outlined journey was started for is discovered, and Shortest Path
