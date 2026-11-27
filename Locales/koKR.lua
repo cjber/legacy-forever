@@ -4,7 +4,8 @@ if GetLocale() ~= "koKR" then
 	return
 end
 local L = ns.L
-L["Legacy Forever carries ForeverCore inside itself."] = "Legacy Forever에 이제 ForeverCore가 들어 있습니다." -- mt
+L["Clicking a large outlined area no longer freezes the game."] =
+	"테두리로 표시된 넓은 지역을 클릭해도 더 이상 게임이 멈추지 않습니다." -- mt
 
 L["%d Legacy objective left"] = "남은 유산 목표 %d개"
 L["%d Legacy objectives left"] = "남은 유산 목표 %d개"

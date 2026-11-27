@@ -47,6 +47,8 @@ L["Click to expand."] = "Click to expand."
 L["Click to set a waypoint here."] = "Click to set a waypoint here."
 L["Click to track, with live progress."] = "Click to track, with live progress."
 L["Click to travel here with Shortest Path Forever."] = "Click to travel here with Shortest Path Forever."
+L["Clicking a large outlined area no longer freezes the game."] =
+	"Clicking a large outlined area no longer freezes the game."
 L["Count account quests"] = "Count account quests"
 L["Count quests completed by any character. The quests counted still match this character's race and class."] =
 	"Count quests completed by any character. The quests counted still match this character's race and class."
@@ -62,7 +64,6 @@ L["Install AtlasLoot for recommended levels."] = "Install AtlasLoot for recommen
 L["Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."] =
 	"Keeps the shared Forever tracker where you put it. The grip at its top no longer drags it."
 L["Legacy"] = "Legacy"
-L["Legacy Forever carries ForeverCore inside itself."] = "Legacy Forever carries ForeverCore inside itself."
 L["Legacy Forever report"] = "Legacy Forever report"
 L["Legacy objectives"] = "Legacy objectives"
 L["Levels, skills, ranks and anything without a fixed place."] =
